@@ -2,9 +2,16 @@
 
 org $809204 ; disable irq
     LDA.B #$81  ; changed #$A1 to #$81 to disable irq
- 
-org $808D0C ; modify the shadow flush 1 (video mode). we still use its "game mode" detection, but we use it to know to do our new stuff instead of the old hud logic.
+
+org $809212 ; disable irq
+    LDA.B #$00
+    
+org $808D08 ; modify the shadow flush 1 (video mode). we still use its "game mode" detection, but we use it to know to do our new stuff instead of the old hud logic.
+    BEQ +
+    SEP #$20
     JSR.W $8CA8 ; old shadow flush jump no longer needed bc removing old hud system, but we can repurpose this spot for some testing, again, not final.
++   JSL $858000 ; run this thing (i think it is music, but it might also be special effects). the original code always ran this during irq, but we dont want irq.
+                ;This game usually disables and reenables irq and nmi at the same times, so hopefully this works as is
     RTS         ; rts early because we dont want to do the rest of the shadow flush code
 
     ;while we are jumping to old irq code, im putting the temp edits to the irq here.
@@ -17,7 +24,6 @@ org $808D0C ; modify the shadow flush 1 (video mode). we still use its "game mod
     NOP
 
     org $808CF8 
-    JSL $858000  ;NOTE: THIS IS JA NK! Ideally we would want to put this rerouted function in the main NMI code, but for testing purposes im putting it here since there is not enough space in the NMI code to put a long jump. 
     RTS          ;rts early because we dont want the HBlank and the INIDISP as we do not have to wait for HBlank or turn off force blank anymore, again bc removing old hud system
 
 

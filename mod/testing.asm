@@ -1,14 +1,9 @@
 ; these are just temporary tests. they override single and multi player.
 
-org $809204 ; disable irq
-    LDA.B #$81  ; changed #$A1 to #$81 to disable irq
-
-org $809212 ; disable irq
-    LDA.B #$00
-    
-org $808D08 ; modify the shadow flush 1 (video mode). we still use its "game mode" detection, but we use it to know to do our new stuff instead of the old hud logic.
-    BEQ +
-    SEP #$20
+org $808C60 ; force the irq to always branch to avoid triggering the old "refresh"
+    BRA $808C82 
+ 
+org $808D0C ; modify the shadow flush 1 (video mode). we still use its "game mode" detection, but we use it to know to do our new stuff instead of the old hud logic.
     JSR.W $8CA8 ; old shadow flush jump no longer needed bc removing old hud system, but we can repurpose this spot for some testing, again, not final.
 +   JSL $858000 ; run this thing (i think it is music, but it might also be special effects). the original code always ran this during irq, but we dont want irq.
                 ;This game usually disables and reenables irq and nmi at the same times, so hopefully this works as is

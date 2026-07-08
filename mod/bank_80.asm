@@ -732,6 +732,11 @@ wram_7FC104            = $7FC104  ; refs=14 (r5/w9) [STA:9,LDA:5], 5 site(s); in
 wram_7FC144            = $7FC144  ; refs=27 (r1/w26) [STA:26,LDA:1], 6 site(s); indexed (,X/,Y) -> array/table
 wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 
+; my vars ($0600-$076F seem free)
+
+modFlags = $0600                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
+
+
 ; jsl label defines (far calls into other banks):
 
 InitPpuRegisters       = $818000
@@ -755,7 +760,7 @@ data_808F35            = $808F35
 
                        ORG $808000
 
-;               LABEL: CODE                                 ;ADDRESS|INTERMEDIATE ADDRESS
+;               LABEL: CODE                       ;ORIGINAL GAME CODE ADDRESS|INTERMEDIATE ADDRESS
 ; ============================================================
 ;  RESET / boot
 ;    Entered from the emulation RESET vector. Switches to native
@@ -2498,7 +2503,15 @@ data_808F35            = $808F35
                        JSR.W ApplyColorMathRegs                       ;808B26|808D89   ; 2nd shadow flush: CGADSUB + fixed colour
                        JSR.W ReadJoypads                              ;808B29|809281   ; consume auto-joypad read -> $03C2/$03C4
                        STZ.W vblankCmd                                ;808B2C|800333   ; issue VBlank command to NMI   ; clear vblankCmd: release the slot to the main thread
- 
+                       
+                       LDA.W modFlags                                 ;INSERT|000600
+                       BIT.W #$0001                                   ;INSERT|
+                       BEQ .skip                                      ;INSERT|
+                       BIT.W #$0002                                   ;INSERT|
+                       JSR.W ApplyRasterSplitRegs                     ;INSERT|808C92
+
+
+                       
                 .skip: LDA.B zp_00                                    ;808B2F|000000
                        LDX.B zp_02                                    ;808B31|000002
                        LDY.B zp_04                                    ;808B33|000004
@@ -2794,31 +2807,36 @@ data_808F35            = $808F35
                        SEP #$30                                       ;808C4D|
                        LDA.W TIMEUP                                   ;808C4F|804211   ; TIMEUP: acknowledge the IRQ
                        AND.B #$80                                     ;808C52|
-                       BEQ .skip3                                     ;808C54|808C86
+                       BEQ .exit                                      ;808C54|808C86
                        LDA.W rasterIrqActive                          ;808C56|800335   ; rasterSplitOwner: !=0 -> custom effect owns IRQ
-                       BNE .skip2                                     ;808C59|808C82   ;   ...so skip the default split, just run $858000
+                       BNE .skip                                      ;808C59|808C82   ;   ...so skip the default split, just run $858000
                        LDA.W gameModeFlags                            ;808C5B|8019E3
                        BIT.B #$01                                     ;808C5E|         ; bit0 = split-screen / alt video layout active?
-                       BEQ .skip2                                     ;808C60|808C82   ; not in split layout -> skip
+                       BEQ .skip                                      ;808C60|808C82   ; not in split layout -> skip
+                       
+                       LDA.W modFlags                                 ;INSERT|000600
+                       BIT.B #$01                                     ;INSERT|
+                       BEQ .skip                                      ;INSERT|
+                                                                      
+                       ;changeLineDown
                        LDA.W rasterSplitPhase                         ;808C62|8003F4   ; rasterSplitPhase (0 = arm phase, 1 = apply phase)
-                       BNE .skip                                      ;808C65|808C74
+                       BNE .changeLineUp                              ;808C65|808C74
                        INC.W rasterSplitPhase                         ;808C67|8003F4   ; phase 0 -> 1
                        LDA.B #$2F                                     ;808C6A|         ; next IRQ at scanline $2F (47)...
                        STA.W VTIMEL                                   ;808C6C|804209   ; ...re-arm VTIME (low)
                        STZ.W VTIMEH                                   ;808C6F|80420A   ; VTIME high = 0
-                       BRA .skip3                                     ;808C72|808C86   ; exit; the apply happens on the NEXT IRQ
+                       BRA .exit                                      ;808C72|808C86   ; exit; the apply happens on the NEXT IRQ
 
-
-                .skip: STZ.W rasterSplitPhase                         ;808C74|8003F4   ; phase 1 -> 0 (ping-pong reset)
+        .changeLineUp: STZ.W rasterSplitPhase                         ;808C74|8003F4   ; phase 1 -> 0 (ping-pong reset)
                        LDA.B #$2D                                     ;808C77|         ; next IRQ at scanline $2D (45, trace-verified)
                        STA.W VTIMEL                                   ;808C79|804209
                        STZ.W VTIMEH                                   ;808C7C|80420A
                        JSR.W ApplyRasterSplitRegs                     ;808C7F|808C92   ; -> ApplyRasterSplitRegs: reprogram BG1 for lower region
 
-               .skip2: JSL.L sub_858000                               ;808C82|858000   ; far raster/extra-effect handler (bank 85)
+                .skip: JSL.L sub_858000                               ;808C82|858000   ; far raster/extra-effect handler (bank 85)
  
-               .skip3: REP #$30                                       ;808C86|
-                       LDA.B zp_00                                    ;808C88|000000
+                .exit: REP #$30                                       ;808C86|  
+                       LDA.B zp_00                                    ;808C88|000000   ; restore stuff
                        LDX.B zp_02                                    ;808C8A|000002
                        LDY.B zp_04                                    ;808C8C|000004
                        PLD                                            ;808C8E|
@@ -2896,7 +2914,12 @@ data_808F35            = $808F35
 ; ------------------------------------------------------------
    ApplyVideoModeRegs: LDA.W gameModeFlags                            ;808D02|8019E3   ; set BG1SC/BG12NBA/COLDATA depending on gameModeFlags bit0
                        BIT.W #$0001                                   ;808D05|
-                       BEQ .skip                                      ;808D08|808D3D
+                       BEQ .nonGameMode                               ;808D08|808D3D
+
+                       LDA.W modFlags                                 ;INSERT|000600
+                       BIT.B #$01                                     ;INSERT|
+                       BEQ .nonGameMode                               ;INSERT|
+
                        SEP #$20                                       ;808D0A|
                        LDA.W bg1scShadow                              ;808D0C|8019EF
                        STA.W BG1SC                                    ;808D0F|802107
@@ -2919,7 +2942,7 @@ data_808F35            = $808F35
                        RTS                                            ;808D3C|
  
  
-                .skip: SEP #$20                                       ;808D3D|
+         .nonGameMode: SEP #$20                                       ;808D3D|
                        LDA.W backdropColorR                           ;808D3F|800344
                        ORA.W backdropColorR2                          ;808D42|80034A
                        ORA.B #$20                                     ;808D45|
@@ -2979,6 +3002,11 @@ data_808F35            = $808F35
                        LDA.W gameModeFlags                            ;808D91|8019E3
                        BIT.B #$01                                     ;808D94|
                        BNE .skip                                      ;808D96|808DAB
+
+                       LDA.W modFlags                                 ;INSERT|000600
+                       BIT.B #$01                                     ;INSERT|
+                       BNE .skip                                      ;INSERT|
+
                        LDA.B #$03                                     ;808D98|
                        STA.W CGADD                                    ;808D9A|802121
                        LDA.W dialogueBoxColorLo                       ;808D9D|8019BB

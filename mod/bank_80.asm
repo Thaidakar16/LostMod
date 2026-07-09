@@ -2508,7 +2508,10 @@ data_808F35            = $808F35
                        BIT.W #$0001                                   ;INSERT|
                        BEQ .skip                                      ;INSERT|
                        BIT.W #$0002                                   ;INSERT|
+                       BNE .skip                                      ;INSERT|
                        JSR.W ApplyRasterSplitRegs                     ;INSERT|808C92
+                       LDA.W modFlags                                 ;INSERT|000600
+                       ORA.W #$0002                                   ;INSERT|
 
 
                        

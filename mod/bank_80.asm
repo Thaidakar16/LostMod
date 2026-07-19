@@ -828,13 +828,28 @@ data_808F35            = $808F35
 ;  MainLoop_Reinit   [10 ins, returns ?]
 ;    callers: vbwait_808081
 ;    reads:     gameModeFlags
-;    calls:     LoadInitialGfx, vbwait_808741, ComputeButtonEdges, input_8082F6, input_8083B6, input_80814E, +1 more
+;    calls:     LoadInitialGfx, vbwait_808741, ComputeButtonEdges, input_8082F6, GiveUpDialog_TriggerGate, input_80814E, +1 more
+;
+;    RECON NOTE (trace-assisted, see level_loading_recon.md): gameModeFlags
+;    is a small bitfield; the only two values seen across all 5 traces:
+;      bit0 ($0001) set, all others clear -- Level 1 and Level 2 both
+;                    read this way (i.e. it just marks "in a level",
+;                    not which one -- see currentSceneId for that).
+;      bit2 ($0004) set, all others clear -- observed the whole time
+;                    on the Try Again screen and (per the read at
+;                    ScreenReinitHdmaOff's scene-copy) on Game Over.
+;                    Likely the general "static/menu-type screen" flag.
+;    Bit3 ($0008, tested right below to choose MainLoop_PauseOrMenu)
+;    was never observed set in any trace, so MainLoop_PauseOrMenu's
+;    actual trigger/purpose is NOT confirmed -- our best guess is a
+;    true pause menu (not exercised by any of the 5 captured
+;    scenarios), but that's a guess, not a finding.
 ; --------------------------------------------------------
       MainLoop_Reinit: JSL.L LoadInitialGfx                           ;808063|818190
                        JSR.W vbwait_808741                            ;808067|808741
                        JSR.W ComputeButtonEdges                       ;80806A|80925C
                        JSR.W input_8082F6                             ;80806D|8082F6
-                       JSR.W input_8083B6                             ;808070|8083B6
+                       JSR.W GiveUpDialog_TriggerGate                 ;808070|8083B6
                        JSR.W input_80814E                             ;808073|80814E
                        LDA.W gameModeFlags                            ;808076|8019E3
                        BIT.W #$0008                                   ;808079|
@@ -934,7 +949,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  WaitVBlankCmd   [4 ins, returns RTS]
-;    callers: vbwait_808081, MainLoop_PauseOrMenu, sub_8081FD, vbwait_808402, vbwait_808741, sub_80A0A3, +1 more
+;    callers: vbwait_808081, MainLoop_PauseOrMenu, sub_8081FD, GiveUpDialog_Run, vbwait_808741, sub_80A0A3, +1 more
 ;    writes:    vblankCmd
 ;    reads:     vblankCmd
 ; --------------------------------------------------------
@@ -948,9 +963,32 @@ data_808F35            = $808F35
 ; --------------------------------------------------------
 ;  input_80814E   [52 ins, returns RTS]
 ;    callers: MainLoop_Reinit, vbwait_808081, vbwait_808741
-;    writes:    ppuUpdateFlags, ram_19DD
+;    writes:    ppuUpdateFlags, requestedSceneId
 ;    reads:     ram_0331, ppuUpdateFlags, joy1Pressed, joy2Pressed, gameModeFlags
 ;    calls:     sub_8087B7, hdma_808E7E, irqcfg_809210, irqcfg_808834, UpdateAllObjects, ScreenReinitHdmaOff, +7 more
+;
+;    RECON NOTE (trace-assisted, see level_loading_recon.md):
+;    Polled once per frame; this is the dispatcher that decides whether
+;    a scene (re)load happens this frame. ppuUpdateFlags bits, low to
+;    high as checked here:
+;      bit0 ($0001) -> generic reinit. Falls into the same reinit chain
+;                      as bit1 but does NOT touch requestedSceneId --
+;                      whatever set this bit is expected to have already
+;                      written the target scene there. Confirmed used by:
+;                      retry-from-Try-Again, level-complete, decline-retry.
+;      bit1 ($0002) -> hardcoded convenience path: always sets
+;                      requestedSceneId=$0025 (Try Again) before falling
+;                      into the same reinit chain. Confirmed used by the
+;                      mid-level "give up" confirm (Yes).
+;      bit4 ($0010) -> input_8081DE (controller-2-only variant of the
+;                      generic hold-to-skip loop below)
+;      bit5 ($0020) -> loc_8081BF (controller-1+2 hold-to-skip loop)
+;      bit2 ($0004) -> loc_80819D (controller-1-only hold-to-skip loop)
+;    Both bit0 and bit1 land in the shared block that clears
+;    ppuUpdateFlags, runs sub_8087B7/hdma_808E7E/irqcfg_809210/
+;    irqcfg_808834, bumps ram_0331, calls UpdateAllObjects, then calls
+;    ScreenReinitHdmaOff (THE scene-load hook -- see its header) and
+;    finishes with WindowWipeThenHdmaOff (the visual wipe transition).
 ; --------------------------------------------------------
          input_80814E: LDA.W ppuUpdateFlags                           ;80814E|800336
                        BIT.W #$0004                                   ;808151|
@@ -1310,12 +1348,23 @@ data_808F35            = $808F35
                        dw $014A,$0168                                 ;8083B2|
  
 ; --------------------------------------------------------
-;  input_8083B6   [28 ins, returns RTS]
+;  GiveUpDialog_TriggerGate (was input_8083B6)   [28 ins, returns RTS]
 ;    callers: MainLoop_Reinit
 ;    reads:     ppuUpdateFlags, backdropColorR, backdropColorG, backdropColorB, joy1Pressed, joy2Pressed ...
-;    calls:     color_80CF31, vbwait_808402, color_80CF82
+;    calls:     color_80CF31, GiveUpDialog_Run, color_80CF82
+;
+;    RECON NOTE (trace-assisted, see level_loading_recon.md): called
+;    every frame from MainLoop_Reinit; almost always exits immediately.
+;    Opens the "Give up?" Yes/No box only when ALL of: ram_19CE is
+;    nonzero (a per-context "dialog armed" flag -- true during normal
+;    level play; also seen ticking over on the Try Again screen, so
+;    this same gate is reused there too, though we couldn't fully trace
+;    what it drives in that context), ram_03EA != $8000, ppuUpdateFlags
+;    bits 0-1 are both clear (no reinit already pending), and Start is
+;    freshly pressed (joy1Pressed|joy2Pressed BIT $1000). Confirmed via
+;    trace #1 and #2 (idle-in-level, press Start -> this fires).
 ; --------------------------------------------------------
-         input_8083B6: LDA.W ram_19CE                                 ;8083B6|8019CE
+      GiveUpDialog_TriggerGate: LDA.W ram_19CE                           ;8083B6|8019CE
                        AND.W #$00FF                                   ;8083B9|
                        BEQ .exit                                      ;8083BC|808401
                        LDA.W ram_03EA                                 ;8083BE|8003EA
@@ -1335,28 +1384,45 @@ data_808F35            = $808F35
                        ORA.W backdropColorG                           ;8083E4|800346
                        ORA.W backdropColorB                           ;8083E7|800348
                        BEQ +                                          ;8083EA|8083EF
-                       JMP.W vbwait_808402                            ;8083EC|808402
+                       JMP.W GiveUpDialog_Run                            ;8083EC|808402
  
  
                     +: LDA.W #$0004                                   ;8083EF|
                        LDX.W #$0004                                   ;8083F2|
                        LDY.W #$0004                                   ;8083F5|
                        JSR.W color_80CF31                             ;8083F8|80CF31
-                       JSR.W vbwait_808402                            ;8083FB|808402
+                       JSR.W GiveUpDialog_Run                            ;8083FB|808402
                        JSR.W color_80CF82                             ;8083FE|80CF82
  
                 .exit: RTS                                            ;808401|
  
  
 ; --------------------------------------------------------
-;  vbwait_808402   [45 ins, returns RTS]
-;    callers: input_8083B6
-;    writes:    ppuUpdateFlags, ram_0465, ram_0467, dialogueBoxColorLo
+;  GiveUpDialog_Run (was vbwait_808402)   [45 ins, returns RTS]
+;    callers: GiveUpDialog_TriggerGate
+;    writes:    ppuUpdateFlags, dialogChoiceIdx, ram_0467, dialogueBoxColorLo
 ;    reads:     vblankCmd, ppuUpdateFlags, ram_19B7, ram_19B9
 ;    calls:     sub_80891D, sub_8088E7, sub_8094A2, sub_80961A, ComputeButtonEdges, sub_80847D, +6 more
+;
+;    RECON NOTE (trace-assisted, see level_loading_recon.md): fades in
+;    the box, defaults dialogChoiceIdx=1 ("No" -- confirmed: trace #1
+;    never touched Left/Right and got 1 at confirm time), then loops
+;    GiveUpDialog_NavConfirm until confirmed. On decline (choice==1,
+;    the default) calls DeclineDialog_StopCues and returns -- no scene
+;    change, play resumes (trace #1). On accept (choice==0, reached by
+;    pressing Left once -- trace #2) sets ppuUpdateFlags bit1 instead,
+;    which input_80814E picks up next frame and routes into
+;    ScreenReinitHdmaOff with requestedSceneId=$0025 (Try Again).
+;    Note: input_80963F (loc_808454) runs UNCONDITIONALLY right after
+;    confirm, before the choice is even checked -- it looks at
+;    gameModeFlags bit0 (not the dialog choice) to pick which pair of
+;    $8001-$8006 tokens to push into a ring buffer at $7E3280,Y (cursor
+;    in ram_19B9/ram_19B7). We didn't chase down the consumer of that
+;    buffer; flagging it here as an open thread in case it matters for
+;    hooking purposes.
 ; --------------------------------------------------------
-        vbwait_808402: LDA.W vblankCmd                                ;808402|800333   ; poll vblankCmd (wait for NMI to consume)
-                       BNE vbwait_808402                              ;808405|808402
+        GiveUpDialog_Run: LDA.W vblankCmd                                ;808402|800333   ; poll vblankCmd (wait for NMI to consume)
+                       BNE GiveUpDialog_Run                              ;808405|808402
                        JSR.W sub_80891D                               ;808407|80891D
                        LDA.W #$00E7                                   ;80840A|
                        JSR.W sub_8088E7                               ;80840D|8088E7
@@ -1377,7 +1443,7 @@ data_808F35            = $808F35
  
                 .loop: JSR.W ComputeButtonEdges                       ;80843A|80925C
                        JSR.W sub_80847D                               ;80843D|80847D
-                       JSR.W input_8084B9                             ;808440|8084B9
+                       JSR.W GiveUpDialog_NavConfirm                  ;808440|8084B9
                        BCS .skip                                      ;808443|808454
                        JSL.L RunCircleIrisHdma                        ;808445|818368
                        JSR.W SetupCgramGpDma                          ;808449|808667
@@ -1404,13 +1470,13 @@ data_808F35            = $808F35
                        RTS                                            ;808478|
  
  
-               .skip2: JSR.W sub_808956                               ;808479|808956
+               .skip2: JSR.W DeclineDialog_StopCues                               ;808479|808956
                        RTS                                            ;80847C|
  
  
 ; --------------------------------------------------------
 ;  sub_80847D   [22 ins, returns RTS]
-;    callers: vbwait_808402
+;    callers: GiveUpDialog_Run
 ;    reads:     ram_0465, ram_0467
 ;    calls:     sub_80961A
 ; --------------------------------------------------------
@@ -1444,13 +1510,20 @@ data_808F35            = $808F35
  
  
 ; --------------------------------------------------------
-;  input_8084B9   [35 ins, returns RTS]
-;    callers: vbwait_808402
+;  GiveUpDialog_NavConfirm (was input_8084B9)   [35 ins, returns RTS]
+;    callers: GiveUpDialog_Run
 ;    writes:    ram_0467
-;    reads:     joy1Pressed, joy2Pressed, ram_0465
+;    reads:     joy1Pressed, joy2Pressed, dialogChoiceIdx
 ;    calls:     sub_80961A
+;
+;    RECON NOTE (trace-assisted): BIT $0200 (Left) decrements
+;    dialogChoiceIdx toward 0 ("Yes"); BIT $0100 (Right) increments it
+;    toward 1 ("No"); BIT $9000 (Start OR B) confirms -- returns with
+;    carry set and dialogChoiceIdx in A. Confirmed directly by traces
+;    #1 (no nav, confirms default=1/No) and #2 (one Left press ->
+;    confirms 0/Yes).
 ; --------------------------------------------------------
-         input_8084B9: LDA.W joy1Pressed                              ;8084B9|8003C8
+      GiveUpDialog_NavConfirm: LDA.W joy1Pressed                        ;8084B9|8003C8
                        ORA.W joy2Pressed                              ;8084BC|8003CA
                        BIT.W #$0200                                   ;8084BF|
                        BEQ .skip                                      ;8084C2|8084DE
@@ -1704,7 +1777,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  SetupCgramGpDma   [12 ins, returns RTS]
-;    callers: vbwait_808081, sub_8081FD, vbwait_808402, sub_80A0A3, vbwait_80B54E, color_80CF31, +1 more
+;    callers: vbwait_808081, sub_8081FD, GiveUpDialog_Run, sub_80A0A3, vbwait_80B54E, color_80CF31, +1 more
 ;    writes HW: A1B2, A1TL2, BBAD2, DASL2, DMAP2
 ; --------------------------------------------------------
            SetupCgramGpDma: SEP #$20                                  ;808667|
@@ -2089,7 +2162,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  sub_8088E7   [8 ins, returns RTS]
-;    callers: vbwait_808402, vbwait_80B54E, input_80B63B, input_80B6EF, sub_80B885, input_80BB41
+;    callers: GiveUpDialog_Run, vbwait_80B54E, input_80B63B, input_80B6EF, sub_80B885, input_80BB41
 ;    calls:     sub_8088F8
 ; --------------------------------------------------------
            sub_8088E7: PHX                                            ;8088E7|
@@ -2142,7 +2215,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  sub_80891D   [9 ins, returns RTS]
-;    callers: vbwait_808402, vbwait_80B54E
+;    callers: GiveUpDialog_Run, vbwait_80B54E
 ;    writes:    ram_19C5
 ;    reads:     ram_0304
 ;    calls:     sub_808932
@@ -2188,12 +2261,26 @@ data_808F35            = $808F35
  
  
 ; --------------------------------------------------------
-;  sub_808956   [8 ins, returns RTS]
-;    callers: vbwait_808402, vbwait_80B54E
+;  DeclineDialog_StopCues (was sub_808956)   [8 ins, returns RTS]
+;    callers: GiveUpDialog_Run, vbwait_80B54E
 ;    reads:     ram_0304
 ;    calls:     irqcfg_808968
+;
+;    RECON NOTE (trace-assisted, see level_loading_recon.md): confirmed
+;    (trace #1) as the "decline" side-effect of the Give Up dialog --
+;    when ram_0304 is nonzero, loops X=0..7 calling irqcfg_808968 to
+;    stop any pending one-shot sound cues, then returns. Causes NO
+;    scene change by itself. Also called from vbwait_80B54E, a nearly
+;    identical fade/nav/confirm box gated on Select (not Start) and
+;    gameModeFlags bit0, driven from the in-level loop via
+;    vbwait_808081 -- i.e. this game has a general "modal Yes/No
+;    confirm box" pattern (fade backdrop, poll L/R+confirm, fade out,
+;    on-decline stop cues) that gets reused for at least two different
+;    prompts. We have not identified vbwait_80B54E's purpose (its own
+;    header calls it a per-object/per-player dialog, curObjIdx-indexed)
+;    -- not confirmed by any of the 5 traces, so left unlabeled.
 ; --------------------------------------------------------
-           sub_808956: LDA.W ram_0304                                 ;808956|800304
+         DeclineDialog_StopCues: LDA.W ram_0304                             ;808956|800304
                        BEQ .exit                                      ;808959|808967
                        LDX.W #$0000                                   ;80895B|
  
@@ -2207,7 +2294,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  irqcfg_808968   [33 ins, returns RTS]
-;    callers: sub_808956
+;    callers: DeclineDialog_StopCues
 ;    writes HW: INIDISP, NMITIMEN
 ;    reads:     ram_19C5
 ;    calls:     farsub_858002, WaitForVBlankStart, WaitForVBlankEnd, Boot_ClearWram
@@ -2505,7 +2592,7 @@ data_808F35            = $808F35
                        STZ.W vblankCmd                                ;808B2C|800333   ; issue VBlank command to NMI   ; clear vblankCmd: release the slot to the main thread
                        
                        LDA.W modFlags                                 ;INSERT|000600
-                       BIT.W #$0001                                   ;INSERT|
+                       BIT.W #$0001                                   ;INSERT|         ; Note: i have yet to hook level loading to set this bit equal to player count.
                        BEQ .skip                                      ;INSERT|
                        BIT.W #$0002                                   ;INSERT|
                        BNE .skip                                      ;INSERT|
@@ -2920,7 +3007,7 @@ data_808F35            = $808F35
                        BEQ .nonGameMode                               ;808D08|808D3D
 
                        LDA.W modFlags                                 ;INSERT|000600
-                       BIT.B #$01                                     ;INSERT|
+                       BIT.W #$0001                                   ;INSERT|
                        BEQ .nonGameMode                               ;INSERT|
 
                        SEP #$20                                       ;808D0A|
@@ -4265,7 +4352,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  sub_8094A2   [15 ins, returns ?]
-;    callers: vbwait_808402
+;    callers: GiveUpDialog_Run
 ;    calls:     sub_809507, sub_809515, sub_80931B, sub_8094BB
 ; --------------------------------------------------------
            sub_8094A2: PHX                                            ;8094A2|
@@ -4562,7 +4649,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  sub_80961A   [17 ins, returns ?]
-;    callers: vbwait_808402, sub_80847D, input_8084B9
+;    callers: GiveUpDialog_Run, sub_80847D, GiveUpDialog_NavConfirm
 ;    writes:    zp_2A, zp_2C, zp_2E, zp_30, refillStageIdx
 ;    reads:     ram_19B9
 ;    calls:     sub_8094BB
@@ -4588,7 +4675,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  input_80963F   [75 ins, returns RTS]
-;    callers: vbwait_808402
+;    callers: GiveUpDialog_Run
 ;    writes:    zp_2E, zp_30, refillStageIdx, ram_19B9
 ;    reads:     refillStageIdx, scriptPC, zp_8E, inputAux2, ram_19B9, gameModeFlags
 ;    calls:     sub_809404
@@ -5194,7 +5281,7 @@ data_808F35            = $808F35
 ;    ($4209=$2D) before re-running the per-level setup chain.
 ;    An HDMA *teardown* point, not an HDMA builder.
 ; ---------------------------------------------------------------
-          ScreenReinitHdmaOff: SEP #$20                               ;809ACC|
+  ScreenReinitHdmaOff: SEP #$20                                       ;809ACC|
                        STZ.W HDMAEN                                   ;809ACE|80420C   ; enable HDMA channels (HDMAEN)   ; STZ HDMAEN: kill HDMA at level/screen re-init.
                        REP #$20                                       ;809AD1|
                        STZ.W deferredFarCallAddr                      ;809AD3|8003AA
@@ -6305,14 +6392,17 @@ data_808F35            = $808F35
 ; --------------------------------------------------------
          input_80A28E: LDA.W numPlayers                               ;80A28E|800308
                        CMP.W #$0001                                   ;80A291|
-                       BNE .skip                                      ;80A294|80A2A0
+                       BNE .2players                                  ;80A294|80A2A0
                        STZ.W inputAux1                                ;80A296|8003D8
                        LDA.W #$FFFF                                   ;80A299|
                        STA.W inputAux2                                ;80A29C|8003DA
                        RTS                                            ;80A29F|
  
  
-                .skip: LDA.W inputAux1                                ;80A2A0|8003D8
+            .2players: LDA.W #$0001                                   ;INSERT|
+                       STA.W modFlags                                 ;INSERT|800600
+            
+                       LDA.W inputAux1                                ;80A2A0|8003D8
                        BPL .skip2                                     ;80A2A3|80A2B3
                        LDX.W #$0000                                   ;80A2A5|
                        CPX.W inputAux2                                ;80A2A8|8003DA
@@ -9566,7 +9656,7 @@ data_808F35            = $808F35
                        JSR.W WaitVBlankCmd                            ;80B5A3|808145
                        PLP                                            ;80B5A6|
                        BCC .loop2                                     ;80B5A7|80B58C
-                       JSR.W sub_808956                               ;80B5A9|808956
+                       JSR.W DeclineDialog_StopCues                               ;80B5A9|808956
                        PLA                                            ;80B5AC|
                        BNE .exit                                      ;80B5AD|80B5B2
                        JSR.W color_80CF82                             ;80B5AF|80CF82
@@ -13764,7 +13854,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  color_80CF31   [33 ins, returns ?]
-;    callers: input_8083B6, vbwait_80B54E
+;    callers: GiveUpDialog_TriggerGate, vbwait_80B54E
 ;    writes:    backdropColorR, backdropColorG, backdropColorB, backdropColorR2, backdropColorG2, backdropColorB2
 ;    reads:     scriptPC
 ;    calls:     hwmath_809011, SetupCgramGpDma
@@ -13810,7 +13900,7 @@ data_808F35            = $808F35
  
 ; --------------------------------------------------------
 ;  color_80CF82   [133 ins, returns RTS]
-;    callers: input_8083B6, vbwait_80B54E
+;    callers: GiveUpDialog_TriggerGate, vbwait_80B54E
 ;    writes:    zp_00, refillTmp32, zp_8E, backdropColorR, backdropColorG, backdropColorB ...
 ;    reads:     zp_00, refillTmp32, curObjIdx, scriptPC, zp_8E, oamSrcAttr ...
 ;    calls:     hwmath_809011, sub_8091ED, SetupCgramGpDma, sub_80D0F1

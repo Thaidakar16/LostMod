@@ -2906,7 +2906,7 @@ data_808F35            = $808F35
                        
                        LDA.W modFlags                                 ;INSERT|000600
                        BIT.B #$01                                     ;INSERT|
-                       BEQ .skip                                      ;INSERT|
+                       BNE .skip                                      ;INSERT|
                                                                       
                        ;changeLineDown
                        LDA.W rasterSplitPhase                         ;808C62|8003F4   ; rasterSplitPhase (0 = arm phase, 1 = apply phase)

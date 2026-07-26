@@ -732,9 +732,9 @@ wram_7FC104            = $7FC104  ; refs=14 (r5/w9) [STA:9,LDA:5], 5 site(s); in
 wram_7FC144            = $7FC144  ; refs=27 (r1/w26) [STA:26,LDA:1], 6 site(s); indexed (,X/,Y) -> array/table
 wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 
-; my vars (0500 - 056F might be free, might not be free, but I will use them for now):
+; my vars (IS THERE A SINGLE FREE VWRAM SPOT???!!!)
 
-modFlags = $0500                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
+ modFlags = $0310                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
 
 
 ; jsl label defines (far calls into other banks):
@@ -756,7 +756,6 @@ sub_850000             = $850000
 sub_858000             = $858000
 farsub_858002          = $858002
 
-data_808F35            = $808F35
 
                        ORG $808000
 
@@ -812,12 +811,12 @@ data_808F35            = $808F35
                        CPY.W #$0300                                   ;808041|
                        BCC .loop2                                     ;808044|80803C
 
-              .myloop: LDY.W #modFlags                                ;INSERT|         ;clear all wram vars that I have added  
-                       STA.W zp_00,Y                                  ;INSERT|800000
-                       INY                                            ;INSERT|
-                       INY                                            ;INSERT|
-                       CPY.W #modFlags+2                              ;INSERT|         ;I only have one var rn...    
-                       BCC .myloop                                    ;INSERT|INSERT
+              ; .myloop: LDY.W #modFlags                                ;INSERT|         ;clear all wram vars that I have added  
+              ;          STA.W zp_00,Y                                  ;INSERT|800000
+              ;          INY                                            ;INSERT|
+              ;          INY                                            ;INSERT|
+              ;          CPY.W #modFlags+2                              ;INSERT|         ;I only have one var rn...    
+              ;          BCC .myloop                                    ;INSERT|INSERT
 
                        LDY.W #$032E                                   ;808046|
                .loop3: STA.W zp_00,Y                                  ;808049|800000
@@ -2598,15 +2597,15 @@ data_808F35            = $808F35
                        JSR.W ReadJoypads                              ;808B29|809281   ; consume auto-joypad read -> $03C2/$03C4
                        STZ.W vblankCmd                                ;808B2C|800333   ; issue VBlank command to NMI   ; clear vblankCmd: release the slot to the main thread
                        
-                       LDA.W modFlags                                 ;INSERT|000500
-                       BIT.W #$0001                                   ;INSERT|         
-                       BEQ .skip                                      ;INSERT|
-                       BIT.W #$0002                                   ;INSERT|
-                       BNE .skip                                      ;INSERT|
-                       JSR.W ApplyRasterSplitRegs                     ;INSERT|808C92
-                       LDA.W modFlags                                 ;INSERT|000500
-                       ORA.W #$0002                                   ;INSERT|
-                       STA.W modFlags                                 ;INSERT|000500
+                     ;   LDA.W modFlags                                 ;INSERT|000500
+                     ;   BIT.W #$0001                                   ;INSERT|         
+                     ;   BEQ .skip                                      ;INSERT|
+                     ;   BIT.W #$0002                                   ;INSERT|
+                     ;   BNE .skip                                      ;INSERT|
+                     ;   JSR.W ApplyRasterSplitRegs                     ;INSERT|808C92
+                     ;   LDA.W modFlags                                 ;INSERT|000500
+                     ;   ORA.W #$0002                                   ;INSERT|
+                     ;   STA.W modFlags                                 ;INSERT|000500
 
 
                        
@@ -2912,9 +2911,9 @@ data_808F35            = $808F35
                        BIT.B #$01                                     ;808C5E|         ; bit0 = split-screen / alt video layout active?
                        BEQ .skip                                      ;808C60|808C82   ; not in split layout -> skip
                        
-                       LDA.W modFlags                                 ;INSERT|000500
-                       BIT.B #$01                                     ;INSERT|
-                       BNE .skip                                      ;INSERT|
+                     ;   LDA.W modFlags                                 ;INSERT|000500
+                     ;   BIT.B #$01                                     ;INSERT|
+                     ;   BNE .skip                                      ;INSERT|
                                                                       
                        ;changeLineDown
                        LDA.W rasterSplitPhase                         ;808C62|8003F4   ; rasterSplitPhase (0 = arm phase, 1 = apply phase)
@@ -3014,9 +3013,9 @@ data_808F35            = $808F35
                        BIT.W #$0001                                   ;808D05|
                        BEQ .nonGameMode                               ;808D08|808D3D
 
-                       LDA.W modFlags                                 ;INSERT|000500
-                       BIT.W #$0001                                   ;INSERT|
-                       BNE .nonGameMode                               ;INSERT|
+                     ;   LDA.W modFlags                                 ;INSERT|000500
+                     ;   BIT.W #$0001                                   ;INSERT|
+                     ;   BNE .nonGameMode                               ;INSERT|
 
                        SEP #$20                                       ;808D0A|
                        LDA.W bg1scShadow                              ;808D0C|8019EF
@@ -3100,10 +3099,10 @@ data_808F35            = $808F35
                        LDA.W gameModeFlags                            ;808D91|8019E3
                        BIT.B #$01                                     ;808D94|
                        BNE .skip                                      ;808D96|808DAB
-
-                       LDA.W modFlags                                 ;INSERT|000500
-                       BIT.B #$01                                     ;INSERT|
-                       BNE .skip                                      ;INSERT|
+                       
+                     ;   LDA.W modFlags                                 ;INSERT|
+                     ;   BIT.B #$01                                     ;INSERT|
+                     ;   BNE .skip                                      ;INSERT|
 
                        LDA.B #$03                                     ;808D98|
                        STA.W CGADD                                    ;808D9A|802121
@@ -3122,7 +3121,7 @@ data_808F35            = $808F35
  
                 .cont: REP #$20                                       ;808DB8|
                        RTS                                            ;808DBA|
- 
+
                        SEP #$20                                       ;808DBB|
                        LDA.B #$01                                     ;808DBD|
                        STA.W INIDISP                                  ;808DBF|802100
@@ -3136,6 +3135,7 @@ data_808F35            = $808F35
                        STA.W inidispShadow                            ;808DCF|800330
                        REP #$20                                       ;808DD2|
                        RTS                                            ;808DD4|
+
  
  
 ; --------------------------------------------------------
@@ -3382,7 +3382,10 @@ data_808F35            = $808F35
                        RTS                                            ;808F33|
  
  
-          data_808F34: dw $0333,$0222                                 ;808F34|
+          data_808F34: db $33                                         ;808F34|
+          data_808F35: db $03                                         ;808F35|
+                       db $22                                         ;808F36|
+                       db $02                                         ;808F37|
  
 ; --------------------------------------------------------
 ;  ppucfg_808F38   [13 ins, returns RTS]
@@ -4835,7 +4838,7 @@ data_808F35            = $808F35
 ;    callers: SetupMode7MatrixHdma
 ;    writes:    zp_2A, zp_2C, zp_68, zp_6A, zp_9C
 ; --------------------------------------------------------
-           BuildMode7MatrixTables: LDA.W #$CFEA                       ;80973C|
+           BuildMode7MatrixTables: LDA.W #(loc_80CFE8+2)              ;80973C|
                        STA.B zp_2A                                    ;80973F|00002A
                        LDX.W #$0001                                   ;809741|
                        STX.B zp_2C                                    ;809744|00002C
@@ -5969,17 +5972,17 @@ data_808F35            = $808F35
                        RTS                                            ;809F4D|
  
  
-               .skip2: LDY.W #$A06D                                   ;809F4E|
+               .skip2: LDY.W #ScreenModeSetupTable                    ;809F4E|
                        JSR.W sub_80A015                               ;809F51|80A015
                        JMP.W sub_809FF3                               ;809F54|809FF3
  
  
-               .skip3: LDY.W #$A07F                                   ;809F57|
+               .skip3: LDY.W #(ScreenModeSetupTable+$12)              ;809F57|
                        JSR.W sub_80A015                               ;809F5A|80A015
                        JMP.W sub_809FF3                               ;809F5D|809FF3
  
  
-               .skip4: LDY.W #$A091                                   ;809F60|
+               .skip4: LDY.W #(ScreenModeSetupTable+$24)              ;809F60|
                        JSR.W sub_80A015                               ;809F63|80A015
                        JMP.W sub_809FF3                               ;809F66|809FF3
  
@@ -6084,6 +6087,7 @@ data_808F35            = $808F35
 ;    reads:     zp_00, zp_02, zp_04, zp_06, zp_08, zp_0A ...
 ;    calls:     sub_80EC56
 ; --------------------------------------------------------
+
            sub_80A015: PHY                                            ;80A015|
                        LDA.W zp_00,Y                                  ;80A016|800000
                        STA.B zp_6C                                    ;80A019|00006C
@@ -6121,15 +6125,21 @@ data_808F35            = $808F35
                        STY.B curObjIdx                                ;80A065|000042
                        LDA.W #$0002                                   ;80A067|
                        JMP.W sub_80EC56                               ;80A06A|80EC56
- 
+                     
+                     ; this table is actually 3 tables back to back
+                     ScreenModeSetupTable:
                        dw $0020,$01A2,$0000,$01B0                     ;80A06D|
-                       dw $00A2,$0040,$0020,$0062                     ;80A075|
-                       dw $0000,$0027,$0142,$0000                     ;80A07D|
-                       dw $00BF,$0120,$0040,$015F                     ;80A085|
-                       dw $012F,$0000,$0058,$0080                     ;80A08D|
-                       dw $0000,$00C8,$0080,$0040                     ;80A095|
-                       dw $0080,$0070,$0000                           ;80A09D|
+                       dw $00A2,$0040,$0020,$0062,$0000               ;80A075|
+
+                       dw $0027,$0142,$0000,$00BF                     ;80A07F|
+                       dw $0120,$0040,$015F,$012F,$0000               ;80A087|
+
+                       dw $0058,$0080,$0000,$00C8                     ;80A091|
+                       dw $0080,$0040,$0080,$0070,$0000               ;80A099|
+
+                     
  
+
 ; --------------------------------------------------------
 ;  sub_80A0A3   [38 ins, returns ?]
 ;    callers: ScreenReinitHdmaOff
@@ -6404,6 +6414,9 @@ data_808F35            = $808F35
                        STZ.W inputAux1                                ;80A296|8003D8
                        LDA.W #$FFFF                                   ;80A299|
                        STA.W inputAux2                                ;80A29C|8003DA
+                       
+                       STZ.W modFlags                                 ;INSERT|
+
                        RTS                                            ;80A29F|
  
  
@@ -11125,7 +11138,17 @@ data_808F35            = $808F35
                        REP #$20                                       ;80BEFE|
                        INC.B zp_14                                    ;80BF00|000014
                        BNE loc_80BF08                                 ;80BF02|80BF08
- 
+                       
+                       ;WIP
+                       LDA.W modFlags            
+                       BIT.W #$0001
+                       BEQ sub_80BF04
+                       LDA.W gameModeFlags
+                       BIT.W #$0001
+                       BEQ sub_80BF04
+                       LDA.W #$0000
+                       STA.W gameModeFlags                       
+
 ; --------------------------------------------------------
 ;  sub_80BF04   [90 ins, returns RTS]
 ;    callers: sub_80BF04

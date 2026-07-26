@@ -2596,19 +2596,7 @@ farsub_858002          = $858002
                        JSR.W ApplyColorMathRegs                       ;808B26|808D89   ; 2nd shadow flush: CGADSUB + fixed colour
                        JSR.W ReadJoypads                              ;808B29|809281   ; consume auto-joypad read -> $03C2/$03C4
                        STZ.W vblankCmd                                ;808B2C|800333   ; issue VBlank command to NMI   ; clear vblankCmd: release the slot to the main thread
-                       
-                     ;   LDA.W modFlags                                 ;INSERT|000500
-                     ;   BIT.W #$0001                                   ;INSERT|         
-                     ;   BEQ .skip                                      ;INSERT|
-                     ;   BIT.W #$0002                                   ;INSERT|
-                     ;   BNE .skip                                      ;INSERT|
-                     ;   JSR.W ApplyRasterSplitRegs                     ;INSERT|808C92
-                     ;   LDA.W modFlags                                 ;INSERT|000500
-                     ;   ORA.W #$0002                                   ;INSERT|
-                     ;   STA.W modFlags                                 ;INSERT|000500
-
-
-                       
+     
                 .skip: LDA.B zp_00                                    ;808B2F|000000
                        LDX.B zp_02                                    ;808B31|000002
                        LDY.B zp_04                                    ;808B33|000004
@@ -2910,10 +2898,6 @@ farsub_858002          = $858002
                        LDA.W gameModeFlags                            ;808C5B|8019E3
                        BIT.B #$01                                     ;808C5E|         ; bit0 = split-screen / alt video layout active?
                        BEQ .skip                                      ;808C60|808C82   ; not in split layout -> skip
-                       
-                     ;   LDA.W modFlags                                 ;INSERT|000500
-                     ;   BIT.B #$01                                     ;INSERT|
-                     ;   BNE .skip                                      ;INSERT|
                                                                       
                        ;changeLineDown
                        LDA.W rasterSplitPhase                         ;808C62|8003F4   ; rasterSplitPhase (0 = arm phase, 1 = apply phase)
@@ -3013,10 +2997,6 @@ farsub_858002          = $858002
                        BIT.W #$0001                                   ;808D05|
                        BEQ .nonGameMode                               ;808D08|808D3D
 
-                     ;   LDA.W modFlags                                 ;INSERT|000500
-                     ;   BIT.W #$0001                                   ;INSERT|
-                     ;   BNE .nonGameMode                               ;INSERT|
-
                        SEP #$20                                       ;808D0A|
                        LDA.W bg1scShadow                              ;808D0C|8019EF
                        STA.W BG1SC                                    ;808D0F|802107
@@ -3099,10 +3079,6 @@ farsub_858002          = $858002
                        LDA.W gameModeFlags                            ;808D91|8019E3
                        BIT.B #$01                                     ;808D94|
                        BNE .skip                                      ;808D96|808DAB
-                       
-                     ;   LDA.W modFlags                                 ;INSERT|
-                     ;   BIT.B #$01                                     ;INSERT|
-                     ;   BNE .skip                                      ;INSERT|
 
                        LDA.B #$03                                     ;808D98|
                        STA.W CGADD                                    ;808D9A|802121
@@ -5424,13 +5400,29 @@ farsub_858002          = $858002
                        ASL A                                          ;809BD6|
                        ORA.B refillTmp32                              ;809BD7|000032
                        STA.W OBSEL                                    ;809BD9|802101
-                       LDA.W ram_19EB                                 ;809BDC|8019EB
+
+                       LDA.W modFlags                                 ;INSERT|
+                       BIT.B #$01                                     ;INSERT|
+                       BEQ +                                          ;INSERT|
+                       
+                       ;WIP 
+                       ;remember to change the ORAs to #$02 later
+                       LDA.W ram_19EB                                 ;INSERT|8019EB
+                       ORA.B #$00                                     ;INSERT|
+                       STA.W BG1SC                                    ;INSERT|802107
+                       LDA.W ram_19ED                                 ;INSERT|8019ED
+                       ORA.B #$00                                     ;INSERT|
+                       STA.W BG2SC                                    ;INSERT|802108
+                       BRA ++                                         ;INSERT|
+
+                    +: LDA.W ram_19EB                                 ;809BDC|8019EB
                        ORA.B #$01                                     ;809BDF|
                        STA.W BG1SC                                    ;809BE1|802107
                        LDA.W ram_19ED                                 ;809BE4|8019ED
                        ORA.B #$01                                     ;809BE7|
                        STA.W BG2SC                                    ;809BE9|802108
-                       LDA.W bg1scShadow                              ;809BEC|8019EF
+                       
+                   ++: LDA.W bg1scShadow                              ;809BEC|8019EF
                        STA.W BG3SC                                    ;809BEF|802109
                        LDA.W ram_19E5                                 ;809BF2|8019E5
                        LSR A                                          ;809BF5|
@@ -11139,15 +11131,15 @@ farsub_858002          = $858002
                        INC.B zp_14                                    ;80BF00|000014
                        BNE loc_80BF08                                 ;80BF02|80BF08
                        
-                       ;WIP
-                       LDA.W modFlags            
-                       BIT.W #$0001
-                       BEQ sub_80BF04
-                       LDA.W gameModeFlags
-                       BIT.W #$0001
-                       BEQ sub_80BF04
-                       LDA.W #$0000
-                       STA.W gameModeFlags                       
+                       
+                       LDA.W modFlags                                 ;INSERT|
+                       BIT.W #$0001                                   ;INSERT|
+                       BEQ sub_80BF04                                 ;INSERT|
+                       LDA.W gameModeFlags                            ;INSERT|
+                       BIT.W #$0001                                   ;INSERT|
+                       BEQ sub_80BF04                                 ;INSERT|
+                       LDA.W #$0000                                   ;INSERT|
+                       STA.W gameModeFlags                            ;INSERT|
 
 ; --------------------------------------------------------
 ;  sub_80BF04   [90 ins, returns RTS]
@@ -11687,7 +11679,8 @@ farsub_858002          = $858002
 ;  tiles, and the hardware's wrap makes it appear at the far
 ;  edge. The mod-32 quadrant-select math lives in
 ;  BuildTilemapColumn ($80C2E5 AND #$003F / $80C2F0 AND #$001F).
-           RefillTilemapOnScroll: LDA.W refillLastCamY                ;80C176|8016AB
+
+RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|8016AB
                        AND.W #$FFF8                                   ;80C179|
                        STA.B refillTmp32                              ;80C17C|000032
                        LDA.B playerCamY                               ;80C17E|000046

@@ -11710,30 +11710,30 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        AND.W #$FFF8                                   ;80C180|         ; snap the NEW camY down to its 8px grid line
                        SEC                                            ;80C183|
                        SBC.B refillTmp32                              ;80C184|000032   ; A = new snapped camY - old snapped camY: 0 = same row, nonzero = crossed at least one row
-                       BEQ .skip                                      ;80C186|80C192   ; no vertical crossing -> skip straight to the horizontal check
+                       BEQ .refillX                                   ;80C186|80C192   ; no vertical crossing -> skip straight to the horizontal check
                        BPL +                                          ;80C188|80C18F   ; positive delta = camera moved DOWN -> refill the row revealed at the bottom
                        JSR.W RefillRowUp                              ;80C18A|80C269   ; negative delta = camera moved UP -> refill the row revealed at the top
-                       BRA .skip                                      ;80C18D|80C192
+                       BRA .refillX                                   ;80C18D|80C192
  
  
                     +: JSR.W RefillRowDown                            ;80C18F|80C20C
  
-                .skip: LDA.W refillLastCamX                           ;80C192|8016A9   ; step 2: same check, horizontally, on the 16px COLUMN grid
+             .refillX: LDA.W refillLastCamX                           ;80C192|8016A9   ; step 2: same check, horizontally, on the 16px COLUMN grid
                        AND.W #$FFF0                                   ;80C195|         ; snap the OLD latched camX down to its 16px grid line
                        STA.B refillTmp32                              ;80C198|000032   ; refillTmp32 = old snapped camX
                        LDA.B playerCamX                               ;80C19A|000044   ; current camX (live, unsnapped)
                        AND.W #$FFF0                                   ;80C19C|         ; snap the NEW camX down to its 16px grid line
                        SEC                                            ;80C19F|
                        SBC.B refillTmp32                              ;80C1A0|000032   ; A = new snapped camX - old snapped camX: 0 = same column, nonzero = crossed at least one column
-                       BEQ .skip2                                     ;80C1A2|80C1AE   ; no horizontal crossing -> skip straight to the camera-latch step
+                       BEQ .updateLastCam                             ;80C1A2|80C1AE   ; no horizontal crossing -> skip straight to the camera-latch step
                        BPL +                                          ;80C1A4|80C1AB   ; positive delta = camera moved RIGHT -> refill the column revealed on the right
                        JSR.W RefillColumnLeft                         ;80C1A6|80C1E4   ; negative delta = camera moved LEFT -> refill the column revealed on the left
-                       BRA .skip2                                     ;80C1A9|80C1AE
+                       BRA .updateLastCam                             ;80C1A9|80C1AE
  
  
                     +: JSR.W RefillColumnRight                        ;80C1AB|80C1B9
  
-               .skip2: LDA.B playerCamX                               ;80C1AE|000044   ; step 3: latch this frame's RAW (unsnapped) camera into refillLastCamX/Y ...
+       .updateLastCam: LDA.B playerCamX                               ;80C1AE|000044   ; step 3: latch this frame's RAW (unsnapped) camera into refillLastCamX/Y ...
                        STA.W refillLastCamX                           ;80C1B0|8016A9   ; ... for next frame's comparison above. Storing the raw value (not the
                        LDA.B playerCamY                               ;80C1B3|000046   ; snapped one) is what makes this "only refill on a NEW grid-line crossing":
                        STA.W refillLastCamY                           ;80C1B5|8016AB   ; the AND-mask is re-applied fresh on both sides every time this runs.
@@ -11757,7 +11757,13 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
 ;   look-ahead distance to the new column). BuildTilemapColumn
 ;  stages it; bit0 of the PPU-update bitfield ($03AE) queues
 ;  the DMA; $80EEB1 sets the new column's sprite clip window.
-           RefillColumnRight: LDA.W refillColTileX                    ;80C1B9|8016C5   ; step 1: advance the "leftmost visible column" tracker by one metatile (2 tiles = 16px)
+           RefillColumnRight:
+                       
+                       LDA.W modFlags
+                       BIT.W #$0001
+           
+                       LDA.W refillColTileX                          ;80C1B9|8016C5   ; step 1: advance the "leftmost visible column" tracker by one metatile (2 tiles = 16px)
+                       
                        ; Suggested edit (inline replacement for the old newFunc2 idea):
                        ;   LDA.W refillColTileX
                        ;   INC
@@ -11839,6 +11845,12 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        LSR A                                          ;80C20E|         ; an EVEN tile row (i.e. aligned to a 16px metatile row). LSR A x3 is a
                        LSR A                                          ;80C20F|         ; pixel->tile conversion (/8) but it's a LOGICAL shift, so...
                        LSR A                                          ;80C210|
+                       
+                       TAX                                            ;INSERT|
+                       AND.W #$0001                                   ;INSERT|
+                       STA.W oddRefillFlag                            ;INSERT|
+                       TXA                                            ;INSERT|
+
                        AND.W #$FFFE                                   ;80C211|         ; ...round down to even tile (metatile-aligned) by clearing bit0...
                        LDX.B playerCamY                               ;80C214|000046   ; ...then check the sign of the ORIGINAL (pre-shift) camY...
                        BPL +                                          ;80C216|80C21B
@@ -12064,7 +12076,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        BCC .skip4                                     ;80C330|80C38F   ; both in range -> skip straight to the main fetch at .skip4
  
                     +: LDA.W levelWrapFlags                           ;80C332|8019F4   ; step 2: out of bounds -- how should this level handle it?
-                       BIT.W #$0002                                   ;80C335|   ; levelWrapFlags bit1 set => coordinates wrap (AND with dim-1) instead of clamp
+                       BIT.W #$0002                                   ;80C335|         ; levelWrapFlags bit1 set => coordinates wrap (AND with dim-1) instead of clamp
                        BEQ .skip                                      ;80C338|80C34E   ; bit1 clear -> not a wrapping level, go check the blank-fill flag instead
                        STX.B refillTmp32                              ;80C33A|000032   ; bit1 SET: wrap X -- requires levelWidthTiles to be a power of 2
                        LDA.W levelWidthTiles                          ;80C33C|8019F0   ; (dim-1 is used as an AND mask, which only wraps correctly for

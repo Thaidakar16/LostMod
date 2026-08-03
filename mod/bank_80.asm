@@ -11418,7 +11418,7 @@ farsub_858002          = $858002
 ; optional second 'wrap' DMA (16D1+16D3 etc.) for columns that
 ; straddle the 32-tile horizontal tilemap boundary. The _B/_D
 ; variants do this twice (VMADDL and VMADDL+$20) to fill a 2-tall
-; column pair. Params are precomputed by CalcVramColParams
+; column pair. Params are precomputed by BuildTilemapColumn
 ; (80C2BE) and siblings at 80C655/80C91E from the camera tile coords.
 ; 
 ; TRACE CAVEAT (VERIFIED): Mesen prints 'STA $420B [MDMAEN] = $8D'
@@ -11471,7 +11471,7 @@ farsub_858002          = $858002
 ;    callers: ppucfg_809EE2
 ;    writes:    refillLastCamX, refillLastCamY, refillColTileX, refillRowTileY
 ;    reads:     playerCamX, playerCamY, gameModeFlags
-;    calls:     CalcVramColParams, UploadTilemapColumn
+;    calls:     BuildTilemapColumn, UploadTilemapColumn
 ; --------------------------------------------------------
            FillTilemapFull: LDA.B playerCamX                          ;80C086|000044
                        STA.W refillLastCamX                           ;80C088|8016A9
@@ -11523,7 +11523,7 @@ farsub_858002          = $858002
                 .loop: PHX                                            ;80C0BC|
                        PHY                                            ;80C0BD|
                        PHA                                            ;80C0BE|
-                       JSR.W CalcVramColParams                        ;80C0BF|80C2BE
+                       JSR.W BuildTilemapColumn                        ;80C0BF|80C2BE
                        JSR.W UploadTilemapColumn                      ;80C0C2|80C517
                        PLA                                            ;80C0C5|
                        PLY                                            ;80C0C6|
@@ -11703,12 +11703,28 @@ farsub_858002          = $858002
 ;  edge. The mod-32 quadrant-select math lives in
 ;  BuildTilemapColumn ($80C2E5 AND #$003F / $80C2F0 AND #$001F).
 
-RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|8016AB   ; step 1: has the camera crossed an 8px ROW boundary since last refill?
+RefillTilemapOnScroll: 
+                       
+                       LDA.W modFlags                                 ;INSERT|
+                       BIT.W #$0001
+                       BEQ +
+                       
+                       LDA.W refillLastCamY                          
+                       AND.W #$FFF4                                   
+                       STA.B refillTmp32                              
+                       LDA.B playerCamY                               
+                       AND.W #$FFF4
+                       BRA ++                                   
+                       
+
+                       
+                    +: LDA.W refillLastCamY                           ;80C176|8016AB   ; step 1: has the camera crossed an 8px ROW boundary since last refill?
                        AND.W #$FFF8                                   ;80C179|         ; snap the OLD latched camY down to its 8px grid line
                        STA.B refillTmp32                              ;80C17C|000032   ; refillTmp32 = old snapped camY (scratch var, reused below for camX too)
                        LDA.B playerCamY                               ;80C17E|000046   ; current camY (live, unsnapped)
                        AND.W #$FFF8                                   ;80C180|         ; snap the NEW camY down to its 8px grid line
-                       SEC                                            ;80C183|
+                       
+                   ++: SEC                                            ;80C183|
                        SBC.B refillTmp32                              ;80C184|000032   ; A = new snapped camY - old snapped camY: 0 = same row, nonzero = crossed at least one row
                        BEQ .refillX                                   ;80C186|80C192   ; no vertical crossing -> skip straight to the horizontal check
                        BPL +                                          ;80C188|80C18F   ; positive delta = camera moved DOWN -> refill the row revealed at the bottom
@@ -11718,12 +11734,25 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
  
                     +: JSR.W RefillRowDown                            ;80C18F|80C20C
  
-             .refillX: LDA.W refillLastCamX                           ;80C192|8016A9   ; step 2: same check, horizontally, on the 16px COLUMN grid
+             .refillX: 
+                     ;   LDA.W modFlags                                 ;INSERT|
+                     ;   BIT.W #$0001
+                     ;   BEQ +
+
+                     ;   LDA.W refillLastCamX                           
+                     ;   AND.W #$FFF8                                   
+                     ;   STA.B refillTmp32                               
+                     ;   LDA.B playerCamX                               
+                     ;   AND.W #$FFF8
+                     ;   BRA ++                       
+
+                    +: LDA.W refillLastCamX                           ;80C192|8016A9   ; step 2: same check, horizontally, on the 16px COLUMN grid
                        AND.W #$FFF0                                   ;80C195|         ; snap the OLD latched camX down to its 16px grid line
                        STA.B refillTmp32                              ;80C198|000032   ; refillTmp32 = old snapped camX
                        LDA.B playerCamX                               ;80C19A|000044   ; current camX (live, unsnapped)
                        AND.W #$FFF0                                   ;80C19C|         ; snap the NEW camX down to its 16px grid line
-                       SEC                                            ;80C19F|
+                       
+                   ++: SEC                                            ;80C19F|
                        SBC.B refillTmp32                              ;80C1A0|000032   ; A = new snapped camX - old snapped camX: 0 = same column, nonzero = crossed at least one column
                        BEQ .updateLastCam                             ;80C1A2|80C1AE   ; no horizontal crossing -> skip straight to the camera-latch step
                        BPL +                                          ;80C1A4|80C1AB   ; positive delta = camera moved RIGHT -> refill the column revealed on the right
@@ -11745,7 +11774,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
 ;    callers: RefillTilemapOnScroll
 ;    writes:    refillColTileX
 ;    reads:     playerCamY, refillColTileX, refillRowTileY
-;    calls:     CalcVramColParams, SetPpuUpdateBits, loc_80EEB1
+;    calls:     BuildTilemapColumn, SetPpuUpdateBits, loc_80EEB1
 ; --------------------------------------------------------
 
 ;== hdr 80C1B9 ==
@@ -11759,28 +11788,25 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
 ;  the DMA; $80EEB1 sets the new column's sprite clip window.
            RefillColumnRight:
                        
-                       LDA.W modFlags
-                       BIT.W #$0001
-           
-                       LDA.W refillColTileX                          ;80C1B9|8016C5   ; step 1: advance the "leftmost visible column" tracker by one metatile (2 tiles = 16px)
-                       
-                       ; Suggested edit (inline replacement for the old newFunc2 idea):
-                       ;   LDA.W refillColTileX
-                       ;   INC
-                       ;   STA.W refillColTileX
-                       ;   LDA.W refillColTileX
-                       ;   CLC
-                       ;   ADC.W #$0022
-                       ;   TAX
-                       ;   STX.W $0560
-                       ; Put that logic here instead of suggesting a jump stub.
+                     ; LDA.W modFlags                                    ;INSERT
+                     ; BIT.W #$0001
+                     ; BEQ .original
+                                  
+                     ; LDA.W refillColTileX
+                     ; INC
+                     ; STA.W refillColTileX
+                     ; AND.W #$0001
+                     ; STA.W oddRefilFlag
+                     ; BRA .merge
+       
+            .original: LDA.W refillColTileX                           ;80C1B9|8016C5   ; step 1: advance the "leftmost visible column" tracker by one metatile (2 tiles = 16px)
                        INC A                                          ;80C1BC|
                        INC A                                          ;80C1BD|
                        STA.W refillColTileX                           ;80C1BE|8016C5
-                       LDA.W refillColTileX                           ;80C1C1|8016C5   ; step 2: compute the tile-X of the column to actually STAGE: the new
+               .merge: LDA.W refillColTileX                           ;80C1C1|8016C5   ; step 2: compute the tile-X of the column to actually STAGE: the new
                        CLC                                            ;80C1C4|         ; off-screen edge is a fixed look-ahead distance to the right of the
                        ADC.W #$0022                                   ;80C1C5|   ; off-screen column tileX = refillColTileX + $22 (real opcode ADC.W #$0022; the prompt's +$10 is wrong)
-                       TAX                                            ;80C1C8|         ; X = tile-X argument to CalcVramColParams/BuildTilemapColumn
+                       TAX                                            ;80C1C8|         ; X = tile-X argument to BuildTilemapColumn/BuildTilemapColumn
                        LDY.W refillRowTileY                           ;80C1C9|8016C7   ; step 3: Y = top tile-Y of the column, normally the current row tracker...
                        LDA.B playerCamY                               ;80C1CC|000046
                        AND.W #$0008                                   ;80C1CE|         ; ...but if camY isn't on an 8px row boundary (mid-row scroll), back Y up
@@ -11788,8 +11814,8 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        DEY                                            ;80C1D3|         ; currently-visible top row instead of one row too low
                        DEY                                            ;80C1D4|
  
-                    +: LDA.W #$0022                                   ;80C1D5|         ; step 4: A = same +$22 offset, passed to CalcVramColParams as the signed
-                       JSR.W CalcVramColParams                        ;80C1D8|80C2BE   ; column offset used for the VRAM destination/wrap math (see its header)
+                    +: LDA.W #$0022                                   ;80C1D5|         ; step 4: A = same +$22 offset, passed to BuildTilemapColumn as the signed
+                       JSR.W BuildTilemapColumn                        ;80C1D8|80C2BE   ; column offset used for the VRAM destination/wrap math (see its header)
                        LDA.W #$0001                                   ;80C1DB|         ; step 5: flag bit0 = "a column DMA is ready" for VBlank_Flush_Tilemap
                        JSR.W SetPpuUpdateBits                         ;80C1DE|80C044
                        JMP.W loc_80EEB1                               ;80C1E1|80EEB1   ; step 6: tail-call into the sprite/object clip-window setup for the right edge
@@ -11800,7 +11826,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
 ;    callers: RefillTilemapOnScroll
 ;    writes:    refillColTileX
 ;    reads:     playerCamY, refillColTileX, refillRowTileY
-;    calls:     CalcVramColParams, SetPpuUpdateBits, loc_80EEA1
+;    calls:     BuildTilemapColumn, SetPpuUpdateBits, loc_80EEA1
 ; --------------------------------------------------------
 
                        ; Suggested edit (inline replacement for the old newFunc3 idea):
@@ -11828,7 +11854,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        DEY                                            ;80C1FC|
  
                     +: LDA.W #$FFFE                                   ;80C1FD|         ; step 4: A = -2, the signed column offset (this column is 2 tiles LEFT
-                       JSR.W CalcVramColParams                        ;80C200|80C2BE   ; of refillColTileX) passed into CalcVramColParams's wrap/dest math
+                       JSR.W BuildTilemapColumn                        ;80C200|80C2BE   ; of refillColTileX) passed into BuildTilemapColumn's wrap/dest math
                        LDA.W #$0001                                   ;80C203|         ; step 5: same column-DMA-ready flag as RefillColumnRight
                        JSR.W SetPpuUpdateBits                         ;80C206|80C044
                        JMP.W loc_80EEA1                               ;80C209|80EEA1   ; step 6: tail-call into the sprite/object clip-window setup for the left edge
@@ -11857,14 +11883,14 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        ORA.W #$E000                                   ;80C218|         ; ...and if it was negative, manually sign-extend the top 3 bits that
                                                                                         ; the logical LSRs left as 0 (emulates an arithmetic >>3 for negative camY)
                     +: STA.W refillRowTileY                           ;80C21B|8016C7
-                       LDA.B playerCamY                               ;80C21E|000046   ; step 2: is camY sitting exactly on a 16px metatile boundary, or mid-metatile
+                       LDA.B playerCamY                               ;80C21E|000046   ; step 2: is camY sitting exactly on the first half metatile (regular 8px tile) or the second half metatile?
                        AND.W #$0008                                   ;80C220|         ; (bit3 = the 8px sub-position within the current metatile row)?
-                       BEQ .skip                                      ;80C223|80C241   ; bit3 CLEAR (on a metatile boundary) -> the "aligned" path below (.skip)
+                       BEQ .skip                                      ;80C223|80C241   ; bit3 CLEAR -> the "first half" path below (.skip)
                                                                                         ; bit3 SET (mid-metatile, i.e. we just crossed into a new row) -> fall
                                                                                         ; through and stage the row one metatile-row AHEAD right now:
                        LDX.W refillColTileX                           ;80C225|8016C5
                        DEX                                            ;80C228|         ; X = refillColTileX-2 (left edge of the staging window, matches the
-                       DEX                                            ;80C229|         ; look-ahead margin CalcVramColParams/BuildTilemapColumn expect)
+                       DEX                                            ;80C229|         ; look-ahead margin BuildTilemapColumn/BuildTilemapColumn expect)
                        LDA.W refillRowTileY                           ;80C22A|8016C7
                        CLC                                            ;80C22D|
                        ADC.W #$001E                                   ;80C22E|         ; Y = refillRowTileY + $1E: the off-screen row just below the visible+
@@ -11876,7 +11902,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        JMP.W loc_80EED3                               ;80C23E|80EED3   ; tail-call: sprite/object clip-window setup for the bottom edge
  
  
-                .skip: LDA.B playerCamY                               ;80C241|000046   ; step 3 (aligned case): how far did camY move THIS FRAME compared to the
+                .skip: LDA.B playerCamY                               ;80C241|000046   ; step 3 (first half case): how far did camY move THIS FRAME compared to the
                        SEC                                            ;80C243|         ; last latched camera (refillLastCamY, set back in RefillTilemapOnScroll)?
                        SBC.W refillLastCamY                           ;80C244|8016AB
                        CMP.W #$0009                                   ;80C247|         ; moved less than 9px this frame -> the mid-metatile branch above already
@@ -11954,7 +11980,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
  
  
 ; --------------------------------------------------------
-;  CalcVramColParams   [53 ins, returns RTS]
+;  BuildTilemapColumn   [53 ins, returns RTS]
 ;    callers: FillTilemapFull, RefillColumnRight, RefillColumnLeft
 ;    writes:    refillTmp32, refillStageIdx, colDmaVramDest0, colDmaLen0, colDmaVramDest1, colDmaLen1
 ;    reads:     refillTmp32, refillStageIdx, refillColTileX, colDmaVramDest0, colDmaLen0, tilemapBaseHi ...
@@ -11984,7 +12010,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
 ;    wrapped run1 ($16D1,len $16D3, 0 if no seam crossing)
 ;    is computed separately as len0 = $40 - (destWord&$1F)*2,
 ;    len1 = $40 - len0.
-           CalcVramColParams: PHY                                     ;80C2BE|         ; save the caller's tile-Y (top row) and A (signed col offset) --
+           BuildTilemapColumn: PHY                                     ;80C2BE|         ; save the caller's tile-Y (top row) and A (signed col offset) --
                        PHA                                            ;80C2BF|         ; popped back on the far side of the loop below, since X/Y/A are all
                                                                                         ; about to be repurposed
                        TXA                                            ;80C2C0|         ; --- classic 6502/65816 "arithmetic shift right by 1" idiom ---
@@ -12045,7 +12071,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
  
 ; --------------------------------------------------------
 ;  FetchConvertMetatile   [83 ins, returns RTS]
-;    callers: CalcVramColParams
+;    callers: BuildTilemapColumn
 ;    writes:    refillTmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, colStageBg1Even ...
 ;    reads:     refillTmp32, refillStageIdx, refillSaveX, refillSaveY, levelTileMapPtr, tileVisualPtr ...
 ;    calls:     Mul8x16
@@ -12151,7 +12177,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        ORA.W tileAttrOr                               ;80C3A9|801997   ; order) from the metatile->graphics lookup table, OR-ing in the current
                        LDX.B refillStageIdx                           ;80C3AC|000034   ; scene's shared attribute bits (palette/priority/flip -- tileAttrOr) into
                        STA.W colStageBg1Even,X                        ;80C3AE|8016F5   ; each one, then write all 4 into this metatile's slot in the column
-                       INY                                            ;80C3B1|         ; staging buffers, ready for CalcVramColParams to DMA out to VRAM.
+                       INY                                            ;80C3B1|         ; staging buffers, ready for BuildTilemapColumn to DMA out to VRAM.
                        INY                                            ;80C3B2|
                        LDA.B [tileVisualPtr],Y                        ;80C3B3|000054
                        ORA.W tileAttrOr                               ;80C3B5|801997
@@ -12192,10 +12218,10 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
 ;  the two map lines plus the horizontal wrap seam.
            BuildTilemapRow: PHA                                       ;80C3D4|         ; save the caller's signed row-offset (A) and metatile-col (X) --
                        PHX                                            ;80C3D5|         ; popped back below once X/Y/A have been repurposed by the loop
-                       TXA                                            ;80C3D6|         ; same ASR-by-1 idiom as CalcVramColParams: X=X/2, Y=Y/2 (sign-
+                       TXA                                            ;80C3D6|         ; same ASR-by-1 idiom as BuildTilemapColumn: X=X/2, Y=Y/2 (sign-
                        ASL A                                          ;80C3D7|         ; preserving) -- converting the caller's tile-X/tile-Y into the
                        TXA                                            ;80C3D8|         ; metatile-grid coordinates levelTileMapPtr is actually indexed by
-                       ROR A                                          ;80C3D9|         ; (see CalcVramColParams's comments for the full bit-level walkthrough)
+                       ROR A                                          ;80C3D9|         ; (see BuildTilemapColumn's comments for the full bit-level walkthrough)
                        TAX                                            ;80C3DA|
                        TYA                                            ;80C3DB|
                        ASL A                                          ;80C3DC|
@@ -12214,11 +12240,11 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        CMP.W #$0050                                   ;80C3EE|   ; row loop runs 16 metatile-cols ($34: 0,4,..,4C; ends at #$0050)
                        BCC .loop                                      ;80C3F1|80C3E2   ; NOTE: 0..$4C step 4 is actually 20 iterations, not 16 -- the header
                                                                                         ; comment above (and the original disassembly note) undercounts this;
-                                                                                        ; the column loop in CalcVramColParams really is 16 (to #$0040), but
+                                                                                        ; the column loop in BuildTilemapColumn really is 16 (to #$0040), but
                                                                                         ; this row loop covers 20 metatile-columns (40 tiles) of horizontal
                                                                                         ; look-ahead/staging buffer, not 16.
                        LDX.W tilemapBaseLo                            ;80C3F3|8019EA   ; --- from here: figure out WHERE in VRAM this row lands (mirrors ---
-                       LDY.W tilemapBaseHi                            ;80C3F6|80199D   ; --- CalcVramColParams, but tracking BOTH tile-lines at once) ---
+                       LDY.W tilemapBaseHi                            ;80C3F6|80199D   ; --- BuildTilemapColumn, but tracking BOTH tile-lines at once) ---
                        PLA                                            ;80C3F9|         ; restore the signed row offset (first of the two PHA/PHX pushes)
                        AND.W #$003F                                   ;80C3FA|         ; same mod-64-then-mod-32 wrap/quadrant-select as the column version
                        CMP.W #$0020                                   ;80C3FD|
@@ -12241,7 +12267,7 @@ RefillTilemapOnScroll: LDA.W refillLastCamY                           ;80C176|80
                        AND.W #$001F                                   ;80C422|
                        ASL A                                          ;80C425|         ; *2: word index -> byte index into the column-offset LUT
                        TAY                                            ;80C426|
-                       LDA.W data_80F363,Y                            ;80C427|80F363   ; data_80F363[i] = i*$20 (same LUT CalcVramColParams uses, reused here
+                       LDA.W data_80F363,Y                            ;80C427|80F363   ; data_80F363[i] = i*$20 (same LUT BuildTilemapColumn uses, reused here
                        TAX                                            ;80C42A|         ; for the row's own column-within-map-row offset)
                        ADC.W rowDmaVramDest0                          ;80C42B|8016D5   ; fold that offset into all three destinations (dest0/1/2 all need it,
                        STA.W rowDmaVramDest0                          ;80C42E|8016D5   ; since it's the same "how far into this VRAM row" offset regardless

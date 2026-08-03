@@ -1,0 +1,35 @@
+okay. the code checks for if you crossed a tile boundry. 
+if we were to move back and forth in 00-07, nothing would be called. this means that you need the 14 tall, plus one for that wiggle, so 15.
+however, if we were to move to -1 or 8, it would dectect a boundry crossed. however, it would probably be to late to update the screen for that, so there is padding on either side. 17 total used at all times.
+HOWEVER, the cam can scroll FATER than 8px... this is a problem as we would blow past our padding and have the same problem as before. 
+This forces us to have 2 MORE for padding bringing us up to 19. 
+Then theres the problem of the skipping. if you move constantly at a speed of 8px, you would update a row every frame, and it would stay cought up. 
+but if you move faster, you blow past a prepared one, which is fine due to our extra padding, but then we would be withought the extra padding. the way the original game handles this is to do checks more frequently than its update system.
+its update system always does a metatile (16px, or 2 tiles), but it checks every 8px instead. if they didnt do that, they would be forced to load 2 rows of metatiles at the same time to catch up. 
+i could do the same by checking evey 4px. however, I think it is fine if i do a double load as my rows are only half a metatile (1 tile, 8px), meaning a double load would be the same as the game's original metatile row load.
+then theres the problem of the mirroring. the second it crosses a tile boundry, i dont need the padding on the side. 
+this means that if the main screen plus padding is tiles 0-18, i can update 0 and 19 at the same time. then 2 and 20, all the way till 13 and 32. 
+HOWEVER, the screen is NOT 13 tall, let alone the extra padding needed. but it might be fine.
+on the frame where i update 32 and 13, the bottom of the camera is in the 30 tile (between 30 and 31).
+if we do a regular sub 9px scroll from there, the bottom is hanging in 31 instead. in that time, we can do another update, getting us to 14. 
+doing another sub 9px would put it in 32, which is still fine as that is still prepared space. that pushes us to 15 in the duplicate, which is enough to move around in, but doesnt have the padding needed.
+On top of that, there is still the cases where we move more than 8px. in the case where we have done the 32 row update, the bottom of the cam is in 30.
+doing a fast scroll there would put the bottom in 32, which is fine. 
+if instead, we started with the bottom of the cam in 31, then it is possible that the bottom of the cam would dangle into 33, which isnt acceptable.
+so instead, we would snap back early. 
+when at the bottom 15, (14 for screen plus the "wiggle room" row), we can forget the top one for the snap. 18-32 are used, 18 is not important.
+0 is a mirror of 19, and so on, so 13 would be our mirror of 32, making 14 the replacement for 33. 
+on the round where we updated 32, we also updated 13. the round after (the sub 9px scroll) we update 14. therefore, we have the visble area needed for the fast scroll
+we would the do a double update like usual giving us the padding back. 
+back on the regular cource (no 9px scroll), we get 13 from 32, 14 from just after, which fills out the 15 needed, then a padding from the one after that. 
+If we were to do a fast scroll there, we would would not have enough padding...
+Gah! i feel like I have missed something, or logic'd incorrectly... 
+however, the first question can be defined and awnsered thanks the the constraints this reveals:
+There will be times when we need to do 2 rows of updates, which means we would need to do twice that many to keep the mirror caught up.
+this is the equivelant of what the original devs were tring to avoid: 4 rows of tiles (i.e. 2 rows of metatiles) updating in the same frame.
+I can trust thier judgement, they know their game better than I do an the constraints involved when working on the snes. 
+It is very possible that there is enough time to do 4 rows, but I dont think i want to push it if the original devs didnt; im already adding more cycles as it is.
+capping the screen scrolling rate is out of the question.
+So the question: Do I use double updating, or check for changes every 4px? 
+As daunting as it is, due to the reasoning above, I can conclude that the better option is to check every 4px.
+

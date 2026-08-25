@@ -1,6 +1,6 @@
 okay. the code checks for if you crossed a tile boundry. 
 if we were to move back and forth in 00-07, nothing would be called. this means that you need the 14 tall, plus one for that wiggle, so 15.
-however, if we were to move to -1 or 8, it would dectect a boundry crossed. however, it would probably be to late to update the screen for that, so there is padding on either side. 17 total used at all times.
+however, if we were to move to -1 or 8, it would dectect a boundry crossed. This would probably be too late to update the screen for that, so there is padding on either side. 17 total used at all times.
 HOWEVER, the cam can scroll FATER than 8px... this is a problem as we would blow past our padding and have the same problem as before. 
 This forces us to have 2 MORE for padding bringing us up to 19. 
 Then theres the problem of the skipping. if you move constantly at a speed of 8px, you would update a row every frame, and it would stay cought up. 
@@ -33,3 +33,13 @@ capping the screen scrolling rate is out of the question.
 So the question: Do I use double updating, or check for changes every 4px? 
 As daunting as it is, due to the reasoning above, I can conclude that the better option is to check every 4px.
 
+Uh oh! i forgot some things! the original code could do this because it checked frequently enough to allow for it to do so... in other words, the game can scroll at faster than 8 px PER CHECK span...
+this means that during the fastest scrolling sections, I have to be updating 2 tiles. If I have to update 2 tiles in one update span, I see no reason not to just use the original Metatile logic.
+Its either that, cap the scroll rate, or see if I can up the frequency of scroll checks (the checks arent done every frame, the check happens in the main game loop and the main game loop is a 3 frame cycle) 
+
+I will contimplate upping the check frequency, but first, ill explore the pain that not doing so would be. 
+If im aligning by metatiles, then main screen + main padding is 16 tiles. that is one more than the 15 from eirlier. 
+
+Just checked, there are cases when the hud is unused. this means that the playable screen is 28 tiles tall, only 4 non visible. our layout will be 14 visible, then ideally 14 for a mirror screen. that is 28, 4 padding.
+this doesnt give us duplicate padding, but it might just be doable. however, it does mean that I will be loading 2 metatile rows quite often... hopefully there will be enough cycles.
+Actually, the cycles will probably not be a problem, there is a lot of time spent spinning. The bigger concern is the additional dma time. hopefully it will be fine. 

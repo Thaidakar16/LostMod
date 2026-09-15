@@ -756,6 +756,11 @@ sub_850000             = $850000
 sub_858000             = $858000
 farsub_858002          = $858002
 
+expandSrcPtr  = $0060   ; 3 bytes: lo, hi, bank of source pointer
+expandDstPtr  = $0063   ; 3 bytes: lo, hi, bank of dest pointer
+expandColCtr  = $0066   ; 2 bytes: inner (column) loop counter
+expandRowCtr  = $0068   ; 2 bytes: outer (row) loop counter
+expandNewEnd  = $006A   ; 2 bytes: return value (new data end offset)
 
                        ORG $808000
 
@@ -5648,7 +5653,13 @@ sub_809C5C:
                 STX.B levelTileMapPtr                          ;809C70|000050
                 LDA.W ram_19F5                                 ;809C72|8019F5
                 JSR.W sub_80BCCD                               ;809C75|80BCCD
-                STX.B tileVisualPtr                            ;809C78|000054
+                ; X = first free byte after level tilemap. Before storing to tileVisualPtr,
+                ; optionally expand the tilemap in-place to add 2 left-border columns.
+                LDA.W modFlags                                 ;INSERT|
+                BIT.W #$0001                                   ;INSERT|
+                BEQ +                                          ;INSERT|
+                JSR.W ExpandLevelTilemap                       ;INSERT| ; X updated to new data end
+             +: STX.B tileVisualPtr                            ;809C78|000054
                 LDY.W #$007F                                   ;809C7A|
                 LDA.W ram_19F9                                 ;809C7D|8019F9
                 JSR.W sub_80BCCD                               ;809C80|80BCCD
@@ -5673,7 +5684,125 @@ sub_809C5C:
                 PLX                                            ;809CA4|
                 RTS                                            ;809CA5|
 
+; --------------------------------------------------------
+;  ExpandLevelTilemap   [INSERT]
+;
+;  Bottom-up backward scan: copies each row of the original level
+;  tilemap rightward by 4 bytes, then writes two $0000 border words
+;  at the left of each row. Works in-place, no scratch buffer needed.
+;
+;  IN:  X = first free byte past decompressed data (from sub_80BCCD)
+;       levelWidthMetaTiles, levelHeightMetaTiles = valid
+;  OUT: X = first free byte past the EXPANDED data
+;       levelWidthMetaTiles += 2  (levelRowStride fixed by ComputeCameraBounds)
+;  USES: expandSrcPtr($60), expandDstPtr($63), expandColCtr($66),
+;        expandRowCtr($68), expandNewEnd($6A)   [all free after decompressor]
+; --------------------------------------------------------
+ExpandLevelTilemap:
+                PHD                                            ;INSERT|
+                PEA.W $0000                                    ;INSERT|
+                PLD                                            ;INSERT|
+                REP #$30                                       ;INSERT| ; 16-bit A/X/Y
 
+                ; === Compute H*W via hardware multiply ===
+                SEP #$20                                       ;INSERT|
+                LDA.W levelHeightMetaTiles                     ;INSERT| ; H
+                STA.W WRMPYA                                   ;INSERT|
+                LDA.W levelWidthMetaTiles                      ;INSERT| ; W
+                STA.W WRMPYB                                   ;INSERT|
+                REP #$20                                       ;INSERT|
+                NOP                                            ;INSERT|
+                NOP                                            ;INSERT|
+                NOP                                            ;INSERT|
+                LDA.W RDMPYL                                   ;INSERT| ; A = H*W
+
+                ; === expandSrcPtr = $7F:(H*W*2 - 2)  [last word of original] ===
+                ASL A                                          ;INSERT| ; H*W*2
+                TAX                                            ;INSERT| ; save H*W*2 in X
+                DEC A                                          ;INSERT|
+                DEC A                                          ;INSERT| ; H*W*2 - 2
+                STA.B expandSrcPtr                             ;INSERT| ; lo/hi of src addr
+                SEP #$20                                       ;INSERT|
+                LDA.B #$7F                                     ;INSERT|
+                STA.B expandSrcPtr+2                           ;INSERT| ; bank $7F
+                REP #$20                                       ;INSERT|
+
+                ; === H*4 = extra bytes added (one 4-byte border per row) ===
+                LDA.W levelHeightMetaTiles                     ;INSERT|
+                ASL A                                          ;INSERT|
+                ASL A                                          ;INSERT| ; H*4
+                STA.B expandRowCtr                             ;INSERT| ; temp: borrow slot
+
+                ; === expandDstPtr = $7F:(H*W*2 + H*4 - 2)  [last word of expanded] ===
+                TXA                                            ;INSERT| ; H*W*2
+                CLC                                            ;INSERT|
+                ADC.B expandRowCtr                             ;INSERT| ; H*W*2 + H*4
+                STA.B expandNewEnd                             ;INSERT| ; save new data end
+                DEC A                                          ;INSERT|
+                DEC A                                          ;INSERT| ; minus 2
+                STA.B expandDstPtr                             ;INSERT|
+                SEP #$20                                       ;INSERT|
+                LDA.B #$7F                                     ;INSERT|
+                STA.B expandDstPtr+2                           ;INSERT|
+                REP #$20                                       ;INSERT|
+
+                ; === Init row counter ===
+                LDA.W levelHeightMetaTiles                     ;INSERT|
+                STA.B expandRowCtr                             ;INSERT|
+
+; --- Outer loop: one row per iteration, bottom to top ---
+.rowLoop:
+                LDA.W levelWidthMetaTiles                      ;INSERT|
+                STA.B expandColCtr                             ;INSERT|
+
+; --- Inner loop: copy W words right-to-left (dst always >= src) ---
+.colLoop:
+                LDA.B [expandSrcPtr]                          ;INSERT| ; read word from src
+                STA.B [expandDstPtr]                          ;INSERT| ; write word to dst
+
+                ; advance expandSrcPtr back by 2
+                LDA.B expandSrcPtr                             ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.W #$0002                                   ;INSERT|
+                STA.B expandSrcPtr                             ;INSERT|
+
+                ; advance expandDstPtr back by 2
+                LDA.B expandDstPtr                             ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.W #$0002                                   ;INSERT|
+                STA.B expandDstPtr                             ;INSERT|
+
+                DEC.B expandColCtr                             ;INSERT|
+                BNE .colLoop                                   ;INSERT|
+
+; --- Write 2 border words (expandDstPtr now at right border slot) ---
+                LDA.W #$0000                                   ;INSERT|
+                STA.B [expandDstPtr]                          ;INSERT| ; border col 1
+
+                LDA.B expandDstPtr                             ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.W #$0002                                   ;INSERT|
+                STA.B expandDstPtr                             ;INSERT|
+
+                LDA.W #$0000                                   ;INSERT|
+                STA.B [expandDstPtr]                          ;INSERT| ; border col 0
+
+                LDA.B expandDstPtr                             ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.W #$0002                                   ;INSERT|
+                STA.B expandDstPtr                             ;INSERT|
+
+                DEC.B expandRowCtr                             ;INSERT|
+                BNE .rowLoop                                   ;INSERT|
+
+                ; === Update level width; return new end in X ===
+                INC.W levelWidthMetaTiles                      ;INSERT|
+                INC.W levelWidthMetaTiles                      ;INSERT|
+
+                LDX.B expandNewEnd                             ;INSERT|
+
+                PLD                                            ;INSERT|
+                RTS                                            ;INSERT|
 ; --------------------------------------------------------
 ;  sub_809CA6   [32 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
@@ -11477,7 +11606,8 @@ sub_80BF04:
 loc_80BF08:
                 INC.B zp_10                                    ;80BF08|000010
                 BNE .skip                                      ;80BF0A|80BF19
-                INC.B zp_12                                    ;80BF0C|000012
+                
+                INC.B zp_12                                    ;80BF0C|000012  ; Bank Check: increment bank if we hit a bank boundry
                 LDY.B zp_12                                    ;80BF0E|000012
                 LDA.W data_80F437,Y                            ;80BF10|80F437
                 XBA                                            ;80BF13|
@@ -11486,7 +11616,8 @@ loc_80BF08:
 
          .skip: INC.B zp_18                                    ;80BF19|000018
                 BNE .skip2                                     ;80BF1B|80BF2A
-                INC.B zp_1A                                    ;80BF1D|00001A
+                
+                INC.B zp_1A                                    ;80BF1D|00001A ; Bank Check: increment bank if we hit a bank boundry
                 LDY.B zp_1A                                    ;80BF1F|00001A
                 LDA.W data_80F437,Y                            ;80BF21|80F437
                 XBA                                            ;80BF24|

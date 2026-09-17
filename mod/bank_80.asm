@@ -5474,7 +5474,15 @@ ScreenReinitHdmaOff:
                 JSR.W ppucfg_809DDA                            ;809B4E|809DDA
                 JSR.W sub_80EC42                               ;809B51|80EC42
                 JSR.W sub_80DFFC                               ;809B54|80DFFC
-                JSR.W sub_809F07                               ;809B57|809F07
+                
+                                LDA.W modFlags                                 ;INSERT|
+                BIT.W #$0001                                   ;INSERT|
+                BEQ +                                          ;INSERT|
+                LDA.W ram_19CF                                 ;INSERT| ; primary Viking spawn X (pixels)
+                CLC                                            ;INSERT|
+                ADC.W #$0020                                   ;INSERT| ; +32px = 2 metatile columns
+                STA.W ram_19CF                                 ;INSERT|
+             +: JSR.W sub_809F07                               ;809B57|809F07
                 JSR.W sub_80B2C8                               ;809B5A|80B2C8
                 JSR.W ComputeCameraBounds                      ;809B5D|809E0D
                 JSR.W ComputeCameras                           ;809B60|809E60
@@ -5684,6 +5692,38 @@ sub_809C5C:
                 PLX                                            ;809CA4|
                 RTS                                            ;809CA5|
 
+
+; --------------------------------------------------------
+;  ShiftObjectsForHud   [INSERT]
+;    Adds 32px to the X position of every active object,
+;    compensating for the 2 metatile columns added to the
+;    left of the level tilemap.
+;  Loops the full object table (stride $28, 0 to objTableEnd).
+;  Skips slots where objActive == 0.
+; --------------------------------------------------------
+ShiftObjectsForHud:
+                REP #$30                                       ;INSERT| ; 16-bit A/X
+
+                LDX.W #$0000                                   ;INSERT|
+.loop:          CPX.W objTableEnd                              ;INSERT| ; past last slot?
+                BCS .done                                      ;INSERT|
+
+                LDA.W objActive,X                              ;INSERT| ; is this slot live?
+                BEQ .skip                                      ;INSERT|
+
+                LDA.W objField_1179,X                          ;INSERT| ; object X (pixels)
+                CLC                                            ;INSERT|
+                ADC.W #$0020                                   ;INSERT| ; +32px = 2 metatiles × 16px
+                STA.W objField_1179,X                          ;INSERT|
+
+.skip:          TXA                                            ;INSERT|
+                CLC                                            ;INSERT|
+                ADC.W #$0028                                   ;INSERT| ; next object slot
+                TAX                                            ;INSERT|
+                BRA .loop                                      ;INSERT|
+
+.done:          RTS                                            ;INSERT|
+
 ; --------------------------------------------------------
 ;  ExpandLevelTilemap   [INSERT]
 ;
@@ -5775,17 +5815,17 @@ ExpandLevelTilemap:
                 DEC.B expandColCtr                             ;INSERT|
                 BNE .colLoop                                   ;INSERT|
 
-; --- Write 2 border words (expandDstPtr now at right border slot) ---
-                LDA.W #$0000                                   ;INSERT|
-                STA.B [expandDstPtr]                          ;INSERT| ; border col 1
+                ; --- Write 2 solid border words ($0400 = solid collision flag, metatile 0) ---
+                LDA.W #$0400                                   ;INSERT|
+                STA.B [expandDstPtr]                             ;INSERT| ; border col 1
 
                 LDA.B expandDstPtr                             ;INSERT|
                 SEC                                            ;INSERT|
                 SBC.W #$0002                                   ;INSERT|
                 STA.B expandDstPtr                             ;INSERT|
 
-                LDA.W #$0000                                   ;INSERT|
-                STA.B [expandDstPtr]                          ;INSERT| ; border col 0
+                LDA.W #$0400                                   ;INSERT|
+                STA.B [expandDstPtr]                             ;INSERT| ; border col 0
 
                 LDA.B expandDstPtr                             ;INSERT|
                 SEC                                            ;INSERT|

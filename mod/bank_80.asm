@@ -274,18 +274,18 @@ zp_6C                  = $006C  ; refs=58 (r30/w28) [STA:24,LDX:19,LDA:7,STX:4],
 zp_6E                  = $006E  ; refs=55 (r30/w25) [STA:21,LDY:16,LDA:9,STY:4], 16 site(s); indexed (,X/,Y) -> array/table
 scriptPC               = $0070  ; refs=148 (r139/w9) [LDA:135,STA:9,ADC:4], 33 site(s); indexed (,X/,Y) -> array/table
 zp_72                  = $0072  ; refs=5 (r2/w3) [STA:3,LDA:2], 4 site(s); indexed (,X/,Y) -> array/table
-zp_74                  = $0074  ; refs=55 (r50/w5) [LDA:24,INC:24,STA:5,ORA:2], 4 site(s); indexed (,X/,Y) -> array/table
+animPC                  = $0074  ; refs=55 (r50/w5) [LDA:24,INC:24,STA:5,ORA:2], 4 site(s); indexed (,X/,Y) -> array/table
 zp_76                  = $0076  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
-zp_78                  = $0078  ; refs=7 (r4/w3) [STA:3,LDA:3,DEC:1], 3 site(s); indexed (,X/,Y) -> array/table
-zp_7A                  = $007A  ; refs=6 (r3/w3) [STA:3,LDA:3], 3 site(s); indexed (,X/,Y) -> array/table
-zp_7C                  = $007C  ; refs=16 (r14/w2) [LDY:10,LDA:3,STA:2,LDX:1], 3 site(s); indexed (,X/,Y) -> array/table
-zp_7E                  = $007E  ; refs=8 (r6/w2) [LDX:5,STA:2,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table
-zp_80                  = $0080  ; refs=23 (r22/w1) [CPY:20,CPX:2,STA:1], 2 site(s)
+animWait                  = $0078  ; refs=7 (r4/w3) [STA:3,LDA:3,DEC:1], 3 site(s); indexed (,X/,Y) -> array/table
+animRet                  = $007A  ; refs=6 (r3/w3) [STA:3,LDA:3], 3 site(s); indexed (,X/,Y) -> array/table
+animOamFirst                  = $007C  ; refs=16 (r14/w2) [LDY:10,LDA:3,STA:2,LDX:1], 3 site(s); indexed (,X/,Y) -> array/table
+animOamFirstX4                  = $007E  ; refs=8 (r6/w2) [LDX:5,STA:2,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table
+animOamEnd                  = $0080  ; refs=23 (r22/w1) [CPY:20,CPX:2,STA:1], 2 site(s)
 zp_86                  = $0086  ; refs=5 (r4/w1) [LDA:4,STA:1], 2 site(s); indexed (,X/,Y) -> array/table
 zp_88                  = $0088  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 zp_8A                  = $008A  ; refs=18 (r12/w6) [INC:10,STA:6,LDA:2], 3 site(s); indexed (,X/,Y) -> array/table
 zp_8C                  = $008C  ; refs=1 (r0/w1) [STA:1], 1 site(s)
-zp_8E                  = $008E  ; refs=135 (r109/w26) [LDA:42,CMP:40,STA:26,ORA:9], 8 site(s)
+vmAcc                  = $008E  ; refs=135 (r109/w26) [LDA:42,CMP:40,STA:26,ORA:9], 8 site(s)
 m7HdmaSrc              = $0094  ; running source offset for the per-strip VRAM upload
 dmaSrcBankShadow       = $0096  ; refs=2 (r0/w2) [STA:2], 2 site(s)
 m7HdmaCtr              = $0098  ; refs=3 (r1/w2) [STA:2,DEC:1], 2 site(s)
@@ -357,8 +357,8 @@ vramDmaPendA           = $037C  ; refs=5 (r2/w3) [LDA:2,STZ:2,STA:1], 4 site(s);
 pendingMapFillFlag     = $037E  ; refs=5 (r2/w3) [LDA:2,STZ:2,STA:1], 4 site(s)
 objTableEnd            = $0380  ; refs=43 (r28/w15) [CPX:16,STA:12,LDA:6,CPY:2], 24 site(s)
 ram_0382               = $0382  ; refs=11 (r5/w6) [STA:5,INC:3,LDA:2,STZ:1], 8 site(s)
-ram_0384               = $0384  ; refs=6 (r4/w2) [STZ:2,LDA:1,CPY:1,LDX:1], 2 site(s)
-ram_0386               = $0386  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+earlyUpdateCount               = $0384  ; refs=6 (r4/w2) [STZ:2,LDA:1,CPY:1,LDX:1], 2 site(s)
+earlyUpdateQueue               = $0386  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_038E               = $038E  ; refs=24 (r22/w2) [LDA:11,AND:11,STZ:1,STA:1], 2 site(s)
 ram_0390               = $0390  ; refs=28 (r19/w9) [LDX:10,LDA:9,STA:7,STZ:2], 9 site(s)
 ram_0392               = $0392  ; refs=8 (r5/w3) [LDA:5,STA:2,STZ:1], 8 site(s)
@@ -511,7 +511,7 @@ ram_0CE9               = $0CE9  ; refs=2 (r1/w1) [STA:1,CMP:1], 2 site(s); index
 ram_0D29               = $0D29  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
 objScriptPtr           = $0D69  ; refs=5 (r2/w3) [STA:3,LDA:2], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 objActive              = $0D91  ; refs=26 (r22/w4) [LDA:22,STZ:2,STA:2], 22 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0DB9               = $0DB9  ; refs=4 (r1/w3) [STA:3,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objReturnPtr               = $0DB9  ; refs=4 (r1/w3) [STA:3,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_0DE1               = $0DE1  ; refs=4 (r2/w2) [SBC:2,STA:2], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_0E09               = $0E09  ; refs=9 (r7/w2) [SBC:3,ADC:3,STA:2,LDA:1], 7 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_0E31               = $0E31  ; refs=16 (r10/w6) [ORA:5,STA:5,AND:5,STZ:1], 6 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
@@ -525,10 +525,10 @@ objField_0F49          = $0F49  ; object table field array (=0F21+0x28); INFERRE
 objField_0F71          = $0F71  ; object table field array (=0F21+0x50); INFERRED, purpose TBD
 objField_0F99          = $0F99  ; object table field array (=0F21+0x78); INFERRED, purpose TBD
 objField_0FC1          = $0FC1  ; object table field array (=0F21+0xA0); INFERRED, purpose TBD
-ram_0FE9               = $0FE9  ; refs=13 (r10/w3) [LDA:10,STA:3], 8 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objHealth               = $0FE9  ; refs=13 (r10/w3) [LDA:10,STA:3], 8 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_0FEB               = $0FEB  ; refs=4 (r3/w1) [LDA:3,STA:1], 2 site(s)
 ram_0FED               = $0FED  ; refs=4 (r3/w1) [LDA:3,STA:1], 2 site(s)
-ram_1011               = $1011  ; refs=2 (r1/w1) [SBC:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objDamage               = $1011  ; refs=2 (r1/w1) [SBC:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_1039               = $1039  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_1061               = $1061  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_1089               = $1089  ; refs=8 (r4/w4) [STA:3,LDA:3,ADC:1,STZ:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
@@ -554,12 +554,12 @@ ram_1331               = $1331  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X
 ram_1359               = $1359  ; refs=2 (r0/w2) [STA:1,STZ:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_1381               = $1381  ; refs=18 (r10/w8) [STA:6,LDA:5,ADC:3,SBC:2], 9 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 objField_13A9          = $13A9  ; object table field array (stride 0x28 family); INFERRED, purpose TBD
-objField_13D1          = $13D1  ; object table field array (=13A9+0x28); INFERRED, purpose TBD
+objTarget          = $13D1  ; object table field array (=13A9+0x28); INFERRED, purpose TBD
 ram_13F9               = $13F9  ; refs=7 (r1/w6) [STA:5,ADC:1,STZ:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_1421               = $1421  ; refs=7 (r1/w6) [STA:5,ADC:1,STZ:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1449               = $1449  ; refs=6 (r1/w5) [STA:5,LDA:1], 5 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1471               = $1471  ; refs=4 (r2/w2) [STA:2,LDA:2], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1499               = $1499  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objAnimPtr               = $1449  ; refs=6 (r1/w5) [STA:5,LDA:1], 5 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objAnimWait               = $1471  ; refs=4 (r2/w2) [STA:2,LDA:2], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objAnimRet               = $1499  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_14C1               = $14C1  ; refs=16 (r15/w1) [LDA:13,STA:1,LDX:1,LDY:1], 13 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_14E9               = $14E9  ; refs=13 (r12/w1) [LDA:12,STA:1], 12 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_1511               = $1511  ; refs=10 (r9/w1) [LDA:8,ADC:1,STA:1], 10 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
@@ -1379,7 +1379,7 @@ data_8083AA:
 ;  GiveUpDialog_TriggerGate (was input_8083B6)   [28 ins, returns RTS]
 ;    callers: MainLoop_Reinit
 ;    reads:     ppuUpdateFlags, backdropColorR, backdropColorG, backdropColorB, joy1Pressed, joy2Pressed ...
-;    calls:     color_80CF31, GiveUpDialog_Run, color_80CF82
+;    calls:     color_80CF31, GiveUpDialog_Run, Op_ClearBackdrop
 ;
 ;    RECON NOTE (trace-assisted, see level_loading_recon.md): called
 ;    every frame from MainLoop_Reinit; almost always exits immediately.
@@ -1421,7 +1421,7 @@ GiveUpDialog_TriggerGate:
                 LDY.W #$0004                                   ;8083F5|
                 JSR.W color_80CF31                             ;8083F8|80CF31
                 JSR.W GiveUpDialog_Run                            ;8083FB|808402
-                JSR.W color_80CF82                             ;8083FE|80CF82
+                JSR.W Op_ClearBackdrop                             ;8083FE|80CF82
 
          .exit: RTS                                            ;808401|
 
@@ -1442,7 +1442,7 @@ GiveUpDialog_TriggerGate:
 ;    pressing Left once -- trace #2) sets ppuUpdateFlags bit1 instead,
 ;    which input_80814E picks up next frame and routes into
 ;    ScreenReinitHdmaOff with requestedSceneId=$0025 (Try Again).
-;    Note: input_80963F (loc_808454) runs UNCONDITIONALLY right after
+;    Note: Op_ClearDialog (loc_808454) runs UNCONDITIONALLY right after
 ;    confirm, before the choice is even checked -- it looks at
 ;    gameModeFlags bit0 (not the dialog choice) to pick which pair of
 ;    $8001-$8006 tokens to push into a ring buffer at $7E3280,Y (cursor
@@ -1483,7 +1483,7 @@ GiveUpDialog_Run:
 
 
          .skip: PHA                                            ;808454|
-                JSR.W input_80963F                             ;808455|80963F
+                JSR.W Op_ClearDialog                             ;808455|80963F
 
         .loop2: JSR.W SetupCgramGpDma                          ;808458|808667
                 LDA.W #$000A                                   ;80845B|
@@ -2236,7 +2236,7 @@ sub_8088E7:
 
 ; --------------------------------------------------------
 ;  sub_8088F8   [10 ins, returns RTS]
-;    callers: input_80889A, sub_8088E7, WindowWipeThenHdmaOff, hdma_808E7E, hwmath_80D130, sub_80E230
+;    callers: input_80889A, sub_8088E7, WindowWipeThenHdmaOff, hdma_808E7E, Op_SubAcc_TFld, AnimVM_Run
 ;    reads:     ram_0304
 ;    calls:     farsub_858002
 ; --------------------------------------------------------
@@ -2256,7 +2256,7 @@ sub_8088F8:
 
 ; --------------------------------------------------------
 ;  sub_80890C   [9 ins, returns RTS]
-;    callers: hwmath_80D130, sub_80E230
+;    callers: Op_SubAcc_TFld, AnimVM_Run
 ;    reads:     ram_0304
 ;    calls:     farsub_858002
 ; --------------------------------------------------------
@@ -3625,7 +3625,7 @@ sub_808FCA:
 
 ; --------------------------------------------------------
 ;  hwmath_809011   [160 ins, returns RTS]
-;    callers: color_80CF31, color_80CF82
+;    callers: color_80CF31, Op_ClearBackdrop
 ;    reads HW:  RDDIVL, RDMPYL
 ;    writes HW: WRDIVB, WRDIVL
 ;    writes:    zp_2A, zp_2C, zp_2E, zp_30, refillTmp32, refillStageIdx ...
@@ -3835,7 +3835,7 @@ DivBy3Trunc:
 
 ; --------------------------------------------------------
 ;  Mul8x8   [11 ins, returns RTS]
-;    callers: sub_80F11F
+;    callers: GetSpawnRecPtr
 ;    reads HW:  RDMPYL
 ;    writes HW: WRMPYA, WRMPYB
 ;    reads:     mulMultiplicand, mulMultiplierLo
@@ -3959,12 +3959,12 @@ Mul16x16:
 
 
 ; --------------------------------------------------------
-;  sub_8091ED   [11 ins, returns RTS]
-;    callers: color_80CF82, hwmath_80D130
+;  VM_GetRandom   [11 ins, returns RTS]
+;    callers: Op_ClearBackdrop, Op_SubAcc_TFld
 ;    writes:    ram_035A
 ;    reads:     ram_035A
 ; --------------------------------------------------------
-sub_8091ED:
+VM_GetRandom:
                 LDA.W ram_035A                                 ;8091ED|80035A
                 XBA                                            ;8091F0|
                 STA.W ram_035A                                 ;8091F1|80035A
@@ -4349,7 +4349,7 @@ sub_8093E8:
 
 ; --------------------------------------------------------
 ;  sub_809404   [14 ins, returns RTS]
-;    callers: sub_8093D9, input_80963F, sub_8096EB
+;    callers: sub_8093D9, Op_ClearDialog, sub_8096EB
 ;    writes:    zp_2E
 ; --------------------------------------------------------
 sub_809404:
@@ -4416,7 +4416,7 @@ sub_809420:
                 RTS                                            ;809459|
 
 
-loc_80945A:
+Op_ShowDialogAtObj:
                 JSR.W sub_8094FF                               ;80945A|8094FF
                 JSR.W sub_809515                               ;80945D|809515
                 JSR.W sub_809528                               ;809460|809528
@@ -4439,7 +4439,7 @@ loc_80945A:
                 RTS                                            ;80947D|
 
 
-loc_80947E:
+Op_ShowDialogAtPos:
                 JSR.W sub_8094FF                               ;80947E|8094FF
                 JSR.W sub_809515                               ;809481|809515
                 JSR.W sub_809528                               ;809484|809528
@@ -4536,13 +4536,13 @@ sub_8094BB:
 ;    callers: sub_809420, sub_8095D6
 ;    writes:    refillTmp32
 ;    reads:     scriptPC
-;    calls:     sub_80DCD7
+;    calls:     VM_GetOperandByType
 ; --------------------------------------------------------
 sub_8094FF:
                 LDA.B [scriptPC],Y                             ;8094FF|000070
                 INY                                            ;809501|
                 STA.B refillTmp32                              ;809502|000032
-                JSR.W sub_80DCD7                               ;809504|80DCD7
+                JSR.W VM_GetOperandByType                               ;809504|80DCD7
 
 ; --------------------------------------------------------
 ;  sub_809507   [7 ins, returns RTS]
@@ -4582,11 +4582,11 @@ sub_809515:
 ;    callers: sub_809420
 ;    writes:    zp_38, zp_3A
 ;    reads:     refillTmp32, refillStageIdx, zp_36
-;    calls:     sub_80DCD4
+;    calls:     VM_GetOperandByType_Shr3
 ; --------------------------------------------------------
 sub_809528:
                 LDA.B refillTmp32                              ;809528|000032
-                JSR.W sub_80DCD4                               ;80952A|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80952A|80DCD4
                 PHA                                            ;80952D|
                 CMP.W #$0005                                   ;80952E|
                 BEQ .skip                                      ;809531|809551
@@ -4645,13 +4645,13 @@ sub_809528:
 ;    callers: sub_809420
 ;    writes:    zp_6C
 ;    reads:     zp_38, zp_3A, curObjIdx, playerCamX, playerCamY, zp_6C ...
-;    calls:     sub_80DCD7
+;    calls:     VM_GetOperandByType
 ; --------------------------------------------------------
 sub_809577:
                 LDA.B [scriptPC],Y                             ;809577|000070
                 INY                                            ;809579|
                 PHA                                            ;80957A|
-                JSR.W sub_80DCD7                               ;80957B|80DCD7
+                JSR.W VM_GetOperandByType                               ;80957B|80DCD7
                 LDX.B curObjIdx                                ;80957E|000042
                 CLC                                            ;809580|
                 ADC.W objField_1179,X                          ;809581|801179
@@ -4674,7 +4674,7 @@ sub_809577:
                 LSR A                                          ;80959C|
                 LSR A                                          ;80959D|
                 LSR A                                          ;80959E|
-                JSR.W sub_80DCD7                               ;80959F|80DCD7
+                JSR.W VM_GetOperandByType                               ;80959F|80DCD7
                 LDX.B curObjIdx                                ;8095A2|000042
                 CLC                                            ;8095A4|
                 ADC.W objField_11A1,X                          ;8095A5|8011A1
@@ -4702,19 +4702,19 @@ sub_809577:
 ;    callers: sub_809420, sub_8095D6
 ;    writes:    zp_6C
 ;    reads:     zp_6C, scriptPC
-;    calls:     sub_80DCD7
+;    calls:     VM_GetOperandByType
 ; --------------------------------------------------------
 sub_8095C3:
                 LDA.B [scriptPC],Y                             ;8095C3|000070
                 INY                                            ;8095C5|
                 PHA                                            ;8095C6|
-                JSR.W sub_80DCD7                               ;8095C7|80DCD7
+                JSR.W VM_GetOperandByType                               ;8095C7|80DCD7
                 STA.B zp_6C                                    ;8095CA|00006C
                 PLA                                            ;8095CC|
                 LSR A                                          ;8095CD|
                 LSR A                                          ;8095CE|
                 LSR A                                          ;8095CF|
-                JSR.W sub_80DCD7                               ;8095D0|80DCD7
+                JSR.W VM_GetOperandByType                               ;8095D0|80DCD7
                 LDX.B zp_6C                                    ;8095D3|00006C
                 RTS                                            ;8095D5|
 
@@ -4753,7 +4753,7 @@ sub_8095D6:
                 RTS                                            ;8095FB|
 
 
-loc_8095FC:
+Op_PrintText:
                 JSR.W sub_8094FF                               ;8095FC|8094FF
                 JSR.W sub_8095C3                               ;8095FF|8095C3
                 PHY                                            ;809602|
@@ -4797,13 +4797,13 @@ sub_80961A:
 
 
 ; --------------------------------------------------------
-;  input_80963F   [75 ins, returns RTS]
+;  Op_ClearDialog   [75 ins, returns RTS]
 ;    callers: GiveUpDialog_Run
 ;    writes:    zp_2E, zp_30, refillStageIdx, ram_19B9
-;    reads:     refillStageIdx, scriptPC, zp_8E, inputAux2, ram_19B9, gameModeFlags
+;    reads:     refillStageIdx, scriptPC, vmAcc, inputAux2, ram_19B9, gameModeFlags
 ;    calls:     sub_809404
 ; --------------------------------------------------------
-input_80963F:
+Op_ClearDialog:
                 PHY                                            ;80963F|
                 LDA.W #$007E                                   ;809640|
                 STA.B zp_30                                    ;809643|000030
@@ -4831,8 +4831,8 @@ input_80963F:
                 RTS                                            ;809676|
 
 
-loc_809677:
-                LDA.B zp_8E                                    ;809677|00008E
+Op_WaitKeyPlayer:
+                LDA.B vmAcc                                    ;809677|00008E
                 CMP.W inputAux2                                ;809679|8003DA
                 BEQ +                                          ;80967C|809683
                 LDA.W #$8009                                   ;80967E|
@@ -4843,7 +4843,7 @@ loc_809677:
                 BRA loc_80968B                                 ;809686|80968B
 
 
-loc_809688:
+Op_WaitKey:
                 LDA.W #$8000                                   ;809688|
 
 loc_80968B:
@@ -4859,7 +4859,7 @@ loc_80968B:
                 RTS                                            ;8096A0|
 
 
-loc_8096A1:
+Op_DialogCmd06:
                 LDA.B [scriptPC],Y                             ;8096A1|000070
                 INY                                            ;8096A3|
                 AND.W #$00FF                                   ;8096A4|
@@ -4879,7 +4879,7 @@ loc_8096A1:
                 RTS                                            ;8096C6|
 
 
-loc_8096C7:
+Op_SetDialogColor:
                 LDA.B [scriptPC],Y                             ;8096C7|000070
                 INY                                            ;8096C9|
                 INY                                            ;8096CA|
@@ -4904,7 +4904,7 @@ loc_8096C7:
 ;    callers: input_80814E, input_8081DE, StreamTilemap
 ;    writes:    zp_2E, zp_30, refillStageIdx, zp_6C, zp_6E, ram_19B7 ...
 ;    reads:     refillStageIdx, zp_6C, zp_6E, scriptPC, ram_19B7, ram_19B9
-;    calls:     sub_80DCD7, sub_809404, sub_8093D9, sub_8093E8
+;    calls:     VM_GetOperandByType, sub_809404, sub_8093D9, sub_8093E8
 ; --------------------------------------------------------
 sub_8096EB:
                 PHA                                            ;8096EB|
@@ -4919,21 +4919,21 @@ sub_8096EB:
                 RTS                                            ;8096FC|
 
 
-loc_8096FD:
+Op_TextPutChar:
                 LDA.B [scriptPC],Y                             ;8096FD|000070
                 INY                                            ;8096FF|
                 PHA                                            ;809700|
-                JSR.W sub_80DCD7                               ;809701|80DCD7
+                JSR.W VM_GetOperandByType                               ;809701|80DCD7
                 STA.B refillStageIdx                           ;809704|000034
                 PLA                                            ;809706|
                 LSR A                                          ;809707|
                 LSR A                                          ;809708|
                 LSR A                                          ;809709|
-                JSR.W sub_80DCD7                               ;80970A|80DCD7
+                JSR.W VM_GetOperandByType                               ;80970A|80DCD7
                 STA.B zp_6C                                    ;80970D|00006C
                 LDA.B [scriptPC],Y                             ;80970F|000070
                 INY                                            ;809711|
-                JSR.W sub_80DCD7                               ;809712|80DCD7
+                JSR.W VM_GetOperandByType                               ;809712|80DCD7
                 STA.B zp_6E                                    ;809715|00006E
                 PHY                                            ;809717|
                 LDA.W #$007E                                   ;809718|
@@ -4959,7 +4959,7 @@ loc_8096FD:
 ;    writes:    zp_2A, zp_2C, zp_68, zp_6A, zp_9C
 ; --------------------------------------------------------
 BuildMode7MatrixTables:
-                LDA.W #(loc_80CFE8+2)              ;80973C|
+                LDA.W #(Op_LoadAcc_Imm+2)              ;80973C|
                 STA.B zp_2A                                    ;80973F|00002A
                 LDX.W #$0001                                   ;809741|
                 STX.B zp_2C                                    ;809744|00002C
@@ -5319,7 +5319,7 @@ sub_8099A1:
          .exit: RTS                                            ;8099C3|
 
 
-loc_8099C4:
+Op_CheckPassword:
                 LDX.W #$0000                                   ;8099C4|
 
          .loop: LDA.W data_809A38,X                            ;8099C7|809A38
@@ -5358,7 +5358,7 @@ loc_8099C4:
                 RTS                                            ;809A0C|
 
 
-loc_809A0D:
+Op_LoadLevelPassword:
                 LDA.W ram_19C1                                 ;809A0D|8019C1
                 ASL A                                          ;809A10|
                 ASL A                                          ;809A11|
@@ -6261,7 +6261,7 @@ ppucfg_809EE2:
 ;    callers: ScreenReinitHdmaOff
 ;    writes:    curObjIdx, zp_6C, zp_6E, ram_033E, ram_0382
 ;    reads:     ram_19CE, ram_19CF, ram_19D1, ram_19D3, ram_19D5, ram_19D7
-;    calls:     sub_80EC56, sub_80A015, loc_809F71, sub_809FF3
+;    calls:     SpawnObject, sub_80A015, loc_809F71, sub_809FF3
 ; --------------------------------------------------------
 sub_809F07:
                 STZ.W ram_033E                                 ;809F07|80033E
@@ -6289,7 +6289,7 @@ sub_809F07:
                 LDY.W #$FFFF                                   ;809F3C|
                 STY.B curObjIdx                                ;809F3F|000042
                 LDA.W ram_19D3                                 ;809F41|8019D3
-                JSR.W sub_80EC56                               ;809F44|80EC56
+                JSR.W SpawnObject                               ;809F44|80EC56
                 LDA.W #$0002                                   ;809F47|
                 STA.W ram_033E                                 ;809F4A|80033E
                 RTS                                            ;809F4D|
@@ -6320,7 +6320,7 @@ sub_809F07:
 ;    callers: sub_809F07
 ;    writes:    curObjIdx, zp_6C, zp_6E, ram_0382
 ;    reads:     ram_19CF, ram_19D1, ram_19D5, ram_19D7
-;    calls:     sub_80EC56
+;    calls:     SpawnObject
 ; --------------------------------------------------------
 loc_809F71:
                 PEA.W $0000                                    ;809F71|
@@ -6337,7 +6337,7 @@ loc_809F77:
                 LDY.W #$FFFF                                   ;809F8A|
                 STY.B curObjIdx                                ;809F8D|000042
                 LDA.W #$0001                                   ;809F8F|
-                JSR.W sub_80EC56                               ;809F92|80EC56
+                JSR.W SpawnObject                               ;809F92|80EC56
                 LDA.W ram_19D5                                 ;809F95|8019D5
                 BIT.W #$0040                                   ;809F98|
                 BNE .skip                                      ;809F9B|809FA6
@@ -6360,7 +6360,7 @@ loc_809F77:
                 LDY.W #$FFFF                                   ;809FB9|
                 STY.B curObjIdx                                ;809FBC|000042
                 LDA.W #$0000                                   ;809FBE|
-                JSR.W sub_80EC56                               ;809FC1|80EC56
+                JSR.W SpawnObject                               ;809FC1|80EC56
                 LDA.W ram_19D5                                 ;809FC4|8019D5
                 BIT.W #$0040                                   ;809FC7|
                 BNE .skip2                                     ;809FCA|809FD5
@@ -6383,17 +6383,17 @@ loc_809F77:
                 LDY.W #$FFFF                                   ;809FE8|
                 STY.B curObjIdx                                ;809FEB|000042
                 LDA.W #$0002                                   ;809FED|
-                JSR.W sub_80EC56                               ;809FF0|80EC56
+                JSR.W SpawnObject                               ;809FF0|80EC56
 
 ; --------------------------------------------------------
 ;  sub_809FF3   [12 ins, returns RTS]
 ;    callers: sub_809F07
-;    writes:    ram_033E, ram_03DC, ram_03DE, ram_0FE9, ram_0FEB, ram_0FED
+;    writes:    ram_033E, ram_03DC, ram_03DE, objHealth, ram_0FEB, ram_0FED
 ;    reads:     ram_0441, ram_0443, ram_0445
 ; --------------------------------------------------------
 sub_809FF3:
                 LDA.W ram_0441                                 ;809FF3|800441
-                STA.W ram_0FE9                                 ;809FF6|800FE9
+                STA.W objHealth                                 ;809FF6|800FE9
                 LDA.W ram_0443                                 ;809FF9|800443
                 STA.W ram_0FEB                                 ;809FFC|800FEB
                 LDA.W ram_0445                                 ;809FFF|800445
@@ -6411,7 +6411,7 @@ sub_809FF3:
 ;    callers: sub_809F07
 ;    writes:    curObjIdx, zp_6C, zp_6E
 ;    reads:     zp_00, zp_02, zp_04, zp_06, zp_08, zp_0A ...
-;    calls:     sub_80EC56
+;    calls:     SpawnObject
 ; --------------------------------------------------------
 
 sub_80A015:
@@ -6426,7 +6426,7 @@ sub_80A015:
                 LDY.W #$FFFF                                   ;80A027|
                 STY.B curObjIdx                                ;80A02A|000042
                 LDA.W #$0001                                   ;80A02C|
-                JSR.W sub_80EC56                               ;80A02F|80EC56
+                JSR.W SpawnObject                               ;80A02F|80EC56
                 PLY                                            ;80A032|
                 PHY                                            ;80A033|
                 LDA.W zp_06,Y                                  ;80A034|800006
@@ -6439,7 +6439,7 @@ sub_80A015:
                 LDY.W #$FFFF                                   ;80A045|
                 STY.B curObjIdx                                ;80A048|000042
                 LDA.W #$0000                                   ;80A04A|
-                JSR.W sub_80EC56                               ;80A04D|80EC56
+                JSR.W SpawnObject                               ;80A04D|80EC56
                 PLY                                            ;80A050|
                 LDA.W zp_0C,Y                                  ;80A051|80000C
                 STA.B zp_6C                                    ;80A054|00006C
@@ -6451,7 +6451,7 @@ sub_80A015:
                 LDY.W #$FFFF                                   ;80A062|
                 STY.B curObjIdx                                ;80A065|000042
                 LDA.W #$0002                                   ;80A067|
-                JMP.W sub_80EC56                               ;80A06A|80EC56
+                JMP.W SpawnObject                               ;80A06A|80EC56
 
                      ; this table is actually 3 tables back to back
 ScreenModeSetupTable:
@@ -6778,7 +6778,7 @@ input_80A28E:
 
 ; --------------------------------------------------------
 ;  sub_80A2C7   [83 ins, returns RTS]
-;    callers: hwmath_80D130
+;    callers: Op_SubAcc_TFld
 ;    writes:    refillTmp32, zp_6C, zp_6E, vramWordWriteCount, ram_0471, ram_0473 ...
 ;    reads:     refillTmp32, tileVisualPtr, zp_6C, zp_6E, vramWordWriteCount, ram_04F1 ...
 ;    calls:     sub_80A368
@@ -6939,7 +6939,7 @@ sub_80A38C:
 
 ; --------------------------------------------------------
 ;  sub_80A3A0   [6 ins, returns RTS]
-;    callers: sub_80A38C, hwmath_80D130
+;    callers: sub_80A38C, Op_SubAcc_TFld
 ;    calls:     sub_80A3B1
 ; --------------------------------------------------------
 sub_80A3A0:
@@ -6953,7 +6953,7 @@ sub_80A3A0:
 
 ; --------------------------------------------------------
 ;  sub_80A3AA   [3 ins, returns RTS]
-;    callers: hwmath_80D130
+;    callers: Op_SubAcc_TFld
 ;    calls:     sub_80A3B1
 ; --------------------------------------------------------
 sub_80A3AA:
@@ -6964,7 +6964,7 @@ sub_80A3AA:
 
 ; --------------------------------------------------------
 ;  sub_80A3B1   [19 ins, returns RTS]
-;    callers: sub_80A3A0, sub_80A3AA, hwmath_80D130
+;    callers: sub_80A3A0, sub_80A3AA, Op_SubAcc_TFld
 ;    writes:    refillTmp32, mulMultiplicand, mulMultiplierLo
 ;    reads:     levelTileMapPtr, mulResult, levelRowStride, levelWidthMetaTiles, levelHeightMetaTiles
 ;    calls:     Mul8x16
@@ -6997,7 +6997,7 @@ sub_80A3B1:
 
 ; --------------------------------------------------------
 ;  sub_80A3D7   [25 ins, returns RTS]
-;    callers: hwmath_80D130
+;    callers: Op_SubAcc_TFld
 ;    writes:    refillTmp32, levelTileMapPtr, mulMultiplicand, mulMultiplierLo
 ;    reads:     refillTmp32, mulResult, levelRowStride
 ;    calls:     Mul8x16, sub_80A402
@@ -7140,7 +7140,7 @@ sub_80A471:
 ;    callers: sub_80A449
 ;    writes:    curObjIdx, scriptPC, zp_72, objTableEnd, ram_0390
 ;    reads:     curObjIdx, scriptPC, objTableEnd, ram_0390, objScriptPtr, objActive
-;    calls:     ptrtbl_80DD85, sub_80A4D6, loc_80CD65
+;    calls:     ObjVM_OpTable, TouchType_Check, Op_Call
 ; --------------------------------------------------------
 RunOneObjectScript:
                 LDA.W objActive,X                      ;80A479|800D91
@@ -7159,7 +7159,7 @@ RunOneObjectScript:
                 BEQ .skip                                      ;80A496|80A49F
                 ASL A                                          ;80A498|
                 TAX                                            ;80A499|
-                JSR.W (ptrtbl_80DD85,X)                        ;80A49A|80DD85
+                JSR.W (ObjVM_OpTable,X)                        ;80A49A|80DD85
                 BRA .loop                                      ;80A49D|80A48D
 
 
@@ -7169,12 +7169,12 @@ loc_80A4A1:
                 RTS                                            ;80A4A1|
 
 
-loc_80A4A2:
+Op_CallIfPlayerTouchType:
                 LDA.W objTableEnd                              ;80A4A2|800380
                 PHA                                            ;80A4A5|
                 LDA.W #$0006                                   ;80A4A6|
                 STA.W objTableEnd                              ;80A4A9|800380
-                JSR.W sub_80A4D6                               ;80A4AC|80A4D6
+                JSR.W TouchType_Check                               ;80A4AC|80A4D6
                 PLA                                            ;80A4AF|
                 STA.W objTableEnd                              ;80A4B0|800380
                 LDA.W ram_0390                                 ;80A4B3|800390
@@ -7182,7 +7182,7 @@ loc_80A4A2:
                 INC A                                          ;80A4B7|
                 STA.W ram_0390                                 ;80A4B8|800390
                 BCC +                                          ;80A4BB|80A4C0
-                JMP.W loc_80CD65                               ;80A4BD|80CD65
+                JMP.W Op_Call                               ;80A4BD|80CD65
 
 
              +: INY                                            ;80A4C0|
@@ -7190,14 +7190,14 @@ loc_80A4A2:
                 RTS                                            ;80A4C2|
 
 
-loc_80A4C3:
-                JSR.W sub_80A4D6                               ;80A4C3|80A4D6
+Op_CallIfTouchType:
+                JSR.W TouchType_Check                               ;80A4C3|80A4D6
                 LDA.W ram_0390                                 ;80A4C6|800390
                 INC A                                          ;80A4C9|
                 INC A                                          ;80A4CA|
                 STA.W ram_0390                                 ;80A4CB|800390
                 BCC +                                          ;80A4CE|80A4D3
-                JMP.W loc_80CD65                               ;80A4D0|80CD65
+                JMP.W Op_Call                               ;80A4D0|80CD65
 
 
              +: INY                                            ;80A4D3|
@@ -7206,13 +7206,13 @@ loc_80A4C3:
 
 
 ; --------------------------------------------------------
-;  sub_80A4D6   [95 ins, returns RTS]
+;  TouchType_Check   [95 ins, returns RTS]
 ;    callers: RunOneObjectScript
 ;    writes:    refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, objTableEnd ...
 ;    reads:     refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx ...
-;    calls:     sub_80B012, sub_80B02B, sub_80A598, loc_80CD65
+;    calls:     sub_80B012, sub_80B02B, TouchMask_Check, Op_Call
 ; --------------------------------------------------------
-sub_80A4D6:
+TouchType_Check:
                 LDA.W ram_0392                                 ;80A4D6|800392
                 BEQ .skip3                                     ;80A4D9|80A54C
                 BPL .skip2                                     ;80A4DB|80A549
@@ -7286,18 +7286,18 @@ sub_80A4D6:
                 AND.W ram_0E31,Y                               ;80A556|800E31
                 BEQ .loop2                                     ;80A559|80A546
                 JSR.W sub_80B02B                               ;80A55B|80B02B
-                STA.W objField_13D1,Y                          ;80A55E|8013D1
+                STA.W objTarget,Y                          ;80A55E|8013D1
                 PLY                                            ;80A561|
                 SEC                                            ;80A562|
                 RTS                                            ;80A563|
 
 
-loc_80A564:
+Op_CallIfPlayerHitMask:
                 LDA.W objTableEnd                              ;80A564|800380
                 PHA                                            ;80A567|
                 LDA.W #$0006                                   ;80A568|
                 STA.W objTableEnd                              ;80A56B|800380
-                JSR.W sub_80A598                               ;80A56E|80A598
+                JSR.W TouchMask_Check                               ;80A56E|80A598
                 PLA                                            ;80A571|
                 STA.W objTableEnd                              ;80A572|800380
                 LDA.W ram_0390                                 ;80A575|800390
@@ -7305,7 +7305,7 @@ loc_80A564:
                 INC A                                          ;80A579|
                 STA.W ram_0390                                 ;80A57A|800390
                 BCC +                                          ;80A57D|80A582
-                JMP.W loc_80CD65                               ;80A57F|80CD65
+                JMP.W Op_Call                               ;80A57F|80CD65
 
 
              +: INY                                            ;80A582|
@@ -7313,14 +7313,14 @@ loc_80A564:
                 RTS                                            ;80A584|
 
 
-loc_80A585:
-                JSR.W sub_80A598                               ;80A585|80A598
+Op_CallIfTouchMask:
+                JSR.W TouchMask_Check                               ;80A585|80A598
                 LDA.W ram_0390                                 ;80A588|800390
                 INC A                                          ;80A58B|
                 INC A                                          ;80A58C|
                 STA.W ram_0390                                 ;80A58D|800390
                 BCC +                                          ;80A590|80A595
-                JMP.W loc_80CD65                               ;80A592|80CD65
+                JMP.W Op_Call                               ;80A592|80CD65
 
 
              +: INY                                            ;80A595|
@@ -7329,13 +7329,13 @@ loc_80A585:
 
 
 ; --------------------------------------------------------
-;  sub_80A598   [81 ins, returns RTS]
-;    callers: sub_80A4D6
+;  TouchMask_Check   [81 ins, returns RTS]
+;    callers: TouchType_Check
 ;    writes:    refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, ram_0390 ...
 ;    reads:     refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx ...
-;    calls:     sub_80B012, sub_80B02B, sub_80A639, loc_80CD65
+;    calls:     sub_80B012, sub_80B02B, CollideX_Resolve, Op_Call
 ; --------------------------------------------------------
-sub_80A598:
+TouchMask_Check:
                 LDA.W ram_0392                                 ;80A598|800392
                 BEQ .skip3                                     ;80A59B|80A60D
                 BPL .skip2                                     ;80A59D|80A609
@@ -7411,20 +7411,20 @@ sub_80A598:
                 AND.W ram_0E31,Y                               ;80A618|800E31
                 BEQ .loop2                                     ;80A61B|80A606
                 JSR.W sub_80B02B                               ;80A61D|80B02B
-                STA.W objField_13D1,Y                          ;80A620|8013D1
+                STA.W objTarget,Y                          ;80A620|8013D1
                 PLY                                            ;80A623|
                 SEC                                            ;80A624|
                 RTS                                            ;80A625|
 
 
-loc_80A626:
-                JSR.W sub_80A639                               ;80A626|80A639
+Op_CallIfCollideX:
+                JSR.W CollideX_Resolve                               ;80A626|80A639
                 LDA.W ram_0390                                 ;80A629|800390
                 INC A                                          ;80A62C|
                 INC A                                          ;80A62D|
                 STA.W ram_0390                                 ;80A62E|800390
                 BCC +                                          ;80A631|80A636
-                JMP.W loc_80CD65                               ;80A633|80CD65
+                JMP.W Op_Call                               ;80A633|80CD65
 
 
              +: INY                                            ;80A636|
@@ -7433,13 +7433,13 @@ loc_80A626:
 
 
 ; --------------------------------------------------------
-;  sub_80A639   [46 ins, returns RTS]
-;    callers: sub_80A598
+;  CollideX_Resolve   [46 ins, returns RTS]
+;    callers: TouchMask_Check
 ;    writes:    ram_0390, ram_0E31
 ;    reads:     curObjIdx, scriptPC, ram_0390, ram_0392, ram_0E31
-;    calls:     sub_80A78E, sub_80A7C4, FindObjectOverlapX, sub_80ABB8, sub_80A693, loc_80CD65
+;    calls:     sub_80A78E, sub_80A7C4, FindObjectOverlapX, sub_80ABB8, CollideY_Resolve, Op_Call
 ; --------------------------------------------------------
-sub_80A639:
+CollideX_Resolve:
                 LDA.W ram_0392                                 ;80A639|800392
                 BEQ .skip2                                     ;80A63C|80A66E
                 BMI .skip                                      ;80A63E|80A66B
@@ -7486,14 +7486,14 @@ sub_80A639:
                 RTS                                            ;80A67F|
 
 
-loc_80A680:
-                JSR.W sub_80A693                               ;80A680|80A693
+Op_CallIfCollideY:
+                JSR.W CollideY_Resolve                               ;80A680|80A693
                 LDA.W ram_0390                                 ;80A683|800390
                 INC A                                          ;80A686|
                 INC A                                          ;80A687|
                 STA.W ram_0390                                 ;80A688|800390
                 BCC +                                          ;80A68B|80A690
-                JMP.W loc_80CD65                               ;80A68D|80CD65
+                JMP.W Op_Call                               ;80A68D|80CD65
 
 
              +: INY                                            ;80A690|
@@ -7502,13 +7502,13 @@ loc_80A680:
 
 
 ; --------------------------------------------------------
-;  sub_80A693   [46 ins, returns RTS]
-;    callers: sub_80A639
+;  CollideY_Resolve   [46 ins, returns RTS]
+;    callers: CollideX_Resolve
 ;    writes:    ram_0390, ram_0E31
 ;    reads:     curObjIdx, scriptPC, ram_0390, ram_0392, ram_0E31
-;    calls:     sub_80A7A9, sub_80A823, FindObjectOverlapX2, sub_80AC15, sub_80A6ED, loc_80CD65
+;    calls:     sub_80A7A9, sub_80A823, FindObjectOverlapX2, sub_80AC15, CollideY_Slope_Resolve, Op_Call
 ; --------------------------------------------------------
-sub_80A693:
+CollideY_Resolve:
                 LDA.W ram_0392                                 ;80A693|800392
                 BEQ .skip2                                     ;80A696|80A6C8
                 BMI .skip                                      ;80A698|80A6C5
@@ -7555,14 +7555,14 @@ sub_80A693:
                 RTS                                            ;80A6D9|
 
 
-loc_80A6DA:
-                JSR.W sub_80A6ED                               ;80A6DA|80A6ED
+Op_CallIfCollideY_Slope:
+                JSR.W CollideY_Slope_Resolve                               ;80A6DA|80A6ED
                 LDA.W ram_0390                                 ;80A6DD|800390
                 INC A                                          ;80A6E0|
                 INC A                                          ;80A6E1|
                 STA.W ram_0390                                 ;80A6E2|800390
                 BCC +                                          ;80A6E5|80A6EA
-                JMP.W loc_80CD65                               ;80A6E7|80CD65
+                JMP.W Op_Call                               ;80A6E7|80CD65
 
 
              +: INY                                            ;80A6EA|
@@ -7571,13 +7571,13 @@ loc_80A6DA:
 
 
 ; --------------------------------------------------------
-;  sub_80A6ED   [36 ins, returns RTS]
-;    callers: sub_80A693
+;  CollideY_Slope_Resolve   [36 ins, returns RTS]
+;    callers: CollideY_Resolve
 ;    writes:    ram_0E31
 ;    reads:     curObjIdx, scriptPC, ram_0390, ram_0392, ram_0E31
 ;    calls:     sub_80A9B2, sub_80A823, sub_80AF5A, sub_80AC15
 ; --------------------------------------------------------
-sub_80A6ED:
+CollideY_Slope_Resolve:
                 LDA.W ram_0392                                 ;80A6ED|800392
                 BEQ .skip2                                     ;80A6F0|80A722
                 BMI .skip                                      ;80A6F2|80A71F
@@ -7626,7 +7626,7 @@ sub_80A6ED:
 
 ; --------------------------------------------------------
 ;  sub_80A734   [6 ins, returns RTS]
-;    callers: hwmath_80D130
+;    callers: Op_SubAcc_TFld
 ;    writes:    ram_03BE
 ;    calls:     sub_80A9A3, sub_80AEF5
 ; --------------------------------------------------------
@@ -7642,7 +7642,7 @@ sub_80A734:
 
 ; --------------------------------------------------------
 ;  sub_80A743   [6 ins, returns RTS]
-;    callers: sub_80CD70
+;    callers: Op_Goto
 ;    writes:    ram_03BE
 ;    calls:     sub_80A894, sub_80AC72
 ; --------------------------------------------------------
@@ -7658,7 +7658,7 @@ sub_80A743:
 
 ; --------------------------------------------------------
 ;  sub_80A752   [6 ins, returns RTS]
-;    callers: sub_80CD70
+;    callers: Op_Goto
 ;    writes:    ram_03BE
 ;    calls:     sub_80A8A7, sub_80AC7C
 ; --------------------------------------------------------
@@ -7674,7 +7674,7 @@ sub_80A752:
 
 ; --------------------------------------------------------
 ;  sub_80A761   [6 ins, returns RTS]
-;    callers: sub_80CD70
+;    callers: Op_Goto
 ;    writes:    ram_03BE
 ;    calls:     sub_80A91D, FindObjectAtEdgeX
 ; --------------------------------------------------------
@@ -7690,7 +7690,7 @@ sub_80A761:
 
 ; --------------------------------------------------------
 ;  sub_80A770   [6 ins, returns RTS]
-;    callers: sub_80CD70
+;    callers: Op_Goto
 ;    writes:    ram_03BE
 ;    calls:     sub_80A930, FindObjectAtEdgeX_RightEntry
 ; --------------------------------------------------------
@@ -7706,7 +7706,7 @@ sub_80A770:
 
 ; --------------------------------------------------------
 ;  sub_80A77F   [6 ins, returns RTS]
-;    callers: sub_80CD70
+;    callers: Op_Goto
 ;    writes:    ram_03BE
 ;    calls:     sub_80A982, FindObjectAtEdgeY
 ; --------------------------------------------------------
@@ -7722,7 +7722,7 @@ sub_80A77F:
 
 ; --------------------------------------------------------
 ;  sub_80A78E   [13 ins, returns RTS]
-;    callers: sub_80A639
+;    callers: CollideX_Resolve
 ;    reads:     ram_0DE1, objField_1179
 ;    calls:     sub_80A89E, sub_80A8B1
 ; --------------------------------------------------------
@@ -7748,7 +7748,7 @@ sub_80A78E:
 
 ; --------------------------------------------------------
 ;  sub_80A7A9   [13 ins, returns RTS]
-;    callers: sub_80A693
+;    callers: CollideY_Resolve
 ;    reads:     ram_0E09, objField_11A1
 ;    calls:     sub_80A927, sub_80A93A
 ; --------------------------------------------------------
@@ -7774,7 +7774,7 @@ sub_80A7A9:
 
 ; --------------------------------------------------------
 ;  sub_80A7C4   [42 ins, returns RTS]
-;    callers: sub_80A639
+;    callers: CollideX_Resolve
 ;    writes:    refillTmp32, objField_0F71, objField_0F99, objField_1179, ram_13F9
 ;    reads:     refillTmp32, objField_0F71, objField_0F99, objField_1179
 ; --------------------------------------------------------
@@ -7827,7 +7827,7 @@ sub_80A7C4:
 
 ; --------------------------------------------------------
 ;  sub_80A823   [50 ins, returns RTS]
-;    callers: sub_80A693, sub_80A6ED
+;    callers: CollideY_Resolve, CollideY_Slope_Resolve
 ;    writes:    refillTmp32, objField_0F21, objField_0F49, objField_11A1, ram_1421
 ;    reads:     refillTmp32, objField_0F21, objField_0F49, objField_11A1
 ; --------------------------------------------------------
@@ -8177,7 +8177,7 @@ sub_80A9A3:
 
 ; --------------------------------------------------------
 ;  sub_80A9B2   [5 ins, returns ?]
-;    callers: sub_80A6ED
+;    callers: CollideY_Slope_Resolve
 ;    reads:     ram_0E09, objField_11A1
 ; --------------------------------------------------------
 sub_80A9B2:
@@ -8336,7 +8336,7 @@ loc_80A9BF:
 
 ; --------------------------------------------------------
 ;  FindObjectOverlapX   [38 ins, returns RTS]
-;    callers: sub_80A639
+;    callers: CollideX_Resolve
 ;    writes:    zp_38, zp_3A
 ;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objActive, ram_1219 ...
 ;    calls:     sub_80AB50, sub_80AB55
@@ -8407,7 +8407,7 @@ FindObjectOverlapX:
 
 ; --------------------------------------------------------
 ;  FindObjectOverlapX2   [38 ins, returns RTS]
-;    callers: sub_80A693
+;    callers: CollideY_Resolve
 ;    writes:    zp_38, zp_3A
 ;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objActive, ram_1219 ...
 ;    calls:     sub_80AB8F, sub_80AB94
@@ -8555,7 +8555,7 @@ loc_80AB97:
 
 ; --------------------------------------------------------
 ;  sub_80ABB8   [42 ins, returns RTS]
-;    callers: sub_80A639
+;    callers: CollideX_Resolve
 ;    writes:    refillTmp32, objField_0F71, objField_0F99, objField_1179, ram_13F9
 ;    reads:     refillTmp32, objField_0F71, objField_0F99, objField_1179
 ; --------------------------------------------------------
@@ -8608,7 +8608,7 @@ sub_80ABB8:
 
 ; --------------------------------------------------------
 ;  sub_80AC15   [42 ins, returns RTS]
-;    callers: sub_80A693, sub_80A6ED
+;    callers: CollideY_Resolve, CollideY_Slope_Resolve
 ;    writes:    refillTmp32, objField_0F21, objField_0F49, objField_11A1, ram_1421
 ;    reads:     refillTmp32, objField_0F21, objField_0F49, objField_11A1
 ; --------------------------------------------------------
@@ -8661,7 +8661,7 @@ sub_80AC15:
 
 ; --------------------------------------------------------
 ;  sub_80AC72   [6 ins, returns ?]
-;    callers: sub_80A743, hwmath_80D130
+;    callers: sub_80A743, Op_SubAcc_TFld
 ;    writes:    refillStageIdx
 ;    reads:     objField_0F71
 ; --------------------------------------------------------
@@ -8676,7 +8676,7 @@ sub_80AC72:
 
 ; --------------------------------------------------------
 ;  sub_80AC7C   [193 ins, returns RTS]
-;    callers: sub_80A752, hwmath_80D130
+;    callers: sub_80A752, Op_SubAcc_TFld
 ;    writes:    refillStageIdx, zp_36, zp_3A, scriptPC, ram_03B4, ram_03B6 ...
 ;    reads:     refillStageIdx, zp_36, zp_3A, curObjIdx, scriptPC, objTableEnd ...
 ; --------------------------------------------------------
@@ -8750,7 +8750,7 @@ loc_80AC84:
                 RTS                                            ;80ACEC|
 
 
-loc_80ACED:
+Op_ScanObjBelow_SetTarget:
                 LDX.B curObjIdx                                ;80ACED|000042
                 LDA.W objField_0F49,X                          ;80ACEF|800F49
                 INC A                                          ;80ACF2|
@@ -8758,14 +8758,14 @@ loc_80ACED:
                 BRA loc_80AD08                                 ;80ACF6|80AD08
 
 
-loc_80ACF8:
+Op_ScanNextObjAbove:
                 DEY                                            ;80ACF8|
                 PHY                                            ;80ACF9|
                 LDX.W ram_03BA                                 ;80ACFA|8003BA
                 BRA loc_80AD70                                 ;80ACFD|80AD70
 
 
-loc_80ACFF:
+Op_ScanObjAbove_SetTarget:
                 LDX.B curObjIdx                                ;80ACFF|000042
                 LDA.W objField_0F21,X                          ;80AD01|800F21
                 DEC A                                          ;80AD04|
@@ -8815,11 +8815,11 @@ loc_80AD1C:
                 BCC loc_80AD70                                 ;80AD57|80AD70
                 TXA                                            ;80AD59|
                 STA.W ram_03BA                                 ;80AD5A|8003BA
-                STA.W objField_13D1,Y                          ;80AD5D|8013D1
+                STA.W objTarget,Y                          ;80AD5D|8013D1
                 PLA                                            ;80AD60|
                 CLC                                            ;80AD61|
                 ADC.B scriptPC                                 ;80AD62|000070
-                STA.W ram_0DB9,Y                               ;80AD64|800DB9
+                STA.W objReturnPtr,Y                               ;80AD64|800DB9
                 LDA.W ram_03B6                                 ;80AD67|8003B6
                 STA.B scriptPC                                 ;80AD6A|000070
                 LDY.W #$0000                                   ;80AD6C|
@@ -8837,7 +8837,7 @@ loc_80AD70:
                 RTS                                            ;80AD7B|
 
 
-loc_80AD7C:
+Op_ScanPlayerBelow_SetTarget:
                 LDX.B curObjIdx                                ;80AD7C|000042
                 LDA.W objField_0F49,X                          ;80AD7E|800F49
                 INC A                                          ;80AD81|
@@ -8845,14 +8845,14 @@ loc_80AD7C:
                 BRA loc_80AD97                                 ;80AD85|80AD97
 
 
-loc_80AD87:
+Op_ScanNextPlayerAbove:
                 DEY                                            ;80AD87|
                 PHY                                            ;80AD88|
                 LDX.W ram_03BA                                 ;80AD89|8003BA
                 BRA loc_80ADFF                                 ;80AD8C|80ADFF
 
 
-loc_80AD8E:
+Op_ScanPlayerAbove_SetTarget:
                 LDX.B curObjIdx                                ;80AD8E|000042
                 LDA.W objField_0F21,X                          ;80AD90|800F21
                 DEC A                                          ;80AD93|
@@ -8902,11 +8902,11 @@ loc_80ADAB:
                 BCC loc_80ADFF                                 ;80ADE6|80ADFF
                 TXA                                            ;80ADE8|
                 STA.W ram_03BA                                 ;80ADE9|8003BA
-                STA.W objField_13D1,Y                          ;80ADEC|8013D1
+                STA.W objTarget,Y                          ;80ADEC|8013D1
                 PLA                                            ;80ADEF|
                 CLC                                            ;80ADF0|
                 ADC.B scriptPC                                 ;80ADF1|000070
-                STA.W ram_0DB9,Y                               ;80ADF3|800DB9
+                STA.W objReturnPtr,Y                               ;80ADF3|800DB9
                 LDA.W ram_03B6                                 ;80ADF6|8003B6
                 STA.B scriptPC                                 ;80ADF9|000070
                 LDY.W #$0000                                   ;80ADFB|
@@ -8926,7 +8926,7 @@ loc_80ADFF:
 
 ; --------------------------------------------------------
 ;  FindObjectAtEdgeX   [6 ins, returns ?]
-;    callers: sub_80A761, hwmath_80D130
+;    callers: sub_80A761, Op_SubAcc_TFld
 ;    writes:    refillStageIdx
 ;    reads:     objField_0F21
 ; --------------------------------------------------------
@@ -8941,7 +8941,7 @@ FindObjectAtEdgeX:
 
 ; --------------------------------------------------------
 ;  FindObjectAtEdgeX_RightEntry   [54 ins, returns RTS]
-;    callers: sub_80A770, loc_80B051, hwmath_80D130
+;    callers: sub_80A770, loc_80B051, Op_SubAcc_TFld
 ;    writes:    refillStageIdx, zp_36, zp_3A, ram_03BC, ram_03BE
 ;    reads:     refillStageIdx, zp_36, zp_3A, curObjIdx, objTableEnd, objActive ...
 ; --------------------------------------------------------
@@ -9160,7 +9160,7 @@ sub_80AEF5:
 
 ; --------------------------------------------------------
 ;  sub_80AF5A   [34 ins, returns RTS]
-;    callers: sub_80A6ED
+;    callers: CollideY_Slope_Resolve
 ;    writes:    zp_38, zp_3A
 ;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objActive, ram_1219 ...
 ;    calls:     sub_80AFA0
@@ -9284,7 +9284,7 @@ sub_80AFA0:
 
 ; --------------------------------------------------------
 ;  sub_80B012   [17 ins, returns RTS]
-;    callers: sub_80A4D6, sub_80A598
+;    callers: TouchType_Check, TouchMask_Check
 ;    writes:    refillTmp32, ram_1561
 ;    reads:     refillTmp32, ram_0390
 ; --------------------------------------------------------
@@ -9310,7 +9310,7 @@ sub_80B012:
 
 ; --------------------------------------------------------
 ;  sub_80B02B   [20 ins, returns RTS]
-;    callers: sub_80A4D6, sub_80A598
+;    callers: TouchType_Check, TouchMask_Check
 ;    writes:    refillTmp32, objField_0FC1
 ;    reads:     refillTmp32, curObjIdx, ram_0390, objField_0FC1, ram_1561
 ; --------------------------------------------------------
@@ -9332,7 +9332,7 @@ sub_80B02B:
                 RTS                                            ;80B041|
 
 
-loc_80B042:
+Op_RequestGroundSnap:
                 LDX.B curObjIdx                                ;80B042|000042
                 LDA.W objField_0FC1,X                          ;80B044|800FC1
                 ORA.W #$2000                                   ;80B047|
@@ -9545,7 +9545,7 @@ sub_80B177:
 
 ; --------------------------------------------------------
 ;  sub_80B199   [63 ins, returns RTS]
-;    callers: sub_80CD70
+;    callers: Op_Goto
 ;    reads:     curObjIdx, objField_0F49, objField_0FC1, objField_1179
 ;    calls:     sub_80A38C
 ; --------------------------------------------------------
@@ -9923,7 +9923,7 @@ sub_80B435:
                 LDA.W ram_0447                                 ;80B435|800447
                 CMP.W ram_044D                                 ;80B438|80044D
                 BNE +                                          ;80B43B|80B445
-                LDA.W ram_0FE9                                 ;80B43D|800FE9
+                LDA.W objHealth                                 ;80B43D|800FE9
                 CMP.W ram_0441                                 ;80B440|800441
                 BEQ .skip2                                     ;80B443|80B486
 
@@ -9933,7 +9933,7 @@ sub_80B435:
                 INC A                                          ;80B44A|
                 LDY.W #$0003                                   ;80B44B|
                 JSR.W sub_80B3DA                               ;80B44E|80B3DA
-                LDA.W ram_0FE9                                 ;80B451|800FE9
+                LDA.W objHealth                                 ;80B451|800FE9
                 SEC                                            ;80B454|
                 SBC.W ram_0447                                 ;80B455|800447
                 LDY.W #$0000                                   ;80B458|
@@ -9957,7 +9957,7 @@ sub_80B435:
                 BCC .loop                                      ;80B475|80B45B
                 LDA.W ram_0447                                 ;80B477|800447
                 STA.W ram_044D                                 ;80B47A|80044D
-                LDA.W ram_0FE9                                 ;80B47D|800FE9
+                LDA.W objHealth                                 ;80B47D|800FE9
                 STA.W ram_0441                                 ;80B480|800441
                 INC.W ram_0455                                 ;80B483|800455
 
@@ -10120,7 +10120,7 @@ vbwait_80B54E:
                 JSR.W DeclineDialog_StopCues                               ;80B5A9|808956
                 PLA                                            ;80B5AC|
                 BNE .exit                                      ;80B5AD|80B5B2
-                JSR.W color_80CF82                             ;80B5AF|80CF82
+                JSR.W Op_ClearBackdrop                             ;80B5AF|80CF82
 
          .exit: RTS                                            ;80B5B2|
 
@@ -10323,7 +10323,7 @@ sub_80B6ED:
 ;  input_80B6EF   [121 ins, returns RTS]
 ;    callers: input_80B63B
 ;    writes:    inputAux1, ram_0432, ram_0467
-;    reads:     curObjIdx, joy1Pressed, inputAux1, inputAux2, ram_0432, ram_0FE9
+;    reads:     curObjIdx, joy1Pressed, inputAux1, inputAux2, ram_0432, objHealth
 ;    calls:     sub_80BA65, input_80B834, sub_8088E7, input_80BB41, sub_80B832
 ; --------------------------------------------------------
 input_80B6EF:
@@ -10343,7 +10343,7 @@ input_80B6EF:
                 BPL +                                          ;80B706|80B70B
                 LDY.W #$0004                                   ;80B708|
 
-             +: LDA.W ram_0FE9,Y                               ;80B70B|800FE9
+             +: LDA.W objHealth,Y                               ;80B70B|800FE9
                 BEQ .loop                                      ;80B70E|80B704
                 TYA                                            ;80B710|
                 CMP.W inputAux1,X                              ;80B711|8003D8
@@ -10371,7 +10371,7 @@ input_80B6EF:
                 BCC +                                          ;80B745|80B74A
                 LDY.W #$0000                                   ;80B747|
 
-             +: LDA.W ram_0FE9,Y                               ;80B74A|800FE9
+             +: LDA.W objHealth,Y                               ;80B74A|800FE9
                 BEQ .loop2                                     ;80B74D|80B740
                 TYA                                            ;80B74F|
                 CMP.W inputAux1,X                              ;80B750|8003D8
@@ -10476,7 +10476,7 @@ sub_80B832:
 ;  input_80B834   [40 ins, returns RTS]
 ;    callers: vbwait_80B54E, input_80B6EF
 ;    writes:    refillTmp32, ram_046B, ram_046D
-;    reads:     refillTmp32, inputAux1, ram_0FE9, objField_1179, objField_11A1
+;    reads:     refillTmp32, inputAux1, objHealth, objField_1179, objField_11A1
 ; --------------------------------------------------------
 input_80B834:
                 PHX                                            ;80B834|
@@ -10487,7 +10487,7 @@ input_80B834:
                 LDY.W inputAux1,X                              ;80B841|8003D8
                 LDX.W #$0000                                   ;80B844|
 
-         .loop: LDA.W ram_0FE9,X                               ;80B847|800FE9
+         .loop: LDA.W objHealth,X                               ;80B847|800FE9
                 BEQ .skip                                      ;80B84A|80B87C
                 LDA.W objField_1179,X                          ;80B84C|801179
                 SEC                                            ;80B84F|
@@ -14250,8 +14250,8 @@ VramColUpload_D:
 ; --------------------------------------------------------
 ;  UpdateAllObjects   [25 ins, returns RTS]
 ;    callers: vbwait_808081, MainLoop_PauseOrMenu, input_80814E, sub_80A0A3
-;    writes:    ram_0384, ram_0392
-;    reads:     objTableEnd, ram_0384, ram_0386
+;    writes:    earlyUpdateCount, ram_0392
+;    reads:     objTableEnd, earlyUpdateCount, earlyUpdateQueue
 ;    calls:     sub_80DD75, UpdateOneObject
 ; --------------------------------------------------------
 
@@ -14268,26 +14268,26 @@ VramColUpload_D:
 ; ------------------------------------------------------------
 UpdateAllObjects:
                 JSR.W sub_80DD75                         ;80CCB3|80DD75
-                STZ.W ram_0384                                 ;80CCB6|800384
+                STZ.W earlyUpdateCount                                 ;80CCB6|800384
                 STZ.W ram_0392                                 ;80CCB9|800392
                 LDX.W #$0000                                   ;80CCBC|
 
          .loop: JSR.W UpdateOneObject                          ;80CCBF|80CCE9
-                LDA.W ram_0384                                 ;80CCC2|800384
+                LDA.W earlyUpdateCount                                 ;80CCC2|800384
                 BEQ .skip                                      ;80CCC5|80CCE1
                 PHX                                            ;80CCC7|
                 LDY.W #$0000                                   ;80CCC8|
 
-        .loop2: LDA.W ram_0386,Y                               ;80CCCB|800386
+        .loop2: LDA.W earlyUpdateQueue,Y                               ;80CCCB|800386
                 AND.W #$00FF                                   ;80CCCE|
                 TAX                                            ;80CCD1|
                 PHY                                            ;80CCD2|
                 JSR.W UpdateOneObject                          ;80CCD3|80CCE9
                 PLY                                            ;80CCD6|
                 INY                                            ;80CCD7|
-                CPY.W ram_0384                                 ;80CCD8|800384
+                CPY.W earlyUpdateCount                                 ;80CCD8|800384
                 BCC .loop2                                     ;80CCDB|80CCCB
-                STZ.W ram_0384                                 ;80CCDD|800384
+                STZ.W earlyUpdateCount                                 ;80CCDD|800384
                 PLX                                            ;80CCE0|
 
          .skip: INX                                            ;80CCE1|
@@ -14302,7 +14302,7 @@ UpdateAllObjects:
 ;    callers: UpdateAllObjects
 ;    writes:    curObjIdx, scriptPC, zp_72, ram_0390, objScriptPtr
 ;    reads:     zp_2A, curObjIdx, scriptPC, ram_0331, inputAux1, inputAux2 ...
-;    calls:     input_80921D, SelectP2Input, sub_80F11F, ptrtbl_80DD85
+;    calls:     input_80921D, SelectP2Input, GetSpawnRecPtr, ObjVM_OpTable
 ; --------------------------------------------------------
 UpdateOneObject:
                 LDA.W objActive,X                           ;80CCE9|800D91
@@ -14341,7 +14341,7 @@ UpdateOneObject:
 
              +: LDA.W ram_1129,X                               ;80CD34|801129
                 BMI .exit                                      ;80CD37|80CD59
-                JSR.W sub_80F11F                               ;80CD39|80F11F
+                JSR.W GetSpawnRecPtr                               ;80CD39|80F11F
                 LDY.W #$0003                                   ;80CD3C|
                 LDA.B [zp_2A],Y                                ;80CD3F|00002A
                 STA.W objScriptPtr,X                           ;80CD41|800D69
@@ -14355,14 +14355,14 @@ UpdateOneObject:
                 AND.W #$00FF                                   ;80CD4F|
                 ASL A                                          ;80CD52|
                 TAX                                            ;80CD53|
-                JSR.W (ptrtbl_80DD85,X)                        ;80CD54|80DD85   ; object-script VM: dispatch opcode via (PTR16_80DD85,X)
+                JSR.W (ObjVM_OpTable,X)                        ;80CD54|80DD85   ; object-script VM: dispatch opcode via (PTR16_80DD85,X)
                 BRA .loop                                      ;80CD57|80CD4C
 
 
          .exit: RTS                                            ;80CD59|
 
 
-loc_80CD5A:
+Op_Yield:
                 PLA                                            ;80CD5A|
                 TYA                                            ;80CD5B|
                 CLC                                            ;80CD5C|
@@ -14370,48 +14370,48 @@ loc_80CD5A:
                 LDX.B curObjIdx                                ;80CD5F|000042
                 STA.W objScriptPtr,X                           ;80CD61|800D69
 
-loc_80CD64:
+Op_Nop:
                 RTS                                            ;80CD64|
 
 
 ; --------------------------------------------------------
-;  loc_80CD65   [7 ins, returns ?]
-;    callers: RunOneObjectScript, sub_80A4D6, sub_80A598, sub_80A639, sub_80A693, hwmath_80D130
-;    writes:    ram_0DB9
+;  Op_Call   [7 ins, returns ?]
+;    callers: RunOneObjectScript, TouchType_Check, TouchMask_Check, CollideX_Resolve, CollideY_Resolve, Op_SubAcc_TFld
+;    writes:    objReturnPtr
 ;    reads:     curObjIdx, scriptPC
 ; --------------------------------------------------------
-loc_80CD65:
+Op_Call:
                 TYA                                            ;80CD65|
                 INC A                                          ;80CD66|
                 INC A                                          ;80CD67|
                 CLC                                            ;80CD68|
                 ADC.B scriptPC                                 ;80CD69|000070
                 LDX.B curObjIdx                                ;80CD6B|000042
-                STA.W ram_0DB9,X                               ;80CD6D|800DB9
+                STA.W objReturnPtr,X                               ;80CD6D|800DB9
 
 ; --------------------------------------------------------
-;  sub_80CD70   [228 ins, returns RTS]
-;    callers: sub_80CD70, hwmath_80D130
+;  Op_Goto   [228 ins, returns RTS]
+;    callers: Op_Goto, Op_SubAcc_TFld
 ;    writes:    scriptPC, ram_035C, ram_0360, ram_0E59, ram_1381, objField_13A9 ...
-;    reads:     curObjIdx, scriptPC, ppuUpdateFlags, ram_035C, ram_0360, ram_0DB9 ...
-;    calls:     sub_80F095, sub_80DD65, sub_80A761, sub_80A770, sub_80A752, sub_80A743, +4 more
+;    reads:     curObjIdx, scriptPC, ppuUpdateFlags, ram_035C, ram_0360, objReturnPtr ...
+;    calls:     DestroyObject, DamageObject, sub_80A761, sub_80A770, sub_80A752, sub_80A743, +4 more
 ; --------------------------------------------------------
-sub_80CD70:
+Op_Goto:
                 LDA.B [scriptPC],Y                             ;80CD70|000070
                 STA.B scriptPC                                 ;80CD72|000070
                 LDY.W #$0000                                   ;80CD74|
                 RTS                                            ;80CD77|
 
 
-loc_80CD78:
+Op_Return:
                 LDX.B curObjIdx                                ;80CD78|000042
-                LDA.W ram_0DB9,X                               ;80CD7A|800DB9
+                LDA.W objReturnPtr,X                               ;80CD7A|800DB9
                 STA.B scriptPC                                 ;80CD7D|000070
                 LDY.W #$0000                                   ;80CD7F|
                 RTS                                            ;80CD82|
 
 
-loc_80CD83:
+Op_AllowRespawn:
                 LDX.B curObjIdx                                ;80CD83|000042
                 LDA.W ram_1101,X                               ;80CD85|801101
                 BMI .exit                                      ;80CD88|80CDA3
@@ -14433,7 +14433,7 @@ loc_80CD83:
          .exit: RTS                                            ;80CDA3|
 
 
-loc_80CDA4:
+Op_BlockRespawn:
                 LDX.B curObjIdx                                ;80CDA4|000042
                 LDA.W ram_1101,X                               ;80CDA6|801101
                 BMI .exit                                      ;80CDA9|80CDC4
@@ -14455,7 +14455,7 @@ loc_80CDA4:
          .exit: RTS                                            ;80CDC4|
 
 
-loc_80CDC5:
+Op_RequestReinit:
                 LDA.W #$0001                                   ;80CDC5|
                 TSB.W ppuUpdateFlags                           ;80CDC8|800336
                 LDX.B curObjIdx                                ;80CDCB|000042
@@ -14463,33 +14463,33 @@ loc_80CDC5:
                 RTS                                            ;80CDCE|
 
 
-loc_80CDCF:
+Op_DestroySelf:
                 LDY.B curObjIdx                                ;80CDCF|000042
-                JSR.W sub_80F095                               ;80CDD1|80F095
+                JSR.W DestroyObject                               ;80CDD1|80F095
                 LDX.B curObjIdx                                ;80CDD4|000042
                 PLA                                            ;80CDD6|
                 RTS                                            ;80CDD7|
 
 
-loc_80CDD8:
+Op_DamageSelfFromTarget:
                 PHY                                            ;80CDD8|
                 LDX.B curObjIdx                                ;80CDD9|000042
-                LDY.W objField_13D1,X                          ;80CDDB|8013D1
-                JSR.W sub_80DD65                               ;80CDDE|80DD65
+                LDY.W objTarget,X                          ;80CDDB|8013D1
+                JSR.W DamageObject                               ;80CDDE|80DD65
                 PLY                                            ;80CDE1|
                 RTS                                            ;80CDE2|
 
 
-loc_80CDE3:
+Op_DamageTarget:
                 PHY                                            ;80CDE3|
                 LDY.B curObjIdx                                ;80CDE4|000042
-                LDX.W objField_13D1,Y                          ;80CDE6|8013D1
-                JSR.W sub_80DD65                               ;80CDE9|80DD65
+                LDX.W objTarget,Y                          ;80CDE6|8013D1
+                JSR.W DamageObject                               ;80CDE9|80DD65
                 PLY                                            ;80CDEC|
                 RTS                                            ;80CDED|
 
 
-loc_80CDEE:
+Op_CallFar:
                 PHB                                            ;80CDEE|
                 PHK                                            ;80CDEF|
                 PEA.W .exit                                    ;80CDF0|80CE0B
@@ -14518,22 +14518,22 @@ loc_80CDEE:
                 RTS                                            ;80CE12|
 
 
-loc_80CE13:
+Op_AttachSelfToObj0:
                 LDX.B curObjIdx                                ;80CE13|000042
                 STZ.W ram_0E59,X                               ;80CE15|800E59
                 BRA loc_80CE2C                                 ;80CE18|80CE2C
 
 
-loc_80CE1A:
+Op_AttachObj0ToSelf:
                 LDX.W #$0000                                   ;80CE1A|
                 LDA.B curObjIdx                                ;80CE1D|000042
                 STA.W ram_0E59                                 ;80CE1F|800E59
                 BRA loc_80CE2C                                 ;80CE22|80CE2C
 
 
-loc_80CE24:
+Op_AttachSelfToTarget:
                 LDX.B curObjIdx                                ;80CE24|000042
-                LDA.W objField_13D1,X                          ;80CE26|8013D1
+                LDA.W objTarget,X                          ;80CE26|8013D1
                 STA.W ram_0E59,X                               ;80CE29|800E59
 
 loc_80CE2C:
@@ -14556,22 +14556,22 @@ loc_80CE2C:
                 RTS                                            ;80CE4E|
 
 
-loc_80CE4F:
+Op_SetAnimScript:
                 LDA.B [scriptPC],Y                             ;80CE4F|000070
                 INY                                            ;80CE51|
                 INY                                            ;80CE52|
                 LDX.B curObjIdx                                ;80CE53|000042
-                STA.W ram_1449,X                               ;80CE55|801449
+                STA.W objAnimPtr,X                               ;80CE55|801449
                 LDA.W #$0001                                   ;80CE58|
-                STA.W ram_1471,X                               ;80CE5B|801471
+                STA.W objAnimWait,X                               ;80CE5B|801471
                 RTS                                            ;80CE5E|
 
 
-loc_80CE5F:
+Op_JmpIfAnimIdle:
                 LDX.B curObjIdx                                ;80CE5F|000042
-                LDA.W ram_1471,X                               ;80CE61|801471
+                LDA.W objAnimWait,X                               ;80CE61|801471
                 BNE +                                          ;80CE64|80CE69
-                JMP.W sub_80CD70                               ;80CE66|80CD70
+                JMP.W Op_Goto                               ;80CE66|80CD70
 
 
              +: INY                                            ;80CE69|
@@ -14579,12 +14579,12 @@ loc_80CE5F:
                 RTS                                            ;80CE6B|
 
 
-loc_80CE6C:
+Op_JmpIfBlockedAbove:
                 PEA.W $0000                                    ;80CE6C|
                 BRA loc_80CE74                                 ;80CE6F|80CE74
 
 
-loc_80CE71:
+Op_JmpIfNotBlockedAbove:
                 PEA.W $0002                                    ;80CE71|
 
 loc_80CE74:
@@ -14597,15 +14597,15 @@ loc_80CE74:
                 JSR.W sub_80A761                               ;80CE7E|80A761
                 PLY                                            ;80CE81|
                 PLX                                            ;80CE82|
-                JMP.W (ptrtbl_80CF02,X)                        ;80CE83|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80CE83|80CF02
 
 
-loc_80CE86:
+Op_JmpIfBlockedBelow:
                 PEA.W $0000                                    ;80CE86|
                 BRA loc_80CE8E                                 ;80CE89|80CE8E
 
 
-loc_80CE8B:
+Op_JmpIfNotBlockedBelow:
                 PEA.W $0002                                    ;80CE8B|
 
 loc_80CE8E:
@@ -14618,15 +14618,15 @@ loc_80CE8E:
                 JSR.W sub_80A770                               ;80CE98|80A770
                 PLY                                            ;80CE9B|
                 PLX                                            ;80CE9C|
-                JMP.W (ptrtbl_80CF02,X)                        ;80CE9D|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80CE9D|80CF02
 
 
-loc_80CEA0:
+Op_JmpIfBlockedAhead:
                 PEA.W $0000                                    ;80CEA0|
                 BRA loc_80CEA8                                 ;80CEA3|80CEA8
 
 
-loc_80CEA5:
+Op_JmpIfNotBlockedAhead:
                 PEA.W $0002                                    ;80CEA5|
 
 loc_80CEA8:
@@ -14645,15 +14645,15 @@ loc_80CEB2:
                 JSR.W sub_80A752                               ;80CEBC|80A752
                 PLY                                            ;80CEBF|
                 PLX                                            ;80CEC0|
-                JMP.W (ptrtbl_80CF02,X)                        ;80CEC1|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80CEC1|80CF02
 
 
-loc_80CEC4:
+Op_JmpIfBlockedBehind:
                 PEA.W $0000                                    ;80CEC4|
                 BRA loc_80CECC                                 ;80CEC7|80CECC
 
 
-loc_80CEC9:
+Op_JmpIfNotBlockedBehind:
                 PEA.W $0002                                    ;80CEC9|
 
 loc_80CECC:
@@ -14672,15 +14672,15 @@ loc_80CED6:
                 JSR.W sub_80A743                               ;80CEE0|80A743
                 PLY                                            ;80CEE3|
                 PLX                                            ;80CEE4|
-                JMP.W (ptrtbl_80CF02,X)                        ;80CEE5|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80CEE5|80CF02
 
 
-loc_80CEE8:
+Op_JmpIfSolidAheadBelow:
                 PEA.W $0000                                    ;80CEE8|
                 BRA loc_80CEF0                                 ;80CEEB|80CEF0
 
 
-loc_80CEED:
+Op_JmpIfNoSolidAheadBelow:
                 PEA.W $0002                                    ;80CEED|
 
 loc_80CEF0:
@@ -14693,9 +14693,9 @@ loc_80CEF0:
                 JSR.W sub_80A77F                               ;80CEFA|80A77F
                 PLY                                            ;80CEFD|
                 PLX                                            ;80CEFE|
-                JMP.W (ptrtbl_80CF02,X)                        ;80CEFF|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80CEFF|80CF02
 
-ptrtbl_80CF02:
+VM_CondBranchTable:
                 dw +                                           ;80CF02|80CF06   ; pointer/jump table (16-bit entries)
                 dw .skip2                                      ;80CF04|80CF13
 
@@ -14723,12 +14723,12 @@ ptrtbl_80CF02:
                 RTS                                            ;80CF1F|
 
 
-loc_80CF20:
+Op_JmpIfEdgeAhead:
                 PEA.W $0000                                    ;80CF20|
                 BRA loc_80CF28                                 ;80CF23|80CF28
 
 
-loc_80CF25:
+Op_JmpIfNotEdgeAhead:
                 PEA.W $0002                                    ;80CF25|
 
 loc_80CF28:
@@ -14736,7 +14736,7 @@ loc_80CF28:
                 JSR.W sub_80B199                               ;80CF29|80B199
                 PLY                                            ;80CF2C|
                 PLX                                            ;80CF2D|
-                JMP.W (ptrtbl_80CF02,X)                        ;80CF2E|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80CF2E|80CF02
 
 
 ; --------------------------------------------------------
@@ -14754,7 +14754,7 @@ color_80CF31:
                 JMP.W SetupCgramGpDma                          ;80CF3D|808667
 
 
-loc_80CF40:
+Op_SetBackdropRGB:
                 LDA.B [scriptPC],Y                             ;80CF40|000070
                 INY                                            ;80CF42|
                 AND.W #$00FF                                   ;80CF43|
@@ -14771,7 +14771,7 @@ loc_80CF40:
                 JMP.W SetupCgramGpDma                          ;80CF5E|808667
 
 
-loc_80CF61:
+Op_SetBackdropRGB2:
                 LDA.B [scriptPC],Y                             ;80CF61|000070
                 INY                                            ;80CF63|
                 AND.W #$00FF                                   ;80CF64|
@@ -14789,13 +14789,13 @@ loc_80CF61:
 
 
 ; --------------------------------------------------------
-;  color_80CF82   [133 ins, returns RTS]
+;  Op_ClearBackdrop   [133 ins, returns RTS]
 ;    callers: GiveUpDialog_TriggerGate, vbwait_80B54E
-;    writes:    zp_00, refillTmp32, zp_8E, backdropColorR, backdropColorG, backdropColorB ...
-;    reads:     zp_00, refillTmp32, curObjIdx, scriptPC, zp_8E, oamSrcAttr ...
-;    calls:     hwmath_809011, sub_8091ED, SetupCgramGpDma, sub_80D0F1
+;    writes:    zp_00, refillTmp32, vmAcc, backdropColorR, backdropColorG, backdropColorB ...
+;    reads:     zp_00, refillTmp32, curObjIdx, scriptPC, vmAcc, oamSrcAttr ...
+;    calls:     hwmath_809011, VM_GetRandom, SetupCgramGpDma, Op_SubAcc_Fld
 ; --------------------------------------------------------
-color_80CF82:
+Op_ClearBackdrop:
                 STZ.W backdropColorR                           ;80CF82|800344
                 STZ.W backdropColorG                           ;80CF85|800346
                 STZ.W backdropColorB                           ;80CF88|800348
@@ -14803,7 +14803,7 @@ color_80CF82:
                 JMP.W SetupCgramGpDma                          ;80CF8E|808667
 
 
-loc_80CF91:
+Op_ClearBackdrop2:
                 STZ.W backdropColorR2                          ;80CF91|80034A
                 STZ.W backdropColorG2                          ;80CF94|80034C
                 STZ.W backdropColorB2                          ;80CF97|80034E
@@ -14811,7 +14811,7 @@ loc_80CF91:
                 JMP.W SetupCgramGpDma                          ;80CF9D|808667
 
 
-loc_80CFA0:
+Op_SetDeferredFarCall:
                 STZ.W deferredFarCallAddr                      ;80CFA0|8003AA
                 LDA.B [scriptPC],Y                             ;80CFA3|000070
                 STA.W deferredFarCallBank                      ;80CFA5|8003AC
@@ -14823,7 +14823,7 @@ loc_80CFA0:
                 RTS                                            ;80CFB0|
 
 
-loc_80CFB1:
+Op_HideSprites:
                 LDX.B curObjIdx                                ;80CFB1|000042
                 LDA.W ram_14E9,X                               ;80CFB3|8014E9
                 STA.B refillTmp32                              ;80CFB6|000032
@@ -14839,7 +14839,7 @@ loc_80CFB1:
                 RTS                                            ;80CFCA|
 
 
-loc_80CFCB:
+Op_ShowSprites:
                 LDX.B curObjIdx                                ;80CFCB|000042
                 LDA.W ram_14E9,X                               ;80CFCD|8014E9
                 STA.B refillTmp32                              ;80CFD0|000032
@@ -14856,15 +14856,15 @@ loc_80CFCB:
                 RTS                                            ;80CFE7|
 
 
-loc_80CFE8:
+Op_LoadAcc_Imm:
                 LDA.B [scriptPC],Y                             ;80CFE8|000070
-                STA.B zp_8E                                    ;80CFEA|00008E
+                STA.B vmAcc                                    ;80CFEA|00008E
                 INY                                            ;80CFEC|
                 INY                                            ;80CFED|
                 RTS                                            ;80CFEE|
 
 
-loc_80CFEF:
+Op_LoadAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80CFEF|000070
                 INY                                            ;80CFF1|
                 AND.W #$00FF                                   ;80CFF2|
@@ -14874,21 +14874,21 @@ loc_80CFEF:
                 ADC.B curObjIdx                                ;80CFFA|000042
                 TAX                                            ;80CFFC|
                 LDA.W objField_0F21,X                          ;80CFFD|800F21
-                STA.B zp_8E                                    ;80D000|00008E
+                STA.B vmAcc                                    ;80D000|00008E
                 RTS                                            ;80D002|
 
 
-loc_80D003:
+Op_LoadAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D003|000070
                 INY                                            ;80D005|
                 INY                                            ;80D006|
                 TAX                                            ;80D007|
                 LDA.B zp_00,X                                  ;80D008|000000
-                STA.B zp_8E                                    ;80D00A|00008E
+                STA.B vmAcc                                    ;80D00A|00008E
                 RTS                                            ;80D00C|
 
 
-loc_80D00D:
+Op_LoadAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D00D|000070
                 INY                                            ;80D00F|
                 AND.W #$00FF                                   ;80D010|
@@ -14896,33 +14896,33 @@ loc_80D00D:
                 LDA.W data_80F3A3,X                            ;80D014|80F3A3
                 CLC                                            ;80D017|
                 LDX.B curObjIdx                                ;80D018|000042
-                ADC.W objField_13D1,X                          ;80D01A|8013D1
+                ADC.W objTarget,X                          ;80D01A|8013D1
                 TAX                                            ;80D01D|
                 LDA.W objField_0F21,X                          ;80D01E|800F21
-                STA.B zp_8E                                    ;80D021|00008E
+                STA.B vmAcc                                    ;80D021|00008E
                 RTS                                            ;80D023|
 
 
-loc_80D024:
-                JSR.W sub_8091ED                               ;80D024|8091ED
-                STA.B zp_8E                                    ;80D027|00008E
+Op_LoadAcc_Rnd:
+                JSR.W VM_GetRandom                               ;80D024|8091ED
+                STA.B vmAcc                                    ;80D027|00008E
                 RTS                                            ;80D029|
 
 
-loc_80D02A:
+Op_SetTargetFromAcc:
                 LDX.B curObjIdx                                ;80D02A|000042
-                LDA.B zp_8E                                    ;80D02C|00008E
-                STA.W objField_13D1,X                          ;80D02E|8013D1
+                LDA.B vmAcc                                    ;80D02C|00008E
+                STA.W objTarget,X                          ;80D02E|8013D1
                 RTS                                            ;80D031|
 
 
-loc_80D032:
-                LDA.B zp_8E                                    ;80D032|00008E
+Op_StoreAccHi_Fld:
+                LDA.B vmAcc                                    ;80D032|00008E
                 XBA                                            ;80D034|
                 AND.W #$FF00                                   ;80D035|
-                STA.B zp_8E                                    ;80D038|00008E
+                STA.B vmAcc                                    ;80D038|00008E
 
-loc_80D03A:
+Op_StoreAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D03A|000070
                 INY                                            ;80D03C|
                 AND.W #$00FF                                   ;80D03D|
@@ -14931,34 +14931,34 @@ loc_80D03A:
                 CLC                                            ;80D044|
                 ADC.B curObjIdx                                ;80D045|000042
                 TAX                                            ;80D047|
-                LDA.B zp_8E                                    ;80D048|00008E
+                LDA.B vmAcc                                    ;80D048|00008E
                 STA.W objField_0F21,X                          ;80D04A|800F21
                 RTS                                            ;80D04D|
 
 
-loc_80D04E:
-                LDA.B zp_8E                                    ;80D04E|00008E
+Op_StoreAccHi_Ram:
+                LDA.B vmAcc                                    ;80D04E|00008E
                 XBA                                            ;80D050|
                 AND.W #$FF00                                   ;80D051|
-                STA.B zp_8E                                    ;80D054|00008E
+                STA.B vmAcc                                    ;80D054|00008E
 
-loc_80D056:
+Op_StoreAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D056|000070
                 INY                                            ;80D058|
                 INY                                            ;80D059|
                 TAX                                            ;80D05A|
-                LDA.B zp_8E                                    ;80D05B|00008E
+                LDA.B vmAcc                                    ;80D05B|00008E
                 STA.B zp_00,X                                  ;80D05D|000000
                 RTS                                            ;80D05F|
 
 
-loc_80D060:
-                LDA.B zp_8E                                    ;80D060|00008E
+Op_StoreAccHi_TFld:
+                LDA.B vmAcc                                    ;80D060|00008E
                 XBA                                            ;80D062|
                 AND.W #$FF00                                   ;80D063|
-                STA.B zp_8E                                    ;80D066|00008E
+                STA.B vmAcc                                    ;80D066|00008E
 
-loc_80D068:
+Op_StoreAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D068|000070
                 INY                                            ;80D06A|
                 AND.W #$00FF                                   ;80D06B|
@@ -14966,29 +14966,29 @@ loc_80D068:
                 LDA.W data_80F3A3,X                            ;80D06F|80F3A3
                 CLC                                            ;80D072|
                 LDX.B curObjIdx                                ;80D073|000042
-                ADC.W objField_13D1,X                          ;80D075|8013D1
+                ADC.W objTarget,X                          ;80D075|8013D1
                 TAX                                            ;80D078|
-                LDA.B zp_8E                                    ;80D079|00008E
+                LDA.B vmAcc                                    ;80D079|00008E
                 STA.W objField_0F21,X                          ;80D07B|800F21
                 RTS                                            ;80D07E|
 
 
-loc_80D07F:
+Op_AddAcc_Fld_Facing:
                 LDX.B curObjIdx                                ;80D07F|000042
                 LDA.W objField_0FC1,X                          ;80D081|800FC1
                 AND.W #$0040                                   ;80D084|
-                BEQ sub_80D08C                                 ;80D087|80D08C
-                JMP.W sub_80D0F1                               ;80D089|80D0F1
+                BEQ Op_AddAcc_Fld                                 ;80D087|80D08C
+                JMP.W Op_SubAcc_Fld                               ;80D089|80D0F1
 
 
 ; --------------------------------------------------------
-;  sub_80D08C   [17 ins, returns RTS]
-;    callers: sub_80D0CA
+;  Op_AddAcc_Fld   [17 ins, returns RTS]
+;    callers: Op_AddAcc_TFld
 ;    writes:    objField_0F21
-;    reads:     curObjIdx, scriptPC, zp_8E, objField_0F21, objField_0FC1
-;    calls:     sub_80D116
+;    reads:     curObjIdx, scriptPC, vmAcc, objField_0F21, objField_0FC1
+;    calls:     Op_SubAcc_Ram
 ; --------------------------------------------------------
-sub_80D08C:
+Op_AddAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D08C|000070
                 INY                                            ;80D08E|
                 AND.W #$00FF                                   ;80D08F|
@@ -14998,54 +14998,54 @@ sub_80D08C:
                 ADC.B curObjIdx                                ;80D097|000042
                 TAX                                            ;80D099|
                 LDA.W objField_0F21,X                          ;80D09A|800F21
-                ADC.B zp_8E                                    ;80D09D|00008E
+                ADC.B vmAcc                                    ;80D09D|00008E
                 STA.W objField_0F21,X                          ;80D09F|800F21
                 RTS                                            ;80D0A2|
 
 
-loc_80D0A3:
+Op_AddAcc_Ram_Facing:
                 LDX.B curObjIdx                                ;80D0A3|000042
                 LDA.W objField_0FC1,X                          ;80D0A5|800FC1
                 AND.W #$0040                                   ;80D0A8|
-                BEQ sub_80D0B0                                 ;80D0AB|80D0B0
-                JMP.W sub_80D116                               ;80D0AD|80D116
+                BEQ Op_AddAcc_Ram                                 ;80D0AB|80D0B0
+                JMP.W Op_SubAcc_Ram                               ;80D0AD|80D116
 
 
 ; --------------------------------------------------------
-;  sub_80D0B0   [14 ins, returns RTS]
-;    callers: sub_80D0F1
+;  Op_AddAcc_Ram   [14 ins, returns RTS]
+;    callers: Op_SubAcc_Fld
 ;    writes:    zp_00
-;    reads:     zp_00, curObjIdx, scriptPC, zp_8E, objField_0FC1
-;    calls:     hwmath_80D130
+;    reads:     zp_00, curObjIdx, scriptPC, vmAcc, objField_0FC1
+;    calls:     Op_SubAcc_TFld
 ; --------------------------------------------------------
-sub_80D0B0:
+Op_AddAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D0B0|000070
                 INY                                            ;80D0B2|
                 INY                                            ;80D0B3|
                 TAX                                            ;80D0B4|
                 LDA.B zp_00,X                                  ;80D0B5|000000
                 CLC                                            ;80D0B7|
-                ADC.B zp_8E                                    ;80D0B8|00008E
+                ADC.B vmAcc                                    ;80D0B8|00008E
                 STA.B zp_00,X                                  ;80D0BA|000000
                 RTS                                            ;80D0BC|
 
 
-loc_80D0BD:
+Op_AddAcc_TFld_Facing:
                 LDX.B curObjIdx                                ;80D0BD|000042
                 LDA.W objField_0FC1,X                          ;80D0BF|800FC1
                 AND.W #$0040                                   ;80D0C2|
-                BEQ sub_80D0CA                                 ;80D0C5|80D0CA
-                JMP.W hwmath_80D130                            ;80D0C7|80D130
+                BEQ Op_AddAcc_TFld                                 ;80D0C5|80D0CA
+                JMP.W Op_SubAcc_TFld                            ;80D0C7|80D130
 
 
 ; --------------------------------------------------------
-;  sub_80D0CA   [18 ins, returns RTS]
-;    callers: sub_80D116
+;  Op_AddAcc_TFld   [18 ins, returns RTS]
+;    callers: Op_SubAcc_Ram
 ;    writes:    objField_0F21
-;    reads:     curObjIdx, scriptPC, zp_8E, objField_0F21, objField_0FC1, objField_13D1
-;    calls:     sub_80D08C
+;    reads:     curObjIdx, scriptPC, vmAcc, objField_0F21, objField_0FC1, objTarget
+;    calls:     Op_AddAcc_Fld
 ; --------------------------------------------------------
-sub_80D0CA:
+Op_AddAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D0CA|000070
                 INY                                            ;80D0CC|
                 AND.W #$00FF                                   ;80D0CD|
@@ -15053,30 +15053,30 @@ sub_80D0CA:
                 LDA.W data_80F3A3,X                            ;80D0D1|80F3A3
                 CLC                                            ;80D0D4|
                 LDX.B curObjIdx                                ;80D0D5|000042
-                ADC.W objField_13D1,X                          ;80D0D7|8013D1
+                ADC.W objTarget,X                          ;80D0D7|8013D1
                 TAX                                            ;80D0DA|
                 LDA.W objField_0F21,X                          ;80D0DB|800F21
-                ADC.B zp_8E                                    ;80D0DE|00008E
+                ADC.B vmAcc                                    ;80D0DE|00008E
                 STA.W objField_0F21,X                          ;80D0E0|800F21
                 RTS                                            ;80D0E3|
 
 
-loc_80D0E4:
+Op_SubAcc_Fld_Facing:
                 LDX.B curObjIdx                                ;80D0E4|000042
                 LDA.W objField_0FC1,X                          ;80D0E6|800FC1
                 AND.W #$0040                                   ;80D0E9|
-                BEQ sub_80D0F1                                 ;80D0EC|80D0F1
-                JMP.W sub_80D08C                               ;80D0EE|80D08C
+                BEQ Op_SubAcc_Fld                                 ;80D0EC|80D0F1
+                JMP.W Op_AddAcc_Fld                               ;80D0EE|80D08C
 
 
 ; --------------------------------------------------------
-;  sub_80D0F1   [18 ins, returns RTS]
-;    callers: color_80CF82
+;  Op_SubAcc_Fld   [18 ins, returns RTS]
+;    callers: Op_ClearBackdrop
 ;    writes:    objField_0F21
-;    reads:     curObjIdx, scriptPC, zp_8E, objField_0F21, objField_0FC1
-;    calls:     sub_80D0B0
+;    reads:     curObjIdx, scriptPC, vmAcc, objField_0F21, objField_0FC1
+;    calls:     Op_AddAcc_Ram
 ; --------------------------------------------------------
-sub_80D0F1:
+Op_SubAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D0F1|000070
                 INY                                            ;80D0F3|
                 AND.W #$00FF                                   ;80D0F4|
@@ -15087,56 +15087,56 @@ sub_80D0F1:
                 TAX                                            ;80D0FE|
                 LDA.W objField_0F21,X                          ;80D0FF|800F21
                 SEC                                            ;80D102|
-                SBC.B zp_8E                                    ;80D103|00008E
+                SBC.B vmAcc                                    ;80D103|00008E
                 STA.W objField_0F21,X                          ;80D105|800F21
                 RTS                                            ;80D108|
 
 
-loc_80D109:
+Op_SubAcc_Ram_Facing:
                 LDX.B curObjIdx                                ;80D109|000042
                 LDA.W objField_0FC1,X                          ;80D10B|800FC1
                 AND.W #$0040                                   ;80D10E|
-                BEQ sub_80D116                                 ;80D111|80D116
-                JMP.W sub_80D0B0                               ;80D113|80D0B0
+                BEQ Op_SubAcc_Ram                                 ;80D111|80D116
+                JMP.W Op_AddAcc_Ram                               ;80D113|80D0B0
 
 
 ; --------------------------------------------------------
-;  sub_80D116   [14 ins, returns RTS]
-;    callers: sub_80D08C
+;  Op_SubAcc_Ram   [14 ins, returns RTS]
+;    callers: Op_AddAcc_Fld
 ;    writes:    zp_00
-;    reads:     zp_00, curObjIdx, scriptPC, zp_8E, objField_0FC1
-;    calls:     sub_80D0CA
+;    reads:     zp_00, curObjIdx, scriptPC, vmAcc, objField_0FC1
+;    calls:     Op_AddAcc_TFld
 ; --------------------------------------------------------
-sub_80D116:
+Op_SubAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D116|000070
                 INY                                            ;80D118|
                 INY                                            ;80D119|
                 TAX                                            ;80D11A|
                 LDA.B zp_00,X                                  ;80D11B|000000
                 SEC                                            ;80D11D|
-                SBC.B zp_8E                                    ;80D11E|00008E
+                SBC.B vmAcc                                    ;80D11E|00008E
                 STA.B zp_00,X                                  ;80D120|000000
                 RTS                                            ;80D122|
 
 
-loc_80D123:
+Op_SubAcc_TFld_Facing:
                 LDX.B curObjIdx                                ;80D123|000042
                 LDA.W objField_0FC1,X                          ;80D125|800FC1
                 AND.W #$0040                                   ;80D128|
-                BEQ hwmath_80D130                              ;80D12B|80D130
-                JMP.W sub_80D0CA                               ;80D12D|80D0CA
+                BEQ Op_SubAcc_TFld                              ;80D12B|80D130
+                JMP.W Op_AddAcc_TFld                               ;80D12D|80D0CA
 
 
 ; --------------------------------------------------------
-;  hwmath_80D130   [1463 ins, returns RTS]
-;    callers: sub_80D0B0
+;  Op_SubAcc_TFld   [1463 ins, returns RTS]
+;    callers: Op_AddAcc_Ram
 ;    reads HW:  RDMPYL
 ;    writes HW: WRMPYA, WRMPYB
 ;    writes:    zp_00, refillTmp32, refillStageIdx, zp_36, refillSaveX, refillSaveY ...
 ;    reads:     zp_00, refillTmp32, refillStageIdx, zp_36, refillSaveX, refillSaveY ...
-;    calls:     sub_80DCE9, sub_80DCEE, sub_80DD00, sub_80DD08, sub_8091ED, sub_80DC60, +26 more
+;    calls:     VM_GetOperandImm, VM_GetOperandFld, VM_GetOperandRam, VM_GetOperandTFld, VM_GetRandom, VM_TestBit_Imm, +26 more
 ; --------------------------------------------------------
-hwmath_80D130:
+Op_SubAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D130|000070
                 INY                                            ;80D132|
                 AND.W #$00FF                                   ;80D133|
@@ -15144,16 +15144,16 @@ hwmath_80D130:
                 LDA.W data_80F3A3,X                            ;80D137|80F3A3
                 CLC                                            ;80D13A|
                 LDX.B curObjIdx                                ;80D13B|000042
-                ADC.W objField_13D1,X                          ;80D13D|8013D1
+                ADC.W objTarget,X                          ;80D13D|8013D1
                 TAX                                            ;80D140|
                 LDA.W objField_0F21,X                          ;80D141|800F21
                 SEC                                            ;80D144|
-                SBC.B zp_8E                                    ;80D145|00008E
+                SBC.B vmAcc                                    ;80D145|00008E
                 STA.W objField_0F21,X                          ;80D147|800F21
                 RTS                                            ;80D14A|
 
 
-loc_80D14B:
+Op_AndAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D14B|000070
                 INY                                            ;80D14D|
                 AND.W #$00FF                                   ;80D14E|
@@ -15163,23 +15163,23 @@ loc_80D14B:
                 ADC.B curObjIdx                                ;80D156|000042
                 TAX                                            ;80D158|
                 LDA.W objField_0F21,X                          ;80D159|800F21
-                AND.B zp_8E                                    ;80D15C|00008E
+                AND.B vmAcc                                    ;80D15C|00008E
                 STA.W objField_0F21,X                          ;80D15E|800F21
                 RTS                                            ;80D161|
 
 
-loc_80D162:
+Op_AndAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D162|000070
                 INY                                            ;80D164|
                 INY                                            ;80D165|
                 TAX                                            ;80D166|
                 LDA.B zp_00,X                                  ;80D167|000000
-                AND.B zp_8E                                    ;80D169|00008E
+                AND.B vmAcc                                    ;80D169|00008E
                 STA.B zp_00,X                                  ;80D16B|000000
                 RTS                                            ;80D16D|
 
 
-loc_80D16E:
+Op_AndAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D16E|000070
                 INY                                            ;80D170|
                 AND.W #$00FF                                   ;80D171|
@@ -15187,15 +15187,15 @@ loc_80D16E:
                 LDA.W data_80F3A3,X                            ;80D175|80F3A3
                 CLC                                            ;80D178|
                 LDX.B curObjIdx                                ;80D179|000042
-                ADC.W objField_13D1,X                          ;80D17B|8013D1
+                ADC.W objTarget,X                          ;80D17B|8013D1
                 TAX                                            ;80D17E|
                 LDA.W objField_0F21,X                          ;80D17F|800F21
-                AND.B zp_8E                                    ;80D182|00008E
+                AND.B vmAcc                                    ;80D182|00008E
                 STA.W objField_0F21,X                          ;80D184|800F21
                 RTS                                            ;80D187|
 
 
-loc_80D188:
+Op_OrAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D188|000070
                 INY                                            ;80D18A|
                 AND.W #$00FF                                   ;80D18B|
@@ -15205,23 +15205,23 @@ loc_80D188:
                 ADC.B curObjIdx                                ;80D193|000042
                 TAX                                            ;80D195|
                 LDA.W objField_0F21,X                          ;80D196|800F21
-                ORA.B zp_8E                                    ;80D199|00008E
+                ORA.B vmAcc                                    ;80D199|00008E
                 STA.W objField_0F21,X                          ;80D19B|800F21
                 RTS                                            ;80D19E|
 
 
-loc_80D19F:
+Op_OrAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D19F|000070
                 INY                                            ;80D1A1|
                 INY                                            ;80D1A2|
                 TAX                                            ;80D1A3|
                 LDA.B zp_00,X                                  ;80D1A4|000000
-                ORA.B zp_8E                                    ;80D1A6|00008E
+                ORA.B vmAcc                                    ;80D1A6|00008E
                 STA.B zp_00,X                                  ;80D1A8|000000
                 RTS                                            ;80D1AA|
 
 
-loc_80D1AB:
+Op_OrAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D1AB|000070
                 INY                                            ;80D1AD|
                 AND.W #$00FF                                   ;80D1AE|
@@ -15229,15 +15229,15 @@ loc_80D1AB:
                 LDA.W data_80F3A3,X                            ;80D1B2|80F3A3
                 CLC                                            ;80D1B5|
                 LDX.B curObjIdx                                ;80D1B6|000042
-                ADC.W objField_13D1,X                          ;80D1B8|8013D1
+                ADC.W objTarget,X                          ;80D1B8|8013D1
                 TAX                                            ;80D1BB|
                 LDA.W objField_0F21,X                          ;80D1BC|800F21
-                ORA.B zp_8E                                    ;80D1BF|00008E
+                ORA.B vmAcc                                    ;80D1BF|00008E
                 STA.W objField_0F21,X                          ;80D1C1|800F21
                 RTS                                            ;80D1C4|
 
 
-loc_80D1C5:
+Op_XorAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D1C5|000070
                 INY                                            ;80D1C7|
                 AND.W #$00FF                                   ;80D1C8|
@@ -15247,23 +15247,23 @@ loc_80D1C5:
                 ADC.B curObjIdx                                ;80D1D0|000042
                 TAX                                            ;80D1D2|
                 LDA.W objField_0F21,X                          ;80D1D3|800F21
-                EOR.B zp_8E                                    ;80D1D6|00008E
+                EOR.B vmAcc                                    ;80D1D6|00008E
                 STA.W objField_0F21,X                          ;80D1D8|800F21
                 RTS                                            ;80D1DB|
 
 
-loc_80D1DC:
+Op_XorAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D1DC|000070
                 INY                                            ;80D1DE|
                 INY                                            ;80D1DF|
                 TAX                                            ;80D1E0|
                 LDA.B zp_00,X                                  ;80D1E1|000000
-                EOR.B zp_8E                                    ;80D1E3|00008E
+                EOR.B vmAcc                                    ;80D1E3|00008E
                 STA.B zp_00,X                                  ;80D1E5|000000
                 RTS                                            ;80D1E7|
 
 
-loc_80D1E8:
+Op_XorAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D1E8|000070
                 INY                                            ;80D1EA|
                 AND.W #$00FF                                   ;80D1EB|
@@ -15271,21 +15271,21 @@ loc_80D1E8:
                 LDA.W data_80F3A3,X                            ;80D1EF|80F3A3
                 CLC                                            ;80D1F2|
                 LDX.B curObjIdx                                ;80D1F3|000042
-                ADC.W objField_13D1,X                          ;80D1F5|8013D1
+                ADC.W objTarget,X                          ;80D1F5|8013D1
                 TAX                                            ;80D1F8|
                 LDA.W objField_0F21,X                          ;80D1F9|800F21
-                EOR.B zp_8E                                    ;80D1FC|00008E
+                EOR.B vmAcc                                    ;80D1FC|00008E
                 STA.W objField_0F21,X                          ;80D1FE|800F21
                 RTS                                            ;80D201|
 
 
-loc_80D202:
-                JSR.W sub_80DCE9                               ;80D202|80DCE9
+Op_JmpIfAccGEu_Imm:
+                JSR.W VM_GetOperandImm                               ;80D202|80DCE9
                 STA.B refillTmp32                              ;80D205|000032
-                LDA.B zp_8E                                    ;80D207|00008E
+                LDA.B vmAcc                                    ;80D207|00008E
                 CMP.B refillTmp32                              ;80D209|000032
                 BCC +                                          ;80D20B|80D210
-                JMP.W sub_80CD70                               ;80D20D|80CD70
+                JMP.W Op_Goto                               ;80D20D|80CD70
 
 
              +: INY                                            ;80D210|
@@ -15293,13 +15293,13 @@ loc_80D202:
                 RTS                                            ;80D212|
 
 
-loc_80D213:
-                JSR.W sub_80DCEE                               ;80D213|80DCEE
+Op_JmpIfAccGEu_Fld:
+                JSR.W VM_GetOperandFld                               ;80D213|80DCEE
                 STA.B refillTmp32                              ;80D216|000032
-                LDA.B zp_8E                                    ;80D218|00008E
+                LDA.B vmAcc                                    ;80D218|00008E
                 CMP.B refillTmp32                              ;80D21A|000032
                 BCC +                                          ;80D21C|80D221
-                JMP.W sub_80CD70                               ;80D21E|80CD70
+                JMP.W Op_Goto                               ;80D21E|80CD70
 
 
              +: INY                                            ;80D221|
@@ -15307,13 +15307,13 @@ loc_80D213:
                 RTS                                            ;80D223|
 
 
-loc_80D224:
-                JSR.W sub_80DD00                               ;80D224|80DD00
+Op_JmpIfAccGEu_Ram:
+                JSR.W VM_GetOperandRam                               ;80D224|80DD00
                 STA.B refillTmp32                              ;80D227|000032
-                LDA.B zp_8E                                    ;80D229|00008E
+                LDA.B vmAcc                                    ;80D229|00008E
                 CMP.B refillTmp32                              ;80D22B|000032
                 BCC +                                          ;80D22D|80D232
-                JMP.W sub_80CD70                               ;80D22F|80CD70
+                JMP.W Op_Goto                               ;80D22F|80CD70
 
 
              +: INY                                            ;80D232|
@@ -15321,13 +15321,13 @@ loc_80D224:
                 RTS                                            ;80D234|
 
 
-loc_80D235:
-                JSR.W sub_80DD08                               ;80D235|80DD08
+Op_JmpIfAccGEu_TFld:
+                JSR.W VM_GetOperandTFld                               ;80D235|80DD08
                 STA.B refillTmp32                              ;80D238|000032
-                LDA.B zp_8E                                    ;80D23A|00008E
+                LDA.B vmAcc                                    ;80D23A|00008E
                 CMP.B refillTmp32                              ;80D23C|000032
                 BCC +                                          ;80D23E|80D243
-                JMP.W sub_80CD70                               ;80D240|80CD70
+                JMP.W Op_Goto                               ;80D240|80CD70
 
 
              +: INY                                            ;80D243|
@@ -15335,13 +15335,13 @@ loc_80D235:
                 RTS                                            ;80D245|
 
 
-loc_80D246:
-                JSR.W sub_8091ED                               ;80D246|8091ED
+Op_JmpIfAccGEu_Rnd:
+                JSR.W VM_GetRandom                               ;80D246|8091ED
                 STA.B refillTmp32                              ;80D249|000032
-                LDA.B zp_8E                                    ;80D24B|00008E
+                LDA.B vmAcc                                    ;80D24B|00008E
                 CMP.B refillTmp32                              ;80D24D|000032
                 BCC +                                          ;80D24F|80D254
-                JMP.W sub_80CD70                               ;80D251|80CD70
+                JMP.W Op_Goto                               ;80D251|80CD70
 
 
              +: INY                                            ;80D254|
@@ -15349,13 +15349,13 @@ loc_80D246:
                 RTS                                            ;80D256|
 
 
-loc_80D257:
-                JSR.W sub_80DCE9                               ;80D257|80DCE9
+Op_JmpIfAccLTu_Imm:
+                JSR.W VM_GetOperandImm                               ;80D257|80DCE9
                 STA.B refillTmp32                              ;80D25A|000032
-                LDA.B zp_8E                                    ;80D25C|00008E
+                LDA.B vmAcc                                    ;80D25C|00008E
                 CMP.B refillTmp32                              ;80D25E|000032
                 BCS +                                          ;80D260|80D265
-                JMP.W sub_80CD70                               ;80D262|80CD70
+                JMP.W Op_Goto                               ;80D262|80CD70
 
 
              +: INY                                            ;80D265|
@@ -15363,13 +15363,13 @@ loc_80D257:
                 RTS                                            ;80D267|
 
 
-loc_80D268:
-                JSR.W sub_80DCEE                               ;80D268|80DCEE
+Op_JmpIfAccLTu_Fld:
+                JSR.W VM_GetOperandFld                               ;80D268|80DCEE
                 STA.B refillTmp32                              ;80D26B|000032
-                LDA.B zp_8E                                    ;80D26D|00008E
+                LDA.B vmAcc                                    ;80D26D|00008E
                 CMP.B refillTmp32                              ;80D26F|000032
                 BCS +                                          ;80D271|80D276
-                JMP.W sub_80CD70                               ;80D273|80CD70
+                JMP.W Op_Goto                               ;80D273|80CD70
 
 
              +: INY                                            ;80D276|
@@ -15377,13 +15377,13 @@ loc_80D268:
                 RTS                                            ;80D278|
 
 
-loc_80D279:
-                JSR.W sub_80DD00                               ;80D279|80DD00
+Op_JmpIfAccLTu_Ram:
+                JSR.W VM_GetOperandRam                               ;80D279|80DD00
                 STA.B refillTmp32                              ;80D27C|000032
-                LDA.B zp_8E                                    ;80D27E|00008E
+                LDA.B vmAcc                                    ;80D27E|00008E
                 CMP.B refillTmp32                              ;80D280|000032
                 BCS +                                          ;80D282|80D287
-                JMP.W sub_80CD70                               ;80D284|80CD70
+                JMP.W Op_Goto                               ;80D284|80CD70
 
 
              +: INY                                            ;80D287|
@@ -15391,13 +15391,13 @@ loc_80D279:
                 RTS                                            ;80D289|
 
 
-loc_80D28A:
-                JSR.W sub_80DD08                               ;80D28A|80DD08
+Op_JmpIfAccLTu_TFld:
+                JSR.W VM_GetOperandTFld                               ;80D28A|80DD08
                 STA.B refillTmp32                              ;80D28D|000032
-                LDA.B zp_8E                                    ;80D28F|00008E
+                LDA.B vmAcc                                    ;80D28F|00008E
                 CMP.B refillTmp32                              ;80D291|000032
                 BCS +                                          ;80D293|80D298
-                JMP.W sub_80CD70                               ;80D295|80CD70
+                JMP.W Op_Goto                               ;80D295|80CD70
 
 
              +: INY                                            ;80D298|
@@ -15405,13 +15405,13 @@ loc_80D28A:
                 RTS                                            ;80D29A|
 
 
-loc_80D29B:
-                JSR.W sub_8091ED                               ;80D29B|8091ED
+Op_JmpIfAccLTu_Rnd:
+                JSR.W VM_GetRandom                               ;80D29B|8091ED
                 STA.B refillTmp32                              ;80D29E|000032
-                LDA.B zp_8E                                    ;80D2A0|00008E
+                LDA.B vmAcc                                    ;80D2A0|00008E
                 CMP.B refillTmp32                              ;80D2A2|000032
                 BCS +                                          ;80D2A4|80D2A9
-                JMP.W sub_80CD70                               ;80D2A6|80CD70
+                JMP.W Op_Goto                               ;80D2A6|80CD70
 
 
              +: INY                                            ;80D2A9|
@@ -15419,10 +15419,10 @@ loc_80D29B:
                 RTS                                            ;80D2AB|
 
 
-loc_80D2AC:
-                JSR.W sub_80DCE9                               ;80D2AC|80DCE9
+Op_JmpIfAccGEs_Imm:
+                JSR.W VM_GetOperandImm                               ;80D2AC|80DCE9
                 STA.B refillTmp32                              ;80D2AF|000032
-                LDA.B zp_8E                                    ;80D2B1|00008E
+                LDA.B vmAcc                                    ;80D2B1|00008E
                 SEC                                            ;80D2B3|
                 SBC.B refillTmp32                              ;80D2B4|000032
                 BVS +                                          ;80D2B6|80D2BC
@@ -15432,7 +15432,7 @@ loc_80D2AC:
 
              +: BPL .skip2                                     ;80D2BC|80D2C1
 
-         .skip: JMP.W sub_80CD70                               ;80D2BE|80CD70
+         .skip: JMP.W Op_Goto                               ;80D2BE|80CD70
 
 
         .skip2: INY                                            ;80D2C1|
@@ -15440,10 +15440,10 @@ loc_80D2AC:
                 RTS                                            ;80D2C3|
 
 
-loc_80D2C4:
-                JSR.W sub_80DCEE                               ;80D2C4|80DCEE
+Op_JmpIfAccGEs_Fld:
+                JSR.W VM_GetOperandFld                               ;80D2C4|80DCEE
                 STA.B refillTmp32                              ;80D2C7|000032
-                LDA.B zp_8E                                    ;80D2C9|00008E
+                LDA.B vmAcc                                    ;80D2C9|00008E
                 SEC                                            ;80D2CB|
                 SBC.B refillTmp32                              ;80D2CC|000032
                 BVS +                                          ;80D2CE|80D2D4
@@ -15453,7 +15453,7 @@ loc_80D2C4:
 
              +: BPL .skip2                                     ;80D2D4|80D2D9
 
-         .skip: JMP.W sub_80CD70                               ;80D2D6|80CD70
+         .skip: JMP.W Op_Goto                               ;80D2D6|80CD70
 
 
         .skip2: INY                                            ;80D2D9|
@@ -15461,10 +15461,10 @@ loc_80D2C4:
                 RTS                                            ;80D2DB|
 
 
-loc_80D2DC:
-                JSR.W sub_80DD00                               ;80D2DC|80DD00
+Op_JmpIfAccGEs_Ram:
+                JSR.W VM_GetOperandRam                               ;80D2DC|80DD00
                 STA.B refillTmp32                              ;80D2DF|000032
-                LDA.B zp_8E                                    ;80D2E1|00008E
+                LDA.B vmAcc                                    ;80D2E1|00008E
                 SEC                                            ;80D2E3|
                 SBC.B refillTmp32                              ;80D2E4|000032
                 BVS +                                          ;80D2E6|80D2EC
@@ -15474,7 +15474,7 @@ loc_80D2DC:
 
              +: BPL .skip2                                     ;80D2EC|80D2F1
 
-         .skip: JMP.W sub_80CD70                               ;80D2EE|80CD70
+         .skip: JMP.W Op_Goto                               ;80D2EE|80CD70
 
 
         .skip2: INY                                            ;80D2F1|
@@ -15482,10 +15482,10 @@ loc_80D2DC:
                 RTS                                            ;80D2F3|
 
 
-loc_80D2F4:
-                JSR.W sub_80DD08                               ;80D2F4|80DD08
+Op_JmpIfAccGEs_TFld:
+                JSR.W VM_GetOperandTFld                               ;80D2F4|80DD08
                 STA.B refillTmp32                              ;80D2F7|000032
-                LDA.B zp_8E                                    ;80D2F9|00008E
+                LDA.B vmAcc                                    ;80D2F9|00008E
                 SEC                                            ;80D2FB|
                 SBC.B refillTmp32                              ;80D2FC|000032
                 BVS +                                          ;80D2FE|80D304
@@ -15495,7 +15495,7 @@ loc_80D2F4:
 
              +: BPL .skip2                                     ;80D304|80D309
 
-         .skip: JMP.W sub_80CD70                               ;80D306|80CD70
+         .skip: JMP.W Op_Goto                               ;80D306|80CD70
 
 
         .skip2: INY                                            ;80D309|
@@ -15503,10 +15503,10 @@ loc_80D2F4:
                 RTS                                            ;80D30B|
 
 
-loc_80D30C:
-                JSR.W sub_8091ED                               ;80D30C|8091ED
+Op_JmpIfAccGEs_Rnd:
+                JSR.W VM_GetRandom                               ;80D30C|8091ED
                 STA.B refillTmp32                              ;80D30F|000032
-                LDA.B zp_8E                                    ;80D311|00008E
+                LDA.B vmAcc                                    ;80D311|00008E
                 SEC                                            ;80D313|
                 SBC.B refillTmp32                              ;80D314|000032
                 BVS +                                          ;80D316|80D31C
@@ -15516,7 +15516,7 @@ loc_80D30C:
 
              +: BPL .skip2                                     ;80D31C|80D321
 
-         .skip: JMP.W sub_80CD70                               ;80D31E|80CD70
+         .skip: JMP.W Op_Goto                               ;80D31E|80CD70
 
 
         .skip2: INY                                            ;80D321|
@@ -15524,10 +15524,10 @@ loc_80D30C:
                 RTS                                            ;80D323|
 
 
-loc_80D324:
-                JSR.W sub_80DCE9                               ;80D324|80DCE9
+Op_JmpIfAccLTs_Imm:
+                JSR.W VM_GetOperandImm                               ;80D324|80DCE9
                 STA.B refillTmp32                              ;80D327|000032
-                LDA.B zp_8E                                    ;80D329|00008E
+                LDA.B vmAcc                                    ;80D329|00008E
                 SEC                                            ;80D32B|
                 SBC.B refillTmp32                              ;80D32C|000032
                 BVS +                                          ;80D32E|80D334
@@ -15537,7 +15537,7 @@ loc_80D324:
 
              +: BMI .skip                                      ;80D334|80D339
 
-         .cont: JMP.W sub_80CD70                               ;80D336|80CD70
+         .cont: JMP.W Op_Goto                               ;80D336|80CD70
 
 
          .skip: INY                                            ;80D339|
@@ -15545,10 +15545,10 @@ loc_80D324:
                 RTS                                            ;80D33B|
 
 
-loc_80D33C:
-                JSR.W sub_80DCEE                               ;80D33C|80DCEE
+Op_JmpIfAccLTs_Fld:
+                JSR.W VM_GetOperandFld                               ;80D33C|80DCEE
                 STA.B refillTmp32                              ;80D33F|000032
-                LDA.B zp_8E                                    ;80D341|00008E
+                LDA.B vmAcc                                    ;80D341|00008E
                 SEC                                            ;80D343|
                 SBC.B refillTmp32                              ;80D344|000032
                 BVS +                                          ;80D346|80D34C
@@ -15558,7 +15558,7 @@ loc_80D33C:
 
              +: BMI .skip                                      ;80D34C|80D351
 
-         .cont: JMP.W sub_80CD70                               ;80D34E|80CD70
+         .cont: JMP.W Op_Goto                               ;80D34E|80CD70
 
 
          .skip: INY                                            ;80D351|
@@ -15566,10 +15566,10 @@ loc_80D33C:
                 RTS                                            ;80D353|
 
 
-loc_80D354:
-                JSR.W sub_80DD00                               ;80D354|80DD00
+Op_JmpIfAccLTs_Ram:
+                JSR.W VM_GetOperandRam                               ;80D354|80DD00
                 STA.B refillTmp32                              ;80D357|000032
-                LDA.B zp_8E                                    ;80D359|00008E
+                LDA.B vmAcc                                    ;80D359|00008E
                 SEC                                            ;80D35B|
                 SBC.B refillTmp32                              ;80D35C|000032
                 BVS +                                          ;80D35E|80D364
@@ -15579,7 +15579,7 @@ loc_80D354:
 
              +: BMI .skip                                      ;80D364|80D369
 
-         .cont: JMP.W sub_80CD70                               ;80D366|80CD70
+         .cont: JMP.W Op_Goto                               ;80D366|80CD70
 
 
          .skip: INY                                            ;80D369|
@@ -15587,10 +15587,10 @@ loc_80D354:
                 RTS                                            ;80D36B|
 
 
-loc_80D36C:
-                JSR.W sub_80DD08                               ;80D36C|80DD08
+Op_JmpIfAccLTs_TFld:
+                JSR.W VM_GetOperandTFld                               ;80D36C|80DD08
                 STA.B refillTmp32                              ;80D36F|000032
-                LDA.B zp_8E                                    ;80D371|00008E
+                LDA.B vmAcc                                    ;80D371|00008E
                 SEC                                            ;80D373|
                 SBC.B refillTmp32                              ;80D374|000032
                 BVS +                                          ;80D376|80D37C
@@ -15600,7 +15600,7 @@ loc_80D36C:
 
              +: BMI .skip                                      ;80D37C|80D381
 
-         .cont: JMP.W sub_80CD70                               ;80D37E|80CD70
+         .cont: JMP.W Op_Goto                               ;80D37E|80CD70
 
 
          .skip: INY                                            ;80D381|
@@ -15608,10 +15608,10 @@ loc_80D36C:
                 RTS                                            ;80D383|
 
 
-loc_80D384:
-                JSR.W sub_8091ED                               ;80D384|8091ED
+Op_JmpIfAccLTs_Rnd:
+                JSR.W VM_GetRandom                               ;80D384|8091ED
                 STA.B refillTmp32                              ;80D387|000032
-                LDA.B zp_8E                                    ;80D389|00008E
+                LDA.B vmAcc                                    ;80D389|00008E
                 SEC                                            ;80D38B|
                 SBC.B refillTmp32                              ;80D38C|000032
                 BVS +                                          ;80D38E|80D394
@@ -15621,7 +15621,7 @@ loc_80D384:
 
              +: BMI .skip                                      ;80D394|80D399
 
-         .cont: JMP.W sub_80CD70                               ;80D396|80CD70
+         .cont: JMP.W Op_Goto                               ;80D396|80CD70
 
 
          .skip: INY                                            ;80D399|
@@ -15629,11 +15629,11 @@ loc_80D384:
                 RTS                                            ;80D39B|
 
 
-loc_80D39C:
-                JSR.W sub_80DCE9                               ;80D39C|80DCE9
-                CMP.B zp_8E                                    ;80D39F|00008E
+Op_JmpIfAccEq_Imm:
+                JSR.W VM_GetOperandImm                               ;80D39C|80DCE9
+                CMP.B vmAcc                                    ;80D39F|00008E
                 BNE +                                          ;80D3A1|80D3A6
-                JMP.W sub_80CD70                               ;80D3A3|80CD70
+                JMP.W Op_Goto                               ;80D3A3|80CD70
 
 
              +: INY                                            ;80D3A6|
@@ -15641,11 +15641,11 @@ loc_80D39C:
                 RTS                                            ;80D3A8|
 
 
-loc_80D3A9:
-                JSR.W sub_80DCEE                               ;80D3A9|80DCEE
-                CMP.B zp_8E                                    ;80D3AC|00008E
+Op_JmpIfAccEq_Fld:
+                JSR.W VM_GetOperandFld                               ;80D3A9|80DCEE
+                CMP.B vmAcc                                    ;80D3AC|00008E
                 BNE +                                          ;80D3AE|80D3B3
-                JMP.W sub_80CD70                               ;80D3B0|80CD70
+                JMP.W Op_Goto                               ;80D3B0|80CD70
 
 
              +: INY                                            ;80D3B3|
@@ -15653,11 +15653,11 @@ loc_80D3A9:
                 RTS                                            ;80D3B5|
 
 
-loc_80D3B6:
-                JSR.W sub_80DD00                               ;80D3B6|80DD00
-                CMP.B zp_8E                                    ;80D3B9|00008E
+Op_JmpIfAccEq_Ram:
+                JSR.W VM_GetOperandRam                               ;80D3B6|80DD00
+                CMP.B vmAcc                                    ;80D3B9|00008E
                 BNE +                                          ;80D3BB|80D3C0
-                JMP.W sub_80CD70                               ;80D3BD|80CD70
+                JMP.W Op_Goto                               ;80D3BD|80CD70
 
 
              +: INY                                            ;80D3C0|
@@ -15665,11 +15665,11 @@ loc_80D3B6:
                 RTS                                            ;80D3C2|
 
 
-loc_80D3C3:
-                JSR.W sub_80DD08                               ;80D3C3|80DD08
-                CMP.B zp_8E                                    ;80D3C6|00008E
+Op_JmpIfAccEq_TFld:
+                JSR.W VM_GetOperandTFld                               ;80D3C3|80DD08
+                CMP.B vmAcc                                    ;80D3C6|00008E
                 BNE +                                          ;80D3C8|80D3CD
-                JMP.W sub_80CD70                               ;80D3CA|80CD70
+                JMP.W Op_Goto                               ;80D3CA|80CD70
 
 
              +: INY                                            ;80D3CD|
@@ -15677,11 +15677,11 @@ loc_80D3C3:
                 RTS                                            ;80D3CF|
 
 
-loc_80D3D0:
-                JSR.W sub_8091ED                               ;80D3D0|8091ED
-                CMP.B zp_8E                                    ;80D3D3|00008E
+Op_JmpIfAccEq_Rnd:
+                JSR.W VM_GetRandom                               ;80D3D0|8091ED
+                CMP.B vmAcc                                    ;80D3D3|00008E
                 BNE +                                          ;80D3D5|80D3DA
-                JMP.W sub_80CD70                               ;80D3D7|80CD70
+                JMP.W Op_Goto                               ;80D3D7|80CD70
 
 
              +: INY                                            ;80D3DA|
@@ -15689,11 +15689,11 @@ loc_80D3D0:
                 RTS                                            ;80D3DC|
 
 
-loc_80D3DD:
-                JSR.W sub_80DCE9                               ;80D3DD|80DCE9
-                CMP.B zp_8E                                    ;80D3E0|00008E
+Op_JmpIfAccNe_Imm:
+                JSR.W VM_GetOperandImm                               ;80D3DD|80DCE9
+                CMP.B vmAcc                                    ;80D3E0|00008E
                 BEQ +                                          ;80D3E2|80D3E7
-                JMP.W sub_80CD70                               ;80D3E4|80CD70
+                JMP.W Op_Goto                               ;80D3E4|80CD70
 
 
              +: INY                                            ;80D3E7|
@@ -15701,11 +15701,11 @@ loc_80D3DD:
                 RTS                                            ;80D3E9|
 
 
-loc_80D3EA:
-                JSR.W sub_80DCEE                               ;80D3EA|80DCEE
-                CMP.B zp_8E                                    ;80D3ED|00008E
+Op_JmpIfAccNe_Fld:
+                JSR.W VM_GetOperandFld                               ;80D3EA|80DCEE
+                CMP.B vmAcc                                    ;80D3ED|00008E
                 BEQ +                                          ;80D3EF|80D3F4
-                JMP.W sub_80CD70                               ;80D3F1|80CD70
+                JMP.W Op_Goto                               ;80D3F1|80CD70
 
 
              +: INY                                            ;80D3F4|
@@ -15713,11 +15713,11 @@ loc_80D3EA:
                 RTS                                            ;80D3F6|
 
 
-loc_80D3F7:
-                JSR.W sub_80DD00                               ;80D3F7|80DD00
-                CMP.B zp_8E                                    ;80D3FA|00008E
+Op_JmpIfAccNe_Ram:
+                JSR.W VM_GetOperandRam                               ;80D3F7|80DD00
+                CMP.B vmAcc                                    ;80D3FA|00008E
                 BEQ +                                          ;80D3FC|80D401
-                JMP.W sub_80CD70                               ;80D3FE|80CD70
+                JMP.W Op_Goto                               ;80D3FE|80CD70
 
 
              +: INY                                            ;80D401|
@@ -15725,11 +15725,11 @@ loc_80D3F7:
                 RTS                                            ;80D403|
 
 
-loc_80D404:
-                JSR.W sub_80DD08                               ;80D404|80DD08
-                CMP.B zp_8E                                    ;80D407|00008E
+Op_JmpIfAccNe_TFld:
+                JSR.W VM_GetOperandTFld                               ;80D404|80DD08
+                CMP.B vmAcc                                    ;80D407|00008E
                 BEQ +                                          ;80D409|80D40E
-                JMP.W sub_80CD70                               ;80D40B|80CD70
+                JMP.W Op_Goto                               ;80D40B|80CD70
 
 
              +: INY                                            ;80D40E|
@@ -15737,11 +15737,11 @@ loc_80D404:
                 RTS                                            ;80D410|
 
 
-loc_80D411:
-                JSR.W sub_8091ED                               ;80D411|8091ED
-                CMP.B zp_8E                                    ;80D414|00008E
+Op_JmpIfAccNe_Rnd:
+                JSR.W VM_GetRandom                               ;80D411|8091ED
+                CMP.B vmAcc                                    ;80D414|00008E
                 BEQ +                                          ;80D416|80D41B
-                JMP.W sub_80CD70                               ;80D418|80CD70
+                JMP.W Op_Goto                               ;80D418|80CD70
 
 
              +: INY                                            ;80D41B|
@@ -15749,11 +15749,11 @@ loc_80D411:
                 RTS                                            ;80D41D|
 
 
-loc_80D41E:
-                JSR.W sub_80DCE9                               ;80D41E|80DCE9
-                CMP.B zp_8E                                    ;80D421|00008E
+Op_CallIfAccEq_Imm:
+                JSR.W VM_GetOperandImm                               ;80D41E|80DCE9
+                CMP.B vmAcc                                    ;80D421|00008E
                 BNE +                                          ;80D423|80D428
-                JMP.W loc_80CD65                               ;80D425|80CD65
+                JMP.W Op_Call                               ;80D425|80CD65
 
 
              +: INY                                            ;80D428|
@@ -15761,11 +15761,11 @@ loc_80D41E:
                 RTS                                            ;80D42A|
 
 
-loc_80D42B:
-                JSR.W sub_80DCEE                               ;80D42B|80DCEE
-                CMP.B zp_8E                                    ;80D42E|00008E
+Op_CallIfAccEq_Fld:
+                JSR.W VM_GetOperandFld                               ;80D42B|80DCEE
+                CMP.B vmAcc                                    ;80D42E|00008E
                 BNE +                                          ;80D430|80D435
-                JMP.W loc_80CD65                               ;80D432|80CD65
+                JMP.W Op_Call                               ;80D432|80CD65
 
 
              +: INY                                            ;80D435|
@@ -15773,11 +15773,11 @@ loc_80D42B:
                 RTS                                            ;80D437|
 
 
-loc_80D438:
-                JSR.W sub_80DD00                               ;80D438|80DD00
-                CMP.B zp_8E                                    ;80D43B|00008E
+Op_CallIfAccEq_Ram:
+                JSR.W VM_GetOperandRam                               ;80D438|80DD00
+                CMP.B vmAcc                                    ;80D43B|00008E
                 BNE +                                          ;80D43D|80D442
-                JMP.W loc_80CD65                               ;80D43F|80CD65
+                JMP.W Op_Call                               ;80D43F|80CD65
 
 
              +: INY                                            ;80D442|
@@ -15785,11 +15785,11 @@ loc_80D438:
                 RTS                                            ;80D444|
 
 
-loc_80D445:
-                JSR.W sub_80DD08                               ;80D445|80DD08
-                CMP.B zp_8E                                    ;80D448|00008E
+Op_CallIfAccEq_TFld:
+                JSR.W VM_GetOperandTFld                               ;80D445|80DD08
+                CMP.B vmAcc                                    ;80D448|00008E
                 BNE +                                          ;80D44A|80D44F
-                JMP.W loc_80CD65                               ;80D44C|80CD65
+                JMP.W Op_Call                               ;80D44C|80CD65
 
 
              +: INY                                            ;80D44F|
@@ -15797,11 +15797,11 @@ loc_80D445:
                 RTS                                            ;80D451|
 
 
-loc_80D452:
-                JSR.W sub_8091ED                               ;80D452|8091ED
-                CMP.B zp_8E                                    ;80D455|00008E
+Op_CallIfAccEq_Rnd:
+                JSR.W VM_GetRandom                               ;80D452|8091ED
+                CMP.B vmAcc                                    ;80D455|00008E
                 BNE +                                          ;80D457|80D45C
-                JMP.W loc_80CD65                               ;80D459|80CD65
+                JMP.W Op_Call                               ;80D459|80CD65
 
 
              +: INY                                            ;80D45C|
@@ -15809,11 +15809,11 @@ loc_80D452:
                 RTS                                            ;80D45E|
 
 
-loc_80D45F:
-                JSR.W sub_80DCE9                               ;80D45F|80DCE9
-                CMP.B zp_8E                                    ;80D462|00008E
+Op_CallIfAccNe_Imm:
+                JSR.W VM_GetOperandImm                               ;80D45F|80DCE9
+                CMP.B vmAcc                                    ;80D462|00008E
                 BEQ +                                          ;80D464|80D469
-                JMP.W loc_80CD65                               ;80D466|80CD65
+                JMP.W Op_Call                               ;80D466|80CD65
 
 
              +: INY                                            ;80D469|
@@ -15821,11 +15821,11 @@ loc_80D45F:
                 RTS                                            ;80D46B|
 
 
-loc_80D46C:
-                JSR.W sub_80DCEE                               ;80D46C|80DCEE
-                CMP.B zp_8E                                    ;80D46F|00008E
+Op_CallIfAccNe_Fld:
+                JSR.W VM_GetOperandFld                               ;80D46C|80DCEE
+                CMP.B vmAcc                                    ;80D46F|00008E
                 BEQ +                                          ;80D471|80D476
-                JMP.W loc_80CD65                               ;80D473|80CD65
+                JMP.W Op_Call                               ;80D473|80CD65
 
 
              +: INY                                            ;80D476|
@@ -15833,11 +15833,11 @@ loc_80D46C:
                 RTS                                            ;80D478|
 
 
-loc_80D479:
-                JSR.W sub_80DD00                               ;80D479|80DD00
-                CMP.B zp_8E                                    ;80D47C|00008E
+Op_CallIfAccNe_Ram:
+                JSR.W VM_GetOperandRam                               ;80D479|80DD00
+                CMP.B vmAcc                                    ;80D47C|00008E
                 BEQ +                                          ;80D47E|80D483
-                JMP.W loc_80CD65                               ;80D480|80CD65
+                JMP.W Op_Call                               ;80D480|80CD65
 
 
              +: INY                                            ;80D483|
@@ -15845,11 +15845,11 @@ loc_80D479:
                 RTS                                            ;80D485|
 
 
-loc_80D486:
-                JSR.W sub_80DD08                               ;80D486|80DD08
-                CMP.B zp_8E                                    ;80D489|00008E
+Op_CallIfAccNe_TFld:
+                JSR.W VM_GetOperandTFld                               ;80D486|80DD08
+                CMP.B vmAcc                                    ;80D489|00008E
                 BEQ +                                          ;80D48B|80D490
-                JMP.W loc_80CD65                               ;80D48D|80CD65
+                JMP.W Op_Call                               ;80D48D|80CD65
 
 
              +: INY                                            ;80D490|
@@ -15857,11 +15857,11 @@ loc_80D486:
                 RTS                                            ;80D492|
 
 
-loc_80D493:
-                JSR.W sub_8091ED                               ;80D493|8091ED
-                CMP.B zp_8E                                    ;80D496|00008E
+Op_CallIfAccNe_Rnd:
+                JSR.W VM_GetRandom                               ;80D493|8091ED
+                CMP.B vmAcc                                    ;80D496|00008E
                 BEQ +                                          ;80D498|80D49D
-                JMP.W loc_80CD65                               ;80D49A|80CD65
+                JMP.W Op_Call                               ;80D49A|80CD65
 
 
              +: INY                                            ;80D49D|
@@ -15869,46 +15869,46 @@ loc_80D493:
                 RTS                                            ;80D49F|
 
 
-loc_80D4A0:
-                JSR.W sub_80DC60                               ;80D4A0|80DC60
-                STA.B zp_8E                                    ;80D4A3|00008E
+Op_LoadAccBit_Imm:
+                JSR.W VM_TestBit_Imm                               ;80D4A0|80DC60
+                STA.B vmAcc                                    ;80D4A3|00008E
                 RTS                                            ;80D4A5|
 
 
-loc_80D4A6:
-                JSR.W sub_80DC75                               ;80D4A6|80DC75
-                STA.B zp_8E                                    ;80D4A9|00008E
+Op_LoadAccBit_Fld:
+                JSR.W VM_TestBit_Fld                               ;80D4A6|80DC75
+                STA.B vmAcc                                    ;80D4A9|00008E
                 RTS                                            ;80D4AB|
 
 
-loc_80D4AC:
-                JSR.W sub_80DC97                               ;80D4AC|80DC97
-                STA.B zp_8E                                    ;80D4AF|00008E
+Op_LoadAccBit_Ram:
+                JSR.W VM_TestBit_Ram                               ;80D4AC|80DC97
+                STA.B vmAcc                                    ;80D4AF|00008E
                 RTS                                            ;80D4B1|
 
 
-loc_80D4B2:
-                JSR.W sub_80DCAF                               ;80D4B2|80DCAF
-                STA.B zp_8E                                    ;80D4B5|00008E
+Op_LoadAccBit_TFld:
+                JSR.W VM_TestBit_TFld                               ;80D4B2|80DCAF
+                STA.B vmAcc                                    ;80D4B5|00008E
                 RTS                                            ;80D4B7|
 
 
-loc_80D4B8:
-                JSR.W sub_8091ED                               ;80D4B8|8091ED
+Op_LoadAccBit_Rnd:
+                JSR.W VM_GetRandom                               ;80D4B8|8091ED
                 AND.W #$0001                                   ;80D4BB|
-                STA.B zp_8E                                    ;80D4BE|00008E
+                STA.B vmAcc                                    ;80D4BE|00008E
                 RTS                                            ;80D4C0|
 
 
-loc_80D4C1:
+Op_SetBitFromAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D4C1|000070
                 INY                                            ;80D4C3|
                 AND.W #$00FF                                   ;80D4C4|
                 TAX                                            ;80D4C7|
-                LDA.B zp_8E                                    ;80D4C8|00008E
+                LDA.B vmAcc                                    ;80D4C8|00008E
                 BEQ +                                          ;80D4CA|80D4D1
                 LDA.W data_80F3F7,X                            ;80D4CC|80F3F7
-                STA.B zp_8E                                    ;80D4CF|00008E
+                STA.B vmAcc                                    ;80D4CF|00008E
 
              +: LDA.W data_80F417,X                            ;80D4D1|80F417
                 STA.B refillTmp32                              ;80D4D4|000032
@@ -15922,20 +15922,20 @@ loc_80D4C1:
                 TAX                                            ;80D4E3|
                 LDA.W objField_0F21,X                          ;80D4E4|800F21
                 AND.B refillTmp32                              ;80D4E7|000032
-                ORA.B zp_8E                                    ;80D4E9|00008E
+                ORA.B vmAcc                                    ;80D4E9|00008E
                 STA.W objField_0F21,X                          ;80D4EB|800F21
                 RTS                                            ;80D4EE|
 
 
-loc_80D4EF:
+Op_SetBitFromAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D4EF|000070
                 INY                                            ;80D4F1|
                 AND.W #$00FF                                   ;80D4F2|
                 TAX                                            ;80D4F5|
-                LDA.B zp_8E                                    ;80D4F6|00008E
+                LDA.B vmAcc                                    ;80D4F6|00008E
                 BEQ +                                          ;80D4F8|80D4FF
                 LDA.W data_80F3F7,X                            ;80D4FA|80F3F7
-                STA.B zp_8E                                    ;80D4FD|00008E
+                STA.B vmAcc                                    ;80D4FD|00008E
 
              +: LDA.W data_80F417,X                            ;80D4FF|80F417
                 STA.B refillTmp32                              ;80D502|000032
@@ -15945,20 +15945,20 @@ loc_80D4EF:
                 TAX                                            ;80D508|
                 LDA.B zp_00,X                                  ;80D509|000000
                 AND.B refillTmp32                              ;80D50B|000032
-                ORA.B zp_8E                                    ;80D50D|00008E
+                ORA.B vmAcc                                    ;80D50D|00008E
                 STA.B zp_00,X                                  ;80D50F|000000
                 RTS                                            ;80D511|
 
 
-loc_80D512:
+Op_SetBitFromAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D512|000070
                 INY                                            ;80D514|
                 AND.W #$00FF                                   ;80D515|
                 TAX                                            ;80D518|
-                LDA.B zp_8E                                    ;80D519|00008E
+                LDA.B vmAcc                                    ;80D519|00008E
                 BEQ +                                          ;80D51B|80D522
                 LDA.W data_80F3F7,X                            ;80D51D|80F3F7
-                STA.B zp_8E                                    ;80D520|00008E
+                STA.B vmAcc                                    ;80D520|00008E
 
              +: LDA.W data_80F417,X                            ;80D522|80F417
                 STA.B refillTmp32                              ;80D525|000032
@@ -15969,24 +15969,24 @@ loc_80D512:
                 LDA.W data_80F3A3,X                            ;80D52E|80F3A3
                 CLC                                            ;80D531|
                 LDX.B curObjIdx                                ;80D532|000042
-                ADC.W objField_13D1,X                          ;80D534|8013D1
+                ADC.W objTarget,X                          ;80D534|8013D1
                 TAX                                            ;80D537|
                 LDA.W objField_0F21,X                          ;80D538|800F21
                 AND.B refillTmp32                              ;80D53B|000032
-                ORA.B zp_8E                                    ;80D53D|00008E
+                ORA.B vmAcc                                    ;80D53D|00008E
                 STA.W objField_0F21,X                          ;80D53F|800F21
                 RTS                                            ;80D542|
 
 
-loc_80D543:
+Op_AndBitAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D543|000070
                 INY                                            ;80D545|
                 AND.W #$00FF                                   ;80D546|
                 TAX                                            ;80D549|
-                LDA.B zp_8E                                    ;80D54A|00008E
+                LDA.B vmAcc                                    ;80D54A|00008E
                 BEQ +                                          ;80D54C|80D553
                 LDA.W data_80F3F7,X                            ;80D54E|80F3F7
-                STA.B zp_8E                                    ;80D551|00008E
+                STA.B vmAcc                                    ;80D551|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D553|000070
                 INY                                            ;80D555|
@@ -15997,40 +15997,40 @@ loc_80D543:
                 ADC.B curObjIdx                                ;80D55E|000042
                 TAX                                            ;80D560|
                 LDA.W objField_0F21,X                          ;80D561|800F21
-                AND.B zp_8E                                    ;80D564|00008E
+                AND.B vmAcc                                    ;80D564|00008E
                 STA.W objField_0F21,X                          ;80D566|800F21
                 RTS                                            ;80D569|
 
 
-loc_80D56A:
+Op_AndBitAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D56A|000070
                 INY                                            ;80D56C|
                 AND.W #$00FF                                   ;80D56D|
                 TAX                                            ;80D570|
-                LDA.B zp_8E                                    ;80D571|00008E
+                LDA.B vmAcc                                    ;80D571|00008E
                 BEQ +                                          ;80D573|80D57A
                 LDA.W data_80F3F7,X                            ;80D575|80F3F7
-                STA.B zp_8E                                    ;80D578|00008E
+                STA.B vmAcc                                    ;80D578|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D57A|000070
                 INY                                            ;80D57C|
                 INY                                            ;80D57D|
                 TAX                                            ;80D57E|
                 LDA.B zp_00,X                                  ;80D57F|000000
-                AND.B zp_8E                                    ;80D581|00008E
+                AND.B vmAcc                                    ;80D581|00008E
                 STA.B zp_00,X                                  ;80D583|000000
                 RTS                                            ;80D585|
 
 
-loc_80D586:
+Op_AndBitAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D586|000070
                 INY                                            ;80D588|
                 AND.W #$00FF                                   ;80D589|
                 TAX                                            ;80D58C|
-                LDA.B zp_8E                                    ;80D58D|00008E
+                LDA.B vmAcc                                    ;80D58D|00008E
                 BEQ +                                          ;80D58F|80D596
                 LDA.W data_80F3F7,X                            ;80D591|80F3F7
-                STA.B zp_8E                                    ;80D594|00008E
+                STA.B vmAcc                                    ;80D594|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D596|000070
                 INY                                            ;80D598|
@@ -16039,23 +16039,23 @@ loc_80D586:
                 LDA.W data_80F3A3,X                            ;80D59D|80F3A3
                 CLC                                            ;80D5A0|
                 LDX.B curObjIdx                                ;80D5A1|000042
-                ADC.W objField_13D1,X                          ;80D5A3|8013D1
+                ADC.W objTarget,X                          ;80D5A3|8013D1
                 TAX                                            ;80D5A6|
                 LDA.W objField_0F21,X                          ;80D5A7|800F21
-                AND.B zp_8E                                    ;80D5AA|00008E
+                AND.B vmAcc                                    ;80D5AA|00008E
                 STA.W objField_0F21,X                          ;80D5AC|800F21
                 RTS                                            ;80D5AF|
 
 
-loc_80D5B0:
+Op_XorBitAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D5B0|000070
                 INY                                            ;80D5B2|
                 AND.W #$00FF                                   ;80D5B3|
                 TAX                                            ;80D5B6|
-                LDA.B zp_8E                                    ;80D5B7|00008E
+                LDA.B vmAcc                                    ;80D5B7|00008E
                 BEQ +                                          ;80D5B9|80D5C0
                 LDA.W data_80F3F7,X                            ;80D5BB|80F3F7
-                STA.B zp_8E                                    ;80D5BE|00008E
+                STA.B vmAcc                                    ;80D5BE|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D5C0|000070
                 INY                                            ;80D5C2|
@@ -16066,40 +16066,40 @@ loc_80D5B0:
                 ADC.B curObjIdx                                ;80D5CB|000042
                 TAX                                            ;80D5CD|
                 LDA.W objField_0F21,X                          ;80D5CE|800F21
-                EOR.B zp_8E                                    ;80D5D1|00008E
+                EOR.B vmAcc                                    ;80D5D1|00008E
                 STA.W objField_0F21,X                          ;80D5D3|800F21
                 RTS                                            ;80D5D6|
 
 
-loc_80D5D7:
+Op_XorBitAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D5D7|000070
                 INY                                            ;80D5D9|
                 AND.W #$00FF                                   ;80D5DA|
                 TAX                                            ;80D5DD|
-                LDA.B zp_8E                                    ;80D5DE|00008E
+                LDA.B vmAcc                                    ;80D5DE|00008E
                 BEQ +                                          ;80D5E0|80D5E7
                 LDA.W data_80F3F7,X                            ;80D5E2|80F3F7
-                STA.B zp_8E                                    ;80D5E5|00008E
+                STA.B vmAcc                                    ;80D5E5|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D5E7|000070
                 INY                                            ;80D5E9|
                 INY                                            ;80D5EA|
                 TAX                                            ;80D5EB|
                 LDA.B zp_00,X                                  ;80D5EC|000000
-                EOR.B zp_8E                                    ;80D5EE|00008E
+                EOR.B vmAcc                                    ;80D5EE|00008E
                 STA.B zp_00,X                                  ;80D5F0|000000
                 RTS                                            ;80D5F2|
 
 
-loc_80D5F3:
+Op_XorBitAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D5F3|000070
                 INY                                            ;80D5F5|
                 AND.W #$00FF                                   ;80D5F6|
                 TAX                                            ;80D5F9|
-                LDA.B zp_8E                                    ;80D5FA|00008E
+                LDA.B vmAcc                                    ;80D5FA|00008E
                 BEQ +                                          ;80D5FC|80D603
                 LDA.W data_80F3F7,X                            ;80D5FE|80F3F7
-                STA.B zp_8E                                    ;80D601|00008E
+                STA.B vmAcc                                    ;80D601|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D603|000070
                 INY                                            ;80D605|
@@ -16108,23 +16108,23 @@ loc_80D5F3:
                 LDA.W data_80F3A3,X                            ;80D60A|80F3A3
                 CLC                                            ;80D60D|
                 LDX.B curObjIdx                                ;80D60E|000042
-                ADC.W objField_13D1,X                          ;80D610|8013D1
+                ADC.W objTarget,X                          ;80D610|8013D1
                 TAX                                            ;80D613|
                 LDA.W objField_0F21,X                          ;80D614|800F21
-                EOR.B zp_8E                                    ;80D617|00008E
+                EOR.B vmAcc                                    ;80D617|00008E
                 STA.W objField_0F21,X                          ;80D619|800F21
                 RTS                                            ;80D61C|
 
 
-loc_80D61D:
+Op_OrBitAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D61D|000070
                 INY                                            ;80D61F|
                 AND.W #$00FF                                   ;80D620|
                 TAX                                            ;80D623|
-                LDA.B zp_8E                                    ;80D624|00008E
+                LDA.B vmAcc                                    ;80D624|00008E
                 BEQ +                                          ;80D626|80D62D
                 LDA.W data_80F3F7,X                            ;80D628|80F3F7
-                STA.B zp_8E                                    ;80D62B|00008E
+                STA.B vmAcc                                    ;80D62B|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D62D|000070
                 INY                                            ;80D62F|
@@ -16135,40 +16135,40 @@ loc_80D61D:
                 ADC.B curObjIdx                                ;80D638|000042
                 TAX                                            ;80D63A|
                 LDA.W objField_0F21,X                          ;80D63B|800F21
-                ORA.B zp_8E                                    ;80D63E|00008E
+                ORA.B vmAcc                                    ;80D63E|00008E
                 STA.W objField_0F21,X                          ;80D640|800F21
                 RTS                                            ;80D643|
 
 
-loc_80D644:
+Op_OrBitAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D644|000070
                 INY                                            ;80D646|
                 AND.W #$00FF                                   ;80D647|
                 TAX                                            ;80D64A|
-                LDA.B zp_8E                                    ;80D64B|00008E
+                LDA.B vmAcc                                    ;80D64B|00008E
                 BEQ +                                          ;80D64D|80D654
                 LDA.W data_80F3F7,X                            ;80D64F|80F3F7
-                STA.B zp_8E                                    ;80D652|00008E
+                STA.B vmAcc                                    ;80D652|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D654|000070
                 INY                                            ;80D656|
                 INY                                            ;80D657|
                 TAX                                            ;80D658|
                 LDA.B zp_00,X                                  ;80D659|000000
-                ORA.B zp_8E                                    ;80D65B|00008E
+                ORA.B vmAcc                                    ;80D65B|00008E
                 STA.B zp_00,X                                  ;80D65D|000000
                 RTS                                            ;80D65F|
 
 
-loc_80D660:
+Op_OrBitAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D660|000070
                 INY                                            ;80D662|
                 AND.W #$00FF                                   ;80D663|
                 TAX                                            ;80D666|
-                LDA.B zp_8E                                    ;80D667|00008E
+                LDA.B vmAcc                                    ;80D667|00008E
                 BEQ +                                          ;80D669|80D670
                 LDA.W data_80F3F7,X                            ;80D66B|80F3F7
-                STA.B zp_8E                                    ;80D66E|00008E
+                STA.B vmAcc                                    ;80D66E|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D670|000070
                 INY                                            ;80D672|
@@ -16177,19 +16177,19 @@ loc_80D660:
                 LDA.W data_80F3A3,X                            ;80D677|80F3A3
                 CLC                                            ;80D67A|
                 LDX.B curObjIdx                                ;80D67B|000042
-                ADC.W objField_13D1,X                          ;80D67D|8013D1
+                ADC.W objTarget,X                          ;80D67D|8013D1
                 TAX                                            ;80D680|
                 LDA.W objField_0F21,X                          ;80D681|800F21
-                ORA.B zp_8E                                    ;80D684|00008E
+                ORA.B vmAcc                                    ;80D684|00008E
                 STA.W objField_0F21,X                          ;80D686|800F21
                 RTS                                            ;80D689|
 
 
-loc_80D68A:
-                JSR.W sub_80DC60                               ;80D68A|80DC60
-                CMP.B zp_8E                                    ;80D68D|00008E
+Op_JmpIfBitEqAcc_Imm:
+                JSR.W VM_TestBit_Imm                               ;80D68A|80DC60
+                CMP.B vmAcc                                    ;80D68D|00008E
                 BNE +                                          ;80D68F|80D694
-                JMP.W sub_80CD70                               ;80D691|80CD70
+                JMP.W Op_Goto                               ;80D691|80CD70
 
 
              +: INY                                            ;80D694|
@@ -16197,11 +16197,11 @@ loc_80D68A:
                 RTS                                            ;80D696|
 
 
-loc_80D697:
-                JSR.W sub_80DC75                               ;80D697|80DC75
-                CMP.B zp_8E                                    ;80D69A|00008E
+Op_JmpIfBitEqAcc_Fld:
+                JSR.W VM_TestBit_Fld                               ;80D697|80DC75
+                CMP.B vmAcc                                    ;80D69A|00008E
                 BNE +                                          ;80D69C|80D6A1
-                JMP.W sub_80CD70                               ;80D69E|80CD70
+                JMP.W Op_Goto                               ;80D69E|80CD70
 
 
              +: INY                                            ;80D6A1|
@@ -16209,11 +16209,11 @@ loc_80D697:
                 RTS                                            ;80D6A3|
 
 
-loc_80D6A4:
-                JSR.W sub_80DC97                               ;80D6A4|80DC97
-                CMP.B zp_8E                                    ;80D6A7|00008E
+Op_JmpIfBitEqAcc_Ram:
+                JSR.W VM_TestBit_Ram                               ;80D6A4|80DC97
+                CMP.B vmAcc                                    ;80D6A7|00008E
                 BNE +                                          ;80D6A9|80D6AE
-                JMP.W sub_80CD70                               ;80D6AB|80CD70
+                JMP.W Op_Goto                               ;80D6AB|80CD70
 
 
              +: INY                                            ;80D6AE|
@@ -16221,11 +16221,11 @@ loc_80D6A4:
                 RTS                                            ;80D6B0|
 
 
-loc_80D6B1:
-                JSR.W sub_80DCAF                               ;80D6B1|80DCAF
-                CMP.B zp_8E                                    ;80D6B4|00008E
+Op_JmpIfBitEqAcc_TFld:
+                JSR.W VM_TestBit_TFld                               ;80D6B1|80DCAF
+                CMP.B vmAcc                                    ;80D6B4|00008E
                 BNE +                                          ;80D6B6|80D6BB
-                JMP.W sub_80CD70                               ;80D6B8|80CD70
+                JMP.W Op_Goto                               ;80D6B8|80CD70
 
 
              +: INY                                            ;80D6BB|
@@ -16233,12 +16233,12 @@ loc_80D6B1:
                 RTS                                            ;80D6BD|
 
 
-loc_80D6BE:
-                JSR.W sub_8091ED                               ;80D6BE|8091ED
+Op_JmpIfBitEqAcc_Rnd:
+                JSR.W VM_GetRandom                               ;80D6BE|8091ED
                 AND.W #$0001                                   ;80D6C1|
-                CMP.B zp_8E                                    ;80D6C4|00008E
+                CMP.B vmAcc                                    ;80D6C4|00008E
                 BNE +                                          ;80D6C6|80D6CB
-                JMP.W sub_80CD70                               ;80D6C8|80CD70
+                JMP.W Op_Goto                               ;80D6C8|80CD70
 
 
              +: INY                                            ;80D6CB|
@@ -16246,11 +16246,11 @@ loc_80D6BE:
                 RTS                                            ;80D6CD|
 
 
-loc_80D6CE:
-                JSR.W sub_80DC60                               ;80D6CE|80DC60
-                CMP.B zp_8E                                    ;80D6D1|00008E
+Op_JmpIfBitNeAcc_Imm:
+                JSR.W VM_TestBit_Imm                               ;80D6CE|80DC60
+                CMP.B vmAcc                                    ;80D6D1|00008E
                 BEQ +                                          ;80D6D3|80D6D8
-                JMP.W sub_80CD70                               ;80D6D5|80CD70
+                JMP.W Op_Goto                               ;80D6D5|80CD70
 
 
              +: INY                                            ;80D6D8|
@@ -16258,11 +16258,11 @@ loc_80D6CE:
                 RTS                                            ;80D6DA|
 
 
-loc_80D6DB:
-                JSR.W sub_80DC75                               ;80D6DB|80DC75
-                CMP.B zp_8E                                    ;80D6DE|00008E
+Op_JmpIfBitNeAcc_Fld:
+                JSR.W VM_TestBit_Fld                               ;80D6DB|80DC75
+                CMP.B vmAcc                                    ;80D6DE|00008E
                 BEQ +                                          ;80D6E0|80D6E5
-                JMP.W sub_80CD70                               ;80D6E2|80CD70
+                JMP.W Op_Goto                               ;80D6E2|80CD70
 
 
              +: INY                                            ;80D6E5|
@@ -16270,11 +16270,11 @@ loc_80D6DB:
                 RTS                                            ;80D6E7|
 
 
-loc_80D6E8:
-                JSR.W sub_80DC97                               ;80D6E8|80DC97
-                CMP.B zp_8E                                    ;80D6EB|00008E
+Op_JmpIfBitNeAcc_Ram:
+                JSR.W VM_TestBit_Ram                               ;80D6E8|80DC97
+                CMP.B vmAcc                                    ;80D6EB|00008E
                 BEQ +                                          ;80D6ED|80D6F2
-                JMP.W sub_80CD70                               ;80D6EF|80CD70
+                JMP.W Op_Goto                               ;80D6EF|80CD70
 
 
              +: INY                                            ;80D6F2|
@@ -16282,11 +16282,11 @@ loc_80D6E8:
                 RTS                                            ;80D6F4|
 
 
-loc_80D6F5:
-                JSR.W sub_80DCAF                               ;80D6F5|80DCAF
-                CMP.B zp_8E                                    ;80D6F8|00008E
+Op_JmpIfBitNeAcc_TFld:
+                JSR.W VM_TestBit_TFld                               ;80D6F5|80DCAF
+                CMP.B vmAcc                                    ;80D6F8|00008E
                 BEQ +                                          ;80D6FA|80D6FF
-                JMP.W sub_80CD70                               ;80D6FC|80CD70
+                JMP.W Op_Goto                               ;80D6FC|80CD70
 
 
              +: INY                                            ;80D6FF|
@@ -16294,12 +16294,12 @@ loc_80D6F5:
                 RTS                                            ;80D701|
 
 
-loc_80D702:
-                JSR.W sub_8091ED                               ;80D702|8091ED
+Op_JmpIfBitNeAcc_Rnd:
+                JSR.W VM_GetRandom                               ;80D702|8091ED
                 AND.W #$0001                                   ;80D705|
-                CMP.B zp_8E                                    ;80D708|00008E
+                CMP.B vmAcc                                    ;80D708|00008E
                 BEQ +                                          ;80D70A|80D70F
-                JMP.W sub_80CD70                               ;80D70C|80CD70
+                JMP.W Op_Goto                               ;80D70C|80CD70
 
 
              +: INY                                            ;80D70F|
@@ -16307,11 +16307,11 @@ loc_80D702:
                 RTS                                            ;80D711|
 
 
-loc_80D712:
-                JSR.W sub_80DC60                               ;80D712|80DC60
-                CMP.B zp_8E                                    ;80D715|00008E
+Op_CallIfBitEqAcc_Imm:
+                JSR.W VM_TestBit_Imm                               ;80D712|80DC60
+                CMP.B vmAcc                                    ;80D715|00008E
                 BNE +                                          ;80D717|80D71C
-                JMP.W loc_80CD65                               ;80D719|80CD65
+                JMP.W Op_Call                               ;80D719|80CD65
 
 
              +: INY                                            ;80D71C|
@@ -16319,11 +16319,11 @@ loc_80D712:
                 RTS                                            ;80D71E|
 
 
-loc_80D71F:
-                JSR.W sub_80DC75                               ;80D71F|80DC75
-                CMP.B zp_8E                                    ;80D722|00008E
+Op_CallIfBitEqAcc_Fld:
+                JSR.W VM_TestBit_Fld                               ;80D71F|80DC75
+                CMP.B vmAcc                                    ;80D722|00008E
                 BNE +                                          ;80D724|80D729
-                JMP.W loc_80CD65                               ;80D726|80CD65
+                JMP.W Op_Call                               ;80D726|80CD65
 
 
              +: INY                                            ;80D729|
@@ -16331,11 +16331,11 @@ loc_80D71F:
                 RTS                                            ;80D72B|
 
 
-loc_80D72C:
-                JSR.W sub_80DC97                               ;80D72C|80DC97
-                CMP.B zp_8E                                    ;80D72F|00008E
+Op_CallIfBitEqAcc_Ram:
+                JSR.W VM_TestBit_Ram                               ;80D72C|80DC97
+                CMP.B vmAcc                                    ;80D72F|00008E
                 BNE +                                          ;80D731|80D736
-                JMP.W loc_80CD65                               ;80D733|80CD65
+                JMP.W Op_Call                               ;80D733|80CD65
 
 
              +: INY                                            ;80D736|
@@ -16343,11 +16343,11 @@ loc_80D72C:
                 RTS                                            ;80D738|
 
 
-loc_80D739:
-                JSR.W sub_80DCAF                               ;80D739|80DCAF
-                CMP.B zp_8E                                    ;80D73C|00008E
+Op_CallIfBitEqAcc_TFld:
+                JSR.W VM_TestBit_TFld                               ;80D739|80DCAF
+                CMP.B vmAcc                                    ;80D73C|00008E
                 BNE +                                          ;80D73E|80D743
-                JMP.W loc_80CD65                               ;80D740|80CD65
+                JMP.W Op_Call                               ;80D740|80CD65
 
 
              +: INY                                            ;80D743|
@@ -16355,12 +16355,12 @@ loc_80D739:
                 RTS                                            ;80D745|
 
 
-loc_80D746:
-                JSR.W sub_8091ED                               ;80D746|8091ED
+Op_CallIfBitEqAcc_Rnd:
+                JSR.W VM_GetRandom                               ;80D746|8091ED
                 AND.W #$0001                                   ;80D749|
-                CMP.B zp_8E                                    ;80D74C|00008E
+                CMP.B vmAcc                                    ;80D74C|00008E
                 BNE +                                          ;80D74E|80D753
-                JMP.W loc_80CD65                               ;80D750|80CD65
+                JMP.W Op_Call                               ;80D750|80CD65
 
 
              +: INY                                            ;80D753|
@@ -16368,11 +16368,11 @@ loc_80D746:
                 RTS                                            ;80D755|
 
 
-loc_80D756:
-                JSR.W sub_80DC60                               ;80D756|80DC60
-                CMP.B zp_8E                                    ;80D759|00008E
+Op_CallIfBitNeAcc_Imm:
+                JSR.W VM_TestBit_Imm                               ;80D756|80DC60
+                CMP.B vmAcc                                    ;80D759|00008E
                 BEQ +                                          ;80D75B|80D760
-                JMP.W loc_80CD65                               ;80D75D|80CD65
+                JMP.W Op_Call                               ;80D75D|80CD65
 
 
              +: INY                                            ;80D760|
@@ -16380,11 +16380,11 @@ loc_80D756:
                 RTS                                            ;80D762|
 
 
-loc_80D763:
-                JSR.W sub_80DC75                               ;80D763|80DC75
-                CMP.B zp_8E                                    ;80D766|00008E
+Op_CallIfBitNeAcc_Fld:
+                JSR.W VM_TestBit_Fld                               ;80D763|80DC75
+                CMP.B vmAcc                                    ;80D766|00008E
                 BEQ +                                          ;80D768|80D76D
-                JMP.W loc_80CD65                               ;80D76A|80CD65
+                JMP.W Op_Call                               ;80D76A|80CD65
 
 
              +: INY                                            ;80D76D|
@@ -16392,11 +16392,11 @@ loc_80D763:
                 RTS                                            ;80D76F|
 
 
-loc_80D770:
-                JSR.W sub_80DC97                               ;80D770|80DC97
-                CMP.B zp_8E                                    ;80D773|00008E
+Op_CallIfBitNeAcc_Ram:
+                JSR.W VM_TestBit_Ram                               ;80D770|80DC97
+                CMP.B vmAcc                                    ;80D773|00008E
                 BEQ +                                          ;80D775|80D77A
-                JMP.W loc_80CD65                               ;80D777|80CD65
+                JMP.W Op_Call                               ;80D777|80CD65
 
 
              +: INY                                            ;80D77A|
@@ -16404,11 +16404,11 @@ loc_80D770:
                 RTS                                            ;80D77C|
 
 
-loc_80D77D:
-                JSR.W sub_80DCAF                               ;80D77D|80DCAF
-                CMP.B zp_8E                                    ;80D780|00008E
+Op_CallIfBitNeAcc_TFld:
+                JSR.W VM_TestBit_TFld                               ;80D77D|80DCAF
+                CMP.B vmAcc                                    ;80D780|00008E
                 BEQ +                                          ;80D782|80D787
-                JMP.W loc_80CD65                               ;80D784|80CD65
+                JMP.W Op_Call                               ;80D784|80CD65
 
 
              +: INY                                            ;80D787|
@@ -16416,12 +16416,12 @@ loc_80D77D:
                 RTS                                            ;80D789|
 
 
-loc_80D78A:
-                JSR.W sub_8091ED                               ;80D78A|8091ED
+Op_CallIfBitNeAcc_Rnd:
+                JSR.W VM_GetRandom                               ;80D78A|8091ED
                 AND.W #$0001                                   ;80D78D|
-                CMP.B zp_8E                                    ;80D790|00008E
+                CMP.B vmAcc                                    ;80D790|00008E
                 BEQ +                                          ;80D792|80D797
-                JMP.W loc_80CD65                               ;80D794|80CD65
+                JMP.W Op_Call                               ;80D794|80CD65
 
 
              +: INY                                            ;80D797|
@@ -16429,18 +16429,18 @@ loc_80D78A:
                 RTS                                            ;80D799|
 
 
-loc_80D79A:
+Op_PixelsToTileXY:
                 LDA.B [scriptPC],Y                             ;80D79A|000070
                 INY                                            ;80D79C|
                 PHA                                            ;80D79D|
-                JSR.W sub_80DCD7                               ;80D79E|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D79E|80DCD7
                 LSR A                                          ;80D7A1|
                 LSR A                                          ;80D7A2|
                 LSR A                                          ;80D7A3|
                 LSR A                                          ;80D7A4|
                 STA.B zp_6C                                    ;80D7A5|00006C
                 PLA                                            ;80D7A7|
-                JSR.W sub_80DCD4                               ;80D7A8|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D7A8|80DCD4
                 LSR A                                          ;80D7AB|
                 LSR A                                          ;80D7AC|
                 LSR A                                          ;80D7AD|
@@ -16450,20 +16450,20 @@ loc_80D79A:
                 INY                                            ;80D7B3|
                 PHA                                            ;80D7B4|
                 LDX.B zp_6C                                    ;80D7B5|00006C
-                JSR.W sub_80DD20                               ;80D7B7|80DD20
+                JSR.W VM_SetOperandByType                               ;80D7B7|80DD20
                 PLA                                            ;80D7BA|
                 LDX.B zp_6E                                    ;80D7BB|00006E
-                JMP.W loc_80DD1D                               ;80D7BD|80DD1D
+                JMP.W VM_SetOperandByType_Shr3                               ;80D7BD|80DD1D
 
 
-loc_80D7C0:
+Op_GetTileCollisionAt:
                 LDA.B [scriptPC],Y                             ;80D7C0|000070
                 PHA                                            ;80D7C2|
                 INY                                            ;80D7C3|
-                JSR.W sub_80DCD7                               ;80D7C4|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D7C4|80DCD7
                 STA.B zp_6C                                    ;80D7C7|00006C
                 PLA                                            ;80D7C9|
-                JSR.W sub_80DCD4                               ;80D7CA|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D7CA|80DCD4
                 PHY                                            ;80D7CD|
                 TAY                                            ;80D7CE|
                 LDX.B zp_6C                                    ;80D7CF|00006C
@@ -16472,19 +16472,19 @@ loc_80D7C0:
                 PLY                                            ;80D7D5|
                 LDA.B [scriptPC],Y                             ;80D7D6|000070
                 INY                                            ;80D7D8|
-                JMP.W sub_80DD20                               ;80D7D9|80DD20
+                JMP.W VM_SetOperandByType                               ;80D7D9|80DD20
 
 
-loc_80D7DC:
+Op_SnapToTileCenterXY:
                 LDA.B [scriptPC],Y                             ;80D7DC|000070
                 PHA                                            ;80D7DE|
                 INY                                            ;80D7DF|
-                JSR.W sub_80DCD7                               ;80D7E0|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D7E0|80DCD7
                 AND.W #$FFF0                                   ;80D7E3|
                 ORA.W #$0008                                   ;80D7E6|
                 STA.B zp_6C                                    ;80D7E9|00006C
                 PLA                                            ;80D7EB|
-                JSR.W sub_80DCD4                               ;80D7EC|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D7EC|80DCD4
                 AND.W #$FFF0                                   ;80D7EF|
                 ORA.W #$0008                                   ;80D7F2|
                 STA.B zp_6E                                    ;80D7F5|00006E
@@ -16492,28 +16492,28 @@ loc_80D7DC:
                 INY                                            ;80D7F9|
                 PHA                                            ;80D7FA|
                 LDX.B zp_6C                                    ;80D7FB|00006C
-                JSR.W sub_80DD20                               ;80D7FD|80DD20
+                JSR.W VM_SetOperandByType                               ;80D7FD|80DD20
                 PLA                                            ;80D800|
                 LDX.B zp_6E                                    ;80D801|00006E
-                JMP.W loc_80DD1D                               ;80D803|80DD1D
+                JMP.W VM_SetOperandByType_Shr3                               ;80D803|80DD1D
 
 
-loc_80D806:
+Op_SpawnObject:
                 LDA.B [scriptPC],Y                             ;80D806|000070
                 INY                                            ;80D808|
                 PHA                                            ;80D809|
-                JSR.W sub_80DCD7                               ;80D80A|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D80A|80DCD7
                 STA.B zp_6C                                    ;80D80D|00006C
                 PLA                                            ;80D80F|
-                JSR.W sub_80DCD4                               ;80D810|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D810|80DCD4
                 STA.B zp_6E                                    ;80D813|00006E
                 LDA.B [scriptPC],Y                             ;80D815|000070
                 INY                                            ;80D817|
                 PHA                                            ;80D818|
-                JSR.W sub_80DCD7                               ;80D819|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D819|80DCD7
                 STA.W ram_0382                                 ;80D81C|800382
                 PLA                                            ;80D81F|
-                JSR.W sub_80DCD4                               ;80D820|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D820|80DCD4
                 AND.W #$0801                                   ;80D823|
                 STA.B refillTmp32                              ;80D826|000032
                 LDX.B curObjIdx                                ;80D828|000042
@@ -16527,39 +16527,39 @@ loc_80D806:
                 AND.W #$00FF                                   ;80D837|
                 LDY.W #$FFFF                                   ;80D83A|
                 STY.W ram_03FE                                 ;80D83D|8003FE
-                JSR.W sub_80EC56                               ;80D840|80EC56
+                JSR.W SpawnObject                               ;80D840|80EC56
                 BCS .skip                                      ;80D843|80D85C
                 TYA                                            ;80D845|
                 LDX.B curObjIdx                                ;80D846|000042
                 STA.W ram_1269,X                               ;80D848|801269
                 CMP.B curObjIdx                                ;80D84B|000042
                 BCS .skip                                      ;80D84D|80D85C
-                LDX.W ram_0384                                 ;80D84F|800384
+                LDX.W earlyUpdateCount                                 ;80D84F|800384
                 SEP #$20                                       ;80D852|
-                STA.W ram_0386,X                               ;80D854|800386
+                STA.W earlyUpdateQueue,X                               ;80D854|800386
                 REP #$20                                       ;80D857|
-                INC.W ram_0384                                 ;80D859|800384
+                INC.W earlyUpdateCount                                 ;80D859|800384
 
          .skip: PLY                                            ;80D85C|
                 RTS                                            ;80D85D|
 
 
-loc_80D85E:
+Op_JmpIfTileClassAtXY:
                 PEA.W $0000                                    ;80D85E|
                 BRA loc_80D866                                 ;80D861|80D866
 
 
-loc_80D863:
+Op_JmpIfNotTileClassAtXY:
                 PEA.W $0002                                    ;80D863|
 
 loc_80D866:
                 LDA.B [scriptPC],Y                             ;80D866|000070
                 INY                                            ;80D868|
                 PHA                                            ;80D869|
-                JSR.W sub_80DCD7                               ;80D86A|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D86A|80DCD7
                 STA.B zp_6C                                    ;80D86D|00006C
                 PLA                                            ;80D86F|
-                JSR.W sub_80DCD4                               ;80D870|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D870|80DCD4
                 STA.B zp_6E                                    ;80D873|00006E
                 LDA.B [scriptPC],Y                             ;80D875|000070
                 INY                                            ;80D877|
@@ -16567,20 +16567,20 @@ loc_80D866:
                 TAX                                            ;80D87B|
                 JSR.W sub_80A734                               ;80D87C|80A734
                 PLX                                            ;80D87F|
-                JMP.W (ptrtbl_80CF02,X)                        ;80D880|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80D880|80CF02
 
 
-loc_80D883:
+Op_MoveToXY:
                 LDA.B [scriptPC],Y                             ;80D883|000070
                 INY                                            ;80D885|
                 PHA                                            ;80D886|
-                JSR.W sub_80DCD7                               ;80D887|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D887|80DCD7
                 LDX.B curObjIdx                                ;80D88A|000042
                 SEC                                            ;80D88C|
                 SBC.W objField_1179,X                          ;80D88D|801179
                 STA.W ram_1381,X                               ;80D890|801381
                 PLA                                            ;80D893|
-                JSR.W sub_80DCD4                               ;80D894|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D894|80DCD4
                 LDX.B curObjIdx                                ;80D897|000042
                 SEC                                            ;80D899|
                 SBC.W objField_11A1,X                          ;80D89A|8011A1
@@ -16590,18 +16590,18 @@ loc_80D883:
                 RTS                                            ;80D8A6|
 
 
-loc_80D8A7:
+Op_SetMetatileXY:
                 LDA.B [scriptPC],Y                             ;80D8A7|000070
                 INY                                            ;80D8A9|
                 PHA                                            ;80D8AA|
-                JSR.W sub_80DCD7                               ;80D8AB|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D8AB|80DCD7
                 STA.B zp_6C                                    ;80D8AE|00006C
                 PLA                                            ;80D8B0|
-                JSR.W sub_80DCD4                               ;80D8B1|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D8B1|80DCD4
                 STA.B zp_6E                                    ;80D8B4|00006E
                 LDA.B [scriptPC],Y                             ;80D8B6|000070
                 INY                                            ;80D8B8|
-                JSR.W sub_80DCD7                               ;80D8B9|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D8B9|80DCD7
                 PHY                                            ;80D8BC|
                 LDX.B zp_6C                                    ;80D8BD|00006C
                 LDY.B zp_6E                                    ;80D8BF|00006E
@@ -16611,18 +16611,18 @@ loc_80D8A7:
                 RTS                                            ;80D8C8|
 
 
-loc_80D8C9:
+Op_SetTileCollisionXY:
                 LDA.B [scriptPC],Y                             ;80D8C9|000070
                 INY                                            ;80D8CB|
                 PHA                                            ;80D8CC|
-                JSR.W sub_80DCD7                               ;80D8CD|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D8CD|80DCD7
                 STA.B zp_6C                                    ;80D8D0|00006C
                 PLA                                            ;80D8D2|
-                JSR.W sub_80DCD4                               ;80D8D3|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D8D3|80DCD4
                 STA.B zp_6E                                    ;80D8D6|00006E
                 LDA.B [scriptPC],Y                             ;80D8D8|000070
                 INY                                            ;80D8DA|
-                JSR.W sub_80DCD7                               ;80D8DB|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D8DB|80DCD7
                 XBA                                            ;80D8DE|
                 ASL A                                          ;80D8DF|
                 ASL A                                          ;80D8E0|
@@ -16640,18 +16640,18 @@ loc_80D8C9:
                 RTS                                            ;80D8F8|
 
 
-loc_80D8F9:
+Op_SetTileIndexXY:
                 LDA.B [scriptPC],Y                             ;80D8F9|000070
                 INY                                            ;80D8FB|
                 PHA                                            ;80D8FC|
-                JSR.W sub_80DCD7                               ;80D8FD|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D8FD|80DCD7
                 STA.B zp_6C                                    ;80D900|00006C
                 PLA                                            ;80D902|
-                JSR.W sub_80DCD4                               ;80D903|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80D903|80DCD4
                 STA.B zp_6E                                    ;80D906|00006E
                 LDA.B [scriptPC],Y                             ;80D908|000070
                 INY                                            ;80D90A|
-                JSR.W sub_80DCD7                               ;80D90B|80DCD7
+                JSR.W VM_GetOperandByType                               ;80D90B|80DCD7
                 STA.B refillStageIdx                           ;80D90E|000034
                 PHY                                            ;80D910|
                 LDX.B zp_6C                                    ;80D911|00006C
@@ -16667,14 +16667,14 @@ loc_80D8F9:
                 RTS                                            ;80D928|
 
 
-loc_80D929:
+Op_GetNearestPlayerDelta:
                 PHY                                            ;80D929|
                 LDA.W #$FFFF                                   ;80D92A|
                 STA.B refillStageIdx                           ;80D92D|000034
                 LDY.B curObjIdx                                ;80D92F|000042
                 LDX.W #$0000                                   ;80D931|
 
-         .loop: LDA.W ram_0FE9,X                               ;80D934|800FE9
+         .loop: LDA.W objHealth,X                               ;80D934|800FE9
                 BEQ .skip                                      ;80D937|80D960
                 LDA.W objField_1179,Y                          ;80D939|801179
                 SEC                                            ;80D93C|
@@ -16707,17 +16707,17 @@ loc_80D929:
                 BRA loc_80D97C                                 ;80D96C|80D97C
 
 
-loc_80D96E:
+Op_GetDeltaToSelPlayer:
                 PHY                                            ;80D96E|
                 LDY.B curObjIdx                                ;80D96F|000042
                 LDX.W inputAuxSel                              ;80D971|8003D6
                 BRA loc_80D97C                                 ;80D974|80D97C
 
 
-loc_80D976:
+Op_GetDeltaToTarget:
                 PHY                                            ;80D976|
                 LDY.B curObjIdx                                ;80D977|000042
-                LDX.W objField_13D1,Y                          ;80D979|8013D1
+                LDX.W objTarget,Y                          ;80D979|8013D1
 
 loc_80D97C:
                 LDA.W objField_0FC1,Y                          ;80D97C|800FC1
@@ -16753,13 +16753,13 @@ loc_80D97C:
                 INY                                            ;80D9B3|
                 PHA                                            ;80D9B4|
                 LDX.B zp_6C                                    ;80D9B5|00006C
-                JSR.W sub_80DD20                               ;80D9B7|80DD20
+                JSR.W VM_SetOperandByType                               ;80D9B7|80DD20
                 PLA                                            ;80D9BA|
                 LDX.B zp_6E                                    ;80D9BB|00006E
-                JMP.W loc_80DD1D                               ;80D9BD|80DD1D
+                JMP.W VM_SetOperandByType_Shr3                               ;80D9BD|80DD1D
 
 
-loc_80D9C0:
+Op_PlaySfx:
                 LDA.B [scriptPC],Y                             ;80D9C0|000070
                 INY                                            ;80D9C2|
                 AND.W #$00FF                                   ;80D9C3|
@@ -16772,7 +16772,7 @@ loc_80D9C0:
                 JMP.W sub_8088F8                               ;80D9D1|8088F8
 
 
-loc_80D9D4:
+Op_StopSfx:
                 LDA.B [scriptPC],Y                             ;80D9D4|000070
                 INY                                            ;80D9D6|
                 AND.W #$00FF                                   ;80D9D7|
@@ -16780,7 +16780,7 @@ loc_80D9D4:
                 JMP.W sub_80890C                               ;80D9DD|80890C
 
 
-loc_80D9E0:
+Op_StopSfx_Ex:
                 LDA.B [scriptPC],Y                             ;80D9E0|000070
                 INY                                            ;80D9E2|
                 AND.W #$00FF                                   ;80D9E3|
@@ -16793,7 +16793,7 @@ loc_80D9E0:
                 JMP.W sub_80890C                               ;80D9EF|80890C
 
 
-loc_80D9F2:
+Op_PlayMusic:
                 LDA.B [scriptPC],Y                             ;80D9F2|000070
                 INY                                            ;80D9F4|
                 AND.W #$00FF                                   ;80D9F5|
@@ -16810,7 +16810,7 @@ loc_80D9F2:
          .exit: RTS                                            ;80DA0D|
 
 
-loc_80DA0E:
+Op_StopMusic:
                 LDA.B [scriptPC],Y                             ;80DA0E|000070
                 INY                                            ;80DA10|
                 AND.W #$00FF                                   ;80DA11|
@@ -16826,12 +16826,12 @@ loc_80DA0E:
          .exit: RTS                                            ;80DA26|
 
 
-loc_80DA27:
+Op_JmpIfPlayerAbove:
                 PEA.W $0000                                    ;80DA27|
                 BRA loc_80DA2F                                 ;80DA2A|80DA2F
 
 
-loc_80DA2C:
+Op_JmpIfNotPlayerAbove:
                 PEA.W $0002                                    ;80DA2C|
 
 loc_80DA2F:
@@ -16852,15 +16852,15 @@ loc_80DA2F:
                 PLA                                            ;80DA4D|
                 STA.W objTableEnd                              ;80DA4E|800380
                 PLX                                            ;80DA51|
-                JMP.W (ptrtbl_80CF02,X)                        ;80DA52|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80DA52|80CF02
 
 
-loc_80DA55:
+Op_JmpIfPlayerBelow:
                 PEA.W $0000                                    ;80DA55|
                 BRA loc_80DA5D                                 ;80DA58|80DA5D
 
 
-loc_80DA5A:
+Op_JmpIfNotPlayerBelow:
                 PEA.W $0002                                    ;80DA5A|
 
 loc_80DA5D:
@@ -16881,15 +16881,15 @@ loc_80DA5D:
                 PLA                                            ;80DA7B|
                 STA.W objTableEnd                              ;80DA7C|800380
                 PLX                                            ;80DA7F|
-                JMP.W (ptrtbl_80CF02,X)                        ;80DA80|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80DA80|80CF02
 
 
-loc_80DA83:
+Op_JmpIfPlayerAhead:
                 PEA.W $0000                                    ;80DA83|
                 BRA loc_80DA8B                                 ;80DA86|80DA8B
 
 
-loc_80DA88:
+Op_JmpIfNotPlayerAhead:
                 PEA.W $0002                                    ;80DA88|
 
 loc_80DA8B:
@@ -16916,15 +16916,15 @@ loc_80DAA5:
                 PLA                                            ;80DAB3|
                 STA.W objTableEnd                              ;80DAB4|800380
                 PLX                                            ;80DAB7|
-                JMP.W (ptrtbl_80CF02,X)                        ;80DAB8|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80DAB8|80CF02
 
 
-loc_80DABB:
+Op_JmpIfPlayerBehind:
                 PEA.W $0000                                    ;80DABB|
                 BRA loc_80DAC3                                 ;80DABE|80DAC3
 
 
-loc_80DAC0:
+Op_JmpIfNotPlayerBehind:
                 PEA.W $0002                                    ;80DAC0|
 
 loc_80DAC3:
@@ -16951,10 +16951,10 @@ loc_80DADD:
                 PLA                                            ;80DAEB|
                 STA.W objTableEnd                              ;80DAEC|800380
                 PLX                                            ;80DAEF|
-                JMP.W (ptrtbl_80CF02,X)                        ;80DAF0|80CF02
+                JMP.W (VM_CondBranchTable,X)                        ;80DAF0|80CF02
 
 
-loc_80DAF3:
+Op_SetShakeX:
                 LDA.B [scriptPC],Y                             ;80DAF3|000070
                 INY                                            ;80DAF5|
                 INY                                            ;80DAF6|
@@ -16969,7 +16969,7 @@ loc_80DAF3:
                 RTS                                            ;80DB07|
 
 
-loc_80DB08:
+Op_SetShakeY:
                 LDA.B [scriptPC],Y                             ;80DB08|000070
                 INY                                            ;80DB0A|
                 INY                                            ;80DB0B|
@@ -16985,7 +16985,7 @@ loc_80DB08:
                 RTS                                            ;80DB1D|
 
 
-loc_80DB1E:
+Op_SetSpawnRecX:
                 LDX.B curObjIdx                                ;80DB1E|000042
                 LDA.W ram_1101,X                               ;80DB20|801101
                 BMI .exit                                      ;80DB23|80DB2A
@@ -16996,7 +16996,7 @@ loc_80DB1E:
          .exit: RTS                                            ;80DB2A|
 
 
-loc_80DB2B:
+Op_SetSpawnRecY:
                 LDX.B curObjIdx                                ;80DB2B|000042
                 LDA.W ram_1101,X                               ;80DB2D|801101
                 BMI loc_80DB4C                                 ;80DB30|80DB4C
@@ -17012,17 +17012,17 @@ loc_80DB35:
                 CLC                                            ;80DB42|
                 ADC.W RDMPYL                                   ;80DB43|804216
                 TAX                                            ;80DB46|
-                LDA.B zp_8E                                    ;80DB47|00008E
+                LDA.B vmAcc                                    ;80DB47|00008E
                 STA.W ram_1A0A,X                               ;80DB49|801A0A
 
 loc_80DB4C:
                 RTS                                            ;80DB4C|
 
 
-loc_80DB4D:
-                LDA.B zp_8E                                    ;80DB4D|00008E
+Op_SetSpawnRecFlags:
+                LDA.B vmAcc                                    ;80DB4D|00008E
                 AND.W #$CDFF                                   ;80DB4F|
-                STA.B zp_8E                                    ;80DB52|00008E
+                STA.B vmAcc                                    ;80DB52|00008E
                 LDX.B curObjIdx                                ;80DB54|000042
                 LDA.W ram_1101,X                               ;80DB56|801101
                 BMI .exit                                      ;80DB59|80DB60
@@ -17033,7 +17033,7 @@ loc_80DB4D:
          .exit: RTS                                            ;80DB60|
 
 
-loc_80DB61:
+Op_SetSpawnRecParam:
                 LDX.B curObjIdx                                ;80DB61|000042
                 LDA.W ram_1101,X                               ;80DB63|801101
                 BMI .exit                                      ;80DB66|80DB6D
@@ -17044,28 +17044,28 @@ loc_80DB61:
          .exit: RTS                                            ;80DB6D|
 
 
-loc_80DB6E:
+Op_JmpIfTargetOffScreen:
                 PEA.W $0002                                    ;80DB6E|
                 BRA loc_80DB76                                 ;80DB71|80DB76
 
 
-loc_80DB73:
+Op_JmpIfTargetOnScreen:
                 PEA.W $0000                                    ;80DB73|
 
 loc_80DB76:
                 LDX.B curObjIdx                                ;80DB76|000042
-                LDA.W objField_13D1,X                          ;80DB78|8013D1
+                LDA.W objTarget,X                          ;80DB78|8013D1
                 TAX                                            ;80DB7B|
                 BRA loc_80DB8A                                 ;80DB7C|80DB8A
 
 
-loc_80DB7E:
+Op_JmpIfOffScreen:
                 PEA.W $0002                                    ;80DB7E|
                 LDX.B curObjIdx                                ;80DB81|000042
                 BRA loc_80DB8A                                 ;80DB83|80DB8A
 
 
-loc_80DB85:
+Op_JmpIfOnScreen:
                 PEA.W $0000                                    ;80DB85|
                 LDX.B curObjIdx                                ;80DB88|000042
 
@@ -17087,11 +17087,11 @@ loc_80DB8A:
                 CMP.W objField_11A1,X                          ;80DBAB|8011A1
                 BCC .skip                                      ;80DBAE|80DBB4
                 PLX                                            ;80DBB0|
-                JMP.W (ptrtbl_80DBBB,X)                        ;80DBB1|80DBBB
+                JMP.W (VM_OnScreenTable,X)                        ;80DBB1|80DBBB
 
 
          .skip: PLX                                            ;80DBB4|
-                JMP.W (ptrtbl_80DBBF,X)                        ;80DBB5|80DBBF
+                JMP.W (VM_OffScreenTable,X)                        ;80DBB5|80DBBF
 
 
 loc_80DBB8:
@@ -17099,20 +17099,20 @@ loc_80DBB8:
                 INY                                            ;80DBB9|
                 RTS                                            ;80DBBA|
 
-ptrtbl_80DBBB:
-                dw sub_80CD70                                  ;80DBBB|80CD70   ; pointer/jump table (16-bit entries)
+VM_OnScreenTable:
+                dw Op_Goto                                  ;80DBBB|80CD70   ; pointer/jump table (16-bit entries)
                 dw loc_80DBB8                                  ;80DBBD|80DBB8
-ptrtbl_80DBBF:
+VM_OffScreenTable:
                 dw loc_80DBB8                                  ;80DBBF|80DBB8   ; pointer/jump table (16-bit entries)
-                dw sub_80CD70                                  ;80DBC1|80CD70
+                dw Op_Goto                                  ;80DBC1|80CD70
 
-loc_80DBC3:
+Op_SetVelocityToward:
                 STZ.B refillSaveX                              ;80DBC3|00003E
                 STZ.B refillSaveY                              ;80DBC5|000040
                 LDA.B [scriptPC],Y                             ;80DBC7|000070
                 INY                                            ;80DBC9|
                 STA.B refillStageIdx                           ;80DBCA|000034
-                JSR.W sub_80DCD7                               ;80DBCC|80DCD7
+                JSR.W VM_GetOperandByType                               ;80DBCC|80DCD7
                 SEC                                            ;80DBCF|
                 LDX.B curObjIdx                                ;80DBD0|000042
                 SBC.W objField_1179,X                          ;80DBD2|801179
@@ -17123,7 +17123,7 @@ loc_80DBC3:
 
              +: STA.B zp_6C                                    ;80DBDD|00006C
                 LDA.B refillStageIdx                           ;80DBDF|000034
-                JSR.W sub_80DCD4                               ;80DBE1|80DCD4
+                JSR.W VM_GetOperandByType_Shr3                               ;80DBE1|80DCD4
                 SEC                                            ;80DBE4|
                 LDX.B curObjIdx                                ;80DBE5|000042
                 SBC.W objField_11A1,X                          ;80DBE7|8011A1
@@ -17198,11 +17198,11 @@ loc_80DBC3:
 
 
 ; --------------------------------------------------------
-;  sub_80DC60   [12 ins, returns RTS]
-;    callers: hwmath_80D130
+;  VM_TestBit_Imm   [12 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
 ;    reads:     scriptPC
 ; --------------------------------------------------------
-sub_80DC60:
+VM_TestBit_Imm:
                 LDA.B [scriptPC],Y                             ;80DC60|000070
                 INY                                            ;80DC62|
                 AND.W #$00FF                                   ;80DC63|
@@ -17219,11 +17219,11 @@ sub_80DC60:
 
 
 ; --------------------------------------------------------
-;  sub_80DC75   [18 ins, returns RTS]
-;    callers: hwmath_80D130
+;  VM_TestBit_Fld   [18 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
 ;    reads:     curObjIdx, scriptPC, objField_0F21
 ; --------------------------------------------------------
-sub_80DC75:
+VM_TestBit_Fld:
                 LDA.B [scriptPC],Y                             ;80DC75|000070
                 INY                                            ;80DC77|
                 AND.W #$00FF                                   ;80DC78|
@@ -17246,11 +17246,11 @@ sub_80DC75:
 
 
 ; --------------------------------------------------------
-;  sub_80DC97   [14 ins, returns RTS]
-;    callers: hwmath_80D130
+;  VM_TestBit_Ram   [14 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
 ;    reads:     zp_00, scriptPC
 ; --------------------------------------------------------
-sub_80DC97:
+VM_TestBit_Ram:
                 LDA.B [scriptPC],Y                             ;80DC97|000070
                 INY                                            ;80DC99|
                 AND.W #$00FF                                   ;80DC9A|
@@ -17269,11 +17269,11 @@ sub_80DC97:
 
 
 ; --------------------------------------------------------
-;  sub_80DCAF   [19 ins, returns RTS]
-;    callers: hwmath_80D130
-;    reads:     curObjIdx, scriptPC, objField_0F21, objField_13D1
+;  VM_TestBit_TFld   [19 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
+;    reads:     curObjIdx, scriptPC, objField_0F21, objTarget
 ; --------------------------------------------------------
-sub_80DCAF:
+VM_TestBit_TFld:
                 LDA.B [scriptPC],Y                             ;80DCAF|000070
                 INY                                            ;80DCB1|
                 AND.W #$00FF                                   ;80DCB2|
@@ -17285,7 +17285,7 @@ sub_80DCAF:
                 LDA.W data_80F3A3,X                            ;80DCBD|80F3A3
                 CLC                                            ;80DCC0|
                 LDX.B curObjIdx                                ;80DCC1|000042
-                ADC.W objField_13D1,X                          ;80DCC3|8013D1
+                ADC.W objTarget,X                          ;80DCC3|8013D1
                 TAX                                            ;80DCC6|
                 LDA.W objField_0F21,X                          ;80DCC7|800F21
                 PLX                                            ;80DCCA|
@@ -17297,38 +17297,38 @@ sub_80DCAF:
 
 
 ; --------------------------------------------------------
-;  sub_80DCD4   [3 ins, returns ?]
-;    callers: sub_809528, hwmath_80D130
+;  VM_GetOperandByType_Shr3   [3 ins, returns ?]
+;    callers: sub_809528, Op_SubAcc_TFld
 ; --------------------------------------------------------
-sub_80DCD4:
+VM_GetOperandByType_Shr3:
                 LSR A                                          ;80DCD4|
                 LSR A                                          ;80DCD5|
                 LSR A                                          ;80DCD6|
 
 ; --------------------------------------------------------
-;  sub_80DCD7   [4 ins, returns ?]
-;    callers: sub_8094FF, sub_809577, sub_8095C3, sub_8096EB, hwmath_80D130
-;    calls:     ptrtbl_80DCDF
+;  VM_GetOperandByType   [4 ins, returns ?]
+;    callers: sub_8094FF, sub_809577, sub_8095C3, sub_8096EB, Op_SubAcc_TFld
+;    calls:     VM_GetOperandTable
 ; --------------------------------------------------------
-sub_80DCD7:
+VM_GetOperandByType:
                 AND.W #$0007                                   ;80DCD7|
                 ASL A                                          ;80DCDA|
                 TAX                                            ;80DCDB|
-                JMP.W (ptrtbl_80DCDF,X)                        ;80DCDC|80DCDF
+                JMP.W (VM_GetOperandTable,X)                        ;80DCDC|80DCDF
 
-ptrtbl_80DCDF:
-                dw sub_80DCE9                                  ;80DCDF|80DCE9   ; pointer/jump table (16-bit entries)
-                dw sub_80DCEE                                  ;80DCE1|80DCEE
-                dw sub_80DD00                                  ;80DCE3|80DD00
-                dw sub_80DD08                                  ;80DCE5|80DD08
-                dw sub_8091ED                                  ;80DCE7|8091ED
+VM_GetOperandTable:
+                dw VM_GetOperandImm                                  ;80DCDF|80DCE9   ; pointer/jump table (16-bit entries)
+                dw VM_GetOperandFld                                  ;80DCE1|80DCEE
+                dw VM_GetOperandRam                                  ;80DCE3|80DD00
+                dw VM_GetOperandTFld                                  ;80DCE5|80DD08
+                dw VM_GetRandom                                  ;80DCE7|8091ED
 
 ; --------------------------------------------------------
-;  sub_80DCE9   [4 ins, returns RTS]
-;    callers: hwmath_80D130
+;  VM_GetOperandImm   [4 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
 ;    reads:     scriptPC
 ; --------------------------------------------------------
-sub_80DCE9:
+VM_GetOperandImm:
                 LDA.B [scriptPC],Y                             ;80DCE9|000070
                 INY                                            ;80DCEB|
                 INY                                            ;80DCEC|
@@ -17336,11 +17336,11 @@ sub_80DCE9:
 
 
 ; --------------------------------------------------------
-;  sub_80DCEE   [10 ins, returns RTS]
-;    callers: hwmath_80D130
+;  VM_GetOperandFld   [10 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
 ;    reads:     curObjIdx, scriptPC, objField_0F21
 ; --------------------------------------------------------
-sub_80DCEE:
+VM_GetOperandFld:
                 LDA.B [scriptPC],Y                             ;80DCEE|000070
                 INY                                            ;80DCF0|
                 AND.W #$00FF                                   ;80DCF1|
@@ -17354,11 +17354,11 @@ sub_80DCEE:
 
 
 ; --------------------------------------------------------
-;  sub_80DD00   [6 ins, returns RTS]
-;    callers: hwmath_80D130
+;  VM_GetOperandRam   [6 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
 ;    reads:     zp_00, scriptPC
 ; --------------------------------------------------------
-sub_80DD00:
+VM_GetOperandRam:
                 LDA.B [scriptPC],Y                             ;80DD00|000070
                 INY                                            ;80DD02|
                 INY                                            ;80DD03|
@@ -17368,11 +17368,11 @@ sub_80DD00:
 
 
 ; --------------------------------------------------------
-;  sub_80DD08   [11 ins, returns RTS]
-;    callers: hwmath_80D130
-;    reads:     curObjIdx, scriptPC, objField_0F21, objField_13D1
+;  VM_GetOperandTFld   [11 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
+;    reads:     curObjIdx, scriptPC, objField_0F21, objTarget
 ; --------------------------------------------------------
-sub_80DD08:
+VM_GetOperandTFld:
                 LDA.B [scriptPC],Y                             ;80DD08|000070
                 INY                                            ;80DD0A|
                 AND.W #$00FF                                   ;80DD0B|
@@ -17380,36 +17380,36 @@ sub_80DD08:
                 LDA.W data_80F3A3,X                            ;80DD0F|80F3A3
                 CLC                                            ;80DD12|
                 LDX.B curObjIdx                                ;80DD13|000042
-                ADC.W objField_13D1,X                          ;80DD15|8013D1
+                ADC.W objTarget,X                          ;80DD15|8013D1
                 TAX                                            ;80DD18|
                 LDA.W objField_0F21,X                          ;80DD19|800F21
                 RTS                                            ;80DD1C|
 
 
 ; --------------------------------------------------------
-;  loc_80DD1D   [3 ins, returns ?]
-;    callers: hwmath_80D130
+;  VM_SetOperandByType_Shr3   [3 ins, returns ?]
+;    callers: Op_SubAcc_TFld
 ; --------------------------------------------------------
-loc_80DD1D:
+VM_SetOperandByType_Shr3:
                 LSR A                                          ;80DD1D|
                 LSR A                                          ;80DD1E|
                 LSR A                                          ;80DD1F|
 
 ; --------------------------------------------------------
-;  sub_80DD20   [35 ins, returns RTS]
-;    callers: hwmath_80D130
+;  VM_SetOperandByType   [35 ins, returns RTS]
+;    callers: Op_SubAcc_TFld
 ;    writes:    zp_00, objField_0F21
-;    reads:     curObjIdx, scriptPC, objField_13D1
-;    calls:     ptrtbl_80DD29
+;    reads:     curObjIdx, scriptPC, objTarget
+;    calls:     VM_SetOperandTable
 ; --------------------------------------------------------
-sub_80DD20:
+VM_SetOperandByType:
                 PHX                                            ;80DD20|
                 AND.W #$0007                                   ;80DD21|
                 ASL A                                          ;80DD24|
                 TAX                                            ;80DD25|
-                JMP.W (ptrtbl_80DD29,X)                        ;80DD26|80DD29
+                JMP.W (VM_SetOperandTable,X)                        ;80DD26|80DD29
 
-ptrtbl_80DD29:
+VM_SetOperandTable:
                 dw .exit                                       ;80DD29|80DD64   ; pointer/jump table (16-bit entries)
                 dw +                                           ;80DD2B|80DD33
                 dw .skip                                       ;80DD2D|80DD46
@@ -17445,7 +17445,7 @@ ptrtbl_80DD29:
                 LDA.W data_80F3A3,X                            ;80DD56|80F3A3
                 CLC                                            ;80DD59|
                 LDX.B curObjIdx                                ;80DD5A|000042
-                ADC.W objField_13D1,X                          ;80DD5C|8013D1
+                ADC.W objTarget,X                          ;80DD5C|8013D1
                 TAX                                            ;80DD5F|
                 PLA                                            ;80DD60|
                 STA.W objField_0F21,X                          ;80DD61|800F21
@@ -17454,19 +17454,19 @@ ptrtbl_80DD29:
 
 
 ; --------------------------------------------------------
-;  sub_80DD65   [7 ins, returns RTS]
-;    callers: sub_80CD70
-;    writes:    ram_0FE9
-;    reads:     ram_0FE9, ram_1011
+;  DamageObject   [7 ins, returns RTS]
+;    callers: Op_Goto
+;    writes:    objHealth
+;    reads:     objHealth, objDamage
 ; --------------------------------------------------------
-sub_80DD65:
-                LDA.W ram_0FE9,X                               ;80DD65|800FE9
+DamageObject:
+                LDA.W objHealth,X                               ;80DD65|800FE9
                 SEC                                            ;80DD68|
-                SBC.W ram_1011,Y                               ;80DD69|801011
+                SBC.W objDamage,Y                               ;80DD69|801011
                 BCS +                                          ;80DD6C|80DD71
                 LDA.W #$0000                                   ;80DD6E|
 
-             +: STA.W ram_0FE9,X                               ;80DD71|800FE9
+             +: STA.W objHealth,X                               ;80DD71|800FE9
                 RTS                                            ;80DD74|
 
 
@@ -17488,223 +17488,232 @@ sub_80DD75:
                 BPL .loop                                      ;80DD82|80DD7A
                 RTS                                            ;80DD84|
 
-ptrtbl_80DD85:
-                dw loc_80CD5A                                  ;80DD85|80CD5A   ; pointer/jump table (16-bit entries)
-                dw loc_80CD64                                  ;80DD87|80CD64
-                dw loc_80D9C0                                  ;80DD89|80D9C0
-                dw sub_80CD70                                  ;80DD8B|80CD70
-                dw loc_80D9D4                                  ;80DD8D|80D9D4
-                dw loc_80CD65                                  ;80DD8F|80CD65
-                dw loc_80CD78                                  ;80DD91|80CD78
-                dw loc_80EA47                                  ;80DD93|80EA47
-                dw loc_80EA3C                                  ;80DD95|80EA3C
-                dw loc_80EB4A                                  ;80DD97|80EB4A
-                dw loc_80EB3F                                  ;80DD99|80EB3F
-                dw loc_80EA52                                  ;80DD9B|80EA52
-                dw loc_80EB55                                  ;80DD9D|80EB55
-                dw loc_80CD83                                  ;80DD9F|80CD83
-                dw loc_80CDA4                                  ;80DDA1|80CDA4
-                dw loc_80CDC5                                  ;80DDA3|80CDC5
-                dw loc_80CDCF                                  ;80DDA5|80CDCF
-                dw loc_80CDD8                                  ;80DDA7|80CDD8
-                dw loc_80CDE3                                  ;80DDA9|80CDE3
-                dw loc_80CDEE                                  ;80DDAB|80CDEE
-                dw loc_80D806                                  ;80DDAD|80D806
-                dw loc_80D96E                                  ;80DDAF|80D96E
-                dw loc_80D976                                  ;80DDB1|80D976
-                dw loc_80CE13                                  ;80DDB3|80CE13
-                dw loc_80CE24                                  ;80DDB5|80CE24
-                dw loc_80CE4F                                  ;80DDB7|80CE4F
-                dw loc_80A4A2                                  ;80DDB9|80A4A2
-                dw loc_80CE1A                                  ;80DDBB|80CE1A
-                dw loc_80CE5F                                  ;80DDBD|80CE5F
-                dw loc_80A564                                  ;80DDBF|80A564
-                dw loc_80CE6C                                  ;80DDC1|80CE6C
-                dw loc_80CE86                                  ;80DDC3|80CE86
-                dw loc_80CEC4                                  ;80DDC5|80CEC4
-                dw loc_80CEA0                                  ;80DDC7|80CEA0
-                dw loc_80CE71                                  ;80DDC9|80CE71
-                dw loc_80CE8B                                  ;80DDCB|80CE8B
-                dw loc_80CEC9                                  ;80DDCD|80CEC9
-                dw loc_80CEA5                                  ;80DDCF|80CEA5
-                dw loc_80D79A                                  ;80DDD1|80D79A
-                dw loc_80D7C0                                  ;80DDD3|80D7C0
-                dw loc_80D7DC                                  ;80DDD5|80D7DC
-                dw loc_80D8A7                                  ;80DDD7|80D8A7
-                dw loc_80D8F9                                  ;80DDD9|80D8F9
-                dw loc_80D8C9                                  ;80DDDB|80D8C9
-                dw loc_80AD8E                                  ;80DDDD|80AD8E
-                dw loc_80AD87                                  ;80DDDF|80AD87
-                dw loc_80DAF3                                  ;80DDE1|80DAF3
-                dw loc_80E1E7                                  ;80DDE3|80E1E7
-                dw loc_80CEE8                                  ;80DDE5|80CEE8
-                dw loc_80CEED                                  ;80DDE7|80CEED
-                dw loc_80A626                                  ;80DDE9|80A626
-                dw loc_80A680                                  ;80DDEB|80A680
-                dw loc_80D929                                  ;80DDED|80D929
-                dw loc_80ACFF                                  ;80DDEF|80ACFF
-                dw loc_80ACF8                                  ;80DDF1|80ACF8
-                dw loc_80A4C3                                  ;80DDF3|80A4C3
-                dw loc_80A585                                  ;80DDF5|80A585
-                dw loc_80CFA0                                  ;80DDF7|80CFA0
-                dw loc_80CDE3                                  ;80DDF9|80CDE3
-                dw loc_80DB08                                  ;80DDFB|80DB08
-                dw loc_80A6DA                                  ;80DDFD|80A6DA
-                dw loc_80CF40                                  ;80DDFF|80CF40
-                dw color_80CF82                                ;80DE01|80CF82
-                dw loc_80CFB1                                  ;80DE03|80CFB1
-                dw loc_80CFCB                                  ;80DE05|80CFCB
-                dw loc_80945A                                  ;80DE07|80945A
-                dw input_80963F                                ;80DE09|80963F
-                dw loc_809688                                  ;80DE0B|809688
-                dw loc_80947E                                  ;80DE0D|80947E
-                dw loc_8095FC                                  ;80DE0F|8095FC
-                dw loc_8096C7                                  ;80DE11|8096C7
-                dw loc_8096A1                                  ;80DE13|8096A1
-                dw loc_80D883                                  ;80DE15|80D883
-                dw loc_80D85E                                  ;80DE17|80D85E
-                dw loc_80D863                                  ;80DE19|80D863
-                dw loc_80B042                                  ;80DE1B|80B042
-                dw loc_80CF61                                  ;80DE1D|80CF61
-                dw loc_80CF91                                  ;80DE1F|80CF91
-                dw loc_80CF20                                  ;80DE21|80CF20
-                dw loc_80CF25                                  ;80DE23|80CF25
-                dw loc_8096FD                                  ;80DE25|8096FD
-                dw loc_80CFE8                                  ;80DE27|80CFE8
-                dw loc_80CFEF                                  ;80DE29|80CFEF
-                dw loc_80D003                                  ;80DE2B|80D003
-                dw loc_80D00D                                  ;80DE2D|80D00D
-                dw loc_80D024                                  ;80DE2F|80D024
-                dw loc_80D03A                                  ;80DE31|80D03A
-                dw loc_80D056                                  ;80DE33|80D056
-                dw loc_80D068                                  ;80DE35|80D068
-                dw sub_80D08C                                  ;80DE37|80D08C
-                dw sub_80D0B0                                  ;80DE39|80D0B0
-                dw sub_80D0CA                                  ;80DE3B|80D0CA
-                dw sub_80D0F1                                  ;80DE3D|80D0F1
-                dw sub_80D116                                  ;80DE3F|80D116
-                dw hwmath_80D130                               ;80DE41|80D130
-                dw loc_80D14B                                  ;80DE43|80D14B
-                dw loc_80D162                                  ;80DE45|80D162
-                dw loc_80D16E                                  ;80DE47|80D16E
-                dw loc_80D188                                  ;80DE49|80D188
-                dw loc_80D19F                                  ;80DE4B|80D19F
-                dw loc_80D1AB                                  ;80DE4D|80D1AB
-                dw loc_80D1C5                                  ;80DE4F|80D1C5
-                dw loc_80D1DC                                  ;80DE51|80D1DC
-                dw loc_80D1E8                                  ;80DE53|80D1E8
-                dw loc_80D202                                  ;80DE55|80D202
-                dw loc_80D213                                  ;80DE57|80D213
-                dw loc_80D224                                  ;80DE59|80D224
-                dw loc_80D235                                  ;80DE5B|80D235
-                dw loc_80D246                                  ;80DE5D|80D246
-                dw loc_80D257                                  ;80DE5F|80D257
-                dw loc_80D268                                  ;80DE61|80D268
-                dw loc_80D279                                  ;80DE63|80D279
-                dw loc_80D28A                                  ;80DE65|80D28A
-                dw loc_80D29B                                  ;80DE67|80D29B
-                dw loc_80D39C                                  ;80DE69|80D39C
-                dw loc_80D3A9                                  ;80DE6B|80D3A9
-                dw loc_80D3B6                                  ;80DE6D|80D3B6
-                dw loc_80D3C3                                  ;80DE6F|80D3C3
-                dw loc_80D3D0                                  ;80DE71|80D3D0
-                dw loc_80D3DD                                  ;80DE73|80D3DD
-                dw loc_80D3EA                                  ;80DE75|80D3EA
-                dw loc_80D3F7                                  ;80DE77|80D3F7
-                dw loc_80D404                                  ;80DE79|80D404
-                dw loc_80D411                                  ;80DE7B|80D411
-                dw loc_80D2AC                                  ;80DE7D|80D2AC
-                dw loc_80D2C4                                  ;80DE7F|80D2C4
-                dw loc_80D2DC                                  ;80DE81|80D2DC
-                dw loc_80D2F4                                  ;80DE83|80D2F4
-                dw loc_80D30C                                  ;80DE85|80D30C
-                dw loc_80D324                                  ;80DE87|80D324
-                dw loc_80D33C                                  ;80DE89|80D33C
-                dw loc_80D354                                  ;80DE8B|80D354
-                dw loc_80D36C                                  ;80DE8D|80D36C
-                dw loc_80D384                                  ;80DE8F|80D384
-                dw loc_80D41E                                  ;80DE91|80D41E
-                dw loc_80D42B                                  ;80DE93|80D42B
-                dw loc_80D438                                  ;80DE95|80D438
-                dw loc_80D445                                  ;80DE97|80D445
-                dw loc_80D452                                  ;80DE99|80D452
-                dw loc_80D45F                                  ;80DE9B|80D45F
-                dw loc_80D46C                                  ;80DE9D|80D46C
-                dw loc_80D479                                  ;80DE9F|80D479
-                dw loc_80D486                                  ;80DEA1|80D486
-                dw loc_80D493                                  ;80DEA3|80D493
-                dw loc_80D07F                                  ;80DEA5|80D07F
-                dw loc_80D0A3                                  ;80DEA7|80D0A3
-                dw loc_80D0BD                                  ;80DEA9|80D0BD
-                dw loc_80D0E4                                  ;80DEAB|80D0E4
-                dw loc_80D109                                  ;80DEAD|80D109
-                dw loc_80D123                                  ;80DEAF|80D123
-                dw loc_80D02A                                  ;80DEB1|80D02A
-                dw loc_80D4A0                                  ;80DEB3|80D4A0
-                dw loc_80D4A6                                  ;80DEB5|80D4A6
-                dw loc_80D4AC                                  ;80DEB7|80D4AC
-                dw loc_80D4B2                                  ;80DEB9|80D4B2
-                dw loc_80D4B8                                  ;80DEBB|80D4B8
-                dw loc_80D4C1                                  ;80DEBD|80D4C1
-                dw loc_80D4EF                                  ;80DEBF|80D4EF
-                dw loc_80D512                                  ;80DEC1|80D512
-                dw loc_80D543                                  ;80DEC3|80D543
-                dw loc_80D56A                                  ;80DEC5|80D56A
-                dw loc_80D586                                  ;80DEC7|80D586
-                dw loc_80D61D                                  ;80DEC9|80D61D
-                dw loc_80D644                                  ;80DECB|80D644
-                dw loc_80D660                                  ;80DECD|80D660
-                dw loc_80D5B0                                  ;80DECF|80D5B0
-                dw loc_80D5D7                                  ;80DED1|80D5D7
-                dw loc_80D5F3                                  ;80DED3|80D5F3
-                dw loc_80D68A                                  ;80DED5|80D68A
-                dw loc_80D697                                  ;80DED7|80D697
-                dw loc_80D6A4                                  ;80DED9|80D6A4
-                dw loc_80D6B1                                  ;80DEDB|80D6B1
-                dw loc_80D6BE                                  ;80DEDD|80D6BE
-                dw loc_80D6CE                                  ;80DEDF|80D6CE
-                dw loc_80D6DB                                  ;80DEE1|80D6DB
-                dw loc_80D6E8                                  ;80DEE3|80D6E8
-                dw loc_80D6F5                                  ;80DEE5|80D6F5
-                dw loc_80D702                                  ;80DEE7|80D702
-                dw loc_80D712                                  ;80DEE9|80D712
-                dw loc_80D71F                                  ;80DEEB|80D71F
-                dw loc_80D72C                                  ;80DEED|80D72C
-                dw loc_80D739                                  ;80DEEF|80D739
-                dw loc_80D746                                  ;80DEF1|80D746
-                dw loc_80D756                                  ;80DEF3|80D756
-                dw loc_80D763                                  ;80DEF5|80D763
-                dw loc_80D770                                  ;80DEF7|80D770
-                dw loc_80D77D                                  ;80DEF9|80D77D
-                dw loc_80D78A                                  ;80DEFB|80D78A
-                dw loc_80D032                                  ;80DEFD|80D032
-                dw loc_80D04E                                  ;80DEFF|80D04E
-                dw loc_80D060                                  ;80DF01|80D060
-                dw loc_80DA27                                  ;80DF03|80DA27
-                dw loc_80DA55                                  ;80DF05|80DA55
-                dw loc_80DABB                                  ;80DF07|80DABB
-                dw loc_80DA83                                  ;80DF09|80DA83
-                dw loc_80DA2C                                  ;80DF0B|80DA2C
-                dw loc_80DA5A                                  ;80DF0D|80DA5A
-                dw loc_80DAC0                                  ;80DF0F|80DAC0
-                dw loc_80DA88                                  ;80DF11|80DA88
-                dw loc_80DB1E                                  ;80DF13|80DB1E
-                dw loc_80DB2B                                  ;80DF15|80DB2B
-                dw loc_80DB4D                                  ;80DF17|80DB4D
-                dw loc_80DB61                                  ;80DF19|80DB61
-                dw loc_809677                                  ;80DF1B|809677
-                dw loc_80DB85                                  ;80DF1D|80DB85
-                dw loc_80DB73                                  ;80DF1F|80DB73
-                dw loc_80DB7E                                  ;80DF21|80DB7E
-                dw loc_80DB6E                                  ;80DF23|80DB6E
-                dw loc_80ACED                                  ;80DF25|80ACED
-                dw loc_80AD7C                                  ;80DF27|80AD7C
-                dw loc_809A0D                                  ;80DF29|809A0D
-                dw loc_8099C4                                  ;80DF2B|8099C4
-                dw loc_80DBC3                                  ;80DF2D|80DBC3
-                dw loc_80D9F2                                  ;80DF2F|80D9F2
-                dw loc_80DA0E                                  ;80DF31|80DA0E
-                dw loc_80D9E0                                  ;80DF33|80D9E0
+; ---------------------------------------------------------------
+;  OBJECT SCRIPT VM  (216 opcodes)  --  see object_vm_opcodes.md
+;    ip = [objScriptPtr bank in zp_72 : scriptPC ($70)] + Y ; opcode byte -> JSR (ObjVM_OpTable,X)
+;    vmAcc ($8E) = accumulator ('var'); objReturnPtr = single-level call/return slot
+;    operand kinds:  Imm = literal, Fld = field of this object, Ram = bank-0 address,
+;                    TFld = field of objTarget (13D1), Rnd = random (VM_GetRandom)
+;    Yield/Reinit/Destroy do PLA to drop the return address: the JSR never RTSes normally,
+;    so emulator call stacks show stale frames after these ops.
+; ---------------------------------------------------------------
+ObjVM_OpTable:
+                dw Op_Yield                                  ;80DD85|80CD5A   ; pointer/jump table (16-bit entries)   ; op $00
+                dw Op_Nop                                  ;80DD87|80CD64   ; op $01
+                dw Op_PlaySfx                                  ;80DD89|80D9C0   ; op $02
+                dw Op_Goto                                  ;80DD8B|80CD70   ; op $03
+                dw Op_StopSfx                                  ;80DD8D|80D9D4   ; op $04
+                dw Op_Call                                  ;80DD8F|80CD65   ; op $05
+                dw Op_Return                                  ;80DD91|80CD78   ; op $06
+                dw Op_FaceLeft                                  ;80DD93|80EA47   ; op $07
+                dw Op_FaceRight                                  ;80DD95|80EA3C   ; op $08
+                dw Op_SetFlipV                                  ;80DD97|80EB4A   ; op $09
+                dw Op_ClearFlipV                                  ;80DD99|80EB3F   ; op $0A
+                dw Op_ToggleFlipH                                  ;80DD9B|80EA52   ; op $0B
+                dw Op_ToggleFlipV                                  ;80DD9D|80EB55   ; op $0C
+                dw Op_AllowRespawn                                  ;80DD9F|80CD83   ; op $0D
+                dw Op_BlockRespawn                                  ;80DDA1|80CDA4   ; op $0E
+                dw Op_RequestReinit                                  ;80DDA3|80CDC5   ; op $0F
+                dw Op_DestroySelf                                  ;80DDA5|80CDCF   ; op $10
+                dw Op_DamageSelfFromTarget                                  ;80DDA7|80CDD8   ; op $11
+                dw Op_DamageTarget                                  ;80DDA9|80CDE3   ; op $12
+                dw Op_CallFar                                  ;80DDAB|80CDEE   ; op $13
+                dw Op_SpawnObject                                  ;80DDAD|80D806   ; op $14
+                dw Op_GetDeltaToSelPlayer                                  ;80DDAF|80D96E   ; op $15
+                dw Op_GetDeltaToTarget                                  ;80DDB1|80D976   ; op $16
+                dw Op_AttachSelfToObj0                                  ;80DDB3|80CE13   ; op $17
+                dw Op_AttachSelfToTarget                                  ;80DDB5|80CE24   ; op $18
+                dw Op_SetAnimScript                                  ;80DDB7|80CE4F   ; op $19
+                dw Op_CallIfPlayerTouchType                                  ;80DDB9|80A4A2   ; op $1A
+                dw Op_AttachObj0ToSelf                                  ;80DDBB|80CE1A   ; op $1B
+                dw Op_JmpIfAnimIdle                                  ;80DDBD|80CE5F   ; op $1C
+                dw Op_CallIfPlayerHitMask                                  ;80DDBF|80A564   ; op $1D
+                dw Op_JmpIfBlockedAbove                                  ;80DDC1|80CE6C   ; op $1E (name is a guess)
+                dw Op_JmpIfBlockedBelow                                  ;80DDC3|80CE86   ; op $1F (name is a guess)
+                dw Op_JmpIfBlockedBehind                                  ;80DDC5|80CEC4   ; op $20
+                dw Op_JmpIfBlockedAhead                                  ;80DDC7|80CEA0   ; op $21
+                dw Op_JmpIfNotBlockedAbove                                  ;80DDC9|80CE71   ; op $22 (name is a guess)
+                dw Op_JmpIfNotBlockedBelow                                  ;80DDCB|80CE8B   ; op $23 (name is a guess)
+                dw Op_JmpIfNotBlockedBehind                                  ;80DDCD|80CEC9   ; op $24
+                dw Op_JmpIfNotBlockedAhead                                  ;80DDCF|80CEA5   ; op $25
+                dw Op_PixelsToTileXY                                  ;80DDD1|80D79A   ; op $26
+                dw Op_GetTileCollisionAt                                  ;80DDD3|80D7C0   ; op $27
+                dw Op_SnapToTileCenterXY                                  ;80DDD5|80D7DC   ; op $28
+                dw Op_SetMetatileXY                                  ;80DDD7|80D8A7   ; op $29
+                dw Op_SetTileIndexXY                                  ;80DDD9|80D8F9   ; op $2A
+                dw Op_SetTileCollisionXY                                  ;80DDDB|80D8C9   ; op $2B
+                dw Op_ScanPlayerAbove_SetTarget                                  ;80DDDD|80AD8E   ; op $2C (name is a guess)
+                dw Op_ScanNextPlayerAbove                                  ;80DDDF|80AD87   ; op $2D (name is a guess)
+                dw Op_SetShakeX                                  ;80DDE1|80DAF3   ; op $2E (name is a guess)
+                dw Op_AnimTick                                  ;80DDE3|80E1E7   ; op $2F
+                dw Op_JmpIfSolidAheadBelow                                  ;80DDE5|80CEE8   ; op $30 (name is a guess)
+                dw Op_JmpIfNoSolidAheadBelow                                  ;80DDE7|80CEED   ; op $31 (name is a guess)
+                dw Op_CallIfCollideX                                  ;80DDE9|80A626   ; op $32
+                dw Op_CallIfCollideY                                  ;80DDEB|80A680   ; op $33
+                dw Op_GetNearestPlayerDelta                                  ;80DDED|80D929   ; op $34
+                dw Op_ScanObjAbove_SetTarget                                  ;80DDEF|80ACFF   ; op $35 (name is a guess)
+                dw Op_ScanNextObjAbove                                  ;80DDF1|80ACF8   ; op $36 (name is a guess)
+                dw Op_CallIfTouchType                                  ;80DDF3|80A4C3   ; op $37
+                dw Op_CallIfTouchMask                                  ;80DDF5|80A585   ; op $38
+                dw Op_SetDeferredFarCall                                  ;80DDF7|80CFA0   ; op $39
+                dw Op_DamageTarget                                  ;80DDF9|80CDE3   ; op $3A  duplicate of $12
+                dw Op_SetShakeY                                  ;80DDFB|80DB08   ; op $3B (name is a guess)
+                dw Op_CallIfCollideY_Slope                                  ;80DDFD|80A6DA   ; op $3C
+                dw Op_SetBackdropRGB                                  ;80DDFF|80CF40   ; op $3D
+                dw Op_ClearBackdrop                                ;80DE01|80CF82   ; op $3E
+                dw Op_HideSprites                                  ;80DE03|80CFB1   ; op $3F
+                dw Op_ShowSprites                                  ;80DE05|80CFCB   ; op $40
+                dw Op_ShowDialogAtObj                                  ;80DE07|80945A   ; op $41
+                dw Op_ClearDialog                                ;80DE09|80963F   ; op $42
+                dw Op_WaitKey                                  ;80DE0B|809688   ; op $43
+                dw Op_ShowDialogAtPos                                  ;80DE0D|80947E   ; op $44
+                dw Op_PrintText                                  ;80DE0F|8095FC   ; op $45 (name is a guess)
+                dw Op_SetDialogColor                                  ;80DE11|8096C7   ; op $46
+                dw Op_DialogCmd06                                  ;80DE13|8096A1   ; op $47 (name is a guess)
+                dw Op_MoveToXY                                  ;80DE15|80D883   ; op $48
+                dw Op_JmpIfTileClassAtXY                                  ;80DE17|80D85E   ; op $49
+                dw Op_JmpIfNotTileClassAtXY                                  ;80DE19|80D863   ; op $4A
+                dw Op_RequestGroundSnap                                  ;80DE1B|80B042   ; op $4B
+                dw Op_SetBackdropRGB2                                  ;80DE1D|80CF61   ; op $4C
+                dw Op_ClearBackdrop2                                  ;80DE1F|80CF91   ; op $4D
+                dw Op_JmpIfEdgeAhead                                  ;80DE21|80CF20   ; op $4E (name is a guess)
+                dw Op_JmpIfNotEdgeAhead                                  ;80DE23|80CF25   ; op $4F (name is a guess)
+                dw Op_TextPutChar                                  ;80DE25|8096FD   ; op $50 (name is a guess)
+                dw Op_LoadAcc_Imm                                  ;80DE27|80CFE8   ; op $51
+                dw Op_LoadAcc_Fld                                  ;80DE29|80CFEF   ; op $52
+                dw Op_LoadAcc_Ram                                  ;80DE2B|80D003   ; op $53
+                dw Op_LoadAcc_TFld                                  ;80DE2D|80D00D   ; op $54
+                dw Op_LoadAcc_Rnd                                  ;80DE2F|80D024   ; op $55
+                dw Op_StoreAcc_Fld                                  ;80DE31|80D03A   ; op $56
+                dw Op_StoreAcc_Ram                                  ;80DE33|80D056   ; op $57
+                dw Op_StoreAcc_TFld                                  ;80DE35|80D068   ; op $58
+                dw Op_AddAcc_Fld                                  ;80DE37|80D08C   ; op $59
+                dw Op_AddAcc_Ram                                  ;80DE39|80D0B0   ; op $5A
+                dw Op_AddAcc_TFld                                  ;80DE3B|80D0CA   ; op $5B
+                dw Op_SubAcc_Fld                                  ;80DE3D|80D0F1   ; op $5C
+                dw Op_SubAcc_Ram                                  ;80DE3F|80D116   ; op $5D
+                dw Op_SubAcc_TFld                               ;80DE41|80D130   ; op $5E
+                dw Op_AndAcc_Fld                                  ;80DE43|80D14B   ; op $5F
+                dw Op_AndAcc_Ram                                  ;80DE45|80D162   ; op $60
+                dw Op_AndAcc_TFld                                  ;80DE47|80D16E   ; op $61
+                dw Op_OrAcc_Fld                                  ;80DE49|80D188   ; op $62
+                dw Op_OrAcc_Ram                                  ;80DE4B|80D19F   ; op $63
+                dw Op_OrAcc_TFld                                  ;80DE4D|80D1AB   ; op $64
+                dw Op_XorAcc_Fld                                  ;80DE4F|80D1C5   ; op $65
+                dw Op_XorAcc_Ram                                  ;80DE51|80D1DC   ; op $66
+                dw Op_XorAcc_TFld                                  ;80DE53|80D1E8   ; op $67
+                dw Op_JmpIfAccGEu_Imm                                  ;80DE55|80D202   ; op $68
+                dw Op_JmpIfAccGEu_Fld                                  ;80DE57|80D213   ; op $69
+                dw Op_JmpIfAccGEu_Ram                                  ;80DE59|80D224   ; op $6A
+                dw Op_JmpIfAccGEu_TFld                                  ;80DE5B|80D235   ; op $6B
+                dw Op_JmpIfAccGEu_Rnd                                  ;80DE5D|80D246   ; op $6C
+                dw Op_JmpIfAccLTu_Imm                                  ;80DE5F|80D257   ; op $6D
+                dw Op_JmpIfAccLTu_Fld                                  ;80DE61|80D268   ; op $6E
+                dw Op_JmpIfAccLTu_Ram                                  ;80DE63|80D279   ; op $6F
+                dw Op_JmpIfAccLTu_TFld                                  ;80DE65|80D28A   ; op $70
+                dw Op_JmpIfAccLTu_Rnd                                  ;80DE67|80D29B   ; op $71
+                dw Op_JmpIfAccEq_Imm                                  ;80DE69|80D39C   ; op $72
+                dw Op_JmpIfAccEq_Fld                                  ;80DE6B|80D3A9   ; op $73
+                dw Op_JmpIfAccEq_Ram                                  ;80DE6D|80D3B6   ; op $74
+                dw Op_JmpIfAccEq_TFld                                  ;80DE6F|80D3C3   ; op $75
+                dw Op_JmpIfAccEq_Rnd                                  ;80DE71|80D3D0   ; op $76
+                dw Op_JmpIfAccNe_Imm                                  ;80DE73|80D3DD   ; op $77
+                dw Op_JmpIfAccNe_Fld                                  ;80DE75|80D3EA   ; op $78
+                dw Op_JmpIfAccNe_Ram                                  ;80DE77|80D3F7   ; op $79
+                dw Op_JmpIfAccNe_TFld                                  ;80DE79|80D404   ; op $7A
+                dw Op_JmpIfAccNe_Rnd                                  ;80DE7B|80D411   ; op $7B
+                dw Op_JmpIfAccGEs_Imm                                  ;80DE7D|80D2AC   ; op $7C
+                dw Op_JmpIfAccGEs_Fld                                  ;80DE7F|80D2C4   ; op $7D
+                dw Op_JmpIfAccGEs_Ram                                  ;80DE81|80D2DC   ; op $7E
+                dw Op_JmpIfAccGEs_TFld                                  ;80DE83|80D2F4   ; op $7F
+                dw Op_JmpIfAccGEs_Rnd                                  ;80DE85|80D30C   ; op $80
+                dw Op_JmpIfAccLTs_Imm                                  ;80DE87|80D324   ; op $81
+                dw Op_JmpIfAccLTs_Fld                                  ;80DE89|80D33C   ; op $82
+                dw Op_JmpIfAccLTs_Ram                                  ;80DE8B|80D354   ; op $83
+                dw Op_JmpIfAccLTs_TFld                                  ;80DE8D|80D36C   ; op $84
+                dw Op_JmpIfAccLTs_Rnd                                  ;80DE8F|80D384   ; op $85
+                dw Op_CallIfAccEq_Imm                                  ;80DE91|80D41E   ; op $86
+                dw Op_CallIfAccEq_Fld                                  ;80DE93|80D42B   ; op $87
+                dw Op_CallIfAccEq_Ram                                  ;80DE95|80D438   ; op $88
+                dw Op_CallIfAccEq_TFld                                  ;80DE97|80D445   ; op $89
+                dw Op_CallIfAccEq_Rnd                                  ;80DE99|80D452   ; op $8A
+                dw Op_CallIfAccNe_Imm                                  ;80DE9B|80D45F   ; op $8B
+                dw Op_CallIfAccNe_Fld                                  ;80DE9D|80D46C   ; op $8C
+                dw Op_CallIfAccNe_Ram                                  ;80DE9F|80D479   ; op $8D
+                dw Op_CallIfAccNe_TFld                                  ;80DEA1|80D486   ; op $8E
+                dw Op_CallIfAccNe_Rnd                                  ;80DEA3|80D493   ; op $8F
+                dw Op_AddAcc_Fld_Facing                                  ;80DEA5|80D07F   ; op $90
+                dw Op_AddAcc_Ram_Facing                                  ;80DEA7|80D0A3   ; op $91
+                dw Op_AddAcc_TFld_Facing                                  ;80DEA9|80D0BD   ; op $92
+                dw Op_SubAcc_Fld_Facing                                  ;80DEAB|80D0E4   ; op $93
+                dw Op_SubAcc_Ram_Facing                                  ;80DEAD|80D109   ; op $94
+                dw Op_SubAcc_TFld_Facing                                  ;80DEAF|80D123   ; op $95
+                dw Op_SetTargetFromAcc                                  ;80DEB1|80D02A   ; op $96
+                dw Op_LoadAccBit_Imm                                  ;80DEB3|80D4A0   ; op $97
+                dw Op_LoadAccBit_Fld                                  ;80DEB5|80D4A6   ; op $98
+                dw Op_LoadAccBit_Ram                                  ;80DEB7|80D4AC   ; op $99
+                dw Op_LoadAccBit_TFld                                  ;80DEB9|80D4B2   ; op $9A
+                dw Op_LoadAccBit_Rnd                                  ;80DEBB|80D4B8   ; op $9B
+                dw Op_SetBitFromAcc_Fld                                  ;80DEBD|80D4C1   ; op $9C
+                dw Op_SetBitFromAcc_Ram                                  ;80DEBF|80D4EF   ; op $9D
+                dw Op_SetBitFromAcc_TFld                                  ;80DEC1|80D512   ; op $9E
+                dw Op_AndBitAcc_Fld                                  ;80DEC3|80D543   ; op $9F
+                dw Op_AndBitAcc_Ram                                  ;80DEC5|80D56A   ; op $A0
+                dw Op_AndBitAcc_TFld                                  ;80DEC7|80D586   ; op $A1
+                dw Op_OrBitAcc_Fld                                  ;80DEC9|80D61D   ; op $A2
+                dw Op_OrBitAcc_Ram                                  ;80DECB|80D644   ; op $A3
+                dw Op_OrBitAcc_TFld                                  ;80DECD|80D660   ; op $A4
+                dw Op_XorBitAcc_Fld                                  ;80DECF|80D5B0   ; op $A5
+                dw Op_XorBitAcc_Ram                                  ;80DED1|80D5D7   ; op $A6
+                dw Op_XorBitAcc_TFld                                  ;80DED3|80D5F3   ; op $A7
+                dw Op_JmpIfBitEqAcc_Imm                                  ;80DED5|80D68A   ; op $A8
+                dw Op_JmpIfBitEqAcc_Fld                                  ;80DED7|80D697   ; op $A9
+                dw Op_JmpIfBitEqAcc_Ram                                  ;80DED9|80D6A4   ; op $AA
+                dw Op_JmpIfBitEqAcc_TFld                                  ;80DEDB|80D6B1   ; op $AB
+                dw Op_JmpIfBitEqAcc_Rnd                                  ;80DEDD|80D6BE   ; op $AC
+                dw Op_JmpIfBitNeAcc_Imm                                  ;80DEDF|80D6CE   ; op $AD
+                dw Op_JmpIfBitNeAcc_Fld                                  ;80DEE1|80D6DB   ; op $AE
+                dw Op_JmpIfBitNeAcc_Ram                                  ;80DEE3|80D6E8   ; op $AF
+                dw Op_JmpIfBitNeAcc_TFld                                  ;80DEE5|80D6F5   ; op $B0
+                dw Op_JmpIfBitNeAcc_Rnd                                  ;80DEE7|80D702   ; op $B1
+                dw Op_CallIfBitEqAcc_Imm                                  ;80DEE9|80D712   ; op $B2
+                dw Op_CallIfBitEqAcc_Fld                                  ;80DEEB|80D71F   ; op $B3
+                dw Op_CallIfBitEqAcc_Ram                                  ;80DEED|80D72C   ; op $B4
+                dw Op_CallIfBitEqAcc_TFld                                  ;80DEEF|80D739   ; op $B5
+                dw Op_CallIfBitEqAcc_Rnd                                  ;80DEF1|80D746   ; op $B6
+                dw Op_CallIfBitNeAcc_Imm                                  ;80DEF3|80D756   ; op $B7
+                dw Op_CallIfBitNeAcc_Fld                                  ;80DEF5|80D763   ; op $B8
+                dw Op_CallIfBitNeAcc_Ram                                  ;80DEF7|80D770   ; op $B9
+                dw Op_CallIfBitNeAcc_TFld                                  ;80DEF9|80D77D   ; op $BA
+                dw Op_CallIfBitNeAcc_Rnd                                  ;80DEFB|80D78A   ; op $BB
+                dw Op_StoreAccHi_Fld                                  ;80DEFD|80D032   ; op $BC
+                dw Op_StoreAccHi_Ram                                  ;80DEFF|80D04E   ; op $BD
+                dw Op_StoreAccHi_TFld                                  ;80DF01|80D060   ; op $BE
+                dw Op_JmpIfPlayerAbove                                  ;80DF03|80DA27   ; op $BF (name is a guess)
+                dw Op_JmpIfPlayerBelow                                  ;80DF05|80DA55   ; op $C0 (name is a guess)
+                dw Op_JmpIfPlayerBehind                                  ;80DF07|80DABB   ; op $C1 (name is a guess)
+                dw Op_JmpIfPlayerAhead                                  ;80DF09|80DA83   ; op $C2 (name is a guess)
+                dw Op_JmpIfNotPlayerAbove                                  ;80DF0B|80DA2C   ; op $C3 (name is a guess)
+                dw Op_JmpIfNotPlayerBelow                                  ;80DF0D|80DA5A   ; op $C4 (name is a guess)
+                dw Op_JmpIfNotPlayerBehind                                  ;80DF0F|80DAC0   ; op $C5 (name is a guess)
+                dw Op_JmpIfNotPlayerAhead                                  ;80DF11|80DA88   ; op $C6 (name is a guess)
+                dw Op_SetSpawnRecX                                  ;80DF13|80DB1E   ; op $C7
+                dw Op_SetSpawnRecY                                  ;80DF15|80DB2B   ; op $C8
+                dw Op_SetSpawnRecFlags                                  ;80DF17|80DB4D   ; op $C9
+                dw Op_SetSpawnRecParam                                  ;80DF19|80DB61   ; op $CA
+                dw Op_WaitKeyPlayer                                  ;80DF1B|809677   ; op $CB
+                dw Op_JmpIfOnScreen                                  ;80DF1D|80DB85   ; op $CC
+                dw Op_JmpIfTargetOnScreen                                  ;80DF1F|80DB73   ; op $CD
+                dw Op_JmpIfOffScreen                                  ;80DF21|80DB7E   ; op $CE
+                dw Op_JmpIfTargetOffScreen                                  ;80DF23|80DB6E   ; op $CF
+                dw Op_ScanObjBelow_SetTarget                                  ;80DF25|80ACED   ; op $D0 (name is a guess)
+                dw Op_ScanPlayerBelow_SetTarget                                  ;80DF27|80AD7C   ; op $D1 (name is a guess)
+                dw Op_LoadLevelPassword                                  ;80DF29|809A0D   ; op $D2
+                dw Op_CheckPassword                                  ;80DF2B|8099C4   ; op $D3
+                dw Op_SetVelocityToward                                  ;80DF2D|80DBC3   ; op $D4 (name is a guess)
+                dw Op_PlayMusic                                  ;80DF2F|80D9F2   ; op $D5
+                dw Op_StopMusic                                  ;80DF31|80DA0E   ; op $D6
+                dw Op_StopSfx_Ex                                  ;80DF33|80D9E0   ; op $D7 (name is a guess)
 
 ; --------------------------------------------------------
 ;  VramDmaBlockA   [13 ins, returns RTS]
@@ -17777,7 +17786,7 @@ sub_80DF6F:
 
 ; --------------------------------------------------------
 ;  sub_80DF80   [34 ins, returns RTS]
-;    callers: sub_80F249
+;    callers: InitObjectFromSpawnRec
 ;    writes:    ram_0370
 ;    reads:     ram_0370, ram_0382, ram_0CE9, ram_0D29
 ; --------------------------------------------------------
@@ -17834,16 +17843,16 @@ data_80DFC5:
 
 ; --------------------------------------------------------
 ;  sub_80DFD1   [20 ins, returns RTS]
-;    callers: sub_80F095
+;    callers: DestroyObject
 ;    writes:    ram_0370
 ;    reads:     zp_2A, ram_1129, ram_1291
-;    calls:     sub_80F11F
+;    calls:     GetSpawnRecPtr
 ; --------------------------------------------------------
 sub_80DFD1:
                 PHY                                            ;80DFD1|
                 TYX                                            ;80DFD2|
                 LDA.W ram_1129,X                               ;80DFD3|801129
-                JSR.W sub_80F11F                               ;80DFD6|80F11F
+                JSR.W GetSpawnRecPtr                               ;80DFD6|80F11F
                 LDY.W #$0000                                   ;80DFD9|
                 LDA.B [zp_2A],Y                                ;80DFDC|00002A
                 CMP.W #$FFFE                                   ;80DFDE|
@@ -18185,7 +18194,7 @@ OamDmaUpload:
 
 ; --------------------------------------------------------
 ;  sub_80E1A8   [23 ins, returns RTS]
-;    callers: sub_80E230, sub_80F1EC
+;    callers: AnimVM_Run, sub_80F1EC
 ;    writes:    refillTmp32, oamBuildHi
 ;    reads:     refillTmp32, oamBuildHi
 ; --------------------------------------------------------
@@ -18222,7 +18231,7 @@ sub_80E1A8:
 ;  sub_80E1D0   [20 ins, returns RTS]
 ;    callers: sub_80EA54, sub_80EADE, sub_80EB57, sub_80EBE1
 ;    reads:     oamBuildHi
-;    calls:     sub_80E1F0, sub_80E8C9
+;    calls:     AnimVM_TickObject, sub_80E8C9
 ; --------------------------------------------------------
 sub_80E1D0:
                 PHY                                            ;80E1D0|
@@ -18242,85 +18251,85 @@ sub_80E1D0:
                 RTS                                            ;80E1E6|
 
 
-loc_80E1E7:
+Op_AnimTick:
                 PHY                                            ;80E1E7|
-                JSR.W sub_80E1F0                               ;80E1E8|80E1F0
+                JSR.W AnimVM_TickObject                               ;80E1E8|80E1F0
                 JSR.W sub_80E8C9                               ;80E1EB|80E8C9
                 PLY                                            ;80E1EE|
                 RTS                                            ;80E1EF|
 
 
 ; --------------------------------------------------------
-;  sub_80E1F0   [28 ins, returns RTS]
+;  AnimVM_TickObject   [28 ins, returns RTS]
 ;    callers: sub_80E1D0
-;    writes:    zp_74, zp_76, zp_78, zp_7A, zp_7C, zp_7E ...
-;    reads:     curObjIdx, zp_72, zp_74, zp_78, zp_7A, ram_1449 ...
-;    calls:     sub_80E230
+;    writes:    animPC, zp_76, animWait, animRet, animOamFirst, animOamFirstX4 ...
+;    reads:     curObjIdx, zp_72, animPC, animWait, animRet, objAnimPtr ...
+;    calls:     AnimVM_Run
 ; --------------------------------------------------------
-sub_80E1F0:
+AnimVM_TickObject:
                 LDY.B curObjIdx                                ;80E1F0|000042
-                LDA.W ram_1449,Y                               ;80E1F2|801449
+                LDA.W objAnimPtr,Y                               ;80E1F2|801449
                 CMP.W #$FFFF                                   ;80E1F5|
                 BEQ .exit                                      ;80E1F8|80E22F
-                STA.B zp_74                                    ;80E1FA|000074
+                STA.B animPC                                    ;80E1FA|000074
                 LDA.B zp_72                                    ;80E1FC|000072
                 STA.B zp_76                                    ;80E1FE|000076
-                LDA.W ram_1471,Y                               ;80E200|801471
-                STA.B zp_78                                    ;80E203|000078
-                LDA.W ram_1499,Y                               ;80E205|801499
-                STA.B zp_7A                                    ;80E208|00007A
+                LDA.W objAnimWait,Y                               ;80E200|801471
+                STA.B animWait                                    ;80E203|000078
+                LDA.W objAnimRet,Y                               ;80E205|801499
+                STA.B animRet                                    ;80E208|00007A
                 LDA.W ram_14C1,Y                               ;80E20A|8014C1
-                STA.B zp_7C                                    ;80E20D|00007C
+                STA.B animOamFirst                                    ;80E20D|00007C
                 ASL A                                          ;80E20F|
                 ASL A                                          ;80E210|
-                STA.B zp_7E                                    ;80E211|00007E
+                STA.B animOamFirstX4                                    ;80E211|00007E
                 LDA.W ram_14E9,Y                               ;80E213|8014E9
-                STA.B zp_80                                    ;80E216|000080
+                STA.B animOamEnd                                    ;80E216|000080
                 STZ.W ram_038E                                 ;80E218|80038E
-                JSR.W sub_80E230                               ;80E21B|80E230
+                JSR.W AnimVM_Run                               ;80E21B|80E230
                 LDY.B curObjIdx                                ;80E21E|000042
-                LDA.B zp_74                                    ;80E220|000074
-                STA.W ram_1449,Y                               ;80E222|801449
-                LDA.B zp_78                                    ;80E225|000078
-                STA.W ram_1471,Y                               ;80E227|801471
-                LDA.B zp_7A                                    ;80E22A|00007A
-                STA.W ram_1499,Y                               ;80E22C|801499
+                LDA.B animPC                                    ;80E220|000074
+                STA.W objAnimPtr,Y                               ;80E222|801449
+                LDA.B animWait                                    ;80E225|000078
+                STA.W objAnimWait,Y                               ;80E227|801471
+                LDA.B animRet                                    ;80E22A|00007A
+                STA.W objAnimRet,Y                               ;80E22C|801499
 
          .exit: RTS                                            ;80E22F|
 
 
 ; --------------------------------------------------------
-;  sub_80E230   [526 ins, returns RTS]
-;    callers: sub_80E1F0
+;  AnimVM_Run   [526 ins, returns RTS]
+;    callers: AnimVM_TickObject
 ;    writes:    zp_2A, zp_2C, zp_2E, zp_30, refillTmp32, refillStageIdx ...
-;    reads:     zp_2C, refillTmp32, refillStageIdx, zp_3A, curObjIdx, zp_74 ...
-;    calls:     ptrtbl_80E96E, sub_80EADE, sub_80EBE1, sub_80E1A8, Mul8x16, sub_8088F8, +2 more
+;    reads:     zp_2C, refillTmp32, refillStageIdx, zp_3A, curObjIdx, animPC ...
+;    calls:     AnimVM_OpTable, sub_80EADE, sub_80EBE1, sub_80E1A8, Mul8x16, sub_8088F8, +2 more
 ; --------------------------------------------------------
-sub_80E230:
-                LDA.B zp_78                                    ;80E230|000078
+AnimVM_Run:
+                LDA.B animWait                                    ;80E230|000078
                 BEQ .loop                                      ;80E232|80E238
-                DEC.B zp_78                                    ;80E234|000078
+                DEC.B animWait                                    ;80E234|000078
                 BNE .exit                                      ;80E236|80E246
 
-         .loop: LDA.B [zp_74]                                  ;80E238|000074
-                INC.B zp_74                                    ;80E23A|000074
+         .loop: LDA.B [animPC]                                  ;80E238|000074
+                INC.B animPC                                    ;80E23A|000074
                 AND.W #$00FF                                   ;80E23C|
                 ASL A                                          ;80E23F|
                 TAX                                            ;80E240|
-                JSR.W (ptrtbl_80E96E,X)                        ;80E241|80E96E
+                JSR.W (AnimVM_OpTable,X)                        ;80E241|80E96E
                 BRA .loop                                      ;80E244|80E238
 
 
          .exit: RTS                                            ;80E246|
 
 
-loc_80E247:
-                LDA.B [zp_74]                                  ;80E247|000074
-                INC.B zp_74                                    ;80E249|000074
+AnimOp_AddTileDelta:
+                LDA.B [animPC]                                  ;80E247|000074
+                INC.B animPC                                    ;80E249|000074
                 AND.W #$00FF                                   ;80E24B|
                 STA.B refillStageIdx                           ;80E24E|000034
-                LDX.B zp_7E                                    ;80E250|00007E
-                LDY.B zp_7C                                    ;80E252|00007C
+                LDX.B animOamFirstX4                                    ;80E250|00007E
+                LDY.B animOamFirst                                    ;80E252|00007C
                 LDA.W ram_038E                                 ;80E254|80038E
                 BEQ .loop2                                     ;80E257|80E274
 
@@ -18337,7 +18346,7 @@ loc_80E247:
                 INX                                            ;80E26C|
                 INX                                            ;80E26D|
                 INY                                            ;80E26E|
-                CPY.B zp_80                                    ;80E26F|000080
+                CPY.B animOamEnd                                    ;80E26F|000080
                 BNE .loop                                      ;80E271|80E259
                 RTS                                            ;80E273|
 
@@ -18351,24 +18360,24 @@ loc_80E247:
                 INX                                            ;80E27F|
                 INX                                            ;80E280|
                 INY                                            ;80E281|
-                CPY.B zp_80                                    ;80E282|000080
+                CPY.B animOamEnd                                    ;80E282|000080
                 BNE .loop2                                     ;80E284|80E274
                 RTS                                            ;80E286|
 
 
-loc_80E287:
+AnimOp_SetTiles:
                 LDY.B curObjIdx                                ;80E287|000042
                 LDA.W ram_1291,Y                               ;80E289|801291
                 STA.B zp_3A                                    ;80E28C|00003A
-                LDX.B zp_7E                                    ;80E28E|00007E
-                LDY.B zp_7C                                    ;80E290|00007C
+                LDX.B animOamFirstX4                                    ;80E28E|00007E
+                LDY.B animOamFirst                                    ;80E290|00007C
                 LDA.W ram_038E                                 ;80E292|80038E
                 BEQ .loop2                                     ;80E295|80E2C9
 
          .loop: LDA.W ram_09F9,Y                               ;80E297|8009F9
                 AND.W ram_038E                                 ;80E29A|80038E
                 BEQ .skip                                      ;80E29D|80E2BF
-                LDA.B [zp_74]                                  ;80E29F|000074
+                LDA.B [animPC]                                  ;80E29F|000074
                 AND.W #$00FF                                   ;80E2A1|
                 CLC                                            ;80E2A4|
                 ADC.B zp_3A                                    ;80E2A5|00003A
@@ -18382,19 +18391,19 @@ loc_80E287:
                 ORA.B refillTmp32                              ;80E2B6|000032
                 STA.W ram_0794,X                               ;80E2B8|800794
                 REP #$20                                       ;80E2BB|
-                INC.B zp_74                                    ;80E2BD|000074
+                INC.B animPC                                    ;80E2BD|000074
 
          .skip: INX                                            ;80E2BF|
                 INX                                            ;80E2C0|
                 INX                                            ;80E2C1|
                 INX                                            ;80E2C2|
                 INY                                            ;80E2C3|
-                CPY.B zp_80                                    ;80E2C4|000080
+                CPY.B animOamEnd                                    ;80E2C4|000080
                 BCC .loop                                      ;80E2C6|80E297
                 RTS                                            ;80E2C8|
 
 
-        .loop2: LDA.B [zp_74]                                  ;80E2C9|000074
+        .loop2: LDA.B [animPC]                                  ;80E2C9|000074
                 AND.W #$00FF                                   ;80E2CB|
                 CLC                                            ;80E2CE|
                 ADC.B zp_3A                                    ;80E2CF|00003A
@@ -18408,41 +18417,41 @@ loc_80E287:
                 ORA.B refillTmp32                              ;80E2E0|000032
                 STA.W ram_0794,X                               ;80E2E2|800794
                 REP #$20                                       ;80E2E5|
-                INC.B zp_74                                    ;80E2E7|000074
+                INC.B animPC                                    ;80E2E7|000074
                 INX                                            ;80E2E9|
                 INX                                            ;80E2EA|
                 INX                                            ;80E2EB|
                 INX                                            ;80E2EC|
                 INY                                            ;80E2ED|
-                CPY.B zp_80                                    ;80E2EE|000080
+                CPY.B animOamEnd                                    ;80E2EE|000080
                 BNE .loop2                                     ;80E2F0|80E2C9
                 RTS                                            ;80E2F2|
 
 
-loc_80E2F3:
-                LDA.B [zp_74]                                  ;80E2F3|000074
-                INC.B zp_74                                    ;80E2F5|000074
+AnimOp_PlaySfx:
+                LDA.B [animPC]                                  ;80E2F3|000074
+                INC.B animPC                                    ;80E2F5|000074
                 AND.W #$00FF                                   ;80E2F7|
                 TAY                                            ;80E2FA|
-                LDA.B [zp_74]                                  ;80E2FB|000074
-                INC.B zp_74                                    ;80E2FD|000074
+                LDA.B [animPC]                                  ;80E2FB|000074
+                INC.B animPC                                    ;80E2FD|000074
                 AND.W #$00FF                                   ;80E2FF|
                 TAX                                            ;80E302|
                 TYA                                            ;80E303|
                 JMP.W sub_8088F8                               ;80E304|8088F8
 
 
-loc_80E307:
-                LDA.B [zp_74]                                  ;80E307|000074
-                INC.B zp_74                                    ;80E309|000074
+AnimOp_StopSfx:
+                LDA.B [animPC]                                  ;80E307|000074
+                INC.B animPC                                    ;80E309|000074
                 AND.W #$00FF                                   ;80E30B|
                 LDX.W #$FFFF                                   ;80E30E|
                 JMP.W sub_80890C                               ;80E311|80890C
 
 
-loc_80E314:
-                LDA.B [zp_74]                                  ;80E314|000074
-                INC.B zp_74                                    ;80E316|000074
+AnimOp_MoveX:
+                LDA.B [animPC]                                  ;80E314|000074
+                INC.B animPC                                    ;80E316|000074
                 AND.W #$00FF                                   ;80E318|
                 BIT.W #$0080                                   ;80E31B|
                 BEQ +                                          ;80E31E|80E323
@@ -18461,7 +18470,7 @@ loc_80E314:
          .skip: STX.B refillTmp32                              ;80E334|000032
                 LDA.W ram_038E                                 ;80E336|80038E
                 BEQ .skip3                                     ;80E339|80E359
-                LDY.B zp_7C                                    ;80E33B|00007C
+                LDY.B animOamFirst                                    ;80E33B|00007C
                 TYA                                            ;80E33D|
                 ASL A                                          ;80E33E|
                 TAX                                            ;80E33F|
@@ -18477,7 +18486,7 @@ loc_80E314:
         .skip2: INX                                            ;80E351|
                 INX                                            ;80E352|
                 INY                                            ;80E353|
-                CPY.B zp_80                                    ;80E354|000080
+                CPY.B animOamEnd                                    ;80E354|000080
                 BNE .loop                                      ;80E356|80E340
                 RTS                                            ;80E358|
 
@@ -18491,25 +18500,25 @@ loc_80E314:
                 RTS                                            ;80E366|
 
 
-loc_80E367:
+AnimOp_SetXPositions:
                 LDY.B curObjIdx                                ;80E367|000042
                 LDA.W objField_1179,Y                          ;80E369|801179
                 STA.B refillTmp32                              ;80E36C|000032
-                LDA.B zp_7C                                    ;80E36E|00007C
+                LDA.B animOamFirst                                    ;80E36E|00007C
                 TAY                                            ;80E370|
                 ASL A                                          ;80E371|
                 TAX                                            ;80E372|
 
-         .loop: LDA.B [zp_74]                                  ;80E373|000074
-                INC.B zp_74                                    ;80E375|000074
-                INC.B zp_74                                    ;80E377|000074
+         .loop: LDA.B [animPC]                                  ;80E373|000074
+                INC.B animPC                                    ;80E375|000074
+                INC.B animPC                                    ;80E377|000074
                 CLC                                            ;80E379|
                 ADC.B refillTmp32                              ;80E37A|000032
                 STA.W oamSrcX,X                                ;80E37C|800A61
                 INX                                            ;80E37F|
                 INX                                            ;80E380|
                 INY                                            ;80E381|
-                CPY.B zp_80                                    ;80E382|000080
+                CPY.B animOamEnd                                    ;80E382|000080
                 BNE .loop                                      ;80E384|80E373
                 LDX.B curObjIdx                                ;80E386|000042
                 LDA.W objField_0FC1,X                          ;80E388|800FC1
@@ -18520,9 +18529,9 @@ loc_80E367:
          .exit: RTS                                            ;80E393|
 
 
-loc_80E394:
-                LDA.B [zp_74]                                  ;80E394|000074
-                INC.B zp_74                                    ;80E396|000074
+AnimOp_MoveY:
+                LDA.B [animPC]                                  ;80E394|000074
+                INC.B animPC                                    ;80E396|000074
                 AND.W #$00FF                                   ;80E398|
                 BIT.W #$0080                                   ;80E39B|
                 BEQ +                                          ;80E39E|80E3A3
@@ -18541,7 +18550,7 @@ loc_80E394:
          .skip: STX.B refillTmp32                              ;80E3B4|000032
                 LDA.W ram_038E                                 ;80E3B6|80038E
                 BEQ .skip3                                     ;80E3B9|80E3D9
-                LDY.B zp_7C                                    ;80E3BB|00007C
+                LDY.B animOamFirst                                    ;80E3BB|00007C
                 TYA                                            ;80E3BD|
                 ASL A                                          ;80E3BE|
                 TAX                                            ;80E3BF|
@@ -18557,7 +18566,7 @@ loc_80E394:
         .skip2: INX                                            ;80E3D1|
                 INX                                            ;80E3D2|
                 INY                                            ;80E3D3|
-                CPY.B zp_80                                    ;80E3D4|000080
+                CPY.B animOamEnd                                    ;80E3D4|000080
                 BNE .loop                                      ;80E3D6|80E3C0
                 RTS                                            ;80E3D8|
 
@@ -18571,25 +18580,25 @@ loc_80E394:
                 RTS                                            ;80E3E6|
 
 
-loc_80E3E7:
+AnimOp_SetYPositions:
                 LDY.B curObjIdx                                ;80E3E7|000042
                 LDA.W objField_11A1,Y                          ;80E3E9|8011A1
                 STA.B refillTmp32                              ;80E3EC|000032
-                LDA.B zp_7C                                    ;80E3EE|00007C
+                LDA.B animOamFirst                                    ;80E3EE|00007C
                 TAY                                            ;80E3F0|
                 ASL A                                          ;80E3F1|
                 TAX                                            ;80E3F2|
 
-         .loop: LDA.B [zp_74]                                  ;80E3F3|000074
-                INC.B zp_74                                    ;80E3F5|000074
-                INC.B zp_74                                    ;80E3F7|000074
+         .loop: LDA.B [animPC]                                  ;80E3F3|000074
+                INC.B animPC                                    ;80E3F5|000074
+                INC.B animPC                                    ;80E3F7|000074
                 CLC                                            ;80E3F9|
                 ADC.B refillTmp32                              ;80E3FA|000032
                 STA.W oamSrcY,X                                ;80E3FC|800B49
                 INX                                            ;80E3FF|
                 INX                                            ;80E400|
                 INY                                            ;80E401|
-                CPY.B zp_80                                    ;80E402|000080
+                CPY.B animOamEnd                                    ;80E402|000080
                 BNE .loop                                      ;80E404|80E3F3
                 LDX.B curObjIdx                                ;80E406|000042
                 LDA.W objField_0FC1,X                          ;80E408|800FC1
@@ -18600,9 +18609,9 @@ loc_80E3E7:
          .exit: RTS                                            ;80E413|
 
 
-loc_80E414:
-                LDX.B zp_7E                                    ;80E414|00007E
-                LDY.B zp_7C                                    ;80E416|00007C
+AnimOp_SetPalette:
+                LDX.B animOamFirstX4                                    ;80E414|00007E
+                LDY.B animOamFirst                                    ;80E416|00007C
                 LDA.W ram_038E                                 ;80E418|80038E
                 BEQ .loop2                                     ;80E41B|80E43F
 
@@ -18612,17 +18621,17 @@ loc_80E414:
                 SEP #$20                                       ;80E425|
                 LDA.W ram_0794,X                               ;80E427|800794
                 AND.B #$F1                                     ;80E42A|
-                ORA.B [zp_74]                                  ;80E42C|000074
+                ORA.B [animPC]                                  ;80E42C|000074
                 STA.W ram_0794,X                               ;80E42E|800794
                 REP #$20                                       ;80E431|
-                INC.B zp_74                                    ;80E433|000074
+                INC.B animPC                                    ;80E433|000074
 
          .skip: INX                                            ;80E435|
                 INX                                            ;80E436|
                 INX                                            ;80E437|
                 INX                                            ;80E438|
                 INY                                            ;80E439|
-                CPY.B zp_80                                    ;80E43A|000080
+                CPY.B animOamEnd                                    ;80E43A|000080
                 BCC .loop                                      ;80E43C|80E41D
                 RTS                                            ;80E43E|
 
@@ -18630,26 +18639,26 @@ loc_80E414:
         .loop2: SEP #$20                                       ;80E43F|
                 LDA.W ram_0794,X                               ;80E441|800794
                 AND.B #$F1                                     ;80E444|
-                ORA.B [zp_74]                                  ;80E446|000074
+                ORA.B [animPC]                                  ;80E446|000074
                 STA.W ram_0794,X                               ;80E448|800794
                 REP #$20                                       ;80E44B|
-                INC.B zp_74                                    ;80E44D|000074
+                INC.B animPC                                    ;80E44D|000074
                 INX                                            ;80E44F|
                 INX                                            ;80E450|
                 INX                                            ;80E451|
                 INX                                            ;80E452|
                 INY                                            ;80E453|
-                CPY.B zp_80                                    ;80E454|000080
+                CPY.B animOamEnd                                    ;80E454|000080
                 BNE .loop2                                     ;80E456|80E43F
                 RTS                                            ;80E458|
 
 
-loc_80E459:
-                LDA.B [zp_74]                                  ;80E459|000074
-                INC.B zp_74                                    ;80E45B|000074
+AnimOp_SetSizeBit:
+                LDA.B [animPC]                                  ;80E459|000074
+                INC.B animPC                                    ;80E45B|000074
                 AND.W #$00FF                                   ;80E45D|
                 STA.B refillStageIdx                           ;80E460|000034
-                LDY.B zp_7C                                    ;80E462|00007C
+                LDY.B animOamFirst                                    ;80E462|00007C
                 LDA.W ram_038E                                 ;80E464|80038E
                 BEQ .loop2                                     ;80E467|80E47C
 
@@ -18660,7 +18669,7 @@ loc_80E459:
                 JSR.W sub_80E1A8                               ;80E473|80E1A8
 
              +: INY                                            ;80E476|
-                CPY.B zp_80                                    ;80E477|000080
+                CPY.B animOamEnd                                    ;80E477|000080
                 BNE .loop                                      ;80E479|80E469
                 RTS                                            ;80E47B|
 
@@ -18668,13 +18677,13 @@ loc_80E459:
         .loop2: LDA.B refillStageIdx                           ;80E47C|000034
                 JSR.W sub_80E1A8                               ;80E47E|80E1A8
                 INY                                            ;80E481|
-                CPY.B zp_80                                    ;80E482|000080
+                CPY.B animOamEnd                                    ;80E482|000080
                 BNE .loop2                                     ;80E484|80E47C
                 RTS                                            ;80E486|
 
 
-loc_80E487:
-                LDY.B zp_7C                                    ;80E487|00007C
+AnimOp_HideSprites:
+                LDY.B animOamFirst                                    ;80E487|00007C
                 LDA.W ram_038E                                 ;80E489|80038E
                 BEQ .loop2                                     ;80E48C|80E4A5
 
@@ -18686,7 +18695,7 @@ loc_80E487:
                 STA.W oamSrcAttr,Y                             ;80E49C|800985
 
              +: INY                                            ;80E49F|
-                CPY.B zp_80                                    ;80E4A0|000080
+                CPY.B animOamEnd                                    ;80E4A0|000080
                 BNE .loop                                      ;80E4A2|80E48E
                 RTS                                            ;80E4A4|
 
@@ -18695,13 +18704,13 @@ loc_80E487:
                 ORA.W #$0040                                   ;80E4A8|
                 STA.W oamSrcAttr,Y                             ;80E4AB|800985
                 INY                                            ;80E4AE|
-                CPY.B zp_80                                    ;80E4AF|000080
+                CPY.B animOamEnd                                    ;80E4AF|000080
                 BNE .loop2                                     ;80E4B1|80E4A5
                 RTS                                            ;80E4B3|
 
 
-loc_80E4B4:
-                LDY.B zp_7C                                    ;80E4B4|00007C
+AnimOp_ShowSprites:
+                LDY.B animOamFirst                                    ;80E4B4|00007C
                 LDA.W ram_038E                                 ;80E4B6|80038E
                 BEQ .loop2                                     ;80E4B9|80E4D5
 
@@ -18714,7 +18723,7 @@ loc_80E4B4:
                 STA.W oamSrcAttr,Y                             ;80E4CC|800985
 
          .skip: INY                                            ;80E4CF|
-                CPY.B zp_80                                    ;80E4D0|000080
+                CPY.B animOamEnd                                    ;80E4D0|000080
                 BNE .loop                                      ;80E4D2|80E4BB
                 RTS                                            ;80E4D4|
 
@@ -18723,22 +18732,22 @@ loc_80E4B4:
                 AND.W #$FFBF                                   ;80E4D8|
                 STA.W oamSrcAttr,Y                             ;80E4DB|800985
                 INY                                            ;80E4DE|
-                CPY.B zp_80                                    ;80E4DF|000080
+                CPY.B animOamEnd                                    ;80E4DF|000080
                 BNE .loop2                                     ;80E4E1|80E4D5
                 RTS                                            ;80E4E3|
 
 
-loc_80E4E4:
-                LDA.B [zp_74]                                  ;80E4E4|000074
-                INC.B zp_74                                    ;80E4E6|000074
+AnimOp_SetPriority:
+                LDA.B [animPC]                                  ;80E4E4|000074
+                INC.B animPC                                    ;80E4E6|000074
                 AND.W #$00FF                                   ;80E4E8|
                 ASL A                                          ;80E4EB|
                 ASL A                                          ;80E4EC|
                 ASL A                                          ;80E4ED|
                 ASL A                                          ;80E4EE|
                 STA.B refillTmp32                              ;80E4EF|000032
-                LDX.B zp_7E                                    ;80E4F1|00007E
-                LDY.B zp_7C                                    ;80E4F3|00007C
+                LDX.B animOamFirstX4                                    ;80E4F1|00007E
+                LDY.B animOamFirst                                    ;80E4F3|00007C
                 LDA.W ram_038E                                 ;80E4F5|80038E
                 BEQ .loop2                                     ;80E4F8|80E51A
 
@@ -18757,7 +18766,7 @@ loc_80E4E4:
                 INX                                            ;80E512|
                 INX                                            ;80E513|
                 INY                                            ;80E514|
-                CPY.B zp_80                                    ;80E515|000080
+                CPY.B animOamEnd                                    ;80E515|000080
                 BCC .loop                                      ;80E517|80E4FA
                 RTS                                            ;80E519|
 
@@ -18773,13 +18782,13 @@ loc_80E4E4:
                 INX                                            ;80E52A|
                 INX                                            ;80E52B|
                 INY                                            ;80E52C|
-                CPY.B zp_80                                    ;80E52D|000080
+                CPY.B animOamEnd                                    ;80E52D|000080
                 BNE .loop2                                     ;80E52F|80E51A
                 RTS                                            ;80E531|
 
 
-loc_80E532:
-                LDX.B zp_7C                                    ;80E532|00007C
+AnimOp_SetSpriteFlags:
+                LDX.B animOamFirst                                    ;80E532|00007C
                 LDA.W ram_038E                                 ;80E534|80038E
                 BEQ .loop2                                     ;80E537|80E552
 
@@ -18787,74 +18796,74 @@ loc_80E532:
                 AND.W ram_038E                                 ;80E53C|80038E
                 BEQ .skip                                      ;80E53F|80E54C
                 SEP #$20                                       ;80E541|
-                LDA.B [zp_74]                                  ;80E543|000074
+                LDA.B [animPC]                                  ;80E543|000074
                 STA.W ram_09F9,X                               ;80E545|8009F9
                 REP #$20                                       ;80E548|
-                INC.B zp_74                                    ;80E54A|000074
+                INC.B animPC                                    ;80E54A|000074
 
          .skip: INX                                            ;80E54C|
-                CPX.B zp_80                                    ;80E54D|000080
+                CPX.B animOamEnd                                    ;80E54D|000080
                 BCC .loop                                      ;80E54F|80E539
                 RTS                                            ;80E551|
 
 
         .loop2: SEP #$20                                       ;80E552|
-                LDA.B [zp_74]                                  ;80E554|000074
+                LDA.B [animPC]                                  ;80E554|000074
                 STA.W ram_09F9,X                               ;80E556|8009F9
                 REP #$20                                       ;80E559|
-                INC.B zp_74                                    ;80E55B|000074
+                INC.B animPC                                    ;80E55B|000074
                 INX                                            ;80E55D|
-                CPX.B zp_80                                    ;80E55E|000080
+                CPX.B animOamEnd                                    ;80E55E|000080
                 BNE .loop2                                     ;80E560|80E552
                 RTS                                            ;80E562|
 
 
-loc_80E563:
-                LDA.B [zp_74]                                  ;80E563|000074
-                INC.B zp_74                                    ;80E565|000074
+AnimOp_SetSpriteMask:
+                LDA.B [animPC]                                  ;80E563|000074
+                INC.B animPC                                    ;80E565|000074
                 AND.W #$00FF                                   ;80E567|
                 STA.W ram_038E                                 ;80E56A|80038E
                 RTS                                            ;80E56D|
 
 
-loc_80E56E:
+AnimOp_Yield:
                 PLA                                            ;80E56E|
                 RTS                                            ;80E56F|
 
 
-loc_80E570:
+AnimOp_End:
                 LDA.W #$FFFF                                   ;80E570|
-                STA.B zp_74                                    ;80E573|000074
+                STA.B animPC                                    ;80E573|000074
                 PLA                                            ;80E575|
                 RTS                                            ;80E576|
 
 
-loc_80E577:
-                LDA.B [zp_74]                                  ;80E577|000074
-                INC.B zp_74                                    ;80E579|000074
+AnimOp_Wait:
+                LDA.B [animPC]                                  ;80E577|000074
+                INC.B animPC                                    ;80E579|000074
                 AND.W #$00FF                                   ;80E57B|
-                STA.B zp_78                                    ;80E57E|000078
+                STA.B animWait                                    ;80E57E|000078
                 PLA                                            ;80E580|
                 RTS                                            ;80E581|
 
 
-loc_80E582:
+AnimOp_ToggleFlipH:
                 LDA.W #$0040                                   ;80E582|
                 BRA loc_80E58F                                 ;80E585|80E58F
 
 
-loc_80E587:
+AnimOp_ToggleFlipV:
                 LDA.W #$0080                                   ;80E587|
                 BRA loc_80E58F                                 ;80E58A|80E58F
 
 
-loc_80E58C:
+AnimOp_ToggleFlipHV:
                 LDA.W #$00C0                                   ;80E58C|
 
 loc_80E58F:
                 STA.B refillTmp32                              ;80E58F|000032
-                LDX.B zp_7E                                    ;80E591|00007E
-                LDY.B zp_7C                                    ;80E593|00007C
+                LDX.B animOamFirstX4                                    ;80E591|00007E
+                LDY.B animOamFirst                                    ;80E593|00007C
                 LDA.W ram_038E                                 ;80E595|80038E
                 BEQ .loop2                                     ;80E598|80E5B8
 
@@ -18872,7 +18881,7 @@ loc_80E58F:
                 INX                                            ;80E5B0|
                 INX                                            ;80E5B1|
                 INY                                            ;80E5B2|
-                CPY.B zp_80                                    ;80E5B3|000080
+                CPY.B animOamEnd                                    ;80E5B3|000080
                 BCC .loop                                      ;80E5B5|80E59A
                 RTS                                            ;80E5B7|
 
@@ -18887,26 +18896,26 @@ loc_80E58F:
                 INX                                            ;80E5C6|
                 INX                                            ;80E5C7|
                 INY                                            ;80E5C8|
-                CPY.B zp_80                                    ;80E5C9|000080
+                CPY.B animOamEnd                                    ;80E5C9|000080
                 BNE .loop2                                     ;80E5CB|80E5B8
                 RTS                                            ;80E5CD|
 
 
-loc_80E5CE:
-                LDA.B zp_74                                    ;80E5CE|000074
+AnimOp_Call:
+                LDA.B animPC                                    ;80E5CE|000074
                 INC A                                          ;80E5D0|
                 INC A                                          ;80E5D1|
-                STA.B zp_7A                                    ;80E5D2|00007A
+                STA.B animRet                                    ;80E5D2|00007A
 
-loc_80E5D4:
-                LDA.B [zp_74]                                  ;80E5D4|000074
-                STA.B zp_74                                    ;80E5D6|000074
+AnimOp_Goto:
+                LDA.B [animPC]                                  ;80E5D4|000074
+                STA.B animPC                                    ;80E5D6|000074
                 RTS                                            ;80E5D8|
 
 
-loc_80E5D9:
-                LDA.B zp_7A                                    ;80E5D9|00007A
-                STA.B zp_74                                    ;80E5DB|000074
+AnimOp_Return:
+                LDA.B animRet                                    ;80E5D9|00007A
+                STA.B animPC                                    ;80E5DB|000074
                 RTS                                            ;80E5DD|
 
 
@@ -18925,7 +18934,7 @@ loc_80E5D9:
 ; ---------------------------------------------------------------
 DmaWramStagingUpload:
                 LDY.B curObjIdx                      ;80E5DE|000042
-                LDA.B [zp_74]                                  ;80E5E0|000074
+                LDA.B [animPC]                                  ;80E5E0|000074
                 AND.W #$00FF                                   ;80E5E2|
                 STA.W ram_1359,Y                               ;80E5E5|801359
                 LDA.W ram_1291,Y                               ;80E5E8|801291
@@ -18941,8 +18950,8 @@ DmaWramStagingUpload:
                 LDA.W ram_1539,Y                               ;80E5FA|801539
                 ASL A                                          ;80E5FD|
                 TAY                                            ;80E5FE|
-                LDA.B [zp_74]                                  ;80E5FF|000074
-                INC.B zp_74                                    ;80E601|000074
+                LDA.B [animPC]                                  ;80E5FF|000074
+                INC.B animPC                                    ;80E601|000074
                 STA.B mulMultiplicand                          ;80E603|0000AC
                 LDA.W ram_0CC9,Y                               ;80E605|800CC9
                 STA.B mulMultiplierLo                          ;80E608|0000B0
@@ -19097,18 +19106,18 @@ DmaWramStagingUpload:
                 STA.W scriptPC,X                               ;80E78E|7E0070
                 LDA.W zp_72,Y                                  ;80E791|7E0072
                 STA.W zp_72,X                                  ;80E794|7E0072
-                LDA.W zp_74,Y                                  ;80E797|7E0074
-                STA.W zp_74,X                                  ;80E79A|7E0074
+                LDA.W animPC,Y                                  ;80E797|7E0074
+                STA.W animPC,X                                  ;80E79A|7E0074
                 LDA.W zp_76,Y                                  ;80E79D|7E0076
                 STA.W zp_76,X                                  ;80E7A0|7E0076
-                LDA.W zp_78,Y                                  ;80E7A3|7E0078
-                STA.W zp_78,X                                  ;80E7A6|7E0078
-                LDA.W zp_7A,Y                                  ;80E7A9|7E007A
-                STA.W zp_7A,X                                  ;80E7AC|7E007A
-                LDA.W zp_7C,Y                                  ;80E7AF|7E007C
-                STA.W zp_7C,X                                  ;80E7B2|7E007C
-                LDA.W zp_7E,Y                                  ;80E7B5|7E007E
-                STA.W zp_7E,X                                  ;80E7B8|7E007E
+                LDA.W animWait,Y                                  ;80E7A3|7E0078
+                STA.W animWait,X                                  ;80E7A6|7E0078
+                LDA.W animRet,Y                                  ;80E7A9|7E007A
+                STA.W animRet,X                                  ;80E7AC|7E007A
+                LDA.W animOamFirst,Y                                  ;80E7AF|7E007C
+                STA.W animOamFirst,X                                  ;80E7B2|7E007C
+                LDA.W animOamFirstX4,Y                                  ;80E7B5|7E007E
+                STA.W animOamFirstX4,X                                  ;80E7B8|7E007E
                 LDA.B zp_2E                                    ;80E7BB|00002E
                 CLC                                            ;80E7BD|
                 ADC.W #$0200                                   ;80E7BE|
@@ -19128,7 +19137,7 @@ DmaWramStagingUpload:
 
 ; --------------------------------------------------------
 ;  dma_80E7D4   [65 ins, returns RTS]
-;    callers: sub_80E230
+;    callers: AnimVM_Run
 ;    writes HW: A1B7, A1TL7, BBAD7, DASL7, DMAP7, MDMAEN, WMADDH, WMADDL
 ;    writes:    zp_2A, zp_2B, zp_2E, vramDmaPendA, pendingMapFillFlag
 ;    reads:     zp_2A, zp_2B, zp_2C, zp_2E, curObjIdx, rasterSplitPhase ...
@@ -19239,7 +19248,7 @@ sub_80E860:
 ;    callers: vbwait_808081, MainLoop_PauseOrMenu, sub_80A0A3
 ;    writes HW: A1B5, A1TL5, BBAD5, DASL5, DMAP5
 ;    writes:    refillTmp32, ram_1539
-;    reads:     refillTmp32, curObjIdx, zp_74, pendingMapFillFlag, ram_0C49
+;    reads:     refillTmp32, curObjIdx, animPC, pendingMapFillFlag, ram_0C49
 ; --------------------------------------------------------
 sub_80E885:
                 LDA.W pendingMapFillFlag                       ;80E885|80037E
@@ -19260,10 +19269,10 @@ sub_80E885:
          .exit: RTS                                            ;80E8A9|
 
 
-loc_80E8AA:
-                LDA.B [zp_74]                                  ;80E8AA|000074
-                INC.B zp_74                                    ;80E8AC|000074
-                INC.B zp_74                                    ;80E8AE|000074
+AnimOp_SelectGfxSet:
+                LDA.B [animPC]                                  ;80E8AA|000074
+                INC.B animPC                                    ;80E8AC|000074
+                INC.B animPC                                    ;80E8AE|000074
                 STA.B refillTmp32                              ;80E8B0|000032
                 LDX.W #$0000                                   ;80E8B2|
                 TXY                                            ;80E8B5|
@@ -19377,36 +19386,41 @@ sub_80E8C9:
                 STA.W objField_13A9,Y                          ;80E96A|8013A9
                 RTS                                            ;80E96D|
 
-ptrtbl_80E96E:
-                dw loc_80E247                                  ;80E96E|80E247   ; pointer/jump table (16-bit entries)
-                dw loc_80E287                                  ;80E970|80E287
-                dw loc_80E2F3                                  ;80E972|80E2F3
-                dw loc_80E5D4                                  ;80E974|80E5D4
-                dw loc_80E307                                  ;80E976|80E307
-                dw loc_80E5CE                                  ;80E978|80E5CE
-                dw loc_80E5D9                                  ;80E97A|80E5D9
-                dw loc_80E314                                  ;80E97C|80E314
-                dw loc_80E367                                  ;80E97E|80E367
-                dw loc_80E394                                  ;80E980|80E394
-                dw loc_80E3E7                                  ;80E982|80E3E7
-                dw $0000                                       ;80E984|800000
-                dw loc_80E414                                  ;80E986|80E414
-                dw loc_80E563                                  ;80E988|80E563
-                dw loc_80E56E                                  ;80E98A|80E56E
-                dw loc_80E577                                  ;80E98C|80E577
-                dw loc_80E582                                  ;80E98E|80E582
-                dw loc_80E587                                  ;80E990|80E587
-                dw loc_80E58C                                  ;80E992|80E58C
-                dw loc_80E532                                  ;80E994|80E532
-                dw DmaWramStagingUpload                        ;80E996|80E5DE
-                dw loc_80E459                                  ;80E998|80E459
-                dw loc_80E4E4                                  ;80E99A|80E4E4
-                dw loc_80E8AA                                  ;80E99C|80E8AA
-                dw loc_80E487                                  ;80E99E|80E487
-                dw loc_80E4B4                                  ;80E9A0|80E4B4
-                dw loc_80E570                                  ;80E9A2|80E570
-                dw EMPTY_80FFBE                                ;80E9A4|80FFBE
-                dw loc_80BFEF                                  ;80E9A6|80BFEF
+; ---------------------------------------------------------------
+;  ANIMATION VM (29 opcodes) -- run per object by Op_AnimTick -> AnimVM_TickObject -> AnimVM_Run
+;    ip = animPC ($74), wait counter = animWait ($78), return = animRet ($7A)
+;    Yield/Wait/End do PLA+RTS (unwind two frames).
+; ---------------------------------------------------------------
+AnimVM_OpTable:
+                dw AnimOp_AddTileDelta                                  ;80E96E|80E247   ; pointer/jump table (16-bit entries)   ; anim op $00
+                dw AnimOp_SetTiles                                  ;80E970|80E287   ; anim op $01
+                dw AnimOp_PlaySfx                                  ;80E972|80E2F3   ; anim op $02
+                dw AnimOp_Goto                                  ;80E974|80E5D4   ; anim op $03
+                dw AnimOp_StopSfx                                  ;80E976|80E307   ; anim op $04
+                dw AnimOp_Call                                  ;80E978|80E5CE   ; anim op $05
+                dw AnimOp_Return                                  ;80E97A|80E5D9   ; anim op $06
+                dw AnimOp_MoveX                                  ;80E97C|80E314   ; anim op $07
+                dw AnimOp_SetXPositions                                  ;80E97E|80E367   ; anim op $08
+                dw AnimOp_MoveY                                  ;80E980|80E394   ; anim op $09
+                dw AnimOp_SetYPositions                                  ;80E982|80E3E7   ; anim op $0A
+                dw $0000                                       ;80E984|800000   ; anim op $0B  UNUSED: table entry is $0000 -> JSR $8000 = Reset. Any anim script using it reboots the game.
+                dw AnimOp_SetPalette                                  ;80E986|80E414   ; anim op $0C
+                dw AnimOp_SetSpriteMask                                  ;80E988|80E563   ; anim op $0D
+                dw AnimOp_Yield                                  ;80E98A|80E56E   ; anim op $0E
+                dw AnimOp_Wait                                  ;80E98C|80E577   ; anim op $0F
+                dw AnimOp_ToggleFlipH                                  ;80E98E|80E582   ; anim op $10
+                dw AnimOp_ToggleFlipV                                  ;80E990|80E587   ; anim op $11
+                dw AnimOp_ToggleFlipHV                                  ;80E992|80E58C   ; anim op $12
+                dw AnimOp_SetSpriteFlags                                  ;80E994|80E532   ; anim op $13 (name is a guess)
+                dw DmaWramStagingUpload                        ;80E996|80E5DE   ; anim op $14  already named DmaWramStagingUpload (uploads the frame's tile data)
+                dw AnimOp_SetSizeBit                                  ;80E998|80E459   ; anim op $15
+                dw AnimOp_SetPriority                                  ;80E99A|80E4E4   ; anim op $16
+                dw AnimOp_SelectGfxSet                                  ;80E99C|80E8AA   ; anim op $17 (name is a guess)
+                dw AnimOp_HideSprites                                  ;80E99E|80E487   ; anim op $18
+                dw AnimOp_ShowSprites                                  ;80E9A0|80E4B4   ; anim op $19
+                dw AnimOp_End                                  ;80E9A2|80E570   ; anim op $1A
+                dw EMPTY_80FFBE                                ;80E9A4|80FFBE   ; anim op $1B  UNUSED: points at $80FFBE (two $00 bytes = BRK)
+                dw loc_80BFEF                                  ;80E9A6|80BFEF   ; anim op $1C  UNUSED/suspect: lands in the middle of LatchBgScroll ($80BFEF)
 
 data_80E9A8:
                        db $FD,$F7,$DF,$7F                             ;80E9A8|
@@ -19438,7 +19452,7 @@ data_80EA30:
 data_80EA36:
                 dw $2010,$2040,$4040                           ;80EA36|
 
-loc_80EA3C:
+Op_FaceRight:
                 LDX.B curObjIdx                                ;80EA3C|000042
                 LDA.W objField_0FC1,X                          ;80EA3E|800FC1
                 AND.W #$0040                                   ;80EA41|
@@ -19446,7 +19460,7 @@ loc_80EA3C:
                 RTS                                            ;80EA46|
 
 
-loc_80EA47:
+Op_FaceLeft:
                 LDX.B curObjIdx                                ;80EA47|000042
                 LDA.W objField_0FC1,X                          ;80EA49|800FC1
                 AND.W #$0040                                   ;80EA4C|
@@ -19454,7 +19468,7 @@ loc_80EA47:
                 RTS                                            ;80EA51|
 
 
-loc_80EA52:
+Op_ToggleFlipH:
                 LDX.B curObjIdx                                ;80EA52|000042
 
 ; --------------------------------------------------------
@@ -19540,7 +19554,7 @@ sub_80EA54:
 
 ; --------------------------------------------------------
 ;  sub_80EADE   [58 ins, returns RTS]
-;    callers: sub_80E230
+;    callers: AnimVM_Run
 ;    writes:    refillTmp32, zp_36, zp_38, zp_3A, ram_0794, oamSrcX
 ;    reads:     refillTmp32, zp_36, zp_38, zp_3A, curObjIdx, ram_03B0 ...
 ;    calls:     sub_80E1D0
@@ -19600,7 +19614,7 @@ sub_80EADE:
                 RTS                                            ;80EB3E|
 
 
-loc_80EB3F:
+Op_ClearFlipV:
                 LDX.B curObjIdx                                ;80EB3F|000042
                 LDA.W objField_0FC1,X                          ;80EB41|800FC1
                 AND.W #$0080                                   ;80EB44|
@@ -19608,7 +19622,7 @@ loc_80EB3F:
                 RTS                                            ;80EB49|
 
 
-loc_80EB4A:
+Op_SetFlipV:
                 LDX.B curObjIdx                                ;80EB4A|000042
                 LDA.W objField_0FC1,X                          ;80EB4C|800FC1
                 AND.W #$0080                                   ;80EB4F|
@@ -19616,7 +19630,7 @@ loc_80EB4A:
                 RTS                                            ;80EB54|
 
 
-loc_80EB55:
+Op_ToggleFlipV:
                 LDX.B curObjIdx                                ;80EB55|000042
 
 ; --------------------------------------------------------
@@ -19702,7 +19716,7 @@ sub_80EB57:
 
 ; --------------------------------------------------------
 ;  sub_80EBE1   [47 ins, returns RTS]
-;    callers: sub_80E230
+;    callers: AnimVM_Run
 ;    writes:    refillTmp32, zp_36, zp_38, zp_3A, ram_0794, oamSrcY
 ;    reads:     refillTmp32, zp_36, zp_38, zp_3A, ram_03B0, ram_03B2 ...
 ;    calls:     sub_80E1D0
@@ -19765,14 +19779,14 @@ sub_80EBE1:
 ; --------------------------------------------------------
 ;  sub_80EC42   [9 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    objActive, ram_1449
+;    writes:    objActive, objAnimPtr
 ; --------------------------------------------------------
 sub_80EC42:
                 LDX.W #$0000                                   ;80EC42|
 
          .loop: STZ.W objActive,X                              ;80EC45|800D91
                 LDA.W #$FFFF                                   ;80EC48|
-                STA.W ram_1449,X                               ;80EC4B|801449
+                STA.W objAnimPtr,X                               ;80EC4B|801449
                 INX                                            ;80EC4E|
                 INX                                            ;80EC4F|
                 CPX.W #$0028                                   ;80EC50|
@@ -19781,13 +19795,13 @@ sub_80EC42:
 
 
 ; --------------------------------------------------------
-;  sub_80EC56   [38 ins, returns RTS]
-;    callers: sub_809F07, loc_809F71, sub_80A015, hwmath_80D130, sub_80EF35, sub_80EFD7
+;  SpawnObject   [38 ins, returns RTS]
+;    callers: sub_809F07, loc_809F71, sub_80A015, Op_SubAcc_TFld, sub_80EF35, sub_80EFD7
 ;    writes:    refillStageIdx, zp_36, zp_38, objTableEnd, objActive, ram_14C1 ...
 ;    reads:     refillStageIdx, zp_38, zp_3A, objTableEnd, ram_1511
-;    calls:     sub_80F135, sub_80F158, sub_80F11F, sub_80F249, sub_80F16B, sub_80F1BE, +3 more
+;    calls:     sub_80F135, sub_80F158, GetSpawnRecPtr, InitObjectFromSpawnRec, sub_80F16B, sub_80F1BE, +3 more
 ; --------------------------------------------------------
-sub_80EC56:
+SpawnObject:
                 STA.B refillStageIdx                           ;80EC56|000034
                 STY.B zp_36                                    ;80EC58|000036
                 STX.B zp_38                                    ;80EC5A|000038
@@ -19796,8 +19810,8 @@ sub_80EC56:
                 JSR.W sub_80F158                               ;80EC61|80F158
                 BCS .skip4                                     ;80EC64|80ECA4
                 LDA.B refillStageIdx                           ;80EC66|000034
-                JSR.W sub_80F11F                               ;80EC68|80F11F
-                JSR.W sub_80F249                               ;80EC6B|80F249
+                JSR.W GetSpawnRecPtr                               ;80EC68|80F11F
+                JSR.W InitObjectFromSpawnRec                               ;80EC6B|80F249
                 BCS .skip3                                     ;80EC6E|80EC9F
                 LDA.W ram_1511,X                               ;80EC70|801511
                 BEQ .skip                                      ;80EC73|80EC8A
@@ -20136,7 +20150,7 @@ sub_80EE7A:
 
 ; --------------------------------------------------------
 ;  sub_80EE80   [17 ins, returns RTS]
-;    callers: sub_80EE7A, sub_80F095
+;    callers: sub_80EE7A, DestroyObject
 ;    writes:    refillStageIdx, zp_36, zp_38, zp_3A
 ;    reads:     playerCamX, playerCamY, splitYOffset
 ; --------------------------------------------------------
@@ -20292,10 +20306,10 @@ sub_80EF03:
 
 ; --------------------------------------------------------
 ;  sub_80EF35   [63 ins, returns RTS]
-;    callers: sub_80EF03, sub_80F095
+;    callers: sub_80EF03, DestroyObject
 ;    writes:    refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, zp_6C ...
 ;    reads:     refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, ram_033E ...
-;    calls:     sub_80EC56
+;    calls:     SpawnObject
 ; --------------------------------------------------------
 sub_80EF35:
                 LDA.W ram_1A0A,Y                               ;80EF35|801A0A
@@ -20348,7 +20362,7 @@ sub_80EF35:
                 LDA.W ram_1A12,Y                               ;80EFA0|801A12
                 LDX.W ram_1A14,Y                               ;80EFA3|801A14
                 LDY.B refillTmp32                              ;80EFA6|000032
-                JSR.W sub_80EC56                               ;80EFA8|80EC56
+                JSR.W SpawnObject                               ;80EFA8|80EC56
                 PLA                                            ;80EFAB|
                 STA.B zp_3A                                    ;80EFAC|00003A
                 PLA                                            ;80EFAE|
@@ -20399,7 +20413,7 @@ sub_80EFBD:
 ;    callers: sub_80EFBD
 ;    writes:    refillTmp32, zp_6C, zp_6E, ram_0382, ram_03FE, ram_0400
 ;    reads:     refillTmp32, ram_1A0A, ram_1A0C, ram_1A0E, ram_1A10, ram_1A12 ...
-;    calls:     sub_80EC56
+;    calls:     SpawnObject
 ; --------------------------------------------------------
 sub_80EFD7:
                 LDA.W ram_1A0A,Y                               ;80EFD7|801A0A
@@ -20424,7 +20438,7 @@ sub_80EFD7:
                 LDA.W ram_1A12,Y                               ;80F007|801A12
                 LDX.W ram_1A14,Y                               ;80F00A|801A14
                 LDY.B refillTmp32                              ;80F00D|000032
-                JSR.W sub_80EC56                               ;80F00F|80EC56
+                JSR.W SpawnObject                               ;80F00F|80EC56
                 PLX                                            ;80F012|
                 PLY                                            ;80F013|
 
@@ -20511,13 +20525,13 @@ sub_80F018:
 
 
 ; --------------------------------------------------------
-;  sub_80F095   [62 ins, returns RTS]
-;    callers: sub_80CD70
+;  DestroyObject   [62 ins, returns RTS]
+;    callers: Op_Goto
 ;    writes:    refillTmp32, curObjIdx, mulMultiplicand, mulMultiplierLo, objTableEnd, oamSrcAttr ...
 ;    reads:     refillTmp32, curObjIdx, objTableEnd, objActive, objField_0FC1, ram_1101 ...
 ;    calls:     sub_80DFD1, sub_80EE80, Mul8x16, sub_80EF35
 ; --------------------------------------------------------
-sub_80F095:
+DestroyObject:
                 LDA.W ram_1511,Y                               ;80F095|801511
                 BEQ .skip                                      ;80F098|80F0B1
                 LDA.W ram_14E9,Y                               ;80F09A|8014E9
@@ -20545,7 +20559,7 @@ sub_80F095:
              +: LDA.W #$0000                                   ;80F0C7|
                 STA.W objActive,Y                              ;80F0CA|800D91
                 LDA.W #$FFFF                                   ;80F0CD|
-                STA.W ram_1449,Y                               ;80F0D0|801449
+                STA.W objAnimPtr,Y                               ;80F0D0|801449
                 PHY                                            ;80F0D3|
                 INY                                            ;80F0D4|
                 INY                                            ;80F0D5|
@@ -20591,12 +20605,12 @@ sub_80F095:
 
 
 ; --------------------------------------------------------
-;  sub_80F11F   [10 ins, returns RTS]
-;    callers: UpdateOneObject, sub_80DFD1, sub_80EC56
+;  GetSpawnRecPtr   [10 ins, returns RTS]
+;    callers: UpdateOneObject, sub_80DFD1, SpawnObject
 ;    writes:    zp_2A, zp_2C, mulMultiplicand, mulMultiplierLo
 ;    calls:     Mul8x8
 ; --------------------------------------------------------
-sub_80F11F:
+GetSpawnRecPtr:
                 STA.B mulMultiplicand                          ;80F11F|0000AC
                 LDA.W #$0015                                   ;80F121|
                 STA.B mulMultiplierLo                          ;80F124|0000B0
@@ -20611,7 +20625,7 @@ sub_80F11F:
 
 ; --------------------------------------------------------
 ;  sub_80F135   [21 ins, returns RTS]
-;    callers: sub_80EC56
+;    callers: SpawnObject
 ;    reads:     ram_0331, ram_0360
 ; --------------------------------------------------------
 sub_80F135:
@@ -20643,7 +20657,7 @@ sub_80F135:
 
 ; --------------------------------------------------------
 ;  sub_80F158   [11 ins, returns RTS]
-;    callers: sub_80EC56
+;    callers: SpawnObject
 ;    reads:     ram_033E, objActive
 ; --------------------------------------------------------
 sub_80F158:
@@ -20665,7 +20679,7 @@ sub_80F158:
 
 ; --------------------------------------------------------
 ;  sub_80F16B   [39 ins, returns RTS]
-;    callers: sub_80EC56
+;    callers: SpawnObject
 ;    writes:    refillTmp32, zp_38, zp_3A
 ;    reads:     refillTmp32, zp_38, ram_0382, oamSrcAttr, ram_1511
 ; --------------------------------------------------------
@@ -20724,7 +20738,7 @@ sub_80F16B:
 
 ; --------------------------------------------------------
 ;  sub_80F1BE   [26 ins, returns RTS]
-;    callers: sub_80EC56
+;    callers: SpawnObject
 ;    writes:    refillTmp32, zp_38, ram_0794, oamSrcAttr
 ;    reads:     refillTmp32, zp_38, objField_0FC1, ram_14C1, ram_14E9
 ; --------------------------------------------------------
@@ -20760,7 +20774,7 @@ sub_80F1BE:
 
 ; --------------------------------------------------------
 ;  sub_80F1EC   [12 ins, returns RTS]
-;    callers: sub_80EC56
+;    callers: SpawnObject
 ;    writes:    refillStageIdx, zp_38
 ;    reads:     refillStageIdx, zp_38, objField_0FC1, ram_14C1, ram_14E9
 ;    calls:     sub_80E1A8
@@ -20783,7 +20797,7 @@ sub_80F1EC:
 
 ; --------------------------------------------------------
 ;  sub_80F207   [16 ins, returns RTS]
-;    callers: sub_80EC56
+;    callers: SpawnObject
 ;    writes:    refillTmp32, oamSrcX
 ;    reads:     refillTmp32, playerCamX, ram_14C1, ram_14E9, ram_1511
 ; --------------------------------------------------------
@@ -20810,7 +20824,7 @@ sub_80F207:
 
 ; --------------------------------------------------------
 ;  sub_80F226   [13 ins, returns RTS]
-;    callers: sub_80EC56
+;    callers: SpawnObject
 ;    writes:    objField_0FC1
 ;    reads:     objField_0FC1
 ;    calls:     sub_80EA54, sub_80EB57
@@ -20834,13 +20848,13 @@ sub_80F226:
 
 
 ; --------------------------------------------------------
-;  sub_80F249   [123 ins, returns RTS]
-;    callers: sub_80EC56
+;  InitObjectFromSpawnRec   [123 ins, returns RTS]
+;    callers: SpawnObject
 ;    writes:    refillTmp32, ram_0382, ram_0400, objScriptPtr, objActive, ram_0DE1 ...
 ;    reads:     zp_2A, refillTmp32, refillStageIdx, zp_36, zp_38, curObjIdx ...
 ;    calls:     sub_80DF80
 ; --------------------------------------------------------
-sub_80F249:
+InitObjectFromSpawnRec:
                 LDA.B refillStageIdx                           ;80F249|000034
                 STA.W ram_1129,X                               ;80F24B|801129
                 LDA.B zp_36                                    ;80F24E|000036
@@ -20879,7 +20893,7 @@ sub_80F249:
                 INY                                            ;80F296|
                 INY                                            ;80F297|
                 LDA.B [zp_2A],Y                                ;80F298|00002A
-                STA.W ram_0FE9,X                               ;80F29A|800FE9
+                STA.W objHealth,X                               ;80F29A|800FE9
                 INY                                            ;80F29D|
                 INY                                            ;80F29E|
                 LDA.B [zp_2A],Y                                ;80F29F|00002A
@@ -20891,7 +20905,7 @@ sub_80F249:
                 STA.W ram_0EA9,X                               ;80F2AD|800EA9
                 INY                                            ;80F2B0|
                 LDA.B [zp_2A],Y                                ;80F2B1|00002A
-                STA.W ram_1011,X                               ;80F2B3|801011
+                STA.W objDamage,X                               ;80F2B3|801011
                 INY                                            ;80F2B6|
                 INY                                            ;80F2B7|
                 LDA.B [zp_2A],Y                                ;80F2B8|00002A
@@ -20938,7 +20952,7 @@ sub_80F249:
                 STZ.W ram_1331,X                               ;80F30B|801331
                 LDA.W #$FFFF                                   ;80F30E|
                 STA.W ram_1269,X                               ;80F311|801269
-                STA.W ram_1449,X                               ;80F314|801449
+                STA.W objAnimPtr,X                               ;80F314|801449
                 STA.W ram_0E59,X                               ;80F317|800E59
                 LDA.W ram_0E81,X                               ;80F31A|800E81
                 LSR A                                          ;80F31D|

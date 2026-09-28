@@ -273,14 +273,14 @@ zp_6A                  = $006A  ; refs=3 (r1/w2) [STX:1,LDA:1,STA:1], 2 site(s);
 zp_6C                  = $006C  ; refs=58 (r30/w28) [STA:24,LDX:19,LDA:7,STX:4], 18 site(s); indexed (,X/,Y) -> array/table
 zp_6E                  = $006E  ; refs=55 (r30/w25) [STA:21,LDY:16,LDA:9,STY:4], 16 site(s); indexed (,X/,Y) -> array/table
 scriptPC               = $0070  ; refs=148 (r139/w9) [LDA:135,STA:9,ADC:4], 33 site(s); indexed (,X/,Y) -> array/table
-scriptPCBank                  = $0072  ; refs=5 (r2/w3) [STA:3,LDA:2], 4 site(s); indexed (,X/,Y) -> array/table
-animPC                  = $0074  ; refs=55 (r50/w5) [LDA:24,INC:24,STA:5,ORA:2], 4 site(s); indexed (,X/,Y) -> array/table
-animPCBank                  = $0076  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
-animWait                  = $0078  ; refs=7 (r4/w3) [STA:3,LDA:3,DEC:1], 3 site(s); indexed (,X/,Y) -> array/table
-animRet                  = $007A  ; refs=6 (r3/w3) [STA:3,LDA:3], 3 site(s); indexed (,X/,Y) -> array/table
-animOamFirst                  = $007C  ; refs=16 (r14/w2) [LDY:10,LDA:3,STA:2,LDX:1], 3 site(s); indexed (,X/,Y) -> array/table
-animOamFirstX4                  = $007E  ; refs=8 (r6/w2) [LDX:5,STA:2,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table
-animOamEnd                  = $0080  ; refs=23 (r22/w1) [CPY:20,CPX:2,STA:1], 2 site(s)
+scriptPCBank           = $0072  ; refs=5 (r2/w3) [STA:3,LDA:2], 4 site(s); indexed (,X/,Y) -> array/table
+animPC                 = $0074  ; refs=55 (r50/w5) [LDA:24,INC:24,STA:5,ORA:2], 4 site(s); indexed (,X/,Y) -> array/table
+animPCBank             = $0076  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
+animWait               = $0078  ; refs=7 (r4/w3) [STA:3,LDA:3,DEC:1], 3 site(s); indexed (,X/,Y) -> array/table
+animRet                = $007A  ; refs=6 (r3/w3) [STA:3,LDA:3], 3 site(s); indexed (,X/,Y) -> array/table
+animOamFirst           = $007C  ; refs=16 (r14/w2) [LDY:10,LDA:3,STA:2,LDX:1], 3 site(s); indexed (,X/,Y) -> array/table
+animOamFirstX4         = $007E  ; refs=8 (r6/w2) [LDX:5,STA:2,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table
+animOamEnd             = $0080  ; refs=23 (r22/w1) [CPY:20,CPX:2,STA:1], 2 site(s)
 zp_86                  = $0086  ; refs=5 (r4/w1) [LDA:4,STA:1], 2 site(s); indexed (,X/,Y) -> array/table
 zp_88                  = $0088  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 zp_8A                  = $008A  ; refs=18 (r12/w6) [INC:10,STA:6,LDA:2], 3 site(s); indexed (,X/,Y) -> array/table
@@ -356,12 +356,12 @@ ram_0370               = $0370  ; refs=4 (r1/w3) [STA:2,STZ:1,LDA:1], 3 site(s);
 vramDmaPendA           = $037C  ; refs=5 (r2/w3) [LDA:2,STZ:2,STA:1], 4 site(s); member of a 0x28-stride table (likely per-object field)
 pendingMapFillFlag     = $037E  ; refs=5 (r2/w3) [LDA:2,STZ:2,STA:1], 4 site(s)
 objTableEnd            = $0380  ; refs=43 (r28/w15) [CPX:16,STA:12,LDA:6,CPY:2], 24 site(s)
-ram_0382               = $0382  ; refs=11 (r5/w6) [STA:5,INC:3,LDA:2,STZ:1], 8 site(s)
-earlyUpdateCount               = $0384  ; refs=6 (r4/w2) [STZ:2,LDA:1,CPY:1,LDX:1], 2 site(s)
-earlyUpdateQueue               = $0386  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_038E               = $038E  ; refs=24 (r22/w2) [LDA:11,AND:11,STZ:1,STA:1], 2 site(s)
-ram_0390               = $0390  ; refs=28 (r19/w9) [LDX:10,LDA:9,STA:7,STZ:2], 9 site(s)
-ram_0392               = $0392  ; refs=8 (r5/w3) [LDA:5,STA:2,STZ:1], 8 site(s)
+spawnOamPool           = $0382  ; refs=11 (r5/w6) [STA:5,INC:3,LDA:2,STZ:1], 8 site(s)
+newChildCount          = $0384  ; refs=6 (r4/w2) [STZ:2,LDA:1,CPY:1,LDX:1], 2 site(s)
+newChildList           = $0386  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+animSpriteMask         = $038E  ; refs=24 (r22/w2) [LDA:11,AND:11,STZ:1,STA:1], 2 site(s)
+vmQuerySlot2           = $0390  ; refs=28 (r19/w9) [LDX:10,LDA:9,STA:7,STZ:2], 9 site(s)
+vmQueryPass            = $0392  ; refs=8 (r5/w3) [LDA:5,STA:2,STZ:1], 8 site(s)
 mainScreenShadow       = $0394  ; shadow of TM (main-screen layer enable)
 ram_0396               = $0396  ; refs=5 (r2/w3) [STZ:3,INC:1,LDA:1], 3 site(s)
 ram_0398_clearedOnReinit = $0398  ; refs=3 (r2/w1) [LDA:2,STZ:1], 3 site(s); member of a 0x28-stride table (likely per-object field)
@@ -382,8 +382,8 @@ ram_03B4               = $03B4  ; refs=4 (r2/w2) [STA:2,LDY:2], 1 site(s)
 ram_03B6               = $03B6  ; refs=4 (r2/w2) [STA:2,LDA:2], 1 site(s)
 ram_03B8               = $03B8  ; refs=6 (r2/w4) [STA:4,LDA:2], 1 site(s)
 ram_03BA               = $03BA  ; refs=4 (r2/w2) [LDX:2,STA:2], 1 site(s)
-ram_03BC               = $03BC  ; refs=6 (r0/w6) [STA:6], 6 site(s)
-ram_03BE               = $03BE  ; refs=14 (r0/w14) [STA:10,STX:4], 11 site(s)
+hitClass               = $03BC  ; refs=6 (r0/w6) [STA:6], 6 site(s)
+hitObj                 = $03BE  ; refs=14 (r0/w14) [STA:10,STX:4], 11 site(s)
 inputHeldSel           = $03C0  ; selected player's held buttons (copied from joy1/2Held)
 joy1Held               = $03C2  ; controller 1 buttons held this frame
 joy2Held               = $03C4  ; controller 2 buttons held this frame
@@ -412,8 +412,8 @@ ram_03F6               = $03F6  ; refs=4 (r2/w2) [LDA:2,STZ:1,STA:1], 3 site(s)
 ram_03F8               = $03F8  ; refs=4 (r2/w2) [LDA:2,STZ:1,STA:1], 3 site(s)
 ram_03FA               = $03FA  ; refs=4 (r2/w2) [LDA:2,STZ:1,STA:1], 3 site(s)
 ram_03FC               = $03FC  ; refs=4 (r2/w2) [LDA:2,STZ:1,STA:1], 3 site(s)
-ram_03FE               = $03FE  ; refs=4 (r1/w3) [STA:2,STY:1,LDA:1], 4 site(s); member of a 0x28-stride table (likely per-object field)
-ram_0400               = $0400  ; refs=4 (r1/w3) [STA:3,LDA:1], 3 site(s)
+spawnHalfW             = $03FE  ; refs=4 (r1/w3) [STA:2,STY:1,LDA:1], 4 site(s); member of a 0x28-stride table (likely per-object field)
+spawnHalfH             = $0400  ; refs=4 (r1/w3) [STA:3,LDA:1], 3 site(s)
 ram_0402               = $0402  ; refs=9 (r6/w3) [LDA:6,STA:2,STZ:1], 7 site(s); indexed (,X/,Y) -> array/table
 ram_041A               = $041A  ; refs=3 (r1/w2) [STA:2,CMP:1], 2 site(s); indexed (,X/,Y) -> array/table
 ram_0432               = $0432  ; refs=17 (r10/w7) [LDA:9,STA:6,LDY:1,STZ:1], 8 site(s); indexed (,X/,Y) -> array/table
@@ -496,75 +496,75 @@ ram_059F               = $059F  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 oamBuildHi             = $0771  ; refs=12 (r6/w6) [LDA:4,STZ:3,STA:3,ORA:1], 6 site(s); indexed (,X/,Y) -> array/table
 ram_0772               = $0772  ; refs=2 (r1/w1) [LDA:1,STZ:1], 2 site(s)
 ram_0773               = $0773  ; refs=3 (r1/w2) [STZ:2,LDA:1], 3 site(s)
-oamSrcTile             = $0793  ; refs=9 (r5/w4) [LDA:5,STA:4], 2 site(s); indexed (,X/,Y) -> array/table
+ram_0793               = $0793  ; refs=9 (r5/w4) [LDA:5,STA:4], 2 site(s); indexed (,X/,Y) -> array/table
 ram_0794               = $0794  ; refs=25 (r12/w13) [STA:13,LDA:12], 6 site(s); indexed (,X/,Y) -> array/table
 oamSrcAttr             = $0985  ; refs=24 (r12/w12) [LDA:12,STA:10,STZ:2], 8 site(s); indexed (,X/,Y) -> array/table
 ram_09F9               = $09F9  ; refs=13 (r11/w2) [LDA:11,STA:2], 1 site(s); indexed (,X/,Y) -> array/table
 oamSrcX                = $0A61  ; refs=15 (r7/w8) [STA:8,SBC:4,LDA:3], 6 site(s); indexed (,X/,Y) -> array/table
 oamSrcY                = $0B49  ; refs=14 (r7/w7) [STA:7,SBC:4,LDA:3], 5 site(s); indexed (,X/,Y) -> array/table
-ram_0C49               = $0C49  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
-ram_0C69               = $0C69  ; refs=1 (r0/w1) [STA:1], 1 site(s); indexed (,X/,Y) -> array/table
-ram_0C89               = $0C89  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
-ram_0CA9               = $0CA9  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
-ram_0CC9               = $0CC9  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
-ram_0CE9               = $0CE9  ; refs=2 (r1/w1) [STA:1,CMP:1], 2 site(s); indexed (,X/,Y) -> array/table
-ram_0D29               = $0D29  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
+gfxSetId               = $0C49  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
+gfxSetByte3            = $0C69  ; refs=1 (r0/w1) [STA:1], 1 site(s); indexed (,X/,Y) -> array/table
+gfxSetSrcLo            = $0C89  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
+gfxSetSrcBank          = $0CA9  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
+gfxSetFrameBytes       = $0CC9  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
+gfxLoadedId            = $0CE9  ; refs=2 (r1/w1) [STA:1,CMP:1], 2 site(s); indexed (,X/,Y) -> array/table
+gfxLoadedBase          = $0D29  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
 objScriptPtr           = $0D69  ; refs=5 (r2/w3) [STA:3,LDA:2], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-objScriptSrcBank              = $0D91  ; refs=26 (r22/w4) [LDA:22,STZ:2,STA:2], 22 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-objReturnPtr               = $0DB9  ; refs=4 (r1/w3) [STA:3,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0DE1               = $0DE1  ; refs=4 (r2/w2) [SBC:2,STA:2], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0E09               = $0E09  ; refs=9 (r7/w2) [SBC:3,ADC:3,STA:2,LDA:1], 7 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0E31               = $0E31  ; refs=16 (r10/w6) [ORA:5,STA:5,AND:5,STZ:1], 6 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0E59               = $0E59  ; refs=11 (r4/w7) [STA:6,LDA:4,STZ:1], 7 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0E81               = $0E81  ; refs=4 (r3/w1) [LDA:2,STA:1,ADC:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0EA9               = $0EA9  ; refs=4 (r3/w1) [LDA:2,STA:1,ADC:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0ED1               = $0ED1  ; refs=3 (r2/w1) [ADC:1,SBC:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_0EF9               = $0EF9  ; refs=3 (r2/w1) [ADC:1,SBC:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-objField_0F21          = $0F21  ; object table field array (stride 0x28, idx=object#); INFERRED, purpose TBD
-objField_0F49          = $0F49  ; object table field array (=0F21+0x28); INFERRED, purpose TBD
-objField_0F71          = $0F71  ; object table field array (=0F21+0x50); INFERRED, purpose TBD
-objField_0F99          = $0F99  ; object table field array (=0F21+0x78); INFERRED, purpose TBD
-objField_0FC1          = $0FC1  ; object table field array (=0F21+0xA0); INFERRED, purpose TBD
-objHealth               = $0FE9  ; refs=13 (r10/w3) [LDA:10,STA:3], 8 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objActive              = $0D91  ; refs=26 (r22/w4) [LDA:22,STZ:2,STA:2], 22 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objReturnPtr           = $0DB9  ; refs=4 (r1/w3) [STA:3,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objPrevX               = $0DE1  ; refs=4 (r2/w2) [SBC:2,STA:2], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objPrevY               = $0E09  ; refs=9 (r7/w2) [SBC:3,ADC:3,STA:2,LDA:1], 7 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objTouchMask           = $0E31  ; refs=16 (r10/w6) [ORA:5,STA:5,AND:5,STZ:1], 6 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objParent              = $0E59  ; refs=11 (r4/w7) [STA:6,LDA:4,STZ:1], 7 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objWidth               = $0E81  ; refs=4 (r3/w1) [LDA:2,STA:1,ADC:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objHeight              = $0EA9  ; refs=4 (r3/w1) [LDA:2,STA:1,ADC:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objCullHalfH           = $0ED1  ; refs=3 (r2/w1) [ADC:1,SBC:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objCullHalfW           = $0EF9  ; refs=3 (r2/w1) [ADC:1,SBC:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objBoxTop              = $0F21  ; object table field array (stride 0x28, idx=object#); INFERRED, purpose TBD
+objBoxBottom           = $0F49  ; object table field array (=0F21+0x28); INFERRED, purpose TBD
+objBoxLeft             = $0F71  ; object table field array (=0F21+0x50); INFERRED, purpose TBD
+objBoxRight            = $0F99  ; object table field array (=0F21+0x78); INFERRED, purpose TBD
+objFlags               = $0FC1  ; object table field array (=0F21+0xA0); INFERRED, purpose TBD
+objArgHp               = $0FE9  ; refs=13 (r10/w3) [LDA:10,STA:3], 8 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_0FEB               = $0FEB  ; refs=4 (r3/w1) [LDA:3,STA:1], 2 site(s)
 ram_0FED               = $0FED  ; refs=4 (r3/w1) [LDA:3,STA:1], 2 site(s)
-objDamage               = $1011  ; refs=2 (r1/w1) [SBC:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1039               = $1039  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1061               = $1061  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1089               = $1089  ; refs=8 (r4/w4) [STA:3,LDA:3,ADC:1,STZ:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_10B1               = $10B1  ; refs=9 (r5/w4) [LDA:4,STA:3,ADC:1,STZ:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_10D9               = $10D9  ; refs=1 (r0/w1) [STA:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1101               = $1101  ; refs=13 (r12/w1) [LDA:11,LDX:1,STA:1], 5 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1129               = $1129  ; refs=8 (r7/w1) [LDA:7,STA:1], 6 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objDamage              = $1011  ; refs=2 (r1/w1) [SBC:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objTouchType           = $1039  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objHitMask             = $1061  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objVelX                = $1089  ; refs=8 (r4/w4) [STA:3,LDA:3,ADC:1,STZ:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objVelY                = $10B1  ; refs=9 (r5/w4) [LDA:4,STA:3,ADC:1,STZ:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objOamPool             = $10D9  ; refs=1 (r0/w1) [STA:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objPlacementIdx        = $1101  ; refs=13 (r12/w1) [LDA:11,LDX:1,STA:1], 5 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objTypeId              = $1129  ; refs=8 (r7/w1) [LDA:7,STA:1], 6 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 ram_112B               = $112B  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 ram_112D               = $112D  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
-ram_1151               = $1151  ; refs=3 (r2/w1) [LDA:1,DEC:1,STZ:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-objField_1179          = $1179  ; object table field array (stride 0x28 family); INFERRED, purpose TBD
-objField_11A1          = $11A1  ; object table field array (=1179+0x28); INFERRED, purpose TBD
-ram_11C9               = $11C9  ; refs=9 (r8/w1) [CMP:4,LDA:4,STA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_11F1               = $11F1  ; refs=9 (r8/w1) [CMP:4,LDA:4,STA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1219               = $1219  ; refs=14 (r13/w1) [LDA:13,STZ:1], 8 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1241               = $1241  ; refs=3 (r1/w2) [STA:2,LDX:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1269               = $1269  ; refs=4 (r1/w3) [STA:3,LDX:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1291               = $1291  ; refs=5 (r4/w1) [LDA:4,STA:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_12B9               = $12B9  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_12E1               = $12E1  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1309               = $1309  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1331               = $1331  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1359               = $1359  ; refs=2 (r0/w2) [STA:1,STZ:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1381               = $1381  ; refs=18 (r10/w8) [STA:6,LDA:5,ADC:3,SBC:2], 9 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-objField_13A9          = $13A9  ; object table field array (stride 0x28 family); INFERRED, purpose TBD
-objTarget          = $13D1  ; object table field array (=13A9+0x28); INFERRED, purpose TBD
-ram_13F9               = $13F9  ; refs=7 (r1/w6) [STA:5,ADC:1,STZ:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1421               = $1421  ; refs=7 (r1/w6) [STA:5,ADC:1,STZ:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-objAnimPtr               = $1449  ; refs=6 (r1/w5) [STA:5,LDA:1], 5 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-objAnimWait               = $1471  ; refs=4 (r2/w2) [STA:2,LDA:2], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-objAnimRet               = $1499  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_14C1               = $14C1  ; refs=16 (r15/w1) [LDA:13,STA:1,LDX:1,LDY:1], 13 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_14E9               = $14E9  ; refs=13 (r12/w1) [LDA:12,STA:1], 12 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1511               = $1511  ; refs=10 (r9/w1) [LDA:8,ADC:1,STA:1], 10 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1539               = $1539  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
-ram_1561               = $1561  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objTimer               = $1151  ; refs=3 (r2/w1) [LDA:1,DEC:1,STZ:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objX                   = $1179  ; object table field array (stride 0x28 family); INFERRED, purpose TBD
+objY                   = $11A1  ; object table field array (=1179+0x28); INFERRED, purpose TBD
+objMaxVelX             = $11C9  ; refs=9 (r8/w1) [CMP:4,LDA:4,STA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objMaxVelY             = $11F1  ; refs=9 (r8/w1) [CMP:4,LDA:4,STA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objSolidClass          = $1219  ; refs=14 (r13/w1) [LDA:13,STZ:1], 8 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objSpawnerIdx          = $1241  ; refs=3 (r1/w2) [STA:2,LDX:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objChildIdx            = $1269  ; refs=4 (r1/w3) [STA:3,LDX:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objGfxBase             = $1291  ; refs=5 (r4/w1) [LDA:4,STA:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objVar0                = $12B9  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objVar1                = $12E1  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objVar2                = $1309  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objVar3                = $1331  ; refs=1 (r0/w1) [STZ:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objGfxFrame            = $1359  ; refs=2 (r0/w2) [STA:1,STZ:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objMoveX               = $1381  ; refs=18 (r10/w8) [STA:6,LDA:5,ADC:3,SBC:2], 9 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objMoveY               = $13A9  ; object table field array (stride 0x28 family); INFERRED, purpose TBD
+objTarget              = $13D1  ; object table field array (=13A9+0x28); INFERRED, purpose TBD
+objFracX               = $13F9  ; refs=7 (r1/w6) [STA:5,ADC:1,STZ:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objFracY               = $1421  ; refs=7 (r1/w6) [STA:5,ADC:1,STZ:1], 4 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objAnimPtr             = $1449  ; refs=6 (r1/w5) [STA:5,LDA:1], 5 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objAnimWait            = $1471  ; refs=4 (r2/w2) [STA:2,LDA:2], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objAnimRet             = $1499  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objOamFirst            = $14C1  ; refs=16 (r15/w1) [LDA:13,STA:1,LDX:1,LDY:1], 13 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objOamEnd              = $14E9  ; refs=13 (r12/w1) [LDA:12,STA:1], 12 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objOamCount            = $1511  ; refs=10 (r9/w1) [LDA:8,ADC:1,STA:1], 10 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objGfxSetIdx           = $1539  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
+objTouchSlots          = $1561  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 decompOutLen           = $16A1  ; refs=4 (r2/w2) [STA:2,LDY:2], 4 site(s)
 scrollDirty            = $16A3  ; refs=3 (r1/w2) [STA:1,LDA:1,STZ:1], 2 site(s)
 bg2CamXSrc             = $16A5  ; refs=11 (r6/w5) [LDA:5,STA:4,ADC:1,STZ:1], 6 site(s)
@@ -700,13 +700,13 @@ ram_1A02               = $1A02  ; refs=2 (r2/w0) [LDA:2], 1 site(s)
 ram_1A04               = $1A04  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 parallaxScaleX         = $1A06  ; refs=7 (r6/w1) [LDA:6,STA:1], 5 site(s)
 parallaxScaleY         = $1A08  ; refs=7 (r6/w1) [LDA:6,STA:1], 5 site(s)
-ram_1A0A               = $1A0A  ; refs=6 (r5/w1) [LDA:5,STA:1], 3 site(s); indexed (,X/,Y) -> array/table
-ram_1A0C               = $1A0C  ; refs=4 (r4/w0) [LDA:4], 2 site(s); indexed (,X/,Y) -> array/table
-ram_1A0E               = $1A0E  ; refs=4 (r4/w0) [LDA:2,ADC:1,SBC:1], 2 site(s); indexed (,X/,Y) -> array/table
-ram_1A10               = $1A10  ; refs=4 (r4/w0) [LDA:2,ADC:1,SBC:1], 2 site(s); indexed (,X/,Y) -> array/table
-ram_1A12               = $1A12  ; refs=2 (r2/w0) [LDA:2], 2 site(s); indexed (,X/,Y) -> array/table
-ram_1A14               = $1A14  ; refs=3 (r3/w0) [LDX:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
-ram_1A16               = $1A16  ; refs=2 (r2/w0) [LDA:2], 2 site(s); indexed (,X/,Y) -> array/table
+placeX                 = $1A0A  ; refs=6 (r5/w1) [LDA:5,STA:1], 3 site(s); indexed (,X/,Y) -> array/table
+placeY                 = $1A0C  ; refs=4 (r4/w0) [LDA:4], 2 site(s); indexed (,X/,Y) -> array/table
+placeHalfW             = $1A0E  ; refs=4 (r4/w0) [LDA:2,ADC:1,SBC:1], 2 site(s); indexed (,X/,Y) -> array/table
+placeHalfH             = $1A10  ; refs=4 (r4/w0) [LDA:2,ADC:1,SBC:1], 2 site(s); indexed (,X/,Y) -> array/table
+placeType              = $1A12  ; refs=2 (r2/w0) [LDA:2], 2 site(s); indexed (,X/,Y) -> array/table
+placeFlags             = $1A14  ; refs=3 (r3/w0) [LDX:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
+placeOamPool           = $1A16  ; refs=2 (r2/w0) [LDA:2], 2 site(s); indexed (,X/,Y) -> array/table
 ram_7000               = $7000  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_70E1               = $70E1  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_71C2               = $71C2  ; refs=1 (r0/w1) [STZ:1], 1 site(s)
@@ -732,6 +732,61 @@ wram_7FC104            = $7FC104  ; refs=14 (r5/w9) [STA:9,LDA:5], 5 site(s); in
 wram_7FC144            = $7FC144  ; refs=27 (r1/w26) [STA:26,LDA:1], 6 site(s); indexed (,X/,Y) -> array/table
 wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 
+;==============================================================
+;  PER-OBJECT FIELDS  (word arrays, stride $28, index = object slot*2)
+;    field k is at $0F21 + $28*k;  script 'field' operand byte = 2*k
+;==============================================================
+;  k=0  $0F21  objBoxTop        bounding box top Y (objY - height/2)
+;  k=1  $0F49  objBoxBottom     bounding box bottom Y (top + height - 1)
+;  k=2  $0F71  objBoxLeft       bounding box left X (objX - width/2)
+;  k=3  $0F99  objBoxRight      bounding box right X (left + width - 1)
+;  k=4  $0FC1  objFlags         flag word. $0040 facing left, $0080 flipped vertically, $0100 re-check placement on destroy, $0200 off-screen (set by sub_80F018), $0800 skip off-screen check, $1000 objTimer active, $2000 ground-snap request, $4000/$8000 apply max-vel clamp to X/Y (sub_80E8C9), low bits = OAM attribute bits for the object's sprites
+;  k=5  $0FE9  objArgHp         spawn record 'argument' (DOS field 0x0a). For the three vikings (slots 0-2) this is their hit points
+;  k=6  $1011  objDamage        damage this object deals when it hits something (Op_DamageTarget)
+;  k=7  $1039  objTouchType     type tag other objects match against in Touch-type ops (Op_CallIfPlayerTouchType / Op_CallIfTouchType)
+;  k=8  $1061  objHitMask       hit-flag mask; ANDed with the operand of Op_CallIfTouchMask
+;  k=9  $1089  objVelX          X velocity, 8.8 fixed point (DOS x_velocity)
+;  k=10 $10B1  objVelY          Y velocity, 8.8 fixed point (DOS y_velocity)
+;  k=11 $10D9  objOamPool       which OAM slot pool the sprites were taken from (0 general $24-$7F, 1 $18-$23, 2 $0C-$17)
+;  k=12 $1101  objPlacementIdx  index in the level placement table (placeX..); $FFFF = spawned by a script
+;  k=13 $1129  objTypeId        object type id (spawn record number; DOS object_type). Bit 15 set = slot ignored by UpdateOneObject
+;  k=14 $1151  objTimer         frame countdown, decremented while objFlags & $1000
+;  k=15 $1179  objX             world X position (DOS x)
+;  k=16 $11A1  objY             world Y position (DOS y)
+;  k=17 $11C9  objMaxVelX       clamp for |objMoveX| (sub_80ECAE / sub_80E8C9)
+;  k=18 $11F1  objMaxVelY       clamp for |objMoveY|
+;  k=19 $1219  objSolidClass    collision class; looked up in the class lists at data_80F537 by every terrain/object probe
+;  k=20 $1241  objSpawnerIdx    slot that spawned this object ($FFFF none); unlinked on destroy
+;  k=21 $1269  objChildIdx      slot of the object this one spawned ($FFFF none)
+;  k=22 $1291  objGfxBase       VRAM tile base / staging slot for this object's sprite graphics (added to tile numbers by AnimOp_SetTiles)
+;  k=23 $12B9  objVar0          script scratch variable, zeroed at spawn, only used by scripts
+;  k=24 $12E1  objVar1          script scratch variable
+;  k=25 $1309  objVar2          script scratch variable
+;  k=26 $1331  objVar3          script scratch variable
+;  k=27 $1359  objGfxFrame      current graphics frame number (set by DmaWramStagingUpload)
+;  k=28 $1381  objMoveX         per-frame X movement: velocity request in 8.8 at frame start, integer pixel delta after sub_80ECAE (cleared each frame by sub_80DD75)
+;  k=29 $13A9  objMoveY         per-frame Y movement (same scheme as objMoveX)
+;  k=30 $13D1  objTarget        current target object slot (DOS target_obj); set by touch/scan ops and Op_SetTargetFromAcc
+;  k=31 $13F9  objFracX         X sub-pixel accumulator
+;  k=32 $1421  objFracY         Y sub-pixel accumulator
+;  k=33 $1449  objAnimPtr       animation script pointer ($FFFF = none)
+;  k=34 $1471  objAnimWait      animation wait counter (0 = ready)
+;  k=35 $1499  objAnimRet       animation VM return slot
+;  k=36 $14C1  objOamFirst      first OAM source entry owned by this object
+;  k=37 $14E9  objOamEnd        one past the last OAM source entry
+;  k=38 $1511  objOamCount      number of OAM sprites (0 = invisible object)
+;  k=39 $1539  objGfxSetIdx     index into the gfxSet* tables (set by AnimOp_SelectGfxSet)
+;  other per-object arrays:
+;       0DE1      objPrevX         X at the start of the frame (for movement direction / collision)
+;       0E09      objPrevY         Y at the start of the frame
+;       0E31      objTouchMask     bit n = touch/collide query slot n hit this frame (see ram_0390 protocol)
+;       0E59      objParent        slot this object follows this frame ($FFFF none; >=$0100 = one-shot move by objMove). Reset to $FFFF every frame by loc_80ED85
+;       0E81      objWidth         hitbox width in pixels
+;       0EA9      objHeight        hitbox height in pixels
+;       0ED1      objCullHalfH     half-height used by the off-screen test (sub_80F018)
+;       0EF9      objCullHalfW     half-width used by the off-screen test
+;       1561      objTouchSlots    16 bytes per object: slot n = index of the object that satisfied touch query n
+;==============================================================
 ; my vars (IS THERE A SINGLE FREE VWRAM SPOT???!!!)
 
 		modFlags = $0310                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
@@ -1600,7 +1655,7 @@ GiveUpDialog_NavConfirm:
 ;  input_808515   [74 ins, returns RTS]
 ;    callers: vbwait_808081, sub_80A0A3
 ;    writes:    ram_0356, ram_0358, ram_03F6, ram_03F8, ram_03FA, ram_03FC
-;    reads:     playerCamX, playerCamY, splitYOffset, inputAux1, ram_03E4, objField_1179 ...
+;    reads:     playerCamX, playerCamY, splitYOffset, inputAux1, ram_03E4, objX ...
 ;    calls:     sub_808636, sub_80C0FC, sub_80C0D2, sub_80C124, sub_80C14E
 ; --------------------------------------------------------
 input_808515:
@@ -1617,7 +1672,7 @@ input_808515:
                 CLC                                            ;808532|
                 ADC.W #$0070                                   ;808533|
                 SEC                                            ;808536|
-                SBC.W objField_1179,Y                          ;808537|801179
+                SBC.W objX,Y                          ;808537|801179
                 BMI .skip                                      ;80853A|808553
                 BEQ .skip                                      ;80853C|808553
                 CMP.W #$0010                                   ;80853E|
@@ -1632,7 +1687,7 @@ input_808515:
                 BRA .skip2                                     ;808551|808573
 
 
-         .skip: LDA.W objField_1179,Y                          ;808553|801179
+         .skip: LDA.W objX,Y                          ;808553|801179
                 SEC                                            ;808556|
                 SBC.B playerCamX                               ;808557|000044
                 SBC.W #$0090                                   ;808559|
@@ -1655,7 +1710,7 @@ input_808515:
                 ADC.W #$0080                                   ;80857C|
                 SEC                                            ;80857F|
                 SBC.W splitYOffset                             ;808580|800340
-                SBC.W objField_11A1,Y                          ;808583|8011A1
+                SBC.W objY,Y                          ;808583|8011A1
                 BMI .skip3                                     ;808586|80859D
                 BEQ .skip3                                     ;808588|80859D
                 CMP.W #$0010                                   ;80858A|
@@ -1669,7 +1724,7 @@ input_808515:
                 JMP.W sub_80C14E                               ;80859A|80C14E
 
 
-        .skip3: LDA.W objField_11A1,Y                          ;80859D|8011A1
+        .skip3: LDA.W objY,Y                          ;80859D|8011A1
                 CLC                                            ;8085A0|
                 ADC.W splitYOffset                             ;8085A1|800340
                 SEC                                            ;8085A4|
@@ -1835,7 +1890,7 @@ SetupCgramGpDma:
 ;  input_808685   [37 ins, returns RTS]
 ;    callers: input_8086F6
 ;    writes:    ram_03DC, ram_03E0, oamSrcAttr
-;    reads:     inputAux1, ram_03DC, ram_03E0, oamSrcAttr, ram_1129, ram_14C1
+;    reads:     inputAux1, ram_03DC, ram_03E0, oamSrcAttr, objTypeId, objOamFirst
 ; --------------------------------------------------------
 input_808685:
                 LDA.W ram_03DC,X                               ;808685|8003DC
@@ -1844,9 +1899,9 @@ input_808685:
                 CMP.W #$0006                                   ;80868D|
                 BCS .skip                                      ;808690|8086A5
                 TAY                                            ;808692|
-                LDA.W ram_1129,Y                               ;808693|801129
+                LDA.W objTypeId,Y                               ;808693|801129
                 BMI .skip                                      ;808696|8086A5
-                LDA.W ram_14C1,Y                               ;808698|8014C1
+                LDA.W objOamFirst,Y                               ;808698|8014C1
                 TAY                                            ;80869B|
                 LDA.W oamSrcAttr,Y                             ;80869C|800985
                 AND.W #$FFDF                                   ;80869F|
@@ -1865,7 +1920,7 @@ input_808685:
                 BIT.W #$0002                                   ;8086BD|
                 BEQ .skip3                                     ;8086C0|8086D3
                 DEC.W ram_03E0,X                               ;8086C2|8003E0
-                LDA.W ram_14C1,Y                               ;8086C5|8014C1
+                LDA.W objOamFirst,Y                               ;8086C5|8014C1
                 TAY                                            ;8086C8|
                 LDA.W oamSrcAttr,Y                             ;8086C9|800985
                 ORA.W #$0020                                   ;8086CC|
@@ -1873,7 +1928,7 @@ input_808685:
                 RTS                                            ;8086D2|
 
 
-        .skip3: LDA.W ram_14C1,Y                               ;8086D3|8014C1
+        .skip3: LDA.W objOamFirst,Y                               ;8086D3|8014C1
                 TAY                                            ;8086D6|
                 LDA.W oamSrcAttr,Y                             ;8086D7|800985
                 AND.W #$FFDF                                   ;8086DA|
@@ -1904,14 +1959,14 @@ sub_8086E1:
 ;  input_8086F6   [35 ins, returns RTS]
 ;    callers: sub_8086E1
 ;    writes:    joy1Held, joy1Pressed
-;    reads:     playerCamX, playerCamY, inputAux1, ram_03E4, objField_1179, objField_11A1
+;    reads:     playerCamX, playerCamY, inputAux1, ram_03E4, objX, objY
 ;    calls:     input_808685
 ; --------------------------------------------------------
 input_8086F6:
                 LDY.W inputAux1,X                              ;8086F6|8003D8
                 CPY.W #$0006                                   ;8086F9|
                 BCS .skip2                                     ;8086FC|80873A
-                LDA.W objField_1179,Y                          ;8086FE|801179
+                LDA.W objX,Y                          ;8086FE|801179
                 SEC                                            ;808701|
                 SBC.B playerCamX                               ;808702|000044
                 CLC                                            ;808704|
@@ -1921,14 +1976,14 @@ input_8086F6:
                 CLC                                            ;80870C|
                 ADC.W #$010C                                   ;80870D|
                 SEC                                            ;808710|
-                SBC.W objField_1179,Y                          ;808711|801179
+                SBC.W objX,Y                          ;808711|801179
                 BMI .skip2                                     ;808714|80873A
                 CPX.W ram_03E4                                 ;808716|8003E4
                 BNE +                                          ;808719|80871F
                 LDA.B playerCamY                               ;80871B|000046
                 BEQ .skip                                      ;80871D|808737
 
-             +: LDA.W objField_11A1,Y                          ;80871F|8011A1
+             +: LDA.W objY,Y                          ;80871F|8011A1
                 SEC                                            ;808722|
                 SBC.B playerCamY                               ;808723|000046
                 CLC                                            ;808725|
@@ -1938,7 +1993,7 @@ input_8086F6:
                 CLC                                            ;80872D|
                 ADC.W #$00C0                                   ;80872E|
                 SEC                                            ;808731|
-                SBC.W objField_11A1,Y                          ;808732|8011A1
+                SBC.W objY,Y                          ;808732|8011A1
                 BMI .skip2                                     ;808735|80873A
 
          .skip: JMP.W input_808685                             ;808737|808685
@@ -4416,6 +4471,13 @@ sub_809420:
                 RTS                                            ;809459|
 
 
+;--------------------------------------------------------------
+;  Op_ShowDialogAtObj   (object VM op $41)
+;    operands: text id operand, position operands
+;    Text box positioned relative to this object's on-screen position (sub_809577), clamped to the
+;    screen. Text id indexes the string table at $8185EA (bank $81); box size comes from the string
+;    header. Queues tokens into the $7E3280 ring consumed by StreamTilemap.
+;--------------------------------------------------------------
 Op_ShowDialogAtObj:
                 JSR.W sub_8094FF                               ;80945A|8094FF
                 JSR.W sub_809515                               ;80945D|809515
@@ -4439,6 +4501,11 @@ Op_ShowDialogAtObj:
                 RTS                                            ;80947D|
 
 
+;--------------------------------------------------------------
+;  Op_ShowDialogAtPos   (object VM op $44)
+;    operands: text id operand, position operands
+;    Like Op_ShowDialogAtObj but at an absolute screen position (sub_8095C3).
+;--------------------------------------------------------------
 Op_ShowDialogAtPos:
                 JSR.W sub_8094FF                               ;80947E|8094FF
                 JSR.W sub_809515                               ;809481|809515
@@ -4654,7 +4721,7 @@ sub_809577:
                 JSR.W VM_GetOperandByType                               ;80957B|80DCD7
                 LDX.B curObjIdx                                ;80957E|000042
                 CLC                                            ;809580|
-                ADC.W objField_1179,X                          ;809581|801179
+                ADC.W objX,X                          ;809581|801179
                 SEC                                            ;809584|
                 SBC.B playerCamX                               ;809585|000044
                 BMI .skip                                      ;809587|809596
@@ -4677,7 +4744,7 @@ sub_809577:
                 JSR.W VM_GetOperandByType                               ;80959F|80DCD7
                 LDX.B curObjIdx                                ;8095A2|000042
                 CLC                                            ;8095A4|
-                ADC.W objField_11A1,X                          ;8095A5|8011A1
+                ADC.W objY,X                          ;8095A5|8011A1
                 ADC.W splitYOffset                             ;8095A8|800340
                 SEC                                            ;8095AB|
                 SBC.B playerCamY                               ;8095AC|000046
@@ -4753,6 +4820,13 @@ sub_8095D6:
                 RTS                                            ;8095FB|
 
 
+;--------------------------------------------------------------
+;  Op_PrintText   (object VM op $45)
+;    operands: text id operand, position operands
+;    Print text without the box border (draws through sub_8094BB at an absolute position). Low
+;    confidence.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_PrintText:
                 JSR.W sub_8094FF                               ;8095FC|8094FF
                 JSR.W sub_8095C3                               ;8095FF|8095C3
@@ -4803,6 +4877,12 @@ sub_80961A:
 ;    reads:     refillStageIdx, scriptPC, vmAcc, inputAux2, ram_19B9, gameModeFlags
 ;    calls:     sub_809404
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_ClearDialog   (object VM op $42)
+;    operands: -
+;    Queue the 'clear dialog area' tokens ($8001,$8002; $8003,$8004 in split layout). Also called
+;    directly by GiveUpDialog_Run.
+;--------------------------------------------------------------
 Op_ClearDialog:
                 PHY                                            ;80963F|
                 LDA.W #$007E                                   ;809640|
@@ -4831,6 +4911,12 @@ Op_ClearDialog:
                 RTS                                            ;809676|
 
 
+;--------------------------------------------------------------
+;  Op_WaitKeyPlayer   (object VM op $CB)
+;    operands: -
+;    Wait for a button press by player vmAcc: token $8008 if vmAcc == inputAux2 (ppuUpdateFlags $10,
+;    controller 2 only) else $8009 ($20, controller 1).
+;--------------------------------------------------------------
 Op_WaitKeyPlayer:
                 LDA.B vmAcc                                    ;809677|00008E
                 CMP.W inputAux2                                ;809679|8003DA
@@ -4843,6 +4929,12 @@ Op_WaitKeyPlayer:
                 BRA loc_80968B                                 ;809686|80968B
 
 
+;--------------------------------------------------------------
+;  Op_WaitKey   (object VM op $43)
+;    operands: -
+;    Queue token $8000: StreamTilemap sets ppuUpdateFlags |= 4 and input_80814E loops until either
+;    player presses a button ($C0C0).
+;--------------------------------------------------------------
 Op_WaitKey:
                 LDA.W #$8000                                   ;809688|
 
@@ -4859,6 +4951,12 @@ loc_80968B:
                 RTS                                            ;8096A0|
 
 
+;--------------------------------------------------------------
+;  Op_DialogCmd06   (object VM op $47)
+;    operands: u8 value
+;    Queue token $8006 + value (StreamTilemap: ppuUpdateFlags |= 8). Consumer not found in bank $80.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_DialogCmd06:
                 LDA.B [scriptPC],Y                             ;8096A1|000070
                 INY                                            ;8096A3|
@@ -4879,6 +4977,11 @@ Op_DialogCmd06:
                 RTS                                            ;8096C6|
 
 
+;--------------------------------------------------------------
+;  Op_SetDialogColor   (object VM op $46)
+;    operands: u16 color
+;    Set the dialog box colour (CGRAM index 3: token $8005 -> dialogueBoxColorLo/Hi).
+;--------------------------------------------------------------
 Op_SetDialogColor:
                 LDA.B [scriptPC],Y                             ;8096C7|000070
                 INY                                            ;8096C9|
@@ -4919,6 +5022,12 @@ sub_8096EB:
                 RTS                                            ;8096FC|
 
 
+;--------------------------------------------------------------
+;  Op_TextPutChar   (object VM op $50)
+;    operands: u8 kinds(x|y<<3), x, y, u8 char
+;    Queue token $8007: put one character at tile position (x,y) in the text layer.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_TextPutChar:
                 LDA.B [scriptPC],Y                             ;8096FD|000070
                 INY                                            ;8096FF|
@@ -5319,6 +5428,12 @@ sub_8099A1:
          .exit: RTS                                            ;8099C3|
 
 
+;--------------------------------------------------------------
+;  Op_CheckPassword   (object VM op $D3)
+;    operands: -
+;    Look up the password in $0312-$0318: on a match requestedSceneId ($19DD) = table index and $030A
+;    = 0, otherwise $030A = 1 (bad password).
+;--------------------------------------------------------------
 Op_CheckPassword:
                 LDX.W #$0000                                   ;8099C4|
 
@@ -5358,6 +5473,11 @@ Op_CheckPassword:
                 RTS                                            ;809A0C|
 
 
+;--------------------------------------------------------------
+;  Op_LoadLevelPassword   (object VM op $D2)
+;    operands: -
+;    Copy the 4 password characters of the current scene (data_809A38 + scene*4) into $0312-$0318.
+;--------------------------------------------------------------
 Op_LoadLevelPassword:
                 LDA.W ram_19C1                                 ;809A0D|8019C1
                 ASL A                                          ;809A10|
@@ -5691,7 +5811,7 @@ sub_809C5C:
 ;    compensating for the 2 metatile columns added to the
 ;    left of the level tilemap.
 ;  Loops the full object table (stride $28, 0 to objTableEnd).
-;  Skips slots where objScriptSrcBank == 0.
+;  Skips slots where objActive == 0.
 ; --------------------------------------------------------
 ShiftObjectsForHud:
                 REP #$30                                       ;INSERT| ; 16-bit A/X
@@ -5700,13 +5820,13 @@ ShiftObjectsForHud:
 .loop:          CPX.W objTableEnd                              ;INSERT| ; past last slot?
                 BCS .done                                      ;INSERT|
 
-                LDA.W objScriptSrcBank,X                              ;INSERT| ; is this slot live?
+                LDA.W objActive,X                              ;INSERT| ; is this slot live?
                 BEQ .skip                                      ;INSERT|
 
-                LDA.W objField_1179,X                          ;INSERT| ; object X (pixels)
+                LDA.W objX,X                          ;INSERT| ; object X (pixels)
                 CLC                                            ;INSERT|
                 ADC.W #$0020                                   ;INSERT| ; +32px = 2 metatiles × 16px
-                STA.W objField_1179,X                          ;INSERT|
+                STA.W objX,X                          ;INSERT|
 
 .skip:          TXA                                            ;INSERT|
                 CLC                                            ;INSERT|
@@ -6176,7 +6296,7 @@ ComputeCameras:
                 BEQ .skip                                      ;809E71|809E76
                 LDX.W inputAux2                                ;809E73|8003DA
 
-         .skip: LDA.W objField_1179,X                          ;809E76|801179
+         .skip: LDA.W objX,X                          ;809E76|801179
                 SEC                                            ;809E79|
                 SBC.W #$0080                                   ;809E7A|
                 BMI +                                          ;809E7D|809E81
@@ -6194,7 +6314,7 @@ ComputeCameras:
                 SBC.W splitYOffset                             ;809E92|800340
                 LSR A                                          ;809E95|
                 STA.B refillTmp32                              ;809E96|000032
-                LDA.W objField_11A1,X                          ;809E98|8011A1
+                LDA.W objY,X                          ;809E98|8011A1
                 SEC                                            ;809E9B|
                 SBC.B refillTmp32                              ;809E9C|000032
                 BMI +                                          ;809E9E|809EA2
@@ -6259,7 +6379,7 @@ ppucfg_809EE2:
 ; --------------------------------------------------------
 ;  sub_809F07   [39 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    curObjIdx, zp_6C, zp_6E, ram_033E, ram_0382
+;    writes:    curObjIdx, zp_6C, zp_6E, ram_033E, spawnOamPool
 ;    reads:     ram_19CE, ram_19CF, ram_19D1, ram_19D3, ram_19D5, ram_19D7
 ;    calls:     SpawnObject, sub_80A015, loc_809F71, sub_809FF3
 ; --------------------------------------------------------
@@ -6280,7 +6400,7 @@ sub_809F07:
 
 
          .skip: LDA.W ram_19D7                                 ;809F29|8019D7
-                STA.W ram_0382                                 ;809F2C|800382
+                STA.W spawnOamPool                                 ;809F2C|800382
                 LDA.W ram_19CF                                 ;809F2F|8019CF
                 STA.B zp_6C                                    ;809F32|00006C
                 LDA.W ram_19D1                                 ;809F34|8019D1
@@ -6318,7 +6438,7 @@ sub_809F07:
 ; --------------------------------------------------------
 ;  loc_809F71   [53 ins, returns ?]
 ;    callers: sub_809F07
-;    writes:    curObjIdx, zp_6C, zp_6E, ram_0382
+;    writes:    curObjIdx, zp_6C, zp_6E, spawnOamPool
 ;    reads:     ram_19CF, ram_19D1, ram_19D5, ram_19D7
 ;    calls:     SpawnObject
 ; --------------------------------------------------------
@@ -6328,7 +6448,7 @@ loc_809F71:
 
 loc_809F77:
                 LDA.W ram_19D7                                 ;809F77|8019D7
-                STA.W ram_0382                                 ;809F7A|800382
+                STA.W spawnOamPool                                 ;809F7A|800382
                 LDA.W ram_19CF                                 ;809F7D|8019CF
                 STA.B zp_6C                                    ;809F80|00006C
                 LDA.W ram_19D1                                 ;809F82|8019D1
@@ -6388,12 +6508,12 @@ loc_809F77:
 ; --------------------------------------------------------
 ;  sub_809FF3   [12 ins, returns RTS]
 ;    callers: sub_809F07
-;    writes:    ram_033E, ram_03DC, ram_03DE, objHealth, ram_0FEB, ram_0FED
+;    writes:    ram_033E, ram_03DC, ram_03DE, objArgHp, ram_0FEB, ram_0FED
 ;    reads:     ram_0441, ram_0443, ram_0445
 ; --------------------------------------------------------
 sub_809FF3:
                 LDA.W ram_0441                                 ;809FF3|800441
-                STA.W objHealth                                 ;809FF6|800FE9
+                STA.W objArgHp                                 ;809FF6|800FE9
                 LDA.W ram_0443                                 ;809FF9|800443
                 STA.W ram_0FEB                                 ;809FFC|800FEB
                 LDA.W ram_0445                                 ;809FFF|800445
@@ -6516,7 +6636,7 @@ sub_80A0A3:
 ; --------------------------------------------------------
 ;  sub_80A115   [39 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    ram_0CE9, ram_0D29
+;    writes:    gfxLoadedId, gfxLoadedBase
 ;    reads:     zp_00, zp_02, zp_04, zp_05
 ;    calls:     sub_80BCCD, vramwr_808F7B
 ; --------------------------------------------------------
@@ -6528,14 +6648,14 @@ sub_80A115:
                 BEQ .skip                                      ;80A11E|80A15D
                 PHX                                            ;80A120|
                 PHY                                            ;80A121|
-                STA.W ram_0CE9,X                               ;80A122|800CE9
+                STA.W gfxLoadedId,X                               ;80A122|800CE9
                 LDX.W #$8000                                   ;80A125|
                 LDY.W #$007E                                   ;80A128|
                 JSR.W sub_80BCCD                               ;80A12B|80BCCD
                 PLY                                            ;80A12E|
                 PLX                                            ;80A12F|
                 LDA.W zp_02,Y                                  ;80A130|800002
-                STA.W ram_0D29,X                               ;80A133|800D29
+                STA.W gfxLoadedBase,X                               ;80A133|800D29
                 PHA                                            ;80A136|
                 LDA.W zp_04,Y                                  ;80A137|800004
                 AND.W #$00FF                                   ;80A13A|
@@ -6568,7 +6688,7 @@ sub_80A115:
 ; --------------------------------------------------------
 ;  sub_80A160   [58 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    zp_2E, zp_30, mulMultiplicand, mulMultiplierLo, ram_0C49, ram_0C69 ...
+;    writes:    zp_2E, zp_30, mulMultiplicand, mulMultiplierLo, gfxSetId, gfxSetByte3 ...
 ;    reads:     zp_00, zp_02, zp_03, zp_04, zp_2E, zp_30 ...
 ;    calls:     Mul8x16, sub_80BC34, sub_80BCCD
 ; --------------------------------------------------------
@@ -6585,10 +6705,10 @@ sub_80A160:
                 PHX                                            ;80A175|
                 PHY                                            ;80A176|
                 PHA                                            ;80A177|
-                STA.W ram_0C49,X                               ;80A178|800C49
+                STA.W gfxSetId,X                               ;80A178|800C49
                 LDA.W zp_03,Y                                  ;80A17B|800003
                 AND.W #$00FF                                   ;80A17E|
-                STA.W ram_0C69,X                               ;80A181|800C69
+                STA.W gfxSetByte3,X                               ;80A181|800C69
                 STA.B mulMultiplicand                          ;80A184|0000AC
                 LDA.W zp_02,Y                                  ;80A186|800002
                 AND.W #$00FF                                   ;80A189|
@@ -6600,23 +6720,23 @@ sub_80A160:
                 STA.B mulMultiplierLo                          ;80A191|0000B0
                 JSR.W Mul8x16                                  ;80A193|809152
                 LDA.B mulResult                                ;80A196|0000B2
-                STA.W ram_0CC9,X                               ;80A198|800CC9
+                STA.W gfxSetFrameBytes,X                               ;80A198|800CC9
                 LDA.W zp_04,Y                                  ;80A19B|800004
                 AND.W #$00FF                                   ;80A19E|
                 BNE .skip                                      ;80A1A1|80A1B1
                 TXY                                            ;80A1A3|
                 PLA                                            ;80A1A4|
                 JSR.W sub_80BC34                               ;80A1A5|80BC34
-                STA.W ram_0CA9,Y                               ;80A1A8|800CA9
+                STA.W gfxSetSrcBank,Y                               ;80A1A8|800CA9
                 TXA                                            ;80A1AB|
-                STA.W ram_0C89,Y                               ;80A1AC|800C89
+                STA.W gfxSetSrcLo,Y                               ;80A1AC|800C89
                 BRA .cont                                      ;80A1AF|80A1C7
 
 
          .skip: LDA.B zp_2E                                    ;80A1B1|00002E
-                STA.W ram_0C89,X                               ;80A1B3|800C89
+                STA.W gfxSetSrcLo,X                               ;80A1B3|800C89
                 LDA.B zp_30                                    ;80A1B6|000030
-                STA.W ram_0CA9,X                               ;80A1B8|800CA9
+                STA.W gfxSetSrcBank,X                               ;80A1B8|800CA9
                 PLA                                            ;80A1BB|
                 LDX.B zp_2E                                    ;80A1BC|00002E
                 LDY.B zp_30                                    ;80A1BE|000030
@@ -7087,13 +7207,13 @@ sub_80A402:
 ; --------------------------------------------------------
 ;  sub_80A449   [9 ins, returns RTS]
 ;    callers: vbwait_808081, sub_80A0A3
-;    writes:    ram_0392
+;    writes:    vmQueryPass
 ;    reads:     objTableEnd
 ;    calls:     RunOneObjectScript
 ; --------------------------------------------------------
 sub_80A449:
                 LDA.W #$FFFF                                   ;80A449|
-                STA.W ram_0392                                 ;80A44C|800392
+                STA.W vmQueryPass                                 ;80A44C|800392
                 LDX.W #$0000                                   ;80A44F|
 
          .loop: JSR.W RunOneObjectScript                       ;80A452|80A479
@@ -7107,13 +7227,13 @@ sub_80A449:
 ; --------------------------------------------------------
 ;  RunObjectScriptsPass   [9 ins, returns RTS]
 ;    callers: vbwait_808081, sub_80A0A3
-;    writes:    ram_0392
+;    writes:    vmQueryPass
 ;    reads:     objTableEnd
 ;    calls:     sub_80A471
 ; --------------------------------------------------------
 RunObjectScriptsPass:
                 LDA.W #$0001                         ;80A45D|
-                STA.W ram_0392                                 ;80A460|800392
+                STA.W vmQueryPass                                 ;80A460|800392
                 LDX.W #$0000                                   ;80A463|
 
          .loop: JSR.W sub_80A471                               ;80A466|80A471
@@ -7127,26 +7247,26 @@ RunObjectScriptsPass:
 ; --------------------------------------------------------
 ;  sub_80A471   [3 ins, returns ?]
 ;    callers: RunObjectScriptsPass
-;    writes:    ram_0E31
-;    reads:     ram_0E59
+;    writes:    objTouchMask
+;    reads:     objParent
 ; --------------------------------------------------------
 sub_80A471:
-                STZ.W ram_0E31,X                               ;80A471|800E31
-                LDA.W ram_0E59,X                               ;80A474|800E59
+                STZ.W objTouchMask,X                               ;80A471|800E31
+                LDA.W objParent,X                               ;80A474|800E59
                 BPL loc_80A4A1                                 ;80A477|80A4A1
 
 ; --------------------------------------------------------
 ;  RunOneObjectScript   [45 ins, returns RTS]
 ;    callers: sub_80A449
-;    writes:    curObjIdx, scriptPC, scriptPCBank, objTableEnd, ram_0390
-;    reads:     curObjIdx, scriptPC, objTableEnd, ram_0390, objScriptPtr, objScriptSrcBank
+;    writes:    curObjIdx, scriptPC, scriptPCBank, objTableEnd, vmQuerySlot2
+;    reads:     curObjIdx, scriptPC, objTableEnd, vmQuerySlot2, objScriptPtr, objActive
 ;    calls:     ObjVM_OpTable, TouchType_Check, Op_Call
 ; --------------------------------------------------------
 RunOneObjectScript:
-                LDA.W objScriptSrcBank,X                      ;80A479|800D91
+                LDA.W objActive,X                      ;80A479|800D91
                 BEQ loc_80A4A1                                 ;80A47C|80A4A1
                 STX.B curObjIdx                                ;80A47E|000042
-                STZ.W ram_0390                                 ;80A480|800390
+                STZ.W vmQuerySlot2                                 ;80A480|800390
                 STA.B scriptPCBank                                    ;80A483|000072
                 LDA.W objScriptPtr,X                           ;80A485|800D69
                 STA.B scriptPC                                 ;80A488|000070
@@ -7169,6 +7289,13 @@ loc_80A4A1:
                 RTS                                            ;80A4A1|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfPlayerTouchType   (object VM op $1A)
+;    operands: u8 type, u16 target
+;    CALL target if a viking (slots 0-2 only) with objTouchType == type overlaps this object. Two-
+;    phase: the collect pass (vmQueryPass < 0) scans and sets this op's bit in objTouchMask and
+;    stores the hit in objTouchSlots; the normal pass tests that bit, sets objTarget and calls.
+;--------------------------------------------------------------
 Op_CallIfPlayerTouchType:
                 LDA.W objTableEnd                              ;80A4A2|800380
                 PHA                                            ;80A4A5|
@@ -7177,10 +7304,10 @@ Op_CallIfPlayerTouchType:
                 JSR.W TouchType_Check                               ;80A4AC|80A4D6
                 PLA                                            ;80A4AF|
                 STA.W objTableEnd                              ;80A4B0|800380
-                LDA.W ram_0390                                 ;80A4B3|800390
+                LDA.W vmQuerySlot2                                 ;80A4B3|800390
                 INC A                                          ;80A4B6|
                 INC A                                          ;80A4B7|
-                STA.W ram_0390                                 ;80A4B8|800390
+                STA.W vmQuerySlot2                                 ;80A4B8|800390
                 BCC +                                          ;80A4BB|80A4C0
                 JMP.W Op_Call                               ;80A4BD|80CD65
 
@@ -7190,12 +7317,18 @@ Op_CallIfPlayerTouchType:
                 RTS                                            ;80A4C2|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfTouchType   (object VM op $37)
+;    operands: u8 type, u16 target
+;    CALL target if ANY object with objTouchType == type overlaps this one. Same two-phase protocol
+;    as Op_CallIfPlayerTouchType.
+;--------------------------------------------------------------
 Op_CallIfTouchType:
                 JSR.W TouchType_Check                               ;80A4C3|80A4D6
-                LDA.W ram_0390                                 ;80A4C6|800390
+                LDA.W vmQuerySlot2                                 ;80A4C6|800390
                 INC A                                          ;80A4C9|
                 INC A                                          ;80A4CA|
-                STA.W ram_0390                                 ;80A4CB|800390
+                STA.W vmQuerySlot2                                 ;80A4CB|800390
                 BCC +                                          ;80A4CE|80A4D3
                 JMP.W Op_Call                               ;80A4D0|80CD65
 
@@ -7213,7 +7346,7 @@ Op_CallIfTouchType:
 ;    calls:     sub_80B012, sub_80B02B, TouchMask_Check, Op_Call
 ; --------------------------------------------------------
 TouchType_Check:
-                LDA.W ram_0392                                 ;80A4D6|800392
+                LDA.W vmQueryPass                                 ;80A4D6|800392
                 BEQ .skip3                                     ;80A4D9|80A54C
                 BPL .skip2                                     ;80A4DB|80A549
                 LDA.B [scriptPC],Y                             ;80A4DD|000070
@@ -7222,40 +7355,40 @@ TouchType_Check:
                 STA.B refillTmp32                              ;80A4E3|000032
                 PHY                                            ;80A4E5|
                 LDY.B curObjIdx                                ;80A4E6|000042
-                LDA.W objField_0F71,Y                          ;80A4E8|800F71
+                LDA.W objBoxLeft,Y                          ;80A4E8|800F71
                 STA.B refillStageIdx                           ;80A4EB|000034
-                LDA.W objField_0F99,Y                          ;80A4ED|800F99
+                LDA.W objBoxRight,Y                          ;80A4ED|800F99
                 STA.B zp_36                                    ;80A4F0|000036
-                LDA.W objField_0F21,Y                          ;80A4F2|800F21
+                LDA.W objBoxTop,Y                          ;80A4F2|800F21
                 STA.B zp_38                                    ;80A4F5|000038
-                LDA.W objField_0F49,Y                          ;80A4F7|800F49
+                LDA.W objBoxBottom,Y                          ;80A4F7|800F49
                 STA.B zp_3A                                    ;80A4FA|00003A
                 LDX.W #$0000                                   ;80A4FC|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80A4FF|800D91
+         .loop: LDA.W objActive,X                              ;80A4FF|800D91
                 BEQ .skip                                      ;80A502|80A53F
-                LDA.W ram_1039,X                               ;80A504|801039
+                LDA.W objTouchType,X                               ;80A504|801039
                 CMP.B refillTmp32                              ;80A507|000032
                 BNE .skip                                      ;80A509|80A53F
                 CPX.B curObjIdx                                ;80A50B|000042
                 BEQ .skip                                      ;80A50D|80A53F
                 LDA.B zp_36                                    ;80A50F|000036
-                CMP.W objField_0F71,X                          ;80A511|800F71
+                CMP.W objBoxLeft,X                          ;80A511|800F71
                 BCC .skip                                      ;80A514|80A53F
-                LDA.W objField_0F99,X                          ;80A516|800F99
+                LDA.W objBoxRight,X                          ;80A516|800F99
                 CMP.B refillStageIdx                           ;80A519|000034
                 BCC .skip                                      ;80A51B|80A53F
                 LDA.B zp_3A                                    ;80A51D|00003A
-                CMP.W objField_0F21,X                          ;80A51F|800F21
+                CMP.W objBoxTop,X                          ;80A51F|800F21
                 BCC .skip                                      ;80A522|80A53F
-                LDA.W objField_0F49,X                          ;80A524|800F49
+                LDA.W objBoxBottom,X                          ;80A524|800F49
                 CMP.B zp_38                                    ;80A527|000038
                 BCC .skip                                      ;80A529|80A53F
                 PHX                                            ;80A52B|
-                LDX.W ram_0390                                 ;80A52C|800390
+                LDX.W vmQuerySlot2                                 ;80A52C|800390
                 LDA.W data_80F3F7,X                            ;80A52F|80F3F7
-                ORA.W ram_0E31,Y                               ;80A532|800E31
-                STA.W ram_0E31,Y                               ;80A535|800E31
+                ORA.W objTouchMask,Y                               ;80A532|800E31
+                STA.W objTouchMask,Y                               ;80A535|800E31
                 PLX                                            ;80A538|
                 JSR.W sub_80B012                               ;80A539|80B012
                 PLY                                            ;80A53C|
@@ -7281,9 +7414,9 @@ TouchType_Check:
         .skip3: INY                                            ;80A54C|
                 PHY                                            ;80A54D|
                 LDY.B curObjIdx                                ;80A54E|000042
-                LDX.W ram_0390                                 ;80A550|800390
+                LDX.W vmQuerySlot2                                 ;80A550|800390
                 LDA.W data_80F3F7,X                            ;80A553|80F3F7
-                AND.W ram_0E31,Y                               ;80A556|800E31
+                AND.W objTouchMask,Y                               ;80A556|800E31
                 BEQ .loop2                                     ;80A559|80A546
                 JSR.W sub_80B02B                               ;80A55B|80B02B
                 STA.W objTarget,Y                          ;80A55E|8013D1
@@ -7292,6 +7425,12 @@ TouchType_Check:
                 RTS                                            ;80A563|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfPlayerHitMask   (object VM op $1D)
+;    operands: u16 mask, u16 target
+;    CALL target if a viking's objHitMask & mask is non-zero and its box overlaps this object
+;    (players only; two-phase like Op_CallIfPlayerTouchType).
+;--------------------------------------------------------------
 Op_CallIfPlayerHitMask:
                 LDA.W objTableEnd                              ;80A564|800380
                 PHA                                            ;80A567|
@@ -7300,10 +7439,10 @@ Op_CallIfPlayerHitMask:
                 JSR.W TouchMask_Check                               ;80A56E|80A598
                 PLA                                            ;80A571|
                 STA.W objTableEnd                              ;80A572|800380
-                LDA.W ram_0390                                 ;80A575|800390
+                LDA.W vmQuerySlot2                                 ;80A575|800390
                 INC A                                          ;80A578|
                 INC A                                          ;80A579|
-                STA.W ram_0390                                 ;80A57A|800390
+                STA.W vmQuerySlot2                                 ;80A57A|800390
                 BCC +                                          ;80A57D|80A582
                 JMP.W Op_Call                               ;80A57F|80CD65
 
@@ -7313,12 +7452,17 @@ Op_CallIfPlayerHitMask:
                 RTS                                            ;80A584|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfTouchMask   (object VM op $38)
+;    operands: u16 mask, u16 target
+;    CALL target if any object's objHitMask & mask is non-zero and its box overlaps (all slots).
+;--------------------------------------------------------------
 Op_CallIfTouchMask:
                 JSR.W TouchMask_Check                               ;80A585|80A598
-                LDA.W ram_0390                                 ;80A588|800390
+                LDA.W vmQuerySlot2                                 ;80A588|800390
                 INC A                                          ;80A58B|
                 INC A                                          ;80A58C|
-                STA.W ram_0390                                 ;80A58D|800390
+                STA.W vmQuerySlot2                                 ;80A58D|800390
                 BCC +                                          ;80A590|80A595
                 JMP.W Op_Call                               ;80A592|80CD65
 
@@ -7331,12 +7475,12 @@ Op_CallIfTouchMask:
 ; --------------------------------------------------------
 ;  TouchMask_Check   [81 ins, returns RTS]
 ;    callers: TouchType_Check
-;    writes:    refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, ram_0390 ...
+;    writes:    refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, vmQuerySlot2 ...
 ;    reads:     refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx ...
 ;    calls:     sub_80B012, sub_80B02B, CollideX_Resolve, Op_Call
 ; --------------------------------------------------------
 TouchMask_Check:
-                LDA.W ram_0392                                 ;80A598|800392
+                LDA.W vmQueryPass                                 ;80A598|800392
                 BEQ .skip3                                     ;80A59B|80A60D
                 BPL .skip2                                     ;80A59D|80A609
                 LDA.B [scriptPC],Y                             ;80A59F|000070
@@ -7345,40 +7489,40 @@ TouchMask_Check:
                 INY                                            ;80A5A4|
                 PHY                                            ;80A5A5|
                 LDY.B curObjIdx                                ;80A5A6|000042
-                LDA.W objField_0F71,Y                          ;80A5A8|800F71
+                LDA.W objBoxLeft,Y                          ;80A5A8|800F71
                 STA.B refillStageIdx                           ;80A5AB|000034
-                LDA.W objField_0F99,Y                          ;80A5AD|800F99
+                LDA.W objBoxRight,Y                          ;80A5AD|800F99
                 STA.B zp_36                                    ;80A5B0|000036
-                LDA.W objField_0F21,Y                          ;80A5B2|800F21
+                LDA.W objBoxTop,Y                          ;80A5B2|800F21
                 STA.B zp_38                                    ;80A5B5|000038
-                LDA.W objField_0F49,Y                          ;80A5B7|800F49
+                LDA.W objBoxBottom,Y                          ;80A5B7|800F49
                 STA.B zp_3A                                    ;80A5BA|00003A
                 LDX.W #$0000                                   ;80A5BC|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80A5BF|800D91
+         .loop: LDA.W objActive,X                              ;80A5BF|800D91
                 BEQ .skip                                      ;80A5C2|80A5FF
-                LDA.W ram_1061,X                               ;80A5C4|801061
+                LDA.W objHitMask,X                               ;80A5C4|801061
                 AND.B refillTmp32                              ;80A5C7|000032
                 BEQ .skip                                      ;80A5C9|80A5FF
                 CPX.B curObjIdx                                ;80A5CB|000042
                 BEQ .skip                                      ;80A5CD|80A5FF
                 LDA.B zp_36                                    ;80A5CF|000036
-                CMP.W objField_0F71,X                          ;80A5D1|800F71
+                CMP.W objBoxLeft,X                          ;80A5D1|800F71
                 BCC .skip                                      ;80A5D4|80A5FF
-                LDA.W objField_0F99,X                          ;80A5D6|800F99
+                LDA.W objBoxRight,X                          ;80A5D6|800F99
                 CMP.B refillStageIdx                           ;80A5D9|000034
                 BCC .skip                                      ;80A5DB|80A5FF
                 LDA.B zp_3A                                    ;80A5DD|00003A
-                CMP.W objField_0F21,X                          ;80A5DF|800F21
+                CMP.W objBoxTop,X                          ;80A5DF|800F21
                 BCC .skip                                      ;80A5E2|80A5FF
-                LDA.W objField_0F49,X                          ;80A5E4|800F49
+                LDA.W objBoxBottom,X                          ;80A5E4|800F49
                 CMP.B zp_38                                    ;80A5E7|000038
                 BCC .skip                                      ;80A5E9|80A5FF
                 PHX                                            ;80A5EB|
-                LDX.W ram_0390                                 ;80A5EC|800390
+                LDX.W vmQuerySlot2                                 ;80A5EC|800390
                 LDA.W data_80F3F7,X                            ;80A5EF|80F3F7
-                ORA.W ram_0E31,Y                               ;80A5F2|800E31
-                STA.W ram_0E31,Y                               ;80A5F5|800E31
+                ORA.W objTouchMask,Y                               ;80A5F2|800E31
+                STA.W objTouchMask,Y                               ;80A5F5|800E31
                 PLX                                            ;80A5F8|
                 JSR.W sub_80B012                               ;80A5F9|80B012
                 PLY                                            ;80A5FC|
@@ -7406,9 +7550,9 @@ TouchMask_Check:
                 INY                                            ;80A60E|
                 PHY                                            ;80A60F|
                 LDY.B curObjIdx                                ;80A610|000042
-                LDX.W ram_0390                                 ;80A612|800390
+                LDX.W vmQuerySlot2                                 ;80A612|800390
                 LDA.W data_80F3F7,X                            ;80A615|80F3F7
-                AND.W ram_0E31,Y                               ;80A618|800E31
+                AND.W objTouchMask,Y                               ;80A618|800E31
                 BEQ .loop2                                     ;80A61B|80A606
                 JSR.W sub_80B02B                               ;80A61D|80B02B
                 STA.W objTarget,Y                          ;80A620|8013D1
@@ -7417,12 +7561,19 @@ TouchMask_Check:
                 RTS                                            ;80A625|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfCollideX   (object VM op $32)
+;    operands: u8 classSet, u16 target
+;    Horizontal collision: if the object moved in X since the frame start (objX != objPrevX) probe
+;    its leading edge against terrain and solid objects. On a hit snap objX flush to the obstacle,
+;    clear objFracX, record it in objTouchMask, and CALL target.
+;--------------------------------------------------------------
 Op_CallIfCollideX:
                 JSR.W CollideX_Resolve                               ;80A626|80A639
-                LDA.W ram_0390                                 ;80A629|800390
+                LDA.W vmQuerySlot2                                 ;80A629|800390
                 INC A                                          ;80A62C|
                 INC A                                          ;80A62D|
-                STA.W ram_0390                                 ;80A62E|800390
+                STA.W vmQuerySlot2                                 ;80A62E|800390
                 BCC +                                          ;80A631|80A636
                 JMP.W Op_Call                               ;80A633|80CD65
 
@@ -7435,12 +7586,12 @@ Op_CallIfCollideX:
 ; --------------------------------------------------------
 ;  CollideX_Resolve   [46 ins, returns RTS]
 ;    callers: TouchMask_Check
-;    writes:    ram_0390, ram_0E31
-;    reads:     curObjIdx, scriptPC, ram_0390, ram_0392, ram_0E31
+;    writes:    vmQuerySlot2, objTouchMask
+;    reads:     curObjIdx, scriptPC, vmQuerySlot2, vmQueryPass, objTouchMask
 ;    calls:     sub_80A78E, sub_80A7C4, FindObjectOverlapX, sub_80ABB8, CollideY_Resolve, Op_Call
 ; --------------------------------------------------------
 CollideX_Resolve:
-                LDA.W ram_0392                                 ;80A639|800392
+                LDA.W vmQueryPass                                 ;80A639|800392
                 BEQ .skip2                                     ;80A63C|80A66E
                 BMI .skip                                      ;80A63E|80A66B
                 LDA.B [scriptPC],Y                             ;80A640|000070
@@ -7459,10 +7610,10 @@ CollideX_Resolve:
                 BCC .loop                                      ;80A657|80A668
                 JSR.W sub_80ABB8                               ;80A659|80ABB8
 
-         .cont: LDX.W ram_0390                                 ;80A65C|800390
+         .cont: LDX.W vmQuerySlot2                                 ;80A65C|800390
                 LDA.W data_80F3F7,X                            ;80A65F|80F3F7
-                ORA.W ram_0E31,Y                               ;80A662|800E31
-                STA.W ram_0E31,Y                               ;80A665|800E31
+                ORA.W objTouchMask,Y                               ;80A662|800E31
+                STA.W objTouchMask,Y                               ;80A665|800E31
 
          .loop: PLY                                            ;80A668|
                 CLC                                            ;80A669|
@@ -7477,21 +7628,26 @@ CollideX_Resolve:
         .skip2: INY                                            ;80A66E|
                 PHY                                            ;80A66F|
                 LDY.B curObjIdx                                ;80A670|000042
-                LDX.W ram_0390                                 ;80A672|800390
+                LDX.W vmQuerySlot2                                 ;80A672|800390
                 LDA.W data_80F3F7,X                            ;80A675|80F3F7
-                AND.W ram_0E31,Y                               ;80A678|800E31
+                AND.W objTouchMask,Y                               ;80A678|800E31
                 BEQ .loop                                      ;80A67B|80A668
                 PLY                                            ;80A67D|
                 SEC                                            ;80A67E|
                 RTS                                            ;80A67F|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfCollideY   (object VM op $33)
+;    operands: u8 classSet, u16 target
+;    Vertical collision (flat tiles): same as Op_CallIfCollideX but for objY / objPrevY.
+;--------------------------------------------------------------
 Op_CallIfCollideY:
                 JSR.W CollideY_Resolve                               ;80A680|80A693
-                LDA.W ram_0390                                 ;80A683|800390
+                LDA.W vmQuerySlot2                                 ;80A683|800390
                 INC A                                          ;80A686|
                 INC A                                          ;80A687|
-                STA.W ram_0390                                 ;80A688|800390
+                STA.W vmQuerySlot2                                 ;80A688|800390
                 BCC +                                          ;80A68B|80A690
                 JMP.W Op_Call                               ;80A68D|80CD65
 
@@ -7504,12 +7660,12 @@ Op_CallIfCollideY:
 ; --------------------------------------------------------
 ;  CollideY_Resolve   [46 ins, returns RTS]
 ;    callers: CollideX_Resolve
-;    writes:    ram_0390, ram_0E31
-;    reads:     curObjIdx, scriptPC, ram_0390, ram_0392, ram_0E31
+;    writes:    vmQuerySlot2, objTouchMask
+;    reads:     curObjIdx, scriptPC, vmQuerySlot2, vmQueryPass, objTouchMask
 ;    calls:     sub_80A7A9, sub_80A823, FindObjectOverlapX2, sub_80AC15, CollideY_Slope_Resolve, Op_Call
 ; --------------------------------------------------------
 CollideY_Resolve:
-                LDA.W ram_0392                                 ;80A693|800392
+                LDA.W vmQueryPass                                 ;80A693|800392
                 BEQ .skip2                                     ;80A696|80A6C8
                 BMI .skip                                      ;80A698|80A6C5
                 LDA.B [scriptPC],Y                             ;80A69A|000070
@@ -7528,10 +7684,10 @@ CollideY_Resolve:
                 BCC .loop                                      ;80A6B1|80A6C2
                 JSR.W sub_80AC15                               ;80A6B3|80AC15
 
-         .cont: LDX.W ram_0390                                 ;80A6B6|800390
+         .cont: LDX.W vmQuerySlot2                                 ;80A6B6|800390
                 LDA.W data_80F3F7,X                            ;80A6B9|80F3F7
-                ORA.W ram_0E31,Y                               ;80A6BC|800E31
-                STA.W ram_0E31,Y                               ;80A6BF|800E31
+                ORA.W objTouchMask,Y                               ;80A6BC|800E31
+                STA.W objTouchMask,Y                               ;80A6BF|800E31
 
          .loop: PLY                                            ;80A6C2|
                 CLC                                            ;80A6C3|
@@ -7546,21 +7702,27 @@ CollideY_Resolve:
         .skip2: INY                                            ;80A6C8|
                 PHY                                            ;80A6C9|
                 LDY.B curObjIdx                                ;80A6CA|000042
-                LDX.W ram_0390                                 ;80A6CC|800390
+                LDX.W vmQuerySlot2                                 ;80A6CC|800390
                 LDA.W data_80F3F7,X                            ;80A6CF|80F3F7
-                AND.W ram_0E31,Y                               ;80A6D2|800E31
+                AND.W objTouchMask,Y                               ;80A6D2|800E31
                 BEQ .loop                                      ;80A6D5|80A6C2
                 PLY                                            ;80A6D7|
                 SEC                                            ;80A6D8|
                 RTS                                            ;80A6D9|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfCollideY_Slope   (object VM op $3C)
+;    operands: u8 classSet, u16 target
+;    Vertical collision with slopes / one-way platforms (CollideY_Slope_Resolve): uses the slope
+;    height table data_80B225 and only lands on objects when moving down onto them.
+;--------------------------------------------------------------
 Op_CallIfCollideY_Slope:
                 JSR.W CollideY_Slope_Resolve                               ;80A6DA|80A6ED
-                LDA.W ram_0390                                 ;80A6DD|800390
+                LDA.W vmQuerySlot2                                 ;80A6DD|800390
                 INC A                                          ;80A6E0|
                 INC A                                          ;80A6E1|
-                STA.W ram_0390                                 ;80A6E2|800390
+                STA.W vmQuerySlot2                                 ;80A6E2|800390
                 BCC +                                          ;80A6E5|80A6EA
                 JMP.W Op_Call                               ;80A6E7|80CD65
 
@@ -7573,12 +7735,12 @@ Op_CallIfCollideY_Slope:
 ; --------------------------------------------------------
 ;  CollideY_Slope_Resolve   [36 ins, returns RTS]
 ;    callers: CollideY_Resolve
-;    writes:    ram_0E31
-;    reads:     curObjIdx, scriptPC, ram_0390, ram_0392, ram_0E31
+;    writes:    objTouchMask
+;    reads:     curObjIdx, scriptPC, vmQuerySlot2, vmQueryPass, objTouchMask
 ;    calls:     sub_80A9B2, sub_80A823, sub_80AF5A, sub_80AC15
 ; --------------------------------------------------------
 CollideY_Slope_Resolve:
-                LDA.W ram_0392                                 ;80A6ED|800392
+                LDA.W vmQueryPass                                 ;80A6ED|800392
                 BEQ .skip2                                     ;80A6F0|80A722
                 BMI .skip                                      ;80A6F2|80A71F
                 LDA.B [scriptPC],Y                             ;80A6F4|000070
@@ -7597,10 +7759,10 @@ CollideY_Slope_Resolve:
                 BCC .loop                                      ;80A70B|80A71C
                 JSR.W sub_80AC15                               ;80A70D|80AC15
 
-         .cont: LDX.W ram_0390                                 ;80A710|800390
+         .cont: LDX.W vmQuerySlot2                                 ;80A710|800390
                 LDA.W data_80F3F7,X                            ;80A713|80F3F7
-                ORA.W ram_0E31,Y                               ;80A716|800E31
-                STA.W ram_0E31,Y                               ;80A719|800E31
+                ORA.W objTouchMask,Y                               ;80A716|800E31
+                STA.W objTouchMask,Y                               ;80A719|800E31
 
          .loop: PLY                                            ;80A71C|
                 CLC                                            ;80A71D|
@@ -7615,9 +7777,9 @@ CollideY_Slope_Resolve:
         .skip2: INY                                            ;80A722|
                 PHY                                            ;80A723|
                 LDY.B curObjIdx                                ;80A724|000042
-                LDX.W ram_0390                                 ;80A726|800390
+                LDX.W vmQuerySlot2                                 ;80A726|800390
                 LDA.W data_80F3F7,X                            ;80A729|80F3F7
-                AND.W ram_0E31,Y                               ;80A72C|800E31
+                AND.W objTouchMask,Y                               ;80A72C|800E31
                 BEQ .loop                                      ;80A72F|80A71C
                 PLY                                            ;80A731|
                 SEC                                            ;80A732|
@@ -7627,12 +7789,12 @@ CollideY_Slope_Resolve:
 ; --------------------------------------------------------
 ;  sub_80A734   [6 ins, returns RTS]
 ;    callers: Op_SubAcc_TFld
-;    writes:    ram_03BE
+;    writes:    hitObj
 ;    calls:     sub_80A9A3, sub_80AEF5
 ; --------------------------------------------------------
 sub_80A734:
                 LDA.W #$FFFF                                   ;80A734|
-                STA.W ram_03BE                                 ;80A737|8003BE
+                STA.W hitObj                                 ;80A737|8003BE
                 JSR.W sub_80A9A3                               ;80A73A|80A9A3
                 BCS .exit                                      ;80A73D|80A742
                 JSR.W sub_80AEF5                               ;80A73F|80AEF5
@@ -7643,12 +7805,12 @@ sub_80A734:
 ; --------------------------------------------------------
 ;  sub_80A743   [6 ins, returns RTS]
 ;    callers: Op_Goto
-;    writes:    ram_03BE
+;    writes:    hitObj
 ;    calls:     sub_80A894, sub_80AC72
 ; --------------------------------------------------------
 sub_80A743:
                 LDA.W #$FFFF                                   ;80A743|
-                STA.W ram_03BE                                 ;80A746|8003BE
+                STA.W hitObj                                 ;80A746|8003BE
                 JSR.W sub_80A894                               ;80A749|80A894
                 BCS .exit                                      ;80A74C|80A751
                 JSR.W sub_80AC72                               ;80A74E|80AC72
@@ -7659,12 +7821,12 @@ sub_80A743:
 ; --------------------------------------------------------
 ;  sub_80A752   [6 ins, returns RTS]
 ;    callers: Op_Goto
-;    writes:    ram_03BE
+;    writes:    hitObj
 ;    calls:     sub_80A8A7, sub_80AC7C
 ; --------------------------------------------------------
 sub_80A752:
                 LDA.W #$FFFF                                   ;80A752|
-                STA.W ram_03BE                                 ;80A755|8003BE
+                STA.W hitObj                                 ;80A755|8003BE
                 JSR.W sub_80A8A7                               ;80A758|80A8A7
                 BCS .exit                                      ;80A75B|80A760
                 JSR.W sub_80AC7C                               ;80A75D|80AC7C
@@ -7675,12 +7837,12 @@ sub_80A752:
 ; --------------------------------------------------------
 ;  sub_80A761   [6 ins, returns RTS]
 ;    callers: Op_Goto
-;    writes:    ram_03BE
+;    writes:    hitObj
 ;    calls:     sub_80A91D, FindObjectAtEdgeX
 ; --------------------------------------------------------
 sub_80A761:
                 LDA.W #$FFFF                                   ;80A761|
-                STA.W ram_03BE                                 ;80A764|8003BE
+                STA.W hitObj                                 ;80A764|8003BE
                 JSR.W sub_80A91D                               ;80A767|80A91D
                 BCS .exit                                      ;80A76A|80A76F
                 JSR.W FindObjectAtEdgeX                        ;80A76C|80AE0B
@@ -7691,12 +7853,12 @@ sub_80A761:
 ; --------------------------------------------------------
 ;  sub_80A770   [6 ins, returns RTS]
 ;    callers: Op_Goto
-;    writes:    ram_03BE
+;    writes:    hitObj
 ;    calls:     sub_80A930, FindObjectAtEdgeX_RightEntry
 ; --------------------------------------------------------
 sub_80A770:
                 LDA.W #$FFFF                                   ;80A770|
-                STA.W ram_03BE                                 ;80A773|8003BE
+                STA.W hitObj                                 ;80A773|8003BE
                 JSR.W sub_80A930                               ;80A776|80A930
                 BCS .exit                                      ;80A779|80A77E
                 JSR.W FindObjectAtEdgeX_RightEntry             ;80A77B|80AE15
@@ -7707,12 +7869,12 @@ sub_80A770:
 ; --------------------------------------------------------
 ;  sub_80A77F   [6 ins, returns RTS]
 ;    callers: Op_Goto
-;    writes:    ram_03BE
+;    writes:    hitObj
 ;    calls:     sub_80A982, FindObjectAtEdgeY
 ; --------------------------------------------------------
 sub_80A77F:
                 LDA.W #$FFFF                                   ;80A77F|
-                STA.W ram_03BE                                 ;80A782|8003BE
+                STA.W hitObj                                 ;80A782|8003BE
                 JSR.W sub_80A982                               ;80A785|80A982
                 BCS .exit                                      ;80A788|80A78D
                 JSR.W FindObjectAtEdgeY                        ;80A78A|80AE7E
@@ -7723,13 +7885,13 @@ sub_80A77F:
 ; --------------------------------------------------------
 ;  sub_80A78E   [13 ins, returns RTS]
 ;    callers: CollideX_Resolve
-;    reads:     ram_0DE1, objField_1179
+;    reads:     objPrevX, objX
 ;    calls:     sub_80A89E, sub_80A8B1
 ; --------------------------------------------------------
 sub_80A78E:
-                LDA.W objField_1179,Y                          ;80A78E|801179
+                LDA.W objX,Y                          ;80A78E|801179
                 SEC                                            ;80A791|
-                SBC.W ram_0DE1,Y                               ;80A792|800DE1
+                SBC.W objPrevX,Y                               ;80A792|800DE1
                 BEQ .skip                                      ;80A795|80A7A7
                 BPL +                                          ;80A797|80A7A0
                 JSR.W sub_80A89E                               ;80A799|80A89E
@@ -7749,13 +7911,13 @@ sub_80A78E:
 ; --------------------------------------------------------
 ;  sub_80A7A9   [13 ins, returns RTS]
 ;    callers: CollideY_Resolve
-;    reads:     ram_0E09, objField_11A1
+;    reads:     objPrevY, objY
 ;    calls:     sub_80A927, sub_80A93A
 ; --------------------------------------------------------
 sub_80A7A9:
-                LDA.W objField_11A1,Y                          ;80A7A9|8011A1
+                LDA.W objY,Y                          ;80A7A9|8011A1
                 SEC                                            ;80A7AC|
-                SBC.W ram_0E09,Y                               ;80A7AD|800E09
+                SBC.W objPrevY,Y                               ;80A7AD|800E09
                 BEQ .skip                                      ;80A7B0|80A7C2
                 BPL +                                          ;80A7B2|80A7BB
                 JSR.W sub_80A927                               ;80A7B4|80A927
@@ -7775,61 +7937,61 @@ sub_80A7A9:
 ; --------------------------------------------------------
 ;  sub_80A7C4   [42 ins, returns RTS]
 ;    callers: CollideX_Resolve
-;    writes:    refillTmp32, objField_0F71, objField_0F99, objField_1179, ram_13F9
-;    reads:     refillTmp32, objField_0F71, objField_0F99, objField_1179
+;    writes:    refillTmp32, objBoxLeft, objBoxRight, objX, objFracX
+;    reads:     refillTmp32, objBoxLeft, objBoxRight, objX
 ; --------------------------------------------------------
 sub_80A7C4:
                 CMP.W #$0000                                   ;80A7C4|
                 BNE .skip                                      ;80A7C7|80A7F6
-                LDA.W objField_0F99,Y                          ;80A7C9|800F99
+                LDA.W objBoxRight,Y                          ;80A7C9|800F99
                 STA.B refillTmp32                              ;80A7CC|000032
                 AND.W #$FFF0                                   ;80A7CE|
                 DEC A                                          ;80A7D1|
-                STA.W objField_0F99,Y                          ;80A7D2|800F99
+                STA.W objBoxRight,Y                          ;80A7D2|800F99
                 LDA.B refillTmp32                              ;80A7D5|000032
                 SEC                                            ;80A7D7|
-                SBC.W objField_0F99,Y                          ;80A7D8|800F99
+                SBC.W objBoxRight,Y                          ;80A7D8|800F99
                 STA.B refillTmp32                              ;80A7DB|000032
-                LDA.W objField_1179,Y                          ;80A7DD|801179
+                LDA.W objX,Y                          ;80A7DD|801179
                 SEC                                            ;80A7E0|
                 SBC.B refillTmp32                              ;80A7E1|000032
-                STA.W objField_1179,Y                          ;80A7E3|801179
-                LDA.W objField_0F71,Y                          ;80A7E6|800F71
+                STA.W objX,Y                          ;80A7E3|801179
+                LDA.W objBoxLeft,Y                          ;80A7E6|800F71
                 SEC                                            ;80A7E9|
                 SBC.B refillTmp32                              ;80A7EA|000032
-                STA.W objField_0F71,Y                          ;80A7EC|800F71
+                STA.W objBoxLeft,Y                          ;80A7EC|800F71
                 LDA.W #$0000                                   ;80A7EF|
-                STA.W ram_13F9,Y                               ;80A7F2|8013F9
+                STA.W objFracX,Y                               ;80A7F2|8013F9
                 RTS                                            ;80A7F5|
 
 
-         .skip: LDA.W objField_0F71,Y                          ;80A7F6|800F71
+         .skip: LDA.W objBoxLeft,Y                          ;80A7F6|800F71
                 STA.B refillTmp32                              ;80A7F9|000032
                 ORA.W #$000F                                   ;80A7FB|
                 INC A                                          ;80A7FE|
-                STA.W objField_0F71,Y                          ;80A7FF|800F71
-                LDA.W objField_0F71,Y                          ;80A802|800F71
+                STA.W objBoxLeft,Y                          ;80A7FF|800F71
+                LDA.W objBoxLeft,Y                          ;80A802|800F71
                 SEC                                            ;80A805|
                 SBC.B refillTmp32                              ;80A806|000032
                 STA.B refillTmp32                              ;80A808|000032
-                LDA.W objField_1179,Y                          ;80A80A|801179
+                LDA.W objX,Y                          ;80A80A|801179
                 CLC                                            ;80A80D|
                 ADC.B refillTmp32                              ;80A80E|000032
-                STA.W objField_1179,Y                          ;80A810|801179
-                LDA.W objField_0F99,Y                          ;80A813|800F99
+                STA.W objX,Y                          ;80A810|801179
+                LDA.W objBoxRight,Y                          ;80A813|800F99
                 CLC                                            ;80A816|
                 ADC.B refillTmp32                              ;80A817|000032
-                STA.W objField_0F99,Y                          ;80A819|800F99
+                STA.W objBoxRight,Y                          ;80A819|800F99
                 LDA.W #$0000                                   ;80A81C|
-                STA.W ram_13F9,Y                               ;80A81F|8013F9
+                STA.W objFracX,Y                               ;80A81F|8013F9
                 RTS                                            ;80A822|
 
 
 ; --------------------------------------------------------
 ;  sub_80A823   [50 ins, returns RTS]
 ;    callers: CollideY_Resolve, CollideY_Slope_Resolve
-;    writes:    refillTmp32, objField_0F21, objField_0F49, objField_11A1, ram_1421
-;    reads:     refillTmp32, objField_0F21, objField_0F49, objField_11A1
+;    writes:    refillTmp32, objBoxTop, objBoxBottom, objY, objFracY
+;    reads:     refillTmp32, objBoxTop, objBoxBottom, objY
 ; --------------------------------------------------------
 sub_80A823:
                 CMP.W #$0000                                   ;80A823|
@@ -7837,55 +7999,55 @@ sub_80A823:
                 BPL .skip2                                     ;80A828|80A867
                 AND.W #$00FF                                   ;80A82A|
                 STA.B refillTmp32                              ;80A82D|000032
-                LDA.W objField_0F49,Y                          ;80A82F|800F49
+                LDA.W objBoxBottom,Y                          ;80A82F|800F49
                 SEC                                            ;80A832|
                 SBC.B refillTmp32                              ;80A833|000032
-                STA.W objField_0F49,Y                          ;80A835|800F49
+                STA.W objBoxBottom,Y                          ;80A835|800F49
                 BRA .cont                                      ;80A838|80A84E
 
 
-         .skip: LDA.W objField_0F49,Y                          ;80A83A|800F49
+         .skip: LDA.W objBoxBottom,Y                          ;80A83A|800F49
                 STA.B refillTmp32                              ;80A83D|000032
                 AND.W #$FFF0                                   ;80A83F|
                 DEC A                                          ;80A842|
-                STA.W objField_0F49,Y                          ;80A843|800F49
+                STA.W objBoxBottom,Y                          ;80A843|800F49
                 LDA.B refillTmp32                              ;80A846|000032
                 SEC                                            ;80A848|
-                SBC.W objField_0F49,Y                          ;80A849|800F49
+                SBC.W objBoxBottom,Y                          ;80A849|800F49
                 STA.B refillTmp32                              ;80A84C|000032
 
-         .cont: LDA.W objField_11A1,Y                          ;80A84E|8011A1
+         .cont: LDA.W objY,Y                          ;80A84E|8011A1
                 SEC                                            ;80A851|
                 SBC.B refillTmp32                              ;80A852|000032
-                STA.W objField_11A1,Y                          ;80A854|8011A1
-                LDA.W objField_0F21,Y                          ;80A857|800F21
+                STA.W objY,Y                          ;80A854|8011A1
+                LDA.W objBoxTop,Y                          ;80A857|800F21
                 SEC                                            ;80A85A|
                 SBC.B refillTmp32                              ;80A85B|000032
-                STA.W objField_0F21,Y                          ;80A85D|800F21
+                STA.W objBoxTop,Y                          ;80A85D|800F21
                 LDA.W #$0000                                   ;80A860|
-                STA.W ram_1421,Y                               ;80A863|801421
+                STA.W objFracY,Y                               ;80A863|801421
                 RTS                                            ;80A866|
 
 
-        .skip2: LDA.W objField_0F21,Y                          ;80A867|800F21
+        .skip2: LDA.W objBoxTop,Y                          ;80A867|800F21
                 STA.B refillTmp32                              ;80A86A|000032
                 ORA.W #$000F                                   ;80A86C|
                 INC A                                          ;80A86F|
-                STA.W objField_0F21,Y                          ;80A870|800F21
-                LDA.W objField_0F21,Y                          ;80A873|800F21
+                STA.W objBoxTop,Y                          ;80A870|800F21
+                LDA.W objBoxTop,Y                          ;80A873|800F21
                 SEC                                            ;80A876|
                 SBC.B refillTmp32                              ;80A877|000032
                 STA.B refillTmp32                              ;80A879|000032
-                LDA.W objField_11A1,Y                          ;80A87B|8011A1
+                LDA.W objY,Y                          ;80A87B|8011A1
                 CLC                                            ;80A87E|
                 ADC.B refillTmp32                              ;80A87F|000032
-                STA.W objField_11A1,Y                          ;80A881|8011A1
-                LDA.W objField_0F49,Y                          ;80A884|800F49
+                STA.W objY,Y                          ;80A881|8011A1
+                LDA.W objBoxBottom,Y                          ;80A884|800F49
                 CLC                                            ;80A887|
                 ADC.B refillTmp32                              ;80A888|000032
-                STA.W objField_0F49,Y                          ;80A88A|800F49
+                STA.W objBoxBottom,Y                          ;80A88A|800F49
                 LDA.W #$0000                                   ;80A88D|
-                STA.W ram_1421,Y                               ;80A890|801421
+                STA.W objFracY,Y                               ;80A890|801421
                 RTS                                            ;80A893|
 
 
@@ -7893,13 +8055,13 @@ sub_80A823:
 ;  sub_80A894   [6 ins, returns ?]
 ;    callers: sub_80A743
 ;    writes:    refillStageIdx
-;    reads:     objField_0F71
+;    reads:     objBoxLeft
 ; --------------------------------------------------------
 sub_80A894:
                 PHX                                            ;80A894|
                 PHY                                            ;80A895|
                 STX.B refillStageIdx                           ;80A896|000034
-                LDX.W objField_0F71,Y                          ;80A898|800F71
+                LDX.W objBoxLeft,Y                          ;80A898|800F71
                 DEX                                            ;80A89B|
                 BRA loc_80A8B8                                 ;80A89C|80A8B8
 
@@ -7908,13 +8070,13 @@ sub_80A894:
 ;  sub_80A89E   [5 ins, returns ?]
 ;    callers: sub_80A78E
 ;    writes:    refillStageIdx
-;    reads:     objField_0F71
+;    reads:     objBoxLeft
 ; --------------------------------------------------------
 sub_80A89E:
                 PHX                                            ;80A89E|
                 PHY                                            ;80A89F|
                 STX.B refillStageIdx                           ;80A8A0|000034
-                LDX.W objField_0F71,Y                          ;80A8A2|800F71
+                LDX.W objBoxLeft,Y                          ;80A8A2|800F71
                 BRA loc_80A8B8                                 ;80A8A5|80A8B8
 
 
@@ -7922,13 +8084,13 @@ sub_80A89E:
 ;  sub_80A8A7   [6 ins, returns ?]
 ;    callers: sub_80A752
 ;    writes:    refillStageIdx
-;    reads:     objField_0F99
+;    reads:     objBoxRight
 ; --------------------------------------------------------
 sub_80A8A7:
                 PHX                                            ;80A8A7|
                 PHY                                            ;80A8A8|
                 STX.B refillStageIdx                           ;80A8A9|000034
-                LDX.W objField_0F99,Y                          ;80A8AB|800F99
+                LDX.W objBoxRight,Y                          ;80A8AB|800F99
                 INX                                            ;80A8AE|
                 BRA loc_80A8B8                                 ;80A8AF|80A8B8
 
@@ -7936,27 +8098,27 @@ sub_80A8A7:
 ; --------------------------------------------------------
 ;  sub_80A8B1   [52 ins, returns RTS]
 ;    callers: sub_80A78E
-;    writes:    refillStageIdx, zp_36, zp_38, ram_03BC
-;    reads:     refillStageIdx, zp_36, zp_38, objField_0F21, objField_0F49, objField_0F99 ...
+;    writes:    refillStageIdx, zp_36, zp_38, hitClass
+;    reads:     refillStageIdx, zp_36, zp_38, objBoxTop, objBoxBottom, objBoxRight ...
 ;    calls:     sub_80A38C, sub_80A919
 ; --------------------------------------------------------
 sub_80A8B1:
                 PHX                                            ;80A8B1|
                 PHY                                            ;80A8B2|
                 STX.B refillStageIdx                           ;80A8B3|000034
-                LDX.W objField_0F99,Y                          ;80A8B5|800F99
+                LDX.W objBoxRight,Y                          ;80A8B5|800F99
 
 loc_80A8B8:
                 STX.B zp_36                                    ;80A8B8|000036
-                LDA.W objField_0F49,Y                          ;80A8BA|800F49
+                LDA.W objBoxBottom,Y                          ;80A8BA|800F49
                 SEC                                            ;80A8BD|
-                SBC.W objField_13A9,Y                          ;80A8BE|8013A9
+                SBC.W objMoveY,Y                          ;80A8BE|8013A9
                 BPL +                                          ;80A8C1|80A8C6
                 LDA.W #$0000                                   ;80A8C3|
 
              +: STA.B zp_38                                    ;80A8C6|000038
                 PHY                                            ;80A8C8|
-                LDX.W objField_1179,Y                          ;80A8C9|801179
+                LDX.W objX,Y                          ;80A8C9|801179
                 TAY                                            ;80A8CC|
                 JSR.W sub_80A38C                               ;80A8CD|80A38C
                 PLY                                            ;80A8D0|
@@ -7965,9 +8127,9 @@ loc_80A8B8:
                 JMP.W sub_80A919                               ;80A8D6|80A919
 
 
-             +: LDA.W objField_0F21,Y                          ;80A8D9|800F21
+             +: LDA.W objBoxTop,Y                          ;80A8D9|800F21
                 SEC                                            ;80A8DC|
-                SBC.W objField_13A9,Y                          ;80A8DD|8013A9
+                SBC.W objMoveY,Y                          ;80A8DD|8013A9
                 BPL +                                          ;80A8E0|80A8E5
                 LDA.W #$0000                                   ;80A8E2|
 
@@ -8000,7 +8162,7 @@ loc_80A8B8:
 
          .skip: REP #$20                                       ;80A90D|
                 AND.W #$00FF                                   ;80A90F|
-                STA.W ram_03BC                                 ;80A912|8003BC
+                STA.W hitClass                                 ;80A912|8003BC
                 PLY                                            ;80A915|
                 PLX                                            ;80A916|
                 SEC                                            ;80A917|
@@ -8022,13 +8184,13 @@ sub_80A919:
 ;  sub_80A91D   [6 ins, returns ?]
 ;    callers: sub_80A761
 ;    writes:    refillStageIdx
-;    reads:     objField_0F21
+;    reads:     objBoxTop
 ; --------------------------------------------------------
 sub_80A91D:
                 PHX                                            ;80A91D|
                 PHY                                            ;80A91E|
                 STX.B refillStageIdx                           ;80A91F|000034
-                LDX.W objField_0F21,Y                          ;80A921|800F21
+                LDX.W objBoxTop,Y                          ;80A921|800F21
                 DEX                                            ;80A924|
                 BRA loc_80A941                                 ;80A925|80A941
 
@@ -8037,13 +8199,13 @@ sub_80A91D:
 ;  sub_80A927   [5 ins, returns ?]
 ;    callers: sub_80A7A9
 ;    writes:    refillStageIdx
-;    reads:     objField_0F21
+;    reads:     objBoxTop
 ; --------------------------------------------------------
 sub_80A927:
                 PHX                                            ;80A927|
                 PHY                                            ;80A928|
                 STX.B refillStageIdx                           ;80A929|000034
-                LDX.W objField_0F21,Y                          ;80A92B|800F21
+                LDX.W objBoxTop,Y                          ;80A92B|800F21
                 BRA loc_80A941                                 ;80A92E|80A941
 
 
@@ -8051,13 +8213,13 @@ sub_80A927:
 ;  sub_80A930   [6 ins, returns ?]
 ;    callers: sub_80A770
 ;    writes:    refillStageIdx
-;    reads:     objField_0F49
+;    reads:     objBoxBottom
 ; --------------------------------------------------------
 sub_80A930:
                 PHX                                            ;80A930|
                 PHY                                            ;80A931|
                 STX.B refillStageIdx                           ;80A932|000034
-                LDX.W objField_0F49,Y                          ;80A934|800F49
+                LDX.W objBoxBottom,Y                          ;80A934|800F49
                 INX                                            ;80A937|
                 BRA loc_80A941                                 ;80A938|80A941
 
@@ -8066,24 +8228,24 @@ sub_80A930:
 ;  sub_80A93A   [8 ins, returns ?]
 ;    callers: sub_80A7A9
 ;    writes:    refillStageIdx, zp_36, zp_38
-;    reads:     objField_0F49, objField_0F71, objField_0F99
+;    reads:     objBoxBottom, objBoxLeft, objBoxRight
 ; --------------------------------------------------------
 sub_80A93A:
                 PHX                                            ;80A93A|
                 PHY                                            ;80A93B|
                 STX.B refillStageIdx                           ;80A93C|000034
-                LDX.W objField_0F49,Y                          ;80A93E|800F49
+                LDX.W objBoxBottom,Y                          ;80A93E|800F49
 
 loc_80A941:
                 STX.B zp_36                                    ;80A941|000036
-                LDA.W objField_0F99,Y                          ;80A943|800F99
+                LDA.W objBoxRight,Y                          ;80A943|800F99
                 STA.B zp_38                                    ;80A946|000038
-                LDX.W objField_0F71,Y                          ;80A948|800F71
+                LDX.W objBoxLeft,Y                          ;80A948|800F71
 
 ; --------------------------------------------------------
 ;  sub_80A94B   [31 ins, returns RTS]
 ;    callers: sub_80A982, sub_80A9A3
-;    writes:    ram_03BC
+;    writes:    hitClass
 ;    reads:     refillStageIdx, zp_36, zp_38
 ;    calls:     sub_80A38C
 ; --------------------------------------------------------
@@ -8115,7 +8277,7 @@ sub_80A94B:
 
          .skip: REP #$20                                       ;80A972|
                 AND.W #$00FF                                   ;80A974|
-                STA.W ram_03BC                                 ;80A977|8003BC
+                STA.W hitClass                                 ;80A977|8003BC
                 PLY                                            ;80A97A|
                 PLX                                            ;80A97B|
                 SEC                                            ;80A97C|
@@ -8132,26 +8294,26 @@ sub_80A94B:
 ;  sub_80A982   [16 ins, returns ?]
 ;    callers: sub_80A77F
 ;    writes:    refillStageIdx, zp_36, zp_38
-;    reads:     objField_0F49, objField_0F71, objField_0F99, objField_0FC1
+;    reads:     objBoxBottom, objBoxLeft, objBoxRight, objFlags
 ;    calls:     sub_80A94B
 ; --------------------------------------------------------
 sub_80A982:
                 PHX                                            ;80A982|
                 PHY                                            ;80A983|
                 STX.B refillStageIdx                           ;80A984|000034
-                LDA.W objField_0FC1,Y                          ;80A986|800FC1
+                LDA.W objFlags,Y                          ;80A986|800FC1
                 BIT.W #$0040                                   ;80A989|
                 BNE +                                          ;80A98C|80A994
-                LDX.W objField_0F99,Y                          ;80A98E|800F99
+                LDX.W objBoxRight,Y                          ;80A98E|800F99
                 INX                                            ;80A991|
                 BRA .cont                                      ;80A992|80A998
 
 
-             +: LDX.W objField_0F71,Y                          ;80A994|800F71
+             +: LDX.W objBoxLeft,Y                          ;80A994|800F71
                 DEX                                            ;80A997|
 
          .cont: STX.B zp_38                                    ;80A998|000038
-                LDA.W objField_0F49,Y                          ;80A99A|800F49
+                LDA.W objBoxBottom,Y                          ;80A99A|800F49
                 INC A                                          ;80A99D|
                 STA.B zp_36                                    ;80A99E|000036
                 JMP.W sub_80A94B                               ;80A9A0|80A94B
@@ -8178,12 +8340,12 @@ sub_80A9A3:
 ; --------------------------------------------------------
 ;  sub_80A9B2   [5 ins, returns ?]
 ;    callers: CollideY_Slope_Resolve
-;    reads:     ram_0E09, objField_11A1
+;    reads:     objPrevY, objY
 ; --------------------------------------------------------
 sub_80A9B2:
-                LDA.W objField_11A1,Y                          ;80A9B2|8011A1
+                LDA.W objY,Y                          ;80A9B2|8011A1
                 SEC                                            ;80A9B5|
-                SBC.W ram_0E09,Y                               ;80A9B6|800E09
+                SBC.W objPrevY,Y                               ;80A9B6|800E09
                 BEQ sub_80A9BD                                 ;80A9B9|80A9BD
                 BPL loc_80A9BF                                 ;80A9BB|80A9BF
 
@@ -8213,35 +8375,35 @@ loc_80A9BF:
                 BRA .loop                                      ;80A9D4|80A9C3
 
 
-             +: LDX.W objField_1179,Y                          ;80A9D6|801179
-                LDA.W ram_0E09,Y                               ;80A9D9|800E09
+             +: LDX.W objX,Y                          ;80A9D6|801179
+                LDA.W objPrevY,Y                               ;80A9D9|800E09
                 SEC                                            ;80A9DC|
-                SBC.W objField_11A1,Y                          ;80A9DD|8011A1
+                SBC.W objY,Y                          ;80A9DD|8011A1
                 CLC                                            ;80A9E0|
-                ADC.W objField_0F49,Y                          ;80A9E1|800F49
+                ADC.W objBoxBottom,Y                          ;80A9E1|800F49
                 TAY                                            ;80A9E4|
                 JSR.W sub_80A38C                               ;80A9E5|80A38C
                 CMP.W #$0030                                   ;80A9E8|
                 BCC .skip2                                     ;80A9EB|80AA24
                 STA.B zp_3A                                    ;80A9ED|00003A
                 LDY.B zp_6E                                    ;80A9EF|00006E
-                LDA.W objField_0F49,Y                          ;80A9F1|800F49
+                LDA.W objBoxBottom,Y                          ;80A9F1|800F49
                 TAY                                            ;80A9F4|
                 JSR.W sub_80A38C                               ;80A9F5|80A38C
                 CMP.W #$0030                                   ;80A9F8|
                 BCS .skip2                                     ;80A9FB|80AA24
                 LDY.B zp_6E                                    ;80A9FD|00006E
-                LDA.W objField_0F49,Y                          ;80A9FF|800F49
+                LDA.W objBoxBottom,Y                          ;80A9FF|800F49
                 PHA                                            ;80AA02|
                 AND.W #$FFF0                                   ;80AA03|
                 DEC A                                          ;80AA06|
-                STA.W objField_0F49,Y                          ;80AA07|800F49
+                STA.W objBoxBottom,Y                          ;80AA07|800F49
                 LDA.B zp_3A                                    ;80AA0A|00003A
                 JSR.W sub_80B177                               ;80AA0C|80B177
                 BMI .skip                                      ;80AA0F|80AA20
                 STA.B refillTmp32                              ;80AA11|000032
                 PLA                                            ;80AA13|
-                STA.W objField_0F49,Y                          ;80AA14|800F49
+                STA.W objBoxBottom,Y                          ;80AA14|800F49
                 AND.W #$000F                                   ;80AA17|
                 CLC                                            ;80AA1A|
                 ADC.B refillTmp32                              ;80AA1B|000032
@@ -8250,11 +8412,11 @@ loc_80A9BF:
 
 
          .skip: PLA                                            ;80AA20|
-                STA.W objField_0F49,Y                          ;80AA21|800F49
+                STA.W objBoxBottom,Y                          ;80AA21|800F49
 
         .skip2: LDY.B zp_6E                                    ;80AA24|00006E
-                LDX.W objField_1179,Y                          ;80AA26|801179
-                LDA.W objField_0F49,Y                          ;80AA29|800F49
+                LDX.W objX,Y                          ;80AA26|801179
+                LDA.W objBoxBottom,Y                          ;80AA29|800F49
                 TAY                                            ;80AA2C|
                 JSR.W sub_80A38C                               ;80AA2D|80A38C
                 CMP.W #$0030                                   ;80AA30|
@@ -8272,25 +8434,25 @@ loc_80A9BF:
 
         .skip3: LDY.B zp_6E                                    ;80AA45|00006E
                 LDX.B zp_6C                                    ;80AA47|00006C
-                LDA.W objField_0F49,Y                          ;80AA49|800F49
+                LDA.W objBoxBottom,Y                          ;80AA49|800F49
                 SEC                                            ;80AA4C|
-                SBC.W objField_11A1,Y                          ;80AA4D|8011A1
+                SBC.W objY,Y                          ;80AA4D|8011A1
                 CLC                                            ;80AA50|
-                ADC.W ram_0E09,Y                               ;80AA51|800E09
+                ADC.W objPrevY,Y                               ;80AA51|800E09
                 AND.W #$FFF0                                   ;80AA54|
                 STA.B refillTmp32                              ;80AA57|000032
-                LDA.W objField_0F49,Y                          ;80AA59|800F49
+                LDA.W objBoxBottom,Y                          ;80AA59|800F49
                 AND.W #$FFF0                                   ;80AA5C|
                 CMP.B refillTmp32                              ;80AA5F|000032
                 BNE +                                          ;80AA61|80AA66
                 JMP.W sub_80A9BD                               ;80AA63|80A9BD
 
 
-             +: LDX.W objField_0F49,Y                          ;80AA66|800F49
+             +: LDX.W objBoxBottom,Y                          ;80AA66|800F49
                 STX.B zp_36                                    ;80AA69|000036
-                LDA.W objField_0F99,Y                          ;80AA6B|800F99
+                LDA.W objBoxRight,Y                          ;80AA6B|800F99
                 STA.B zp_38                                    ;80AA6E|000038
-                LDX.W objField_0F71,Y                          ;80AA70|800F71
+                LDX.W objBoxLeft,Y                          ;80AA70|800F71
 
         .loop2: LDY.B zp_36                                    ;80AA73|000036
                 JSR.W sub_80A38C                               ;80AA75|80A38C
@@ -8338,7 +8500,7 @@ loc_80A9BF:
 ;  FindObjectOverlapX   [38 ins, returns RTS]
 ;    callers: CollideX_Resolve
 ;    writes:    zp_38, zp_3A
-;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objScriptSrcBank, ram_1219 ...
+;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objActive, objSolidClass ...
 ;    calls:     sub_80AB50, sub_80AB55
 ; --------------------------------------------------------
 
@@ -8359,12 +8521,12 @@ FindObjectOverlapX:
                 STX.B zp_3A                            ;80AAB2|00003A
                 LDX.W #$0000                                   ;80AAB4|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80AAB7|800D91
+         .loop: LDA.W objActive,X                              ;80AAB7|800D91
                 BEQ .skip3                                     ;80AABA|80AAF8
                 CPX.B curObjIdx                                ;80AABC|000042
                 BEQ .skip3                                     ;80AABE|80AAF8
                 STX.B zp_38                                    ;80AAC0|000038
-                LDA.W ram_1219,X                               ;80AAC2|801219
+                LDA.W objSolidClass,X                               ;80AAC2|801219
                 SEP #$20                                       ;80AAC5|
                 LDX.B zp_3A                                    ;80AAC7|00003A
 
@@ -8377,9 +8539,9 @@ FindObjectOverlapX:
 
              +: REP #$20                                       ;80AAD3|
                 LDX.B zp_38                                    ;80AAD5|000038
-                LDA.W ram_1381,Y                               ;80AAD7|801381
+                LDA.W objMoveX,Y                               ;80AAD7|801381
                 SEC                                            ;80AADA|
-                SBC.W ram_1381,X                               ;80AADB|801381
+                SBC.W objMoveX,X                               ;80AADB|801381
                 BEQ .skip3                                     ;80AADE|80AAF8
                 BPL .skip                                      ;80AAE0|80AAEB
                 JSR.W sub_80AB50                               ;80AAE2|80AB50
@@ -8409,19 +8571,19 @@ FindObjectOverlapX:
 ;  FindObjectOverlapX2   [38 ins, returns RTS]
 ;    callers: CollideY_Resolve
 ;    writes:    zp_38, zp_3A
-;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objScriptSrcBank, ram_1219 ...
+;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objActive, objSolidClass ...
 ;    calls:     sub_80AB8F, sub_80AB94
 ; --------------------------------------------------------
 FindObjectOverlapX2:
                 STX.B zp_3A                           ;80AB01|00003A
                 LDX.W #$0000                                   ;80AB03|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80AB06|800D91
+         .loop: LDA.W objActive,X                              ;80AB06|800D91
                 BEQ .skip3                                     ;80AB09|80AB47
                 CPX.B curObjIdx                                ;80AB0B|000042
                 BEQ .skip3                                     ;80AB0D|80AB47
                 STX.B zp_38                                    ;80AB0F|000038
-                LDA.W ram_1219,X                               ;80AB11|801219
+                LDA.W objSolidClass,X                               ;80AB11|801219
                 SEP #$20                                       ;80AB14|
                 LDX.B zp_3A                                    ;80AB16|00003A
 
@@ -8434,9 +8596,9 @@ FindObjectOverlapX2:
 
              +: REP #$20                                       ;80AB22|
                 LDX.B zp_38                                    ;80AB24|000038
-                LDA.W objField_13A9,Y                          ;80AB26|8013A9
+                LDA.W objMoveY,Y                          ;80AB26|8013A9
                 SEC                                            ;80AB29|
-                SBC.W objField_13A9,X                          ;80AB2A|8013A9
+                SBC.W objMoveY,X                          ;80AB2A|8013A9
                 BEQ .skip3                                     ;80AB2D|80AB47
                 BPL .skip                                      ;80AB2F|80AB3A
                 JSR.W sub_80AB8F                               ;80AB31|80AB8F
@@ -8465,10 +8627,10 @@ FindObjectOverlapX2:
 ; --------------------------------------------------------
 ;  sub_80AB50   [2 ins, returns ?]
 ;    callers: FindObjectOverlapX
-;    reads:     objField_0F71
+;    reads:     objBoxLeft
 ; --------------------------------------------------------
 sub_80AB50:
-                LDA.W objField_0F71,Y                          ;80AB50|800F71
+                LDA.W objBoxLeft,Y                          ;80AB50|800F71
                 BRA loc_80AB58                                 ;80AB53|80AB58
 
 
@@ -8476,33 +8638,33 @@ sub_80AB50:
 ;  sub_80AB55   [28 ins, returns RTS]
 ;    callers: FindObjectOverlapX
 ;    writes:    refillTmp32
-;    reads:     refillTmp32, objField_0F21, objField_0F49, objField_0F71, objField_0F99, objField_13A9
+;    reads:     refillTmp32, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight, objMoveY
 ; --------------------------------------------------------
 sub_80AB55:
-                LDA.W objField_0F99,Y                          ;80AB55|800F99
+                LDA.W objBoxRight,Y                          ;80AB55|800F99
 
 loc_80AB58:
-                CMP.W objField_0F71,X                          ;80AB58|800F71
+                CMP.W objBoxLeft,X                          ;80AB58|800F71
                 BCC .skip                                      ;80AB5B|80AB8D
                 DEC A                                          ;80AB5D|
-                CMP.W objField_0F99,X                          ;80AB5E|800F99
+                CMP.W objBoxRight,X                          ;80AB5E|800F99
                 BCS .skip                                      ;80AB61|80AB8D
-                LDA.W objField_0F21,X                          ;80AB63|800F21
+                LDA.W objBoxTop,X                          ;80AB63|800F21
                 SEC                                            ;80AB66|
-                SBC.W objField_13A9,X                          ;80AB67|8013A9
+                SBC.W objMoveY,X                          ;80AB67|8013A9
                 STA.B refillTmp32                              ;80AB6A|000032
-                LDA.W objField_0F49,Y                          ;80AB6C|800F49
+                LDA.W objBoxBottom,Y                          ;80AB6C|800F49
                 SEC                                            ;80AB6F|
-                SBC.W objField_13A9,Y                          ;80AB70|8013A9
+                SBC.W objMoveY,Y                          ;80AB70|8013A9
                 CMP.B refillTmp32                              ;80AB73|000032
                 BCC .skip                                      ;80AB75|80AB8D
-                LDA.W objField_0F21,Y                          ;80AB77|800F21
+                LDA.W objBoxTop,Y                          ;80AB77|800F21
                 SEC                                            ;80AB7A|
-                SBC.W objField_13A9,Y                          ;80AB7B|8013A9
+                SBC.W objMoveY,Y                          ;80AB7B|8013A9
                 STA.B refillTmp32                              ;80AB7E|000032
-                LDA.W objField_0F49,X                          ;80AB80|800F49
+                LDA.W objBoxBottom,X                          ;80AB80|800F49
                 SEC                                            ;80AB83|
-                SBC.W objField_13A9,X                          ;80AB84|8013A9
+                SBC.W objMoveY,X                          ;80AB84|8013A9
                 CMP.B refillTmp32                              ;80AB87|000032
                 BCC .skip                                      ;80AB89|80AB8D
                 SEC                                            ;80AB8B|
@@ -8516,34 +8678,34 @@ loc_80AB58:
 ; --------------------------------------------------------
 ;  sub_80AB8F   [2 ins, returns ?]
 ;    callers: FindObjectOverlapX2
-;    reads:     objField_0F21
+;    reads:     objBoxTop
 ; --------------------------------------------------------
 sub_80AB8F:
-                LDA.W objField_0F21,Y                          ;80AB8F|800F21
+                LDA.W objBoxTop,Y                          ;80AB8F|800F21
                 BRA loc_80AB97                                 ;80AB92|80AB97
 
 
 ; --------------------------------------------------------
 ;  sub_80AB94   [18 ins, returns RTS]
 ;    callers: FindObjectOverlapX2
-;    reads:     objField_0F21, objField_0F49, objField_0F71, objField_0F99
+;    reads:     objBoxTop, objBoxBottom, objBoxLeft, objBoxRight
 ; --------------------------------------------------------
 sub_80AB94:
-                LDA.W objField_0F49,Y                          ;80AB94|800F49
+                LDA.W objBoxBottom,Y                          ;80AB94|800F49
 
 loc_80AB97:
-                CMP.W objField_0F21,X                          ;80AB97|800F21
+                CMP.W objBoxTop,X                          ;80AB97|800F21
                 BCC .skip                                      ;80AB9A|80ABB6
                 DEC A                                          ;80AB9C|
-                CMP.W objField_0F49,X                          ;80AB9D|800F49
+                CMP.W objBoxBottom,X                          ;80AB9D|800F49
                 BCS .skip                                      ;80ABA0|80ABB6
-                LDA.W objField_0F99,Y                          ;80ABA2|800F99
+                LDA.W objBoxRight,Y                          ;80ABA2|800F99
                 SEC                                            ;80ABA5|
-                SBC.W objField_0F71,X                          ;80ABA6|800F71
+                SBC.W objBoxLeft,X                          ;80ABA6|800F71
                 BMI .skip                                      ;80ABA9|80ABB6
-                LDA.W objField_0F99,X                          ;80ABAB|800F99
+                LDA.W objBoxRight,X                          ;80ABAB|800F99
                 SEC                                            ;80ABAE|
-                SBC.W objField_0F71,Y                          ;80ABAF|800F71
+                SBC.W objBoxLeft,Y                          ;80ABAF|800F71
                 BMI .skip                                      ;80ABB2|80ABB6
                 SEC                                            ;80ABB4|
                 RTS                                            ;80ABB5|
@@ -8556,106 +8718,106 @@ loc_80AB97:
 ; --------------------------------------------------------
 ;  sub_80ABB8   [42 ins, returns RTS]
 ;    callers: CollideX_Resolve
-;    writes:    refillTmp32, objField_0F71, objField_0F99, objField_1179, ram_13F9
-;    reads:     refillTmp32, objField_0F71, objField_0F99, objField_1179
+;    writes:    refillTmp32, objBoxLeft, objBoxRight, objX, objFracX
+;    reads:     refillTmp32, objBoxLeft, objBoxRight, objX
 ; --------------------------------------------------------
 sub_80ABB8:
                 CMP.W #$0000                                   ;80ABB8|
                 BNE .skip                                      ;80ABBB|80ABE9
-                LDA.W objField_0F99,Y                          ;80ABBD|800F99
+                LDA.W objBoxRight,Y                          ;80ABBD|800F99
                 SEC                                            ;80ABC0|
-                SBC.W objField_0F71,X                          ;80ABC1|800F71
+                SBC.W objBoxLeft,X                          ;80ABC1|800F71
                 INC A                                          ;80ABC4|
                 STA.B refillTmp32                              ;80ABC5|000032
-                LDA.W objField_1179,Y                          ;80ABC7|801179
+                LDA.W objX,Y                          ;80ABC7|801179
                 SEC                                            ;80ABCA|
                 SBC.B refillTmp32                              ;80ABCB|000032
-                STA.W objField_1179,Y                          ;80ABCD|801179
-                LDA.W objField_0F71,Y                          ;80ABD0|800F71
+                STA.W objX,Y                          ;80ABCD|801179
+                LDA.W objBoxLeft,Y                          ;80ABD0|800F71
                 SEC                                            ;80ABD3|
                 SBC.B refillTmp32                              ;80ABD4|000032
-                STA.W objField_0F71,Y                          ;80ABD6|800F71
-                LDA.W objField_0F99,Y                          ;80ABD9|800F99
+                STA.W objBoxLeft,Y                          ;80ABD6|800F71
+                LDA.W objBoxRight,Y                          ;80ABD9|800F99
                 SEC                                            ;80ABDC|
                 SBC.B refillTmp32                              ;80ABDD|000032
-                STA.W objField_0F99,Y                          ;80ABDF|800F99
+                STA.W objBoxRight,Y                          ;80ABDF|800F99
                 LDA.W #$0000                                   ;80ABE2|
-                STA.W ram_13F9,Y                               ;80ABE5|8013F9
+                STA.W objFracX,Y                               ;80ABE5|8013F9
                 RTS                                            ;80ABE8|
 
 
-         .skip: LDA.W objField_0F99,X                          ;80ABE9|800F99
+         .skip: LDA.W objBoxRight,X                          ;80ABE9|800F99
                 SEC                                            ;80ABEC|
-                SBC.W objField_0F71,Y                          ;80ABED|800F71
+                SBC.W objBoxLeft,Y                          ;80ABED|800F71
                 INC A                                          ;80ABF0|
                 STA.B refillTmp32                              ;80ABF1|000032
-                LDA.W objField_1179,Y                          ;80ABF3|801179
+                LDA.W objX,Y                          ;80ABF3|801179
                 CLC                                            ;80ABF6|
                 ADC.B refillTmp32                              ;80ABF7|000032
-                STA.W objField_1179,Y                          ;80ABF9|801179
-                LDA.W objField_0F71,Y                          ;80ABFC|800F71
+                STA.W objX,Y                          ;80ABF9|801179
+                LDA.W objBoxLeft,Y                          ;80ABFC|800F71
                 CLC                                            ;80ABFF|
                 ADC.B refillTmp32                              ;80AC00|000032
-                STA.W objField_0F71,Y                          ;80AC02|800F71
-                LDA.W objField_0F99,Y                          ;80AC05|800F99
+                STA.W objBoxLeft,Y                          ;80AC02|800F71
+                LDA.W objBoxRight,Y                          ;80AC05|800F99
                 CLC                                            ;80AC08|
                 ADC.B refillTmp32                              ;80AC09|000032
-                STA.W objField_0F99,Y                          ;80AC0B|800F99
+                STA.W objBoxRight,Y                          ;80AC0B|800F99
                 LDA.W #$0000                                   ;80AC0E|
-                STA.W ram_13F9,Y                               ;80AC11|8013F9
+                STA.W objFracX,Y                               ;80AC11|8013F9
                 RTS                                            ;80AC14|
 
 
 ; --------------------------------------------------------
 ;  sub_80AC15   [42 ins, returns RTS]
 ;    callers: CollideY_Resolve, CollideY_Slope_Resolve
-;    writes:    refillTmp32, objField_0F21, objField_0F49, objField_11A1, ram_1421
-;    reads:     refillTmp32, objField_0F21, objField_0F49, objField_11A1
+;    writes:    refillTmp32, objBoxTop, objBoxBottom, objY, objFracY
+;    reads:     refillTmp32, objBoxTop, objBoxBottom, objY
 ; --------------------------------------------------------
 sub_80AC15:
                 CMP.W #$0000                                   ;80AC15|
                 BNE .skip                                      ;80AC18|80AC46
-                LDA.W objField_0F49,Y                          ;80AC1A|800F49
+                LDA.W objBoxBottom,Y                          ;80AC1A|800F49
                 SEC                                            ;80AC1D|
-                SBC.W objField_0F21,X                          ;80AC1E|800F21
+                SBC.W objBoxTop,X                          ;80AC1E|800F21
                 INC A                                          ;80AC21|
                 STA.B refillTmp32                              ;80AC22|000032
-                LDA.W objField_11A1,Y                          ;80AC24|8011A1
+                LDA.W objY,Y                          ;80AC24|8011A1
                 SEC                                            ;80AC27|
                 SBC.B refillTmp32                              ;80AC28|000032
-                STA.W objField_11A1,Y                          ;80AC2A|8011A1
-                LDA.W objField_0F21,Y                          ;80AC2D|800F21
+                STA.W objY,Y                          ;80AC2A|8011A1
+                LDA.W objBoxTop,Y                          ;80AC2D|800F21
                 SEC                                            ;80AC30|
                 SBC.B refillTmp32                              ;80AC31|000032
-                STA.W objField_0F21,Y                          ;80AC33|800F21
-                LDA.W objField_0F49,Y                          ;80AC36|800F49
+                STA.W objBoxTop,Y                          ;80AC33|800F21
+                LDA.W objBoxBottom,Y                          ;80AC36|800F49
                 SEC                                            ;80AC39|
                 SBC.B refillTmp32                              ;80AC3A|000032
-                STA.W objField_0F49,Y                          ;80AC3C|800F49
+                STA.W objBoxBottom,Y                          ;80AC3C|800F49
                 LDA.W #$0000                                   ;80AC3F|
-                STA.W ram_1421,Y                               ;80AC42|801421
+                STA.W objFracY,Y                               ;80AC42|801421
                 RTS                                            ;80AC45|
 
 
-         .skip: LDA.W objField_0F49,X                          ;80AC46|800F49
+         .skip: LDA.W objBoxBottom,X                          ;80AC46|800F49
                 SEC                                            ;80AC49|
-                SBC.W objField_0F21,Y                          ;80AC4A|800F21
+                SBC.W objBoxTop,Y                          ;80AC4A|800F21
                 INC A                                          ;80AC4D|
                 STA.B refillTmp32                              ;80AC4E|000032
-                LDA.W objField_11A1,Y                          ;80AC50|8011A1
+                LDA.W objY,Y                          ;80AC50|8011A1
                 CLC                                            ;80AC53|
                 ADC.B refillTmp32                              ;80AC54|000032
-                STA.W objField_11A1,Y                          ;80AC56|8011A1
-                LDA.W objField_0F21,Y                          ;80AC59|800F21
+                STA.W objY,Y                          ;80AC56|8011A1
+                LDA.W objBoxTop,Y                          ;80AC59|800F21
                 CLC                                            ;80AC5C|
                 ADC.B refillTmp32                              ;80AC5D|000032
-                STA.W objField_0F21,Y                          ;80AC5F|800F21
-                LDA.W objField_0F49,Y                          ;80AC62|800F49
+                STA.W objBoxTop,Y                          ;80AC5F|800F21
+                LDA.W objBoxBottom,Y                          ;80AC62|800F49
                 CLC                                            ;80AC65|
                 ADC.B refillTmp32                              ;80AC66|000032
-                STA.W objField_0F49,Y                          ;80AC68|800F49
+                STA.W objBoxBottom,Y                          ;80AC68|800F49
                 LDA.W #$0000                                   ;80AC6B|
-                STA.W ram_1421,Y                               ;80AC6E|801421
+                STA.W objFracY,Y                               ;80AC6E|801421
                 RTS                                            ;80AC71|
 
 
@@ -8663,13 +8825,13 @@ sub_80AC15:
 ;  sub_80AC72   [6 ins, returns ?]
 ;    callers: sub_80A743, Op_SubAcc_TFld
 ;    writes:    refillStageIdx
-;    reads:     objField_0F71
+;    reads:     objBoxLeft
 ; --------------------------------------------------------
 sub_80AC72:
                 PHX                                            ;80AC72|
                 PHY                                            ;80AC73|
                 STX.B refillStageIdx                           ;80AC74|000034
-                LDX.W objField_0F71,Y                          ;80AC76|800F71
+                LDX.W objBoxLeft,Y                          ;80AC76|800F71
                 DEX                                            ;80AC79|
                 BRA loc_80AC84                                 ;80AC7A|80AC84
 
@@ -8684,19 +8846,19 @@ sub_80AC7C:
                 PHX                                            ;80AC7C|
                 PHY                                            ;80AC7D|
                 STX.B refillStageIdx                           ;80AC7E|000034
-                LDX.W objField_0F99,Y                          ;80AC80|800F99
+                LDX.W objBoxRight,Y                          ;80AC80|800F99
                 INX                                            ;80AC83|
 
 loc_80AC84:
                 STX.B zp_36                                    ;80AC84|000036
                 LDX.W #$0000                                   ;80AC86|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80AC89|800D91
+         .loop: LDA.W objActive,X                              ;80AC89|800D91
                 BEQ .skip2                                     ;80AC8C|80ACE2
                 CPX.B curObjIdx                                ;80AC8E|000042
                 BEQ .skip2                                     ;80AC90|80ACE2
                 STX.B zp_3A                                    ;80AC92|00003A
-                LDA.W ram_1219,X                               ;80AC94|801219
+                LDA.W objSolidClass,X                               ;80AC94|801219
                 SEP #$20                                       ;80AC97|
                 LDX.B refillStageIdx                           ;80AC99|000034
 
@@ -8710,26 +8872,26 @@ loc_80AC84:
              +: REP #$20                                       ;80ACA5|
                 LDX.B zp_3A                                    ;80ACA7|00003A
                 LDA.B zp_36                                    ;80ACA9|000036
-                CMP.W objField_0F71,X                          ;80ACAB|800F71
+                CMP.W objBoxLeft,X                          ;80ACAB|800F71
                 BCC .skip2                                     ;80ACAE|80ACE2
                 DEC A                                          ;80ACB0|
-                CMP.W objField_0F99,X                          ;80ACB1|800F99
+                CMP.W objBoxRight,X                          ;80ACB1|800F99
                 BCS .skip2                                     ;80ACB4|80ACE2
-                LDA.W objField_0F49,Y                          ;80ACB6|800F49
+                LDA.W objBoxBottom,Y                          ;80ACB6|800F49
                 SEC                                            ;80ACB9|
-                SBC.W objField_13A9,Y                          ;80ACBA|8013A9
-                CMP.W objField_0F21,X                          ;80ACBD|800F21
+                SBC.W objMoveY,Y                          ;80ACBA|8013A9
+                CMP.W objBoxTop,X                          ;80ACBD|800F21
                 BCC .skip2                                     ;80ACC0|80ACE2
-                LDA.W objField_0F21,Y                          ;80ACC2|800F21
+                LDA.W objBoxTop,Y                          ;80ACC2|800F21
                 SEC                                            ;80ACC5|
-                SBC.W objField_13A9,Y                          ;80ACC6|8013A9
-                CMP.W objField_0F49,X                          ;80ACC9|800F49
+                SBC.W objMoveY,Y                          ;80ACC6|8013A9
+                CMP.W objBoxBottom,X                          ;80ACC9|800F49
                 BEQ +                                          ;80ACCC|80ACD0
                 BCS .skip2                                     ;80ACCE|80ACE2
 
-             +: LDA.W ram_1219,X                               ;80ACD0|801219
-                STA.W ram_03BC                                 ;80ACD3|8003BC
-                STX.W ram_03BE                                 ;80ACD6|8003BE
+             +: LDA.W objSolidClass,X                               ;80ACD0|801219
+                STA.W hitClass                                 ;80ACD3|8003BC
+                STX.W hitObj                                 ;80ACD6|8003BE
                 TXA                                            ;80ACD9|
                 PLY                                            ;80ACDA|
                 PLX                                            ;80ACDB|
@@ -8750,14 +8912,27 @@ loc_80AC84:
                 RTS                                            ;80ACEC|
 
 
+;--------------------------------------------------------------
+;  Op_ScanObjBelow_SetTarget   (object VM op $D0)
+;    operands: u8 type, u16 target
+;    Loop starter like Op_ScanObjAbove_SetTarget but for the row BELOW (objBoxBottom+1) - 'what am I
+;    standing on'.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_ScanObjBelow_SetTarget:
                 LDX.B curObjIdx                                ;80ACED|000042
-                LDA.W objField_0F49,X                          ;80ACEF|800F49
+                LDA.W objBoxBottom,X                          ;80ACEF|800F49
                 INC A                                          ;80ACF2|
                 STA.W ram_03B8                                 ;80ACF3|8003B8
                 BRA loc_80AD08                                 ;80ACF6|80AD08
 
 
+;--------------------------------------------------------------
+;  Op_ScanNextObjAbove   (object VM op $36)
+;    operands: -
+;    Loop continuation for Op_ScanObjAbove_SetTarget.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_ScanNextObjAbove:
                 DEY                                            ;80ACF8|
                 PHY                                            ;80ACF9|
@@ -8765,9 +8940,16 @@ Op_ScanNextObjAbove:
                 BRA loc_80AD70                                 ;80ACFD|80AD70
 
 
+;--------------------------------------------------------------
+;  Op_ScanObjAbove_SetTarget   (object VM op $35)
+;    operands: u8 type, u16 target
+;    Loop starter: CALL target for each object (all slots) with objTouchType == type overlapping the
+;    row above (objBoxTop-1). Sets objTarget.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_ScanObjAbove_SetTarget:
                 LDX.B curObjIdx                                ;80ACFF|000042
-                LDA.W objField_0F21,X                          ;80AD01|800F21
+                LDA.W objBoxTop,X                          ;80AD01|800F21
                 DEC A                                          ;80AD04|
                 STA.W ram_03B8                                 ;80AD05|8003B8
 
@@ -8784,11 +8966,11 @@ loc_80AD08:
                 LDX.W #$0000                                   ;80AD19|
 
 loc_80AD1C:
-                LDA.W objScriptSrcBank,X                              ;80AD1C|800D91
+                LDA.W objActive,X                              ;80AD1C|800D91
                 BEQ loc_80AD70                                 ;80AD1F|80AD70
                 CPX.B curObjIdx                                ;80AD21|000042
                 BEQ loc_80AD70                                 ;80AD23|80AD70
-                LDA.W ram_1219,X                               ;80AD25|801219
+                LDA.W objSolidClass,X                               ;80AD25|801219
                 SEP #$20                                       ;80AD28|
                 LDY.W ram_03B4                                 ;80AD2A|8003B4
 
@@ -8801,17 +8983,17 @@ loc_80AD1C:
 
              +: REP #$20                                       ;80AD37|
                 LDA.W ram_03B8                                 ;80AD39|8003B8
-                CMP.W objField_0F21,X                          ;80AD3C|800F21
+                CMP.W objBoxTop,X                          ;80AD3C|800F21
                 BCC loc_80AD70                                 ;80AD3F|80AD70
                 DEC A                                          ;80AD41|
-                CMP.W objField_0F49,X                          ;80AD42|800F49
+                CMP.W objBoxBottom,X                          ;80AD42|800F49
                 BCS loc_80AD70                                 ;80AD45|80AD70
                 LDY.B curObjIdx                                ;80AD47|000042
-                LDA.W objField_0F99,Y                          ;80AD49|800F99
-                CMP.W objField_0F71,X                          ;80AD4C|800F71
+                LDA.W objBoxRight,Y                          ;80AD49|800F99
+                CMP.W objBoxLeft,X                          ;80AD4C|800F71
                 BCC loc_80AD70                                 ;80AD4F|80AD70
-                LDA.W objField_0F99,X                          ;80AD51|800F99
-                CMP.W objField_0F71,Y                          ;80AD54|800F71
+                LDA.W objBoxRight,X                          ;80AD51|800F99
+                CMP.W objBoxLeft,Y                          ;80AD54|800F71
                 BCC loc_80AD70                                 ;80AD57|80AD70
                 TXA                                            ;80AD59|
                 STA.W ram_03BA                                 ;80AD5A|8003BA
@@ -8837,14 +9019,27 @@ loc_80AD70:
                 RTS                                            ;80AD7B|
 
 
+;--------------------------------------------------------------
+;  Op_ScanPlayerBelow_SetTarget   (object VM op $D1)
+;    operands: u8 type, u16 target
+;    Same as Op_ScanObjBelow_SetTarget, players only.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_ScanPlayerBelow_SetTarget:
                 LDX.B curObjIdx                                ;80AD7C|000042
-                LDA.W objField_0F49,X                          ;80AD7E|800F49
+                LDA.W objBoxBottom,X                          ;80AD7E|800F49
                 INC A                                          ;80AD81|
                 STA.W ram_03B8                                 ;80AD82|8003B8
                 BRA loc_80AD97                                 ;80AD85|80AD97
 
 
+;--------------------------------------------------------------
+;  Op_ScanNextPlayerAbove   (object VM op $2D)
+;    operands: -
+;    Loop continuation for Op_ScanPlayerAbove_SetTarget: resumes the scan after the last hit
+;    (vmObjHit $03BA); when nothing is left, falls through to the next op.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_ScanNextPlayerAbove:
                 DEY                                            ;80AD87|
                 PHY                                            ;80AD88|
@@ -8852,9 +9047,17 @@ Op_ScanNextPlayerAbove:
                 BRA loc_80ADFF                                 ;80AD8C|80ADFF
 
 
+;--------------------------------------------------------------
+;  Op_ScanPlayerAbove_SetTarget   (object VM op $2C)
+;    operands: u8 type, u16 target
+;    Loop starter: CALL target for the first player whose objTouchType == type and whose box overlaps
+;    the row above this object. Sets objTarget = that player; the handler's Return lands on the
+;    following Op_ScanNextPlayerAbove.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_ScanPlayerAbove_SetTarget:
                 LDX.B curObjIdx                                ;80AD8E|000042
-                LDA.W objField_0F21,X                          ;80AD90|800F21
+                LDA.W objBoxTop,X                          ;80AD90|800F21
                 DEC A                                          ;80AD93|
                 STA.W ram_03B8                                 ;80AD94|8003B8
 
@@ -8871,11 +9074,11 @@ loc_80AD97:
                 LDX.W #$0000                                   ;80ADA8|
 
 loc_80ADAB:
-                LDA.W objScriptSrcBank,X                              ;80ADAB|800D91
+                LDA.W objActive,X                              ;80ADAB|800D91
                 BEQ loc_80ADFF                                 ;80ADAE|80ADFF
                 CPX.B curObjIdx                                ;80ADB0|000042
                 BEQ loc_80ADFF                                 ;80ADB2|80ADFF
-                LDA.W ram_1219,X                               ;80ADB4|801219
+                LDA.W objSolidClass,X                               ;80ADB4|801219
                 SEP #$20                                       ;80ADB7|
                 LDY.W ram_03B4                                 ;80ADB9|8003B4
 
@@ -8888,17 +9091,17 @@ loc_80ADAB:
 
              +: REP #$20                                       ;80ADC6|
                 LDA.W ram_03B8                                 ;80ADC8|8003B8
-                CMP.W objField_0F21,X                          ;80ADCB|800F21
+                CMP.W objBoxTop,X                          ;80ADCB|800F21
                 BCC loc_80ADFF                                 ;80ADCE|80ADFF
                 DEC A                                          ;80ADD0|
-                CMP.W objField_0F49,X                          ;80ADD1|800F49
+                CMP.W objBoxBottom,X                          ;80ADD1|800F49
                 BCS loc_80ADFF                                 ;80ADD4|80ADFF
                 LDY.B curObjIdx                                ;80ADD6|000042
-                LDA.W objField_0F99,Y                          ;80ADD8|800F99
-                CMP.W objField_0F71,X                          ;80ADDB|800F71
+                LDA.W objBoxRight,Y                          ;80ADD8|800F99
+                CMP.W objBoxLeft,X                          ;80ADDB|800F71
                 BCC loc_80ADFF                                 ;80ADDE|80ADFF
-                LDA.W objField_0F99,X                          ;80ADE0|800F99
-                CMP.W objField_0F71,Y                          ;80ADE3|800F71
+                LDA.W objBoxRight,X                          ;80ADE0|800F99
+                CMP.W objBoxLeft,Y                          ;80ADE3|800F71
                 BCC loc_80ADFF                                 ;80ADE6|80ADFF
                 TXA                                            ;80ADE8|
                 STA.W ram_03BA                                 ;80ADE9|8003BA
@@ -8928,13 +9131,13 @@ loc_80ADFF:
 ;  FindObjectAtEdgeX   [6 ins, returns ?]
 ;    callers: sub_80A761, Op_SubAcc_TFld
 ;    writes:    refillStageIdx
-;    reads:     objField_0F21
+;    reads:     objBoxTop
 ; --------------------------------------------------------
 FindObjectAtEdgeX:
                 PHX                                     ;80AE0B|
                 PHY                                            ;80AE0C|
                 STX.B refillStageIdx                           ;80AE0D|000034
-                LDX.W objField_0F21,Y                          ;80AE0F|800F21
+                LDX.W objBoxTop,Y                          ;80AE0F|800F21
                 DEX                                            ;80AE12|
                 BRA loc_80AE1D                                 ;80AE13|80AE1D
 
@@ -8942,26 +9145,26 @@ FindObjectAtEdgeX:
 ; --------------------------------------------------------
 ;  FindObjectAtEdgeX_RightEntry   [54 ins, returns RTS]
 ;    callers: sub_80A770, loc_80B051, Op_SubAcc_TFld
-;    writes:    refillStageIdx, zp_36, zp_3A, ram_03BC, ram_03BE
-;    reads:     refillStageIdx, zp_36, zp_3A, curObjIdx, objTableEnd, objScriptSrcBank ...
+;    writes:    refillStageIdx, zp_36, zp_3A, hitClass, hitObj
+;    reads:     refillStageIdx, zp_36, zp_3A, curObjIdx, objTableEnd, objActive ...
 ; --------------------------------------------------------
 FindObjectAtEdgeX_RightEntry:
                 PHX                          ;80AE15|
                 PHY                                            ;80AE16|
                 STX.B refillStageIdx                           ;80AE17|000034
-                LDX.W objField_0F49,Y                          ;80AE19|800F49
+                LDX.W objBoxBottom,Y                          ;80AE19|800F49
                 INX                                            ;80AE1C|
 
 loc_80AE1D:
                 STX.B zp_36                                    ;80AE1D|000036
                 LDX.W #$0000                                   ;80AE1F|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80AE22|800D91
+         .loop: LDA.W objActive,X                              ;80AE22|800D91
                 BEQ .skip2                                     ;80AE25|80AE73
                 CPX.B curObjIdx                                ;80AE27|000042
                 BEQ .skip2                                     ;80AE29|80AE73
                 STX.B zp_3A                                    ;80AE2B|00003A
-                LDA.W ram_1219,X                               ;80AE2D|801219
+                LDA.W objSolidClass,X                               ;80AE2D|801219
                 SEP #$20                                       ;80AE30|
                 LDX.B refillStageIdx                           ;80AE32|000034
 
@@ -8975,22 +9178,22 @@ loc_80AE1D:
              +: REP #$20                                       ;80AE3E|
                 LDX.B zp_3A                                    ;80AE40|00003A
                 LDA.B zp_36                                    ;80AE42|000036
-                CMP.W objField_0F21,X                          ;80AE44|800F21
+                CMP.W objBoxTop,X                          ;80AE44|800F21
                 BCC .skip2                                     ;80AE47|80AE73
                 DEC A                                          ;80AE49|
-                CMP.W objField_0F49,X                          ;80AE4A|800F49
+                CMP.W objBoxBottom,X                          ;80AE4A|800F49
                 BCS .skip2                                     ;80AE4D|80AE73
-                LDA.W objField_0F99,Y                          ;80AE4F|800F99
+                LDA.W objBoxRight,Y                          ;80AE4F|800F99
                 SEC                                            ;80AE52|
-                SBC.W objField_0F71,X                          ;80AE53|800F71
+                SBC.W objBoxLeft,X                          ;80AE53|800F71
                 BMI .skip2                                     ;80AE56|80AE73
-                LDA.W objField_0F99,X                          ;80AE58|800F99
+                LDA.W objBoxRight,X                          ;80AE58|800F99
                 SEC                                            ;80AE5B|
-                SBC.W objField_0F71,Y                          ;80AE5C|800F71
+                SBC.W objBoxLeft,Y                          ;80AE5C|800F71
                 BMI .skip2                                     ;80AE5F|80AE73
-                LDA.W ram_1219,X                               ;80AE61|801219
-                STA.W ram_03BC                                 ;80AE64|8003BC
-                STX.W ram_03BE                                 ;80AE67|8003BE
+                LDA.W objSolidClass,X                               ;80AE61|801219
+                STA.W hitClass                                 ;80AE64|8003BC
+                STX.W hitObj                                 ;80AE67|8003BE
                 TXA                                            ;80AE6A|
                 PLY                                            ;80AE6B|
                 PLX                                            ;80AE6C|
@@ -9014,36 +9217,36 @@ loc_80AE1D:
 ; --------------------------------------------------------
 ;  FindObjectAtEdgeY   [60 ins, returns RTS]
 ;    callers: sub_80A77F
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, ram_03BC, ram_03BE
+;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, hitClass, hitObj
 ;    reads:     refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx, objTableEnd ...
 ; --------------------------------------------------------
 FindObjectAtEdgeY:
                 PHX                                     ;80AE7E|
                 PHY                                            ;80AE7F|
                 STX.B refillStageIdx                           ;80AE80|000034
-                LDA.W objField_0FC1,Y                          ;80AE82|800FC1
+                LDA.W objFlags,Y                          ;80AE82|800FC1
                 BIT.W #$0040                                   ;80AE85|
                 BNE +                                          ;80AE88|80AE90
-                LDX.W objField_0F99,Y                          ;80AE8A|800F99
+                LDX.W objBoxRight,Y                          ;80AE8A|800F99
                 INX                                            ;80AE8D|
                 BRA .cont                                      ;80AE8E|80AE94
 
 
-             +: LDX.W objField_0F71,Y                          ;80AE90|800F71
+             +: LDX.W objBoxLeft,Y                          ;80AE90|800F71
                 DEX                                            ;80AE93|
 
          .cont: STX.B zp_36                                    ;80AE94|000036
-                LDA.W objField_0F49,Y                          ;80AE96|800F49
+                LDA.W objBoxBottom,Y                          ;80AE96|800F49
                 INC A                                          ;80AE99|
                 STA.B zp_38                                    ;80AE9A|000038
                 LDX.W #$0000                                   ;80AE9C|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80AE9F|800D91
+         .loop: LDA.W objActive,X                              ;80AE9F|800D91
                 BEQ .skip2                                     ;80AEA2|80AEEA
                 CPX.B curObjIdx                                ;80AEA4|000042
                 BEQ .skip2                                     ;80AEA6|80AEEA
                 STX.B zp_3A                                    ;80AEA8|00003A
-                LDA.W ram_1219,X                               ;80AEAA|801219
+                LDA.W objSolidClass,X                               ;80AEAA|801219
                 SEP #$20                                       ;80AEAD|
                 LDX.B refillStageIdx                           ;80AEAF|000034
 
@@ -9057,20 +9260,20 @@ FindObjectAtEdgeY:
              +: REP #$20                                       ;80AEBB|
                 LDX.B zp_3A                                    ;80AEBD|00003A
                 LDA.B zp_36                                    ;80AEBF|000036
-                CMP.W objField_0F71,X                          ;80AEC1|800F71
+                CMP.W objBoxLeft,X                          ;80AEC1|800F71
                 BCC .skip2                                     ;80AEC4|80AEEA
                 DEC A                                          ;80AEC6|
-                CMP.W objField_0F99,X                          ;80AEC7|800F99
+                CMP.W objBoxRight,X                          ;80AEC7|800F99
                 BCS .skip2                                     ;80AECA|80AEEA
                 LDA.B zp_38                                    ;80AECC|000038
-                CMP.W objField_0F21,X                          ;80AECE|800F21
+                CMP.W objBoxTop,X                          ;80AECE|800F21
                 BCC .skip2                                     ;80AED1|80AEEA
                 DEC A                                          ;80AED3|
-                CMP.W objField_0F49,X                          ;80AED4|800F49
+                CMP.W objBoxBottom,X                          ;80AED4|800F49
                 BCS .skip2                                     ;80AED7|80AEEA
-                LDA.W ram_1219,X                               ;80AED9|801219
-                STA.W ram_03BC                                 ;80AEDC|8003BC
-                STX.W ram_03BE                                 ;80AEDF|8003BE
+                LDA.W objSolidClass,X                               ;80AED9|801219
+                STA.W hitClass                                 ;80AEDC|8003BC
+                STX.W hitObj                                 ;80AEDF|8003BE
                 PLY                                            ;80AEE2|
                 PLX                                            ;80AEE3|
                 SEC                                            ;80AEE4|
@@ -9093,7 +9296,7 @@ FindObjectAtEdgeY:
 ; --------------------------------------------------------
 ;  sub_80AEF5   [52 ins, returns RTS]
 ;    callers: sub_80A734
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, ram_03BC, ram_03BE
+;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, hitClass, hitObj
 ;    reads:     refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx, zp_6C ...
 ; --------------------------------------------------------
 sub_80AEF5:
@@ -9106,12 +9309,12 @@ sub_80AEF5:
                 STA.B zp_38                                    ;80AEFF|000038
                 LDX.W #$0000                                   ;80AF01|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80AF04|800D91
+         .loop: LDA.W objActive,X                              ;80AF04|800D91
                 BEQ .skip2                                     ;80AF07|80AF4F
                 CPX.B curObjIdx                                ;80AF09|000042
                 BEQ .skip2                                     ;80AF0B|80AF4F
                 STX.B zp_3A                                    ;80AF0D|00003A
-                LDA.W ram_1219,X                               ;80AF0F|801219
+                LDA.W objSolidClass,X                               ;80AF0F|801219
                 SEP #$20                                       ;80AF12|
                 LDX.B refillStageIdx                           ;80AF14|000034
 
@@ -9125,20 +9328,20 @@ sub_80AEF5:
              +: REP #$20                                       ;80AF20|
                 LDX.B zp_3A                                    ;80AF22|00003A
                 LDA.B zp_36                                    ;80AF24|000036
-                CMP.W objField_0F71,X                          ;80AF26|800F71
+                CMP.W objBoxLeft,X                          ;80AF26|800F71
                 BCC .skip2                                     ;80AF29|80AF4F
                 DEC A                                          ;80AF2B|
-                CMP.W objField_0F99,X                          ;80AF2C|800F99
+                CMP.W objBoxRight,X                          ;80AF2C|800F99
                 BCS .skip2                                     ;80AF2F|80AF4F
                 LDA.B zp_38                                    ;80AF31|000038
-                CMP.W objField_0F21,X                          ;80AF33|800F21
+                CMP.W objBoxTop,X                          ;80AF33|800F21
                 BCC .skip2                                     ;80AF36|80AF4F
                 DEC A                                          ;80AF38|
-                CMP.W objField_0F49,X                          ;80AF39|800F49
+                CMP.W objBoxBottom,X                          ;80AF39|800F49
                 BCS .skip2                                     ;80AF3C|80AF4F
-                LDA.W ram_1219,X                               ;80AF3E|801219
-                STA.W ram_03BC                                 ;80AF41|8003BC
-                STX.W ram_03BE                                 ;80AF44|8003BE
+                LDA.W objSolidClass,X                               ;80AF3E|801219
+                STA.W hitClass                                 ;80AF41|8003BC
+                STX.W hitObj                                 ;80AF44|8003BE
                 PLY                                            ;80AF47|
                 PLX                                            ;80AF48|
                 SEC                                            ;80AF49|
@@ -9162,19 +9365,19 @@ sub_80AEF5:
 ;  sub_80AF5A   [34 ins, returns RTS]
 ;    callers: CollideY_Slope_Resolve
 ;    writes:    zp_38, zp_3A
-;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objScriptSrcBank, ram_1219 ...
+;    reads:     zp_38, zp_3A, curObjIdx, objTableEnd, objActive, objSolidClass ...
 ;    calls:     sub_80AFA0
 ; --------------------------------------------------------
 sub_80AF5A:
                 STX.B zp_3A                                    ;80AF5A|00003A
                 LDX.W #$0000                                   ;80AF5C|
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80AF5F|800D91
+         .loop: LDA.W objActive,X                              ;80AF5F|800D91
                 BEQ .skip2                                     ;80AF62|80AF97
                 CPX.B curObjIdx                                ;80AF64|000042
                 BEQ .skip2                                     ;80AF66|80AF97
                 STX.B zp_38                                    ;80AF68|000038
-                LDA.W ram_1219,X                               ;80AF6A|801219
+                LDA.W objSolidClass,X                               ;80AF6A|801219
                 SEP #$20                                       ;80AF6D|
                 LDX.B zp_3A                                    ;80AF6F|00003A
 
@@ -9187,9 +9390,9 @@ sub_80AF5A:
 
              +: REP #$20                                       ;80AF7B|
                 LDX.B zp_38                                    ;80AF7D|000038
-                LDA.W objField_13A9,Y                          ;80AF7F|8013A9
+                LDA.W objMoveY,Y                          ;80AF7F|8013A9
                 SEC                                            ;80AF82|
-                SBC.W objField_13A9,X                          ;80AF83|8013A9
+                SBC.W objMoveY,X                          ;80AF83|8013A9
                 BEQ .skip2                                     ;80AF86|80AF97
                 BMI .skip2                                     ;80AF88|80AF97
                 JSR.W sub_80AFA0                               ;80AF8A|80AFA0
@@ -9213,27 +9416,27 @@ sub_80AF5A:
 ;  sub_80AFA0   [55 ins, returns RTS]
 ;    callers: sub_80AF5A
 ;    writes:    refillTmp32, refillStageIdx, zp_36
-;    reads:     refillTmp32, refillStageIdx, zp_36, ram_0E09, objField_0F21, objField_0F49 ...
+;    reads:     refillTmp32, refillStageIdx, zp_36, objPrevY, objBoxTop, objBoxBottom ...
 ; --------------------------------------------------------
 sub_80AFA0:
-                LDA.W objField_0F99,Y                          ;80AFA0|800F99
+                LDA.W objBoxRight,Y                          ;80AFA0|800F99
                 SEC                                            ;80AFA3|
-                SBC.W objField_0F71,X                          ;80AFA4|800F71
+                SBC.W objBoxLeft,X                          ;80AFA4|800F71
                 BMI .skip3                                     ;80AFA7|80B010
-                LDA.W objField_0F99,X                          ;80AFA9|800F99
+                LDA.W objBoxRight,X                          ;80AFA9|800F99
                 SEC                                            ;80AFAC|
-                SBC.W objField_0F71,Y                          ;80AFAD|800F71
+                SBC.W objBoxLeft,Y                          ;80AFAD|800F71
                 BMI .skip3                                     ;80AFB0|80B010
-                LDA.W objField_0F49,Y                          ;80AFB2|800F49
+                LDA.W objBoxBottom,Y                          ;80AFB2|800F49
                 BPL +                                          ;80AFB5|80AFBA
                 LDA.W #$0000                                   ;80AFB7|
 
              +: STA.B refillTmp32                              ;80AFBA|000032
-                LDA.W objField_0F49,Y                          ;80AFBC|800F49
+                LDA.W objBoxBottom,Y                          ;80AFBC|800F49
                 SEC                                            ;80AFBF|
-                SBC.W objField_11A1,Y                          ;80AFC0|8011A1
+                SBC.W objY,Y                          ;80AFC0|8011A1
                 CLC                                            ;80AFC3|
-                ADC.W ram_0E09,Y                               ;80AFC4|800E09
+                ADC.W objPrevY,Y                               ;80AFC4|800E09
                 BPL +                                          ;80AFC7|80AFCC
                 LDA.W #$0000                                   ;80AFC9|
 
@@ -9249,18 +9452,18 @@ sub_80AFA0:
                 LDA.B refillTmp32                              ;80AFDA|000032
                 STA.B refillStageIdx                           ;80AFDC|000034
 
-         .cont: LDA.W objField_0F21,X                          ;80AFDE|800F21
+         .cont: LDA.W objBoxTop,X                          ;80AFDE|800F21
                 SEC                                            ;80AFE1|
-                SBC.W objField_11A1,X                          ;80AFE2|8011A1
+                SBC.W objY,X                          ;80AFE2|8011A1
                 CLC                                            ;80AFE5|
-                ADC.W ram_0E09,X                               ;80AFE6|800E09
-                CMP.W objField_0F21,X                          ;80AFE9|800F21
+                ADC.W objPrevY,X                               ;80AFE6|800E09
+                CMP.W objBoxTop,X                          ;80AFE9|800F21
                 BCS .skip2                                     ;80AFEC|80AFFF
                 STA.B refillTmp32                              ;80AFEE|000032
                 LDA.B zp_36                                    ;80AFF0|000036
                 CMP.B refillTmp32                              ;80AFF2|000032
                 BCC .skip3                                     ;80AFF4|80B010
-                LDA.W objField_0F21,X                          ;80AFF6|800F21
+                LDA.W objBoxTop,X                          ;80AFF6|800F21
                 CMP.B refillStageIdx                           ;80AFF9|000034
                 BCC .skip3                                     ;80AFFB|80B010
                 SEC                                            ;80AFFD|
@@ -9269,7 +9472,7 @@ sub_80AFA0:
 
         .skip2: STA.B refillTmp32                              ;80AFFF|000032
                 LDA.B zp_36                                    ;80B001|000036
-                CMP.W objField_0F21,X                          ;80B003|800F21
+                CMP.W objBoxTop,X                          ;80B003|800F21
                 BCC .skip3                                     ;80B006|80B010
                 LDA.B refillTmp32                              ;80B008|000032
                 CMP.B refillStageIdx                           ;80B00A|000034
@@ -9285,8 +9488,8 @@ sub_80AFA0:
 ; --------------------------------------------------------
 ;  sub_80B012   [17 ins, returns RTS]
 ;    callers: TouchType_Check, TouchMask_Check
-;    writes:    refillTmp32, ram_1561
-;    reads:     refillTmp32, ram_0390
+;    writes:    refillTmp32, objTouchSlots
+;    reads:     refillTmp32, vmQuerySlot2
 ; --------------------------------------------------------
 sub_80B012:
                 PHY                                            ;80B012|
@@ -9295,14 +9498,14 @@ sub_80B012:
                 ASL A                                          ;80B015|
                 ASL A                                          ;80B016|
                 STA.B refillTmp32                              ;80B017|000032
-                LDA.W ram_0390                                 ;80B019|800390
+                LDA.W vmQuerySlot2                                 ;80B019|800390
                 LSR A                                          ;80B01C|
                 CLC                                            ;80B01D|
                 ADC.B refillTmp32                              ;80B01E|000032
                 TAY                                            ;80B020|
                 SEP #$20                                       ;80B021|
                 TXA                                            ;80B023|
-                STA.W ram_1561,Y                               ;80B024|801561
+                STA.W objTouchSlots,Y                               ;80B024|801561
                 REP #$20                                       ;80B027|
                 PLY                                            ;80B029|
                 RTS                                            ;80B02A|
@@ -9311,8 +9514,8 @@ sub_80B012:
 ; --------------------------------------------------------
 ;  sub_80B02B   [20 ins, returns RTS]
 ;    callers: TouchType_Check, TouchMask_Check
-;    writes:    refillTmp32, objField_0FC1
-;    reads:     refillTmp32, curObjIdx, ram_0390, objField_0FC1, ram_1561
+;    writes:    refillTmp32, objFlags
+;    reads:     refillTmp32, curObjIdx, vmQuerySlot2, objFlags, objTouchSlots
 ; --------------------------------------------------------
 sub_80B02B:
                 PHY                                            ;80B02B|
@@ -9321,22 +9524,28 @@ sub_80B02B:
                 ASL A                                          ;80B02E|
                 ASL A                                          ;80B02F|
                 STA.B refillTmp32                              ;80B030|000032
-                LDA.W ram_0390                                 ;80B032|800390
+                LDA.W vmQuerySlot2                                 ;80B032|800390
                 LSR A                                          ;80B035|
                 CLC                                            ;80B036|
                 ADC.B refillTmp32                              ;80B037|000032
                 TAY                                            ;80B039|
-                LDA.W ram_1561,Y                               ;80B03A|801561
+                LDA.W objTouchSlots,Y                               ;80B03A|801561
                 PLY                                            ;80B03D|
                 AND.W #$00FF                                   ;80B03E|
                 RTS                                            ;80B041|
 
 
+;--------------------------------------------------------------
+;  Op_RequestGroundSnap   (object VM op $4B)
+;    operands: -
+;    objFlags |= $2000: ask loc_80B051 (ground snap pass, run from sub_80B04E each frame) to drop
+;    this object onto the floor.
+;--------------------------------------------------------------
 Op_RequestGroundSnap:
                 LDX.B curObjIdx                                ;80B042|000042
-                LDA.W objField_0FC1,X                          ;80B044|800FC1
+                LDA.W objFlags,X                          ;80B044|800FC1
                 ORA.W #$2000                                   ;80B047|
-                STA.W objField_0FC1,X                          ;80B04A|800FC1
+                STA.W objFlags,X                          ;80B04A|800FC1
                 RTS                                            ;80B04D|
 
 
@@ -9350,32 +9559,32 @@ sub_80B04E:
 ; --------------------------------------------------------
 ;  loc_80B051   [100 ins, returns ?]
 ;    callers: sub_80B16A
-;    writes:    curObjIdx, objField_0FC1
-;    reads:     curObjIdx, objScriptSrcBank, objField_0F49, objField_0FC1, ram_10B1, objField_1179
+;    writes:    curObjIdx, objFlags
+;    reads:     curObjIdx, objActive, objBoxBottom, objFlags, objVelY, objX
 ;    calls:     sub_80A38C, sub_80B177, FindObjectAtEdgeX_RightEntry, sub_80B16A, loc_80B147
 ; --------------------------------------------------------
 loc_80B051:
                 STY.B curObjIdx                                ;80B051|000042
-                LDA.W objScriptSrcBank,Y                              ;80B053|800D91
+                LDA.W objActive,Y                              ;80B053|800D91
                 BNE +                                          ;80B056|80B05B
                 JMP.W sub_80B16A                               ;80B058|80B16A
 
 
-             +: LDA.W objField_0FC1,Y                          ;80B05B|800FC1
+             +: LDA.W objFlags,Y                          ;80B05B|800FC1
                 BIT.W #$2000                                   ;80B05E|
                 BNE +                                          ;80B061|80B066
                 JMP.W sub_80B16A                               ;80B063|80B16A
 
 
              +: AND.W #$DFFF                                   ;80B066|
-                STA.W objField_0FC1,Y                          ;80B069|800FC1
-                LDA.W ram_10B1,Y                               ;80B06C|8010B1
+                STA.W objFlags,Y                          ;80B069|800FC1
+                LDA.W objVelY,Y                               ;80B06C|8010B1
                 BPL +                                          ;80B06F|80B074
                 JMP.W sub_80B16A                               ;80B071|80B16A
 
 
-             +: LDX.W objField_1179,Y                          ;80B074|801179
-                LDA.W objField_0F49,Y                          ;80B077|800F49
+             +: LDX.W objX,Y                          ;80B074|801179
+                LDA.W objBoxBottom,Y                          ;80B077|800F49
                 TAY                                            ;80B07A|
                 JSR.W sub_80A38C                               ;80B07B|80A38C
                 CMP.W #$0004                                   ;80B07E|
@@ -9383,8 +9592,8 @@ loc_80B051:
                 CMP.W #$0001                                   ;80B083|
                 BNE .skip3                                     ;80B086|80B0C4
                 LDY.B curObjIdx                                ;80B088|000042
-                LDX.W objField_1179,Y                          ;80B08A|801179
-                LDA.W objField_0F49,Y                          ;80B08D|800F49
+                LDX.W objX,Y                          ;80B08A|801179
+                LDA.W objBoxBottom,Y                          ;80B08D|800F49
                 SEC                                            ;80B090|
                 SBC.W #$0010                                   ;80B091|
                 TAY                                            ;80B094|
@@ -9399,7 +9608,7 @@ loc_80B051:
                 BNE .skip3                                     ;80B0AA|80B0C4
 
          .skip: LDY.B curObjIdx                                ;80B0AC|000042
-                LDA.W objField_0F49,Y                          ;80B0AE|800F49
+                LDA.W objBoxBottom,Y                          ;80B0AE|800F49
                 AND.W #$000F                                   ;80B0B1|
                 INC A                                          ;80B0B4|
                 JMP.W loc_80B147                               ;80B0B5|80B147
@@ -9422,8 +9631,8 @@ loc_80B051:
 
 
         .skip4: LDY.B curObjIdx                                ;80B0D6|000042
-                LDX.W objField_1179,Y                          ;80B0D8|801179
-                LDA.W objField_0F49,Y                          ;80B0DB|800F49
+                LDX.W objX,Y                          ;80B0D8|801179
+                LDA.W objBoxBottom,Y                          ;80B0DB|800F49
                 TAY                                            ;80B0DE|
                 JSR.W sub_80A38C                               ;80B0DF|80A38C
                 CMP.W #$0030                                   ;80B0E2|
@@ -9434,8 +9643,8 @@ loc_80B051:
 
 
              +: LDY.B curObjIdx                                ;80B0EF|000042
-                LDX.W objField_1179,Y                          ;80B0F1|801179
-                LDA.W objField_0F49,Y                          ;80B0F4|800F49
+                LDX.W objX,Y                          ;80B0F1|801179
+                LDA.W objBoxBottom,Y                          ;80B0F4|800F49
                 TAY                                            ;80B0F7|
                 JSR.W sub_80A38C                               ;80B0F8|80A38C
                 CMP.W #$0000                                   ;80B0FB|
@@ -9464,7 +9673,7 @@ loc_80B051:
                 BNE sub_80B16A                                 ;80B12F|80B16A
 
         .skip6: LDY.B curObjIdx                                ;80B131|000042
-                LDA.W objField_0F49,Y                          ;80B133|800F49
+                LDA.W objBoxBottom,Y                          ;80B133|800F49
                 AND.W #$000F                                   ;80B136|
                 SEC                                            ;80B139|
                 SBC.W #$000F                                   ;80B13A|
@@ -9478,25 +9687,25 @@ loc_80B051:
 ; --------------------------------------------------------
 ;  loc_80B147   [15 ins, returns ?]
 ;    callers: loc_80B051
-;    writes:    refillTmp32, objField_0F21, objField_0F49, objField_11A1, objField_13A9
-;    reads:     refillTmp32, objField_0F21, objField_0F49, objField_11A1
+;    writes:    refillTmp32, objBoxTop, objBoxBottom, objY, objMoveY
+;    reads:     refillTmp32, objBoxTop, objBoxBottom, objY
 ; --------------------------------------------------------
 loc_80B147:
                 STA.B refillTmp32                              ;80B147|000032
-                LDA.W objField_0F21,Y                          ;80B149|800F21
+                LDA.W objBoxTop,Y                          ;80B149|800F21
                 SEC                                            ;80B14C|
                 SBC.B refillTmp32                              ;80B14D|000032
-                STA.W objField_0F21,Y                          ;80B14F|800F21
-                LDA.W objField_11A1,Y                          ;80B152|8011A1
+                STA.W objBoxTop,Y                          ;80B14F|800F21
+                LDA.W objY,Y                          ;80B152|8011A1
                 SEC                                            ;80B155|
                 SBC.B refillTmp32                              ;80B156|000032
-                STA.W objField_11A1,Y                          ;80B158|8011A1
-                LDA.W objField_0F49,Y                          ;80B15B|800F49
+                STA.W objY,Y                          ;80B158|8011A1
+                LDA.W objBoxBottom,Y                          ;80B15B|800F49
                 SEC                                            ;80B15E|
                 SBC.B refillTmp32                              ;80B15F|000032
-                STA.W objField_0F49,Y                          ;80B161|800F49
+                STA.W objBoxBottom,Y                          ;80B161|800F49
                 LDA.W #$0000                                   ;80B164|
-                STA.W objField_13A9,Y                          ;80B167|8013A9
+                STA.W objMoveY,Y                          ;80B167|8013A9
 
 ; --------------------------------------------------------
 ;  sub_80B16A   [7 ins, returns RTS]
@@ -9520,7 +9729,7 @@ sub_80B16A:
 ;  sub_80B177   [18 ins, returns RTS]
 ;    callers: sub_80A9BD, loc_80B051
 ;    writes:    refillTmp32
-;    reads:     refillTmp32, objField_0F49
+;    reads:     refillTmp32, objBoxBottom
 ; --------------------------------------------------------
 sub_80B177:
                 AND.W #$000F                                   ;80B177|
@@ -9536,7 +9745,7 @@ sub_80B177:
                 LDA.W data_80B225,X                            ;80B187|80B225
                 AND.W #$000F                                   ;80B18A|
                 STA.B refillTmp32                              ;80B18D|000032
-                LDA.W objField_0F49,Y                          ;80B18F|800F49
+                LDA.W objBoxBottom,Y                          ;80B18F|800F49
                 AND.W #$000F                                   ;80B192|
                 SEC                                            ;80B195|
                 SBC.B refillTmp32                              ;80B196|000032
@@ -9546,26 +9755,26 @@ sub_80B177:
 ; --------------------------------------------------------
 ;  sub_80B199   [63 ins, returns RTS]
 ;    callers: Op_Goto
-;    reads:     curObjIdx, objField_0F49, objField_0FC1, objField_1179
+;    reads:     curObjIdx, objBoxBottom, objFlags, objX
 ;    calls:     sub_80A38C
 ; --------------------------------------------------------
 sub_80B199:
                 LDY.B curObjIdx                                ;80B199|000042
-                LDA.W objField_0FC1,Y                          ;80B19B|800FC1
+                LDA.W objFlags,Y                          ;80B19B|800FC1
                 BIT.W #$0040                                   ;80B19E|
                 BNE .skip                                      ;80B1A1|80B1AC
-                LDA.W objField_1179,Y                          ;80B1A3|801179
+                LDA.W objX,Y                          ;80B1A3|801179
                 CLC                                            ;80B1A6|
                 ADC.W #$0010                                   ;80B1A7|
                 BRA .cont                                      ;80B1AA|80B1B3
 
 
-         .skip: LDA.W objField_1179,Y                          ;80B1AC|801179
+         .skip: LDA.W objX,Y                          ;80B1AC|801179
                 SEC                                            ;80B1AF|
                 SBC.W #$0010                                   ;80B1B0|
 
          .cont: TAX                                            ;80B1B3|
-                LDA.W objField_0F49,Y                          ;80B1B4|800F49
+                LDA.W objBoxBottom,Y                          ;80B1B4|800F49
                 TAY                                            ;80B1B7|
                 JSR.W sub_80A38C                               ;80B1B8|80A38C
                 CMP.W #$0030                                   ;80B1BB|
@@ -9587,7 +9796,7 @@ sub_80B199:
                 BEQ .skip4                                     ;80B1E0|80B221
 
         .skip2: LDY.B curObjIdx                                ;80B1E2|000042
-                LDA.W objField_0F49,Y                          ;80B1E4|800F49
+                LDA.W objBoxBottom,Y                          ;80B1E4|800F49
                 TAY                                            ;80B1E7|
                 JSR.W sub_80A38C                               ;80B1E8|80A38C
                 CMP.W #$0000                                   ;80B1EB|
@@ -9923,7 +10132,7 @@ sub_80B435:
                 LDA.W ram_0447                                 ;80B435|800447
                 CMP.W ram_044D                                 ;80B438|80044D
                 BNE +                                          ;80B43B|80B445
-                LDA.W objHealth                                 ;80B43D|800FE9
+                LDA.W objArgHp                                 ;80B43D|800FE9
                 CMP.W ram_0441                                 ;80B440|800441
                 BEQ .skip2                                     ;80B443|80B486
 
@@ -9933,7 +10142,7 @@ sub_80B435:
                 INC A                                          ;80B44A|
                 LDY.W #$0003                                   ;80B44B|
                 JSR.W sub_80B3DA                               ;80B44E|80B3DA
-                LDA.W objHealth                                 ;80B451|800FE9
+                LDA.W objArgHp                                 ;80B451|800FE9
                 SEC                                            ;80B454|
                 SBC.W ram_0447                                 ;80B455|800447
                 LDY.W #$0000                                   ;80B458|
@@ -9957,7 +10166,7 @@ sub_80B435:
                 BCC .loop                                      ;80B475|80B45B
                 LDA.W ram_0447                                 ;80B477|800447
                 STA.W ram_044D                                 ;80B47A|80044D
-                LDA.W objHealth                                 ;80B47D|800FE9
+                LDA.W objArgHp                                 ;80B47D|800FE9
                 STA.W ram_0441                                 ;80B480|800441
                 INC.W ram_0455                                 ;80B483|800455
 
@@ -10323,7 +10532,7 @@ sub_80B6ED:
 ;  input_80B6EF   [121 ins, returns RTS]
 ;    callers: input_80B63B
 ;    writes:    inputAux1, ram_0432, ram_0467
-;    reads:     curObjIdx, joy1Pressed, inputAux1, inputAux2, ram_0432, objHealth
+;    reads:     curObjIdx, joy1Pressed, inputAux1, inputAux2, ram_0432, objArgHp
 ;    calls:     sub_80BA65, input_80B834, sub_8088E7, input_80BB41, sub_80B832
 ; --------------------------------------------------------
 input_80B6EF:
@@ -10343,7 +10552,7 @@ input_80B6EF:
                 BPL +                                          ;80B706|80B70B
                 LDY.W #$0004                                   ;80B708|
 
-             +: LDA.W objHealth,Y                               ;80B70B|800FE9
+             +: LDA.W objArgHp,Y                               ;80B70B|800FE9
                 BEQ .loop                                      ;80B70E|80B704
                 TYA                                            ;80B710|
                 CMP.W inputAux1,X                              ;80B711|8003D8
@@ -10371,7 +10580,7 @@ input_80B6EF:
                 BCC +                                          ;80B745|80B74A
                 LDY.W #$0000                                   ;80B747|
 
-             +: LDA.W objHealth,Y                               ;80B74A|800FE9
+             +: LDA.W objArgHp,Y                               ;80B74A|800FE9
                 BEQ .loop2                                     ;80B74D|80B740
                 TYA                                            ;80B74F|
                 CMP.W inputAux1,X                              ;80B750|8003D8
@@ -10476,7 +10685,7 @@ sub_80B832:
 ;  input_80B834   [40 ins, returns RTS]
 ;    callers: vbwait_80B54E, input_80B6EF
 ;    writes:    refillTmp32, ram_046B, ram_046D
-;    reads:     refillTmp32, inputAux1, objHealth, objField_1179, objField_11A1
+;    reads:     refillTmp32, inputAux1, objArgHp, objX, objY
 ; --------------------------------------------------------
 input_80B834:
                 PHX                                            ;80B834|
@@ -10487,19 +10696,19 @@ input_80B834:
                 LDY.W inputAux1,X                              ;80B841|8003D8
                 LDX.W #$0000                                   ;80B844|
 
-         .loop: LDA.W objHealth,X                               ;80B847|800FE9
+         .loop: LDA.W objArgHp,X                               ;80B847|800FE9
                 BEQ .skip                                      ;80B84A|80B87C
-                LDA.W objField_1179,X                          ;80B84C|801179
+                LDA.W objX,X                          ;80B84C|801179
                 SEC                                            ;80B84F|
-                SBC.W objField_1179,Y                          ;80B850|801179
+                SBC.W objX,Y                          ;80B850|801179
                 BPL +                                          ;80B853|80B859
                 EOR.W #$FFFF                                   ;80B855|
                 INC A                                          ;80B858|
 
              +: STA.B refillTmp32                              ;80B859|000032
-                LDA.W objField_11A1,X                          ;80B85B|8011A1
+                LDA.W objY,X                          ;80B85B|8011A1
                 SEC                                            ;80B85E|
-                SBC.W objField_11A1,Y                          ;80B85F|8011A1
+                SBC.W objY,Y                          ;80B85F|8011A1
                 BPL +                                          ;80B862|80B868
                 EOR.W #$FFFF                                   ;80B864|
                 INC A                                          ;80B867|
@@ -10680,7 +10889,7 @@ sub_80B949:
 input_80B965:
                 LDA.W ram_0457                                 ;80B965|800457
                 STA.W ram_045D                                 ;80B968|80045D
-                LDA.W ram_1129                                 ;80B96B|801129
+                LDA.W objTypeId                                 ;80B96B|801129
                 BPL +                                          ;80B96E|80B975
                 LDA.W #$0002                                   ;80B970|
                 BRA .cont                                      ;80B973|80B987
@@ -14250,8 +14459,8 @@ VramColUpload_D:
 ; --------------------------------------------------------
 ;  UpdateAllObjects   [25 ins, returns RTS]
 ;    callers: vbwait_808081, MainLoop_PauseOrMenu, input_80814E, sub_80A0A3
-;    writes:    earlyUpdateCount, ram_0392
-;    reads:     objTableEnd, earlyUpdateCount, earlyUpdateQueue
+;    writes:    newChildCount, vmQueryPass
+;    reads:     objTableEnd, newChildCount, newChildList
 ;    calls:     sub_80DD75, UpdateOneObject
 ; --------------------------------------------------------
 
@@ -14268,26 +14477,26 @@ VramColUpload_D:
 ; ------------------------------------------------------------
 UpdateAllObjects:
                 JSR.W sub_80DD75                         ;80CCB3|80DD75
-                STZ.W earlyUpdateCount                                 ;80CCB6|800384
-                STZ.W ram_0392                                 ;80CCB9|800392
+                STZ.W newChildCount                                 ;80CCB6|800384
+                STZ.W vmQueryPass                                 ;80CCB9|800392
                 LDX.W #$0000                                   ;80CCBC|
 
          .loop: JSR.W UpdateOneObject                          ;80CCBF|80CCE9
-                LDA.W earlyUpdateCount                                 ;80CCC2|800384
+                LDA.W newChildCount                                 ;80CCC2|800384
                 BEQ .skip                                      ;80CCC5|80CCE1
                 PHX                                            ;80CCC7|
                 LDY.W #$0000                                   ;80CCC8|
 
-        .loop2: LDA.W earlyUpdateQueue,Y                               ;80CCCB|800386
+        .loop2: LDA.W newChildList,Y                               ;80CCCB|800386
                 AND.W #$00FF                                   ;80CCCE|
                 TAX                                            ;80CCD1|
                 PHY                                            ;80CCD2|
                 JSR.W UpdateOneObject                          ;80CCD3|80CCE9
                 PLY                                            ;80CCD6|
                 INY                                            ;80CCD7|
-                CPY.W earlyUpdateCount                                 ;80CCD8|800384
+                CPY.W newChildCount                                 ;80CCD8|800384
                 BCC .loop2                                     ;80CCDB|80CCCB
-                STZ.W earlyUpdateCount                                 ;80CCDD|800384
+                STZ.W newChildCount                                 ;80CCDD|800384
                 PLX                                            ;80CCE0|
 
          .skip: INX                                            ;80CCE1|
@@ -14300,12 +14509,12 @@ UpdateAllObjects:
 ; --------------------------------------------------------
 ;  UpdateOneObject   [53 ins, returns RTS]
 ;    callers: UpdateAllObjects
-;    writes:    curObjIdx, scriptPC, scriptPCBank, ram_0390, objScriptPtr
+;    writes:    curObjIdx, scriptPC, scriptPCBank, vmQuerySlot2, objScriptPtr
 ;    reads:     zp_2A, curObjIdx, scriptPC, ram_0331, inputAux1, inputAux2 ...
 ;    calls:     input_80921D, SelectP2Input, GetSpawnRecPtr, ObjVM_OpTable
 ; --------------------------------------------------------
 UpdateOneObject:
-                LDA.W objScriptSrcBank,X                       ;80CCE9|800D91
+                LDA.W objActive,X                           ;80CCE9|800D91
                 BEQ .exit                                      ;80CCEC|80CD59
                 LDA.W ram_19CE                                 ;80CCEE|8019CE
                 AND.W #$00FF                                   ;80CCF1|
@@ -14322,24 +14531,24 @@ UpdateOneObject:
                 BNE .skip                                      ;80CD08|80CD0D
                 JSR.W SelectP2Input                            ;80CD0A|809230
 
-         .skip: LDA.W objField_0FC1,X                          ;80CD0D|800FC1
+         .skip: LDA.W objFlags,X                          ;80CD0D|800FC1
                 AND.W #$1000                                   ;80CD10|
                 BEQ .skip2                                     ;80CD13|80CD1D
-                LDA.W ram_1151,X                               ;80CD15|801151
+                LDA.W objTimer,X                               ;80CD15|801151
                 BEQ .skip2                                     ;80CD18|80CD1D
-                DEC.W ram_1151,X                               ;80CD1A|801151
+                DEC.W objTimer,X                               ;80CD1A|801151
 
         .skip2: STX.B curObjIdx                                ;80CD1D|000042
-                STZ.W ram_0390                                 ;80CD1F|800390
-                LDA.W objScriptSrcBank,X                              ;80CD22|800D91
+                STZ.W vmQuerySlot2                                 ;80CD1F|800390
+                LDA.W objActive,X                              ;80CD22|800D91
                 STA.B scriptPCBank                                    ;80CD25|000072
-                LDA.W objField_0FC1,X                          ;80CD27|800FC1
+                LDA.W objFlags,X                          ;80CD27|800FC1
                 AND.W #$0200                                   ;80CD2A|
                 BNE +                                          ;80CD2D|80CD34
                 LDA.W ram_0331                                 ;80CD2F|800331
                 BEQ .skip3                                     ;80CD32|80CD44
 
-             +: LDA.W ram_1129,X                               ;80CD34|801129
+             +: LDA.W objTypeId,X                               ;80CD34|801129
                 BMI .exit                                      ;80CD37|80CD59
                 JSR.W GetSpawnRecPtr                               ;80CD39|80F11F
                 LDY.W #$0003                                   ;80CD3C|
@@ -14362,6 +14571,13 @@ UpdateOneObject:
          .exit: RTS                                            ;80CD59|
 
 
+;--------------------------------------------------------------
+;  Op_Yield   (object VM op $00)
+;    operands: -
+;    End this object's turn for the frame. Saves scriptPC+Y into objScriptPtr[X] (the PLA drops the
+;    JSR return, so UpdateOneObject returns) - the script resumes right after this op next frame.
+;    Every object main loop has to reach one of these.
+;--------------------------------------------------------------
 Op_Yield:
                 PLA                                            ;80CD5A|
                 TYA                                            ;80CD5B|
@@ -14370,6 +14586,11 @@ Op_Yield:
                 LDX.B curObjIdx                                ;80CD5F|000042
                 STA.W objScriptPtr,X                           ;80CD61|800D69
 
+;--------------------------------------------------------------
+;  Op_Nop   (object VM op $01)
+;    operands: -
+;    No-op (RTS). Exception: RunOneObjectScript treats a $01 byte as 'stop' before it dispatches.
+;--------------------------------------------------------------
 Op_Nop:
                 RTS                                            ;80CD64|
 
@@ -14380,6 +14601,12 @@ Op_Nop:
 ;    writes:    objReturnPtr
 ;    reads:     curObjIdx, scriptPC
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_Call   (object VM op $05)
+;    operands: u16 target
+;    Subroutine call: objReturnPtr[X] = address after this op, then jump. ONE level only - a nested
+;    Call overwrites the return slot. Also the shared 'call taken' tail of the Op_Call* handlers.
+;--------------------------------------------------------------
 Op_Call:
                 TYA                                            ;80CD65|
                 INC A                                          ;80CD66|
@@ -14392,10 +14619,15 @@ Op_Call:
 ; --------------------------------------------------------
 ;  Op_Goto   [228 ins, returns RTS]
 ;    callers: Op_Goto, Op_SubAcc_TFld
-;    writes:    scriptPC, ram_035C, ram_0360, ram_0E59, ram_1381, objField_13A9 ...
+;    writes:    scriptPC, ram_035C, ram_0360, objParent, objMoveX, objMoveY ...
 ;    reads:     curObjIdx, scriptPC, ppuUpdateFlags, ram_035C, ram_0360, objReturnPtr ...
 ;    calls:     DestroyObject, DamageObject, sub_80A761, sub_80A770, sub_80A752, sub_80A743, +4 more
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_Goto   (object VM op $03)
+;    operands: u16 target
+;    scriptPC = target, Y = 0. Also the shared 'branch taken' tail of every Op_Jmp* handler.
+;--------------------------------------------------------------
 Op_Goto:
                 LDA.B [scriptPC],Y                             ;80CD70|000070
                 STA.B scriptPC                                 ;80CD72|000070
@@ -14403,6 +14635,11 @@ Op_Goto:
                 RTS                                            ;80CD77|
 
 
+;--------------------------------------------------------------
+;  Op_Return   (object VM op $06)
+;    operands: -
+;    Return: scriptPC = objReturnPtr[X], Y = 0.
+;--------------------------------------------------------------
 Op_Return:
                 LDX.B curObjIdx                                ;80CD78|000042
                 LDA.W objReturnPtr,X                               ;80CD7A|800DB9
@@ -14411,15 +14648,22 @@ Op_Return:
                 RTS                                            ;80CD82|
 
 
+;--------------------------------------------------------------
+;  Op_AllowRespawn   (object VM op $0D)
+;    operands: -
+;    Clear this object's bit in the placement-consumed bitmap $0360 (16 bytes, one bit per
+;    objPlacementIdx) so the level placement may spawn it again. No effect for script-spawned objects
+;    (objPlacementIdx < 0).
+;--------------------------------------------------------------
 Op_AllowRespawn:
                 LDX.B curObjIdx                                ;80CD83|000042
-                LDA.W ram_1101,X                               ;80CD85|801101
+                LDA.W objPlacementIdx,X                               ;80CD85|801101
                 BMI .exit                                      ;80CD88|80CDA3
                 PHY                                            ;80CD8A|
                 SEP #$30                                       ;80CD8B|
                 AND.B #$07                                     ;80CD8D|
                 TAY                                            ;80CD8F|
-                LDA.W ram_1101,X                               ;80CD90|801101
+                LDA.W objPlacementIdx,X                               ;80CD90|801101
                 LSR A                                          ;80CD93|
                 LSR A                                          ;80CD94|
                 LSR A                                          ;80CD95|
@@ -14433,15 +14677,21 @@ Op_AllowRespawn:
          .exit: RTS                                            ;80CDA3|
 
 
+;--------------------------------------------------------------
+;  Op_BlockRespawn   (object VM op $0E)
+;    operands: -
+;    Set this object's bit in $0360: SpawnObject (sub_80F135) refuses to spawn that placement again
+;    until the scene is reloaded (used for one-shot pickups).
+;--------------------------------------------------------------
 Op_BlockRespawn:
                 LDX.B curObjIdx                                ;80CDA4|000042
-                LDA.W ram_1101,X                               ;80CDA6|801101
+                LDA.W objPlacementIdx,X                               ;80CDA6|801101
                 BMI .exit                                      ;80CDA9|80CDC4
                 PHY                                            ;80CDAB|
                 SEP #$30                                       ;80CDAC|
                 AND.B #$07                                     ;80CDAE|
                 TAY                                            ;80CDB0|
-                LDA.W ram_1101,X                               ;80CDB1|801101
+                LDA.W objPlacementIdx,X                               ;80CDB1|801101
                 LSR A                                          ;80CDB4|
                 LSR A                                          ;80CDB5|
                 LSR A                                          ;80CDB6|
@@ -14455,6 +14705,12 @@ Op_BlockRespawn:
          .exit: RTS                                            ;80CDC4|
 
 
+;--------------------------------------------------------------
+;  Op_RequestReinit   (object VM op $0F)
+;    operands: -
+;    Request a scene reload: ppuUpdateFlags |= 1 (input_80814E then reinitialises using
+;    requestedSceneId $19DD) and end the frame. Does NOT save scriptPC.
+;--------------------------------------------------------------
 Op_RequestReinit:
                 LDA.W #$0001                                   ;80CDC5|
                 TSB.W ppuUpdateFlags                           ;80CDC8|800336
@@ -14463,6 +14719,13 @@ Op_RequestReinit:
                 RTS                                            ;80CDCE|
 
 
+;--------------------------------------------------------------
+;  Op_DestroySelf   (object VM op $10)
+;    operands: -
+;    Destroy this object (DestroyObject): clears its OAM entries, unlinks spawner/child, zeroes
+;    objActive, shrinks objTableEnd, and re-checks its placement if objFlags & $0100. Then PLA - the
+;    script never resumes.
+;--------------------------------------------------------------
 Op_DestroySelf:
                 LDY.B curObjIdx                                ;80CDCF|000042
                 JSR.W DestroyObject                               ;80CDD1|80F095
@@ -14471,6 +14734,12 @@ Op_DestroySelf:
                 RTS                                            ;80CDD7|
 
 
+;--------------------------------------------------------------
+;  Op_DamageSelfFromTarget   (object VM op $11)
+;    operands: -
+;    objArgHp[self] -= objDamage[objTarget], clamped at 0 (DamageObject). Shares its body with
+;    Op_DamageTarget through sub_80DD65.
+;--------------------------------------------------------------
 Op_DamageSelfFromTarget:
                 PHY                                            ;80CDD8|
                 LDX.B curObjIdx                                ;80CDD9|000042
@@ -14480,6 +14749,12 @@ Op_DamageSelfFromTarget:
                 RTS                                            ;80CDE2|
 
 
+;--------------------------------------------------------------
+;  Op_DamageTarget   (object VM op $12)
+;    operands: -
+;    objArgHp[objTarget] -= objDamage[self], clamped at 0. (Table entries $12 and $3A both point
+;    here.)
+;--------------------------------------------------------------
 Op_DamageTarget:
                 PHY                                            ;80CDE3|
                 LDY.B curObjIdx                                ;80CDE4|000042
@@ -14489,6 +14764,12 @@ Op_DamageTarget:
                 RTS                                            ;80CDED|
 
 
+;--------------------------------------------------------------
+;  Op_CallFar   (object VM op $13)
+;    operands: u8 bank, u16 addr
+;    Call native code: pushes a return to $80CE0C (restores DB and Y=$035C) and RTLs into bank:addr.
+;    The routine is entered at addr and must RTL.
+;--------------------------------------------------------------
 Op_CallFar:
                 PHB                                            ;80CDEE|
                 PHK                                            ;80CDEF|
@@ -14518,23 +14799,40 @@ Op_CallFar:
                 RTS                                            ;80CE12|
 
 
+;--------------------------------------------------------------
+;  Op_AttachSelfToObj0   (object VM op $17)
+;    operands: s8 dx, s8 dy
+;    Make this object follow object 0 (Erik) at offset (dx,dy) for THIS FRAME ONLY: sets
+;    objParent[self]=0 and objMoveX/Y = offset; loc_80ED85 consumes it and resets objParent to $FFFF,
+;    so the script must reissue it every frame. dx is mirrored when facing left.
+;--------------------------------------------------------------
 Op_AttachSelfToObj0:
                 LDX.B curObjIdx                                ;80CE13|000042
-                STZ.W ram_0E59,X                               ;80CE15|800E59
+                STZ.W objParent,X                               ;80CE15|800E59
                 BRA loc_80CE2C                                 ;80CE18|80CE2C
 
 
+;--------------------------------------------------------------
+;  Op_AttachObj0ToSelf   (object VM op $1B)
+;    operands: s8 dx, s8 dy
+;    Attach object 0 to this object at (dx,dy) for this frame (platform carry): objParent[0] = self.
+;--------------------------------------------------------------
 Op_AttachObj0ToSelf:
                 LDX.W #$0000                                   ;80CE1A|
                 LDA.B curObjIdx                                ;80CE1D|000042
-                STA.W ram_0E59                                 ;80CE1F|800E59
+                STA.W objParent                                 ;80CE1F|800E59
                 BRA loc_80CE2C                                 ;80CE22|80CE2C
 
 
+;--------------------------------------------------------------
+;  Op_AttachSelfToTarget   (object VM op $18)
+;    operands: s8 dx, s8 dy
+;    Same as Op_AttachSelfToObj0 but follows objTarget.
+;--------------------------------------------------------------
 Op_AttachSelfToTarget:
                 LDX.B curObjIdx                                ;80CE24|000042
                 LDA.W objTarget,X                          ;80CE26|8013D1
-                STA.W ram_0E59,X                               ;80CE29|800E59
+                STA.W objParent,X                               ;80CE29|800E59
 
 loc_80CE2C:
                 LDA.B [scriptPC],Y                             ;80CE2C|000070
@@ -14544,7 +14842,7 @@ loc_80CE2C:
                 BEQ +                                          ;80CE35|80CE3A
                 ORA.W #$FF00                                   ;80CE37|
 
-             +: STA.W ram_1381,X                               ;80CE3A|801381
+             +: STA.W objMoveX,X                               ;80CE3A|801381
                 LDA.B [scriptPC],Y                             ;80CE3D|000070
                 INY                                            ;80CE3F|
                 AND.W #$00FF                                   ;80CE40|
@@ -14552,10 +14850,16 @@ loc_80CE2C:
                 BEQ +                                          ;80CE46|80CE4B
                 ORA.W #$FF00                                   ;80CE48|
 
-             +: STA.W objField_13A9,X                          ;80CE4B|8013A9
+             +: STA.W objMoveY,X                          ;80CE4B|8013A9
                 RTS                                            ;80CE4E|
 
 
+;--------------------------------------------------------------
+;  Op_SetAnimScript   (object VM op $19)
+;    operands: u16 animPtr
+;    objAnimPtr = animPtr, objAnimWait = 1: the animation VM starts running this script on the next
+;    Op_AnimTick.
+;--------------------------------------------------------------
 Op_SetAnimScript:
                 LDA.B [scriptPC],Y                             ;80CE4F|000070
                 INY                                            ;80CE51|
@@ -14567,6 +14871,11 @@ Op_SetAnimScript:
                 RTS                                            ;80CE5E|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAnimIdle   (object VM op $1C)
+;    operands: u16 target
+;    Jump to target if objAnimWait == 0 (the animation script has finished waiting).
+;--------------------------------------------------------------
 Op_JmpIfAnimIdle:
                 LDX.B curObjIdx                                ;80CE5F|000042
                 LDA.W objAnimWait,X                               ;80CE61|801471
@@ -14579,11 +14888,25 @@ Op_JmpIfAnimIdle:
                 RTS                                            ;80CE6B|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBlockedAbove   (object VM op $1E)
+;    operands: u8 classSet, u16 target
+;    Jump if the row just above the object (objBoxTop-1) is blocked: terrain whose tile collision
+;    type is in the list at data_80F537+classSet, or an object whose objSolidClass is in it. (names
+;    of the underlying FindObjectAtEdgeX helpers are swapped: X = above/below.)
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfBlockedAbove:
                 PEA.W $0000                                    ;80CE6C|
                 BRA loc_80CE74                                 ;80CE6F|80CE74
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotBlockedAbove   (object VM op $22)
+;    operands: u8 classSet, u16 target
+;    Jump if the row above is NOT blocked (inverse of Op_JmpIfBlockedAbove).
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfNotBlockedAbove:
                 PEA.W $0002                                    ;80CE71|
 
@@ -14600,11 +14923,23 @@ loc_80CE74:
                 JMP.W (VM_CondBranchTable,X)                        ;80CE83|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBlockedBelow   (object VM op $1F)
+;    operands: u8 classSet, u16 target
+;    Jump if the row just below (objBoxBottom+1) is blocked.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfBlockedBelow:
                 PEA.W $0000                                    ;80CE86|
                 BRA loc_80CE8E                                 ;80CE89|80CE8E
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotBlockedBelow   (object VM op $23)
+;    operands: u8 classSet, u16 target
+;    Jump if the row below is NOT blocked.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfNotBlockedBelow:
                 PEA.W $0002                                    ;80CE8B|
 
@@ -14621,17 +14956,27 @@ loc_80CE8E:
                 JMP.W (VM_CondBranchTable,X)                        ;80CE9D|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBlockedAhead   (object VM op $21)
+;    operands: u8 classSet, u16 target
+;    Jump if AHEAD is blocked: left of the box when objFlags bit6 (facing left) is set, else right.
+;--------------------------------------------------------------
 Op_JmpIfBlockedAhead:
                 PEA.W $0000                                    ;80CEA0|
                 BRA loc_80CEA8                                 ;80CEA3|80CEA8
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotBlockedAhead   (object VM op $25)
+;    operands: u8 classSet, u16 target
+;    Jump if AHEAD is not blocked.
+;--------------------------------------------------------------
 Op_JmpIfNotBlockedAhead:
                 PEA.W $0002                                    ;80CEA5|
 
 loc_80CEA8:
                 LDX.B curObjIdx                                ;80CEA8|000042
-                LDA.W objField_0FC1,X                          ;80CEAA|800FC1
+                LDA.W objFlags,X                          ;80CEAA|800FC1
                 AND.W #$0040                                   ;80CEAD|
                 BNE loc_80CED6                                 ;80CEB0|80CED6
 
@@ -14648,17 +14993,28 @@ loc_80CEB2:
                 JMP.W (VM_CondBranchTable,X)                        ;80CEC1|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBlockedBehind   (object VM op $20)
+;    operands: u8 classSet, u16 target
+;    Jump if BEHIND is blocked: the side opposite the facing direction (right of the box when facing
+;    left).
+;--------------------------------------------------------------
 Op_JmpIfBlockedBehind:
                 PEA.W $0000                                    ;80CEC4|
                 BRA loc_80CECC                                 ;80CEC7|80CECC
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotBlockedBehind   (object VM op $24)
+;    operands: u8 classSet, u16 target
+;    Jump if BEHIND is not blocked.
+;--------------------------------------------------------------
 Op_JmpIfNotBlockedBehind:
                 PEA.W $0002                                    ;80CEC9|
 
 loc_80CECC:
                 LDX.B curObjIdx                                ;80CECC|000042
-                LDA.W objField_0FC1,X                          ;80CECE|800FC1
+                LDA.W objFlags,X                          ;80CECE|800FC1
                 AND.W #$0040                                   ;80CED1|
                 BNE loc_80CEB2                                 ;80CED4|80CEB2
 
@@ -14675,11 +15031,24 @@ loc_80CED6:
                 JMP.W (VM_CondBranchTable,X)                        ;80CEE5|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfSolidAheadBelow   (object VM op $30)
+;    operands: u8 classSet, u16 target
+;    Jump if the tile diagonally ahead-below the feet (x = right+1 or left-1 by facing, y = bottom+1)
+;    is solid (terrain or object). Ground-ahead test.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfSolidAheadBelow:
                 PEA.W $0000                                    ;80CEE8|
                 BRA loc_80CEF0                                 ;80CEEB|80CEF0
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNoSolidAheadBelow   (object VM op $31)
+;    operands: u8 classSet, u16 target
+;    Jump if that ahead-below point is NOT solid: a ledge is ahead.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfNoSolidAheadBelow:
                 PEA.W $0002                                    ;80CEED|
 
@@ -14723,11 +15092,24 @@ VM_CondBranchTable:
                 RTS                                            ;80CF1F|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfEdgeAhead   (object VM op $4E)
+;    operands: u8 classSet, u16 target
+;    Jump if sub_80B199 reports a wall or missing floor ahead (probes x = objX +/- 16 by facing at
+;    feet level and one row below). Low confidence about exact conditions.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfEdgeAhead:
                 PEA.W $0000                                    ;80CF20|
                 BRA loc_80CF28                                 ;80CF23|80CF28
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotEdgeAhead   (object VM op $4F)
+;    operands: u8 classSet, u16 target
+;    Inverse of Op_JmpIfEdgeAhead.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfNotEdgeAhead:
                 PEA.W $0002                                    ;80CF25|
 
@@ -14754,6 +15136,12 @@ color_80CF31:
                 JMP.W SetupCgramGpDma                          ;80CF3D|808667
 
 
+;--------------------------------------------------------------
+;  Op_SetBackdropRGB   (object VM op $3D)
+;    operands: u8 r, u8 g, u8 b
+;    Set the backdrop colour planes ($0344/$0346/$0348), rebuild the darkened palette (hwmath_809011)
+;    and re-queue the CGRAM DMA.
+;--------------------------------------------------------------
 Op_SetBackdropRGB:
                 LDA.B [scriptPC],Y                             ;80CF40|000070
                 INY                                            ;80CF42|
@@ -14771,6 +15159,11 @@ Op_SetBackdropRGB:
                 JMP.W SetupCgramGpDma                          ;80CF5E|808667
 
 
+;--------------------------------------------------------------
+;  Op_SetBackdropRGB2   (object VM op $4C)
+;    operands: u8 r, u8 g, u8 b
+;    Set the second backdrop colour contribution ($034A/$034C/$034E), rebuild the palette.
+;--------------------------------------------------------------
 Op_SetBackdropRGB2:
                 LDA.B [scriptPC],Y                             ;80CF61|000070
                 INY                                            ;80CF63|
@@ -14795,6 +15188,11 @@ Op_SetBackdropRGB2:
 ;    reads:     zp_00, refillTmp32, curObjIdx, scriptPC, vmAcc, oamSrcAttr ...
 ;    calls:     hwmath_809011, VM_GetRandom, SetupCgramGpDma, Op_SubAcc_Fld
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_ClearBackdrop   (object VM op $3E)
+;    operands: -
+;    Clear the backdrop colour planes and rebuild the palette.
+;--------------------------------------------------------------
 Op_ClearBackdrop:
                 STZ.W backdropColorR                           ;80CF82|800344
                 STZ.W backdropColorG                           ;80CF85|800346
@@ -14803,6 +15201,11 @@ Op_ClearBackdrop:
                 JMP.W SetupCgramGpDma                          ;80CF8E|808667
 
 
+;--------------------------------------------------------------
+;  Op_ClearBackdrop2   (object VM op $4D)
+;    operands: -
+;    Clear the second backdrop colour contribution.
+;--------------------------------------------------------------
 Op_ClearBackdrop2:
                 STZ.W backdropColorR2                          ;80CF91|80034A
                 STZ.W backdropColorG2                          ;80CF94|80034C
@@ -14811,6 +15214,12 @@ Op_ClearBackdrop2:
                 JMP.W SetupCgramGpDma                          ;80CF9D|808667
 
 
+;--------------------------------------------------------------
+;  Op_SetDeferredFarCall   (object VM op $39)
+;    operands: u8 bank, u16 addr
+;    Queue a native routine to run in VBlank (deferredFarCallBank/Addr, run by RunDeferredFarCall
+;    through JSL/RTL).
+;--------------------------------------------------------------
 Op_SetDeferredFarCall:
                 STZ.W deferredFarCallAddr                      ;80CFA0|8003AA
                 LDA.B [scriptPC],Y                             ;80CFA3|000070
@@ -14823,11 +15232,16 @@ Op_SetDeferredFarCall:
                 RTS                                            ;80CFB0|
 
 
+;--------------------------------------------------------------
+;  Op_HideSprites   (object VM op $3F)
+;    operands: -
+;    Hide every sprite of this object (oamSrcAttr |= $40 across objOamFirst..objOamEnd).
+;--------------------------------------------------------------
 Op_HideSprites:
                 LDX.B curObjIdx                                ;80CFB1|000042
-                LDA.W ram_14E9,X                               ;80CFB3|8014E9
+                LDA.W objOamEnd,X                               ;80CFB3|8014E9
                 STA.B refillTmp32                              ;80CFB6|000032
-                LDA.W ram_14C1,X                               ;80CFB8|8014C1
+                LDA.W objOamFirst,X                               ;80CFB8|8014C1
                 TAX                                            ;80CFBB|
 
          .loop: LDA.W oamSrcAttr,X                             ;80CFBC|800985
@@ -14839,11 +15253,16 @@ Op_HideSprites:
                 RTS                                            ;80CFCA|
 
 
+;--------------------------------------------------------------
+;  Op_ShowSprites   (object VM op $40)
+;    operands: -
+;    Show every sprite of this object (clears $40 and $20).
+;--------------------------------------------------------------
 Op_ShowSprites:
                 LDX.B curObjIdx                                ;80CFCB|000042
-                LDA.W ram_14E9,X                               ;80CFCD|8014E9
+                LDA.W objOamEnd,X                               ;80CFCD|8014E9
                 STA.B refillTmp32                              ;80CFD0|000032
-                LDA.W ram_14C1,X                               ;80CFD2|8014C1
+                LDA.W objOamFirst,X                               ;80CFD2|8014C1
                 TAX                                            ;80CFD5|
 
          .loop: LDA.W oamSrcAttr,X                             ;80CFD6|800985
@@ -14856,6 +15275,11 @@ Op_ShowSprites:
                 RTS                                            ;80CFE7|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAcc_Imm   (object VM op $51)
+;    operands: u16
+;    vmAcc = the literal.
+;--------------------------------------------------------------
 Op_LoadAcc_Imm:
                 LDA.B [scriptPC],Y                             ;80CFE8|000070
                 STA.B vmAcc                                    ;80CFEA|00008E
@@ -14864,6 +15288,11 @@ Op_LoadAcc_Imm:
                 RTS                                            ;80CFEE|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAcc_Fld   (object VM op $52)
+;    operands: u8 fieldOfs
+;    vmAcc = the field of this object.
+;--------------------------------------------------------------
 Op_LoadAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80CFEF|000070
                 INY                                            ;80CFF1|
@@ -14873,11 +15302,16 @@ Op_LoadAcc_Fld:
                 CLC                                            ;80CFF9|
                 ADC.B curObjIdx                                ;80CFFA|000042
                 TAX                                            ;80CFFC|
-                LDA.W objField_0F21,X                          ;80CFFD|800F21
+                LDA.W objBoxTop,X                          ;80CFFD|800F21
                 STA.B vmAcc                                    ;80D000|00008E
                 RTS                                            ;80D002|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAcc_Ram   (object VM op $53)
+;    operands: u16 addr
+;    vmAcc = the word at bank-0 address.
+;--------------------------------------------------------------
 Op_LoadAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D003|000070
                 INY                                            ;80D005|
@@ -14888,6 +15322,11 @@ Op_LoadAcc_Ram:
                 RTS                                            ;80D00C|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAcc_TFld   (object VM op $54)
+;    operands: u8 fieldOfs
+;    vmAcc = the field of objTarget.
+;--------------------------------------------------------------
 Op_LoadAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D00D|000070
                 INY                                            ;80D00F|
@@ -14898,17 +15337,27 @@ Op_LoadAcc_TFld:
                 LDX.B curObjIdx                                ;80D018|000042
                 ADC.W objTarget,X                          ;80D01A|8013D1
                 TAX                                            ;80D01D|
-                LDA.W objField_0F21,X                          ;80D01E|800F21
+                LDA.W objBoxTop,X                          ;80D01E|800F21
                 STA.B vmAcc                                    ;80D021|00008E
                 RTS                                            ;80D023|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAcc_Rnd   (object VM op $55)
+;    operands: -
+;    vmAcc = a random word (VM_GetRandom).
+;--------------------------------------------------------------
 Op_LoadAcc_Rnd:
                 JSR.W VM_GetRandom                               ;80D024|8091ED
                 STA.B vmAcc                                    ;80D027|00008E
                 RTS                                            ;80D029|
 
 
+;--------------------------------------------------------------
+;  Op_SetTargetFromAcc   (object VM op $96)
+;    operands: -
+;    objTarget[self] = vmAcc: pick the target object by slot number.
+;--------------------------------------------------------------
 Op_SetTargetFromAcc:
                 LDX.B curObjIdx                                ;80D02A|000042
                 LDA.B vmAcc                                    ;80D02C|00008E
@@ -14916,12 +15365,23 @@ Op_SetTargetFromAcc:
                 RTS                                            ;80D031|
 
 
+;--------------------------------------------------------------
+;  Op_StoreAccHi_Fld   (object VM op $BC)
+;    operands: u8 fieldOfs
+;    vmAcc = (vmAcc << 8) & $FF00 (modifies vmAcc), then the field of this object = vmAcc: writes the
+;    low byte of vmAcc into the high byte.
+;--------------------------------------------------------------
 Op_StoreAccHi_Fld:
                 LDA.B vmAcc                                    ;80D032|00008E
                 XBA                                            ;80D034|
                 AND.W #$FF00                                   ;80D035|
                 STA.B vmAcc                                    ;80D038|00008E
 
+;--------------------------------------------------------------
+;  Op_StoreAcc_Fld   (object VM op $56)
+;    operands: u8 fieldOfs
+;    the field of this object = vmAcc.
+;--------------------------------------------------------------
 Op_StoreAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D03A|000070
                 INY                                            ;80D03C|
@@ -14932,16 +15392,27 @@ Op_StoreAcc_Fld:
                 ADC.B curObjIdx                                ;80D045|000042
                 TAX                                            ;80D047|
                 LDA.B vmAcc                                    ;80D048|00008E
-                STA.W objField_0F21,X                          ;80D04A|800F21
+                STA.W objBoxTop,X                          ;80D04A|800F21
                 RTS                                            ;80D04D|
 
 
+;--------------------------------------------------------------
+;  Op_StoreAccHi_Ram   (object VM op $BD)
+;    operands: u16 addr
+;    vmAcc = (vmAcc << 8) & $FF00 (modifies vmAcc), then the word at bank-0 address = vmAcc: writes
+;    the low byte of vmAcc into the high byte.
+;--------------------------------------------------------------
 Op_StoreAccHi_Ram:
                 LDA.B vmAcc                                    ;80D04E|00008E
                 XBA                                            ;80D050|
                 AND.W #$FF00                                   ;80D051|
                 STA.B vmAcc                                    ;80D054|00008E
 
+;--------------------------------------------------------------
+;  Op_StoreAcc_Ram   (object VM op $57)
+;    operands: u16 addr
+;    the word at bank-0 address = vmAcc.
+;--------------------------------------------------------------
 Op_StoreAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D056|000070
                 INY                                            ;80D058|
@@ -14952,12 +15423,23 @@ Op_StoreAcc_Ram:
                 RTS                                            ;80D05F|
 
 
+;--------------------------------------------------------------
+;  Op_StoreAccHi_TFld   (object VM op $BE)
+;    operands: u8 fieldOfs
+;    vmAcc = (vmAcc << 8) & $FF00 (modifies vmAcc), then the field of objTarget = vmAcc: writes the
+;    low byte of vmAcc into the high byte.
+;--------------------------------------------------------------
 Op_StoreAccHi_TFld:
                 LDA.B vmAcc                                    ;80D060|00008E
                 XBA                                            ;80D062|
                 AND.W #$FF00                                   ;80D063|
                 STA.B vmAcc                                    ;80D066|00008E
 
+;--------------------------------------------------------------
+;  Op_StoreAcc_TFld   (object VM op $58)
+;    operands: u8 fieldOfs
+;    the field of objTarget = vmAcc.
+;--------------------------------------------------------------
 Op_StoreAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D068|000070
                 INY                                            ;80D06A|
@@ -14969,13 +15451,19 @@ Op_StoreAcc_TFld:
                 ADC.W objTarget,X                          ;80D075|8013D1
                 TAX                                            ;80D078|
                 LDA.B vmAcc                                    ;80D079|00008E
-                STA.W objField_0F21,X                          ;80D07B|800F21
+                STA.W objBoxTop,X                          ;80D07B|800F21
                 RTS                                            ;80D07E|
 
 
+;--------------------------------------------------------------
+;  Op_AddAcc_Fld_Facing   (object VM op $90)
+;    operands: u8 fieldOfs
+;    the field of this object += vmAcc, or -= when objFlags bit6 (facing left) is set: movement
+;    relative to facing.
+;--------------------------------------------------------------
 Op_AddAcc_Fld_Facing:
                 LDX.B curObjIdx                                ;80D07F|000042
-                LDA.W objField_0FC1,X                          ;80D081|800FC1
+                LDA.W objFlags,X                          ;80D081|800FC1
                 AND.W #$0040                                   ;80D084|
                 BEQ Op_AddAcc_Fld                                 ;80D087|80D08C
                 JMP.W Op_SubAcc_Fld                               ;80D089|80D0F1
@@ -14984,10 +15472,15 @@ Op_AddAcc_Fld_Facing:
 ; --------------------------------------------------------
 ;  Op_AddAcc_Fld   [17 ins, returns RTS]
 ;    callers: Op_AddAcc_TFld
-;    writes:    objField_0F21
-;    reads:     curObjIdx, scriptPC, vmAcc, objField_0F21, objField_0FC1
+;    writes:    objBoxTop
+;    reads:     curObjIdx, scriptPC, vmAcc, objBoxTop, objFlags
 ;    calls:     Op_SubAcc_Ram
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_AddAcc_Fld   (object VM op $59)
+;    operands: u8 fieldOfs
+;    the field of this object += vmAcc.
+;--------------------------------------------------------------
 Op_AddAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D08C|000070
                 INY                                            ;80D08E|
@@ -14997,15 +15490,21 @@ Op_AddAcc_Fld:
                 CLC                                            ;80D096|
                 ADC.B curObjIdx                                ;80D097|000042
                 TAX                                            ;80D099|
-                LDA.W objField_0F21,X                          ;80D09A|800F21
+                LDA.W objBoxTop,X                          ;80D09A|800F21
                 ADC.B vmAcc                                    ;80D09D|00008E
-                STA.W objField_0F21,X                          ;80D09F|800F21
+                STA.W objBoxTop,X                          ;80D09F|800F21
                 RTS                                            ;80D0A2|
 
 
+;--------------------------------------------------------------
+;  Op_AddAcc_Ram_Facing   (object VM op $91)
+;    operands: u16 addr
+;    the word at bank-0 address += vmAcc, or -= when objFlags bit6 (facing left) is set: movement
+;    relative to facing.
+;--------------------------------------------------------------
 Op_AddAcc_Ram_Facing:
                 LDX.B curObjIdx                                ;80D0A3|000042
-                LDA.W objField_0FC1,X                          ;80D0A5|800FC1
+                LDA.W objFlags,X                          ;80D0A5|800FC1
                 AND.W #$0040                                   ;80D0A8|
                 BEQ Op_AddAcc_Ram                                 ;80D0AB|80D0B0
                 JMP.W Op_SubAcc_Ram                               ;80D0AD|80D116
@@ -15015,9 +15514,14 @@ Op_AddAcc_Ram_Facing:
 ;  Op_AddAcc_Ram   [14 ins, returns RTS]
 ;    callers: Op_SubAcc_Fld
 ;    writes:    zp_00
-;    reads:     zp_00, curObjIdx, scriptPC, vmAcc, objField_0FC1
+;    reads:     zp_00, curObjIdx, scriptPC, vmAcc, objFlags
 ;    calls:     Op_SubAcc_TFld
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_AddAcc_Ram   (object VM op $5A)
+;    operands: u16 addr
+;    the word at bank-0 address += vmAcc.
+;--------------------------------------------------------------
 Op_AddAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D0B0|000070
                 INY                                            ;80D0B2|
@@ -15030,9 +15534,15 @@ Op_AddAcc_Ram:
                 RTS                                            ;80D0BC|
 
 
+;--------------------------------------------------------------
+;  Op_AddAcc_TFld_Facing   (object VM op $92)
+;    operands: u8 fieldOfs
+;    the field of objTarget += vmAcc, or -= when objFlags bit6 (facing left) is set: movement
+;    relative to facing.
+;--------------------------------------------------------------
 Op_AddAcc_TFld_Facing:
                 LDX.B curObjIdx                                ;80D0BD|000042
-                LDA.W objField_0FC1,X                          ;80D0BF|800FC1
+                LDA.W objFlags,X                          ;80D0BF|800FC1
                 AND.W #$0040                                   ;80D0C2|
                 BEQ Op_AddAcc_TFld                                 ;80D0C5|80D0CA
                 JMP.W Op_SubAcc_TFld                            ;80D0C7|80D130
@@ -15041,10 +15551,15 @@ Op_AddAcc_TFld_Facing:
 ; --------------------------------------------------------
 ;  Op_AddAcc_TFld   [18 ins, returns RTS]
 ;    callers: Op_SubAcc_Ram
-;    writes:    objField_0F21
-;    reads:     curObjIdx, scriptPC, vmAcc, objField_0F21, objField_0FC1, objTarget
+;    writes:    objBoxTop
+;    reads:     curObjIdx, scriptPC, vmAcc, objBoxTop, objFlags, objTarget
 ;    calls:     Op_AddAcc_Fld
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_AddAcc_TFld   (object VM op $5B)
+;    operands: u8 fieldOfs
+;    the field of objTarget += vmAcc.
+;--------------------------------------------------------------
 Op_AddAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D0CA|000070
                 INY                                            ;80D0CC|
@@ -15055,15 +15570,20 @@ Op_AddAcc_TFld:
                 LDX.B curObjIdx                                ;80D0D5|000042
                 ADC.W objTarget,X                          ;80D0D7|8013D1
                 TAX                                            ;80D0DA|
-                LDA.W objField_0F21,X                          ;80D0DB|800F21
+                LDA.W objBoxTop,X                          ;80D0DB|800F21
                 ADC.B vmAcc                                    ;80D0DE|00008E
-                STA.W objField_0F21,X                          ;80D0E0|800F21
+                STA.W objBoxTop,X                          ;80D0E0|800F21
                 RTS                                            ;80D0E3|
 
 
+;--------------------------------------------------------------
+;  Op_SubAcc_Fld_Facing   (object VM op $93)
+;    operands: u8 fieldOfs
+;    the field of this object -= vmAcc, or += when facing left.
+;--------------------------------------------------------------
 Op_SubAcc_Fld_Facing:
                 LDX.B curObjIdx                                ;80D0E4|000042
-                LDA.W objField_0FC1,X                          ;80D0E6|800FC1
+                LDA.W objFlags,X                          ;80D0E6|800FC1
                 AND.W #$0040                                   ;80D0E9|
                 BEQ Op_SubAcc_Fld                                 ;80D0EC|80D0F1
                 JMP.W Op_AddAcc_Fld                               ;80D0EE|80D08C
@@ -15072,10 +15592,15 @@ Op_SubAcc_Fld_Facing:
 ; --------------------------------------------------------
 ;  Op_SubAcc_Fld   [18 ins, returns RTS]
 ;    callers: Op_ClearBackdrop
-;    writes:    objField_0F21
-;    reads:     curObjIdx, scriptPC, vmAcc, objField_0F21, objField_0FC1
+;    writes:    objBoxTop
+;    reads:     curObjIdx, scriptPC, vmAcc, objBoxTop, objFlags
 ;    calls:     Op_AddAcc_Ram
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_SubAcc_Fld   (object VM op $5C)
+;    operands: u8 fieldOfs
+;    the field of this object -= vmAcc.
+;--------------------------------------------------------------
 Op_SubAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D0F1|000070
                 INY                                            ;80D0F3|
@@ -15085,16 +15610,21 @@ Op_SubAcc_Fld:
                 CLC                                            ;80D0FB|
                 ADC.B curObjIdx                                ;80D0FC|000042
                 TAX                                            ;80D0FE|
-                LDA.W objField_0F21,X                          ;80D0FF|800F21
+                LDA.W objBoxTop,X                          ;80D0FF|800F21
                 SEC                                            ;80D102|
                 SBC.B vmAcc                                    ;80D103|00008E
-                STA.W objField_0F21,X                          ;80D105|800F21
+                STA.W objBoxTop,X                          ;80D105|800F21
                 RTS                                            ;80D108|
 
 
+;--------------------------------------------------------------
+;  Op_SubAcc_Ram_Facing   (object VM op $94)
+;    operands: u16 addr
+;    the word at bank-0 address -= vmAcc, or += when facing left.
+;--------------------------------------------------------------
 Op_SubAcc_Ram_Facing:
                 LDX.B curObjIdx                                ;80D109|000042
-                LDA.W objField_0FC1,X                          ;80D10B|800FC1
+                LDA.W objFlags,X                          ;80D10B|800FC1
                 AND.W #$0040                                   ;80D10E|
                 BEQ Op_SubAcc_Ram                                 ;80D111|80D116
                 JMP.W Op_AddAcc_Ram                               ;80D113|80D0B0
@@ -15104,9 +15634,14 @@ Op_SubAcc_Ram_Facing:
 ;  Op_SubAcc_Ram   [14 ins, returns RTS]
 ;    callers: Op_AddAcc_Fld
 ;    writes:    zp_00
-;    reads:     zp_00, curObjIdx, scriptPC, vmAcc, objField_0FC1
+;    reads:     zp_00, curObjIdx, scriptPC, vmAcc, objFlags
 ;    calls:     Op_AddAcc_TFld
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_SubAcc_Ram   (object VM op $5D)
+;    operands: u16 addr
+;    the word at bank-0 address -= vmAcc.
+;--------------------------------------------------------------
 Op_SubAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D116|000070
                 INY                                            ;80D118|
@@ -15119,9 +15654,14 @@ Op_SubAcc_Ram:
                 RTS                                            ;80D122|
 
 
+;--------------------------------------------------------------
+;  Op_SubAcc_TFld_Facing   (object VM op $95)
+;    operands: u8 fieldOfs
+;    the field of objTarget -= vmAcc, or += when facing left.
+;--------------------------------------------------------------
 Op_SubAcc_TFld_Facing:
                 LDX.B curObjIdx                                ;80D123|000042
-                LDA.W objField_0FC1,X                          ;80D125|800FC1
+                LDA.W objFlags,X                          ;80D125|800FC1
                 AND.W #$0040                                   ;80D128|
                 BEQ Op_SubAcc_TFld                              ;80D12B|80D130
                 JMP.W Op_AddAcc_TFld                               ;80D12D|80D0CA
@@ -15136,6 +15676,11 @@ Op_SubAcc_TFld_Facing:
 ;    reads:     zp_00, refillTmp32, refillStageIdx, zp_36, refillSaveX, refillSaveY ...
 ;    calls:     VM_GetOperandImm, VM_GetOperandFld, VM_GetOperandRam, VM_GetOperandTFld, VM_GetRandom, VM_TestBit_Imm, +26 more
 ; --------------------------------------------------------
+;--------------------------------------------------------------
+;  Op_SubAcc_TFld   (object VM op $5E)
+;    operands: u8 fieldOfs
+;    the field of objTarget -= vmAcc.
+;--------------------------------------------------------------
 Op_SubAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D130|000070
                 INY                                            ;80D132|
@@ -15146,13 +15691,18 @@ Op_SubAcc_TFld:
                 LDX.B curObjIdx                                ;80D13B|000042
                 ADC.W objTarget,X                          ;80D13D|8013D1
                 TAX                                            ;80D140|
-                LDA.W objField_0F21,X                          ;80D141|800F21
+                LDA.W objBoxTop,X                          ;80D141|800F21
                 SEC                                            ;80D144|
                 SBC.B vmAcc                                    ;80D145|00008E
-                STA.W objField_0F21,X                          ;80D147|800F21
+                STA.W objBoxTop,X                          ;80D147|800F21
                 RTS                                            ;80D14A|
 
 
+;--------------------------------------------------------------
+;  Op_AndAcc_Fld   (object VM op $5F)
+;    operands: u8 fieldOfs
+;    the field of this object &= vmAcc.
+;--------------------------------------------------------------
 Op_AndAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D14B|000070
                 INY                                            ;80D14D|
@@ -15162,12 +15712,17 @@ Op_AndAcc_Fld:
                 CLC                                            ;80D155|
                 ADC.B curObjIdx                                ;80D156|000042
                 TAX                                            ;80D158|
-                LDA.W objField_0F21,X                          ;80D159|800F21
+                LDA.W objBoxTop,X                          ;80D159|800F21
                 AND.B vmAcc                                    ;80D15C|00008E
-                STA.W objField_0F21,X                          ;80D15E|800F21
+                STA.W objBoxTop,X                          ;80D15E|800F21
                 RTS                                            ;80D161|
 
 
+;--------------------------------------------------------------
+;  Op_AndAcc_Ram   (object VM op $60)
+;    operands: u16 addr
+;    the word at bank-0 address &= vmAcc.
+;--------------------------------------------------------------
 Op_AndAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D162|000070
                 INY                                            ;80D164|
@@ -15179,6 +15734,11 @@ Op_AndAcc_Ram:
                 RTS                                            ;80D16D|
 
 
+;--------------------------------------------------------------
+;  Op_AndAcc_TFld   (object VM op $61)
+;    operands: u8 fieldOfs
+;    the field of objTarget &= vmAcc.
+;--------------------------------------------------------------
 Op_AndAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D16E|000070
                 INY                                            ;80D170|
@@ -15189,12 +15749,17 @@ Op_AndAcc_TFld:
                 LDX.B curObjIdx                                ;80D179|000042
                 ADC.W objTarget,X                          ;80D17B|8013D1
                 TAX                                            ;80D17E|
-                LDA.W objField_0F21,X                          ;80D17F|800F21
+                LDA.W objBoxTop,X                          ;80D17F|800F21
                 AND.B vmAcc                                    ;80D182|00008E
-                STA.W objField_0F21,X                          ;80D184|800F21
+                STA.W objBoxTop,X                          ;80D184|800F21
                 RTS                                            ;80D187|
 
 
+;--------------------------------------------------------------
+;  Op_OrAcc_Fld   (object VM op $62)
+;    operands: u8 fieldOfs
+;    the field of this object |= vmAcc.
+;--------------------------------------------------------------
 Op_OrAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D188|000070
                 INY                                            ;80D18A|
@@ -15204,12 +15769,17 @@ Op_OrAcc_Fld:
                 CLC                                            ;80D192|
                 ADC.B curObjIdx                                ;80D193|000042
                 TAX                                            ;80D195|
-                LDA.W objField_0F21,X                          ;80D196|800F21
+                LDA.W objBoxTop,X                          ;80D196|800F21
                 ORA.B vmAcc                                    ;80D199|00008E
-                STA.W objField_0F21,X                          ;80D19B|800F21
+                STA.W objBoxTop,X                          ;80D19B|800F21
                 RTS                                            ;80D19E|
 
 
+;--------------------------------------------------------------
+;  Op_OrAcc_Ram   (object VM op $63)
+;    operands: u16 addr
+;    the word at bank-0 address |= vmAcc.
+;--------------------------------------------------------------
 Op_OrAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D19F|000070
                 INY                                            ;80D1A1|
@@ -15221,6 +15791,11 @@ Op_OrAcc_Ram:
                 RTS                                            ;80D1AA|
 
 
+;--------------------------------------------------------------
+;  Op_OrAcc_TFld   (object VM op $64)
+;    operands: u8 fieldOfs
+;    the field of objTarget |= vmAcc.
+;--------------------------------------------------------------
 Op_OrAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D1AB|000070
                 INY                                            ;80D1AD|
@@ -15231,12 +15806,17 @@ Op_OrAcc_TFld:
                 LDX.B curObjIdx                                ;80D1B6|000042
                 ADC.W objTarget,X                          ;80D1B8|8013D1
                 TAX                                            ;80D1BB|
-                LDA.W objField_0F21,X                          ;80D1BC|800F21
+                LDA.W objBoxTop,X                          ;80D1BC|800F21
                 ORA.B vmAcc                                    ;80D1BF|00008E
-                STA.W objField_0F21,X                          ;80D1C1|800F21
+                STA.W objBoxTop,X                          ;80D1C1|800F21
                 RTS                                            ;80D1C4|
 
 
+;--------------------------------------------------------------
+;  Op_XorAcc_Fld   (object VM op $65)
+;    operands: u8 fieldOfs
+;    the field of this object ^= vmAcc.
+;--------------------------------------------------------------
 Op_XorAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D1C5|000070
                 INY                                            ;80D1C7|
@@ -15246,12 +15826,17 @@ Op_XorAcc_Fld:
                 CLC                                            ;80D1CF|
                 ADC.B curObjIdx                                ;80D1D0|000042
                 TAX                                            ;80D1D2|
-                LDA.W objField_0F21,X                          ;80D1D3|800F21
+                LDA.W objBoxTop,X                          ;80D1D3|800F21
                 EOR.B vmAcc                                    ;80D1D6|00008E
-                STA.W objField_0F21,X                          ;80D1D8|800F21
+                STA.W objBoxTop,X                          ;80D1D8|800F21
                 RTS                                            ;80D1DB|
 
 
+;--------------------------------------------------------------
+;  Op_XorAcc_Ram   (object VM op $66)
+;    operands: u16 addr
+;    the word at bank-0 address ^= vmAcc.
+;--------------------------------------------------------------
 Op_XorAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D1DC|000070
                 INY                                            ;80D1DE|
@@ -15263,6 +15848,11 @@ Op_XorAcc_Ram:
                 RTS                                            ;80D1E7|
 
 
+;--------------------------------------------------------------
+;  Op_XorAcc_TFld   (object VM op $67)
+;    operands: u8 fieldOfs
+;    the field of objTarget ^= vmAcc.
+;--------------------------------------------------------------
 Op_XorAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D1E8|000070
                 INY                                            ;80D1EA|
@@ -15273,12 +15863,17 @@ Op_XorAcc_TFld:
                 LDX.B curObjIdx                                ;80D1F3|000042
                 ADC.W objTarget,X                          ;80D1F5|8013D1
                 TAX                                            ;80D1F8|
-                LDA.W objField_0F21,X                          ;80D1F9|800F21
+                LDA.W objBoxTop,X                          ;80D1F9|800F21
                 EOR.B vmAcc                                    ;80D1FC|00008E
-                STA.W objField_0F21,X                          ;80D1FE|800F21
+                STA.W objBoxTop,X                          ;80D1FE|800F21
                 RTS                                            ;80D201|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEu_Imm   (object VM op $68)
+;    operands: u16, u16 target
+;    Jump to target if vmAcc >= the literal (unsigned). Otherwise continue.
+;--------------------------------------------------------------
 Op_JmpIfAccGEu_Imm:
                 JSR.W VM_GetOperandImm                               ;80D202|80DCE9
                 STA.B refillTmp32                              ;80D205|000032
@@ -15293,6 +15888,11 @@ Op_JmpIfAccGEu_Imm:
                 RTS                                            ;80D212|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEu_Fld   (object VM op $69)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc >= the field of this object (unsigned). Otherwise continue.
+;--------------------------------------------------------------
 Op_JmpIfAccGEu_Fld:
                 JSR.W VM_GetOperandFld                               ;80D213|80DCEE
                 STA.B refillTmp32                              ;80D216|000032
@@ -15307,6 +15907,11 @@ Op_JmpIfAccGEu_Fld:
                 RTS                                            ;80D223|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEu_Ram   (object VM op $6A)
+;    operands: u16 addr, u16 target
+;    Jump to target if vmAcc >= the word at bank-0 address (unsigned). Otherwise continue.
+;--------------------------------------------------------------
 Op_JmpIfAccGEu_Ram:
                 JSR.W VM_GetOperandRam                               ;80D224|80DD00
                 STA.B refillTmp32                              ;80D227|000032
@@ -15321,6 +15926,11 @@ Op_JmpIfAccGEu_Ram:
                 RTS                                            ;80D234|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEu_TFld   (object VM op $6B)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc >= the field of objTarget (unsigned). Otherwise continue.
+;--------------------------------------------------------------
 Op_JmpIfAccGEu_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D235|80DD08
                 STA.B refillTmp32                              ;80D238|000032
@@ -15335,6 +15945,11 @@ Op_JmpIfAccGEu_TFld:
                 RTS                                            ;80D245|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEu_Rnd   (object VM op $6C)
+;    operands: -, u16 target
+;    Jump to target if vmAcc >= a random word (VM_GetRandom) (unsigned). Otherwise continue.
+;--------------------------------------------------------------
 Op_JmpIfAccGEu_Rnd:
                 JSR.W VM_GetRandom                               ;80D246|8091ED
                 STA.B refillTmp32                              ;80D249|000032
@@ -15349,6 +15964,11 @@ Op_JmpIfAccGEu_Rnd:
                 RTS                                            ;80D256|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTu_Imm   (object VM op $6D)
+;    operands: u16, u16 target
+;    Jump to target if vmAcc < the literal (unsigned).
+;--------------------------------------------------------------
 Op_JmpIfAccLTu_Imm:
                 JSR.W VM_GetOperandImm                               ;80D257|80DCE9
                 STA.B refillTmp32                              ;80D25A|000032
@@ -15363,6 +15983,11 @@ Op_JmpIfAccLTu_Imm:
                 RTS                                            ;80D267|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTu_Fld   (object VM op $6E)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc < the field of this object (unsigned).
+;--------------------------------------------------------------
 Op_JmpIfAccLTu_Fld:
                 JSR.W VM_GetOperandFld                               ;80D268|80DCEE
                 STA.B refillTmp32                              ;80D26B|000032
@@ -15377,6 +16002,11 @@ Op_JmpIfAccLTu_Fld:
                 RTS                                            ;80D278|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTu_Ram   (object VM op $6F)
+;    operands: u16 addr, u16 target
+;    Jump to target if vmAcc < the word at bank-0 address (unsigned).
+;--------------------------------------------------------------
 Op_JmpIfAccLTu_Ram:
                 JSR.W VM_GetOperandRam                               ;80D279|80DD00
                 STA.B refillTmp32                              ;80D27C|000032
@@ -15391,6 +16021,11 @@ Op_JmpIfAccLTu_Ram:
                 RTS                                            ;80D289|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTu_TFld   (object VM op $70)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc < the field of objTarget (unsigned).
+;--------------------------------------------------------------
 Op_JmpIfAccLTu_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D28A|80DD08
                 STA.B refillTmp32                              ;80D28D|000032
@@ -15405,6 +16040,11 @@ Op_JmpIfAccLTu_TFld:
                 RTS                                            ;80D29A|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTu_Rnd   (object VM op $71)
+;    operands: -, u16 target
+;    Jump to target if vmAcc < a random word (VM_GetRandom) (unsigned).
+;--------------------------------------------------------------
 Op_JmpIfAccLTu_Rnd:
                 JSR.W VM_GetRandom                               ;80D29B|8091ED
                 STA.B refillTmp32                              ;80D29E|000032
@@ -15419,6 +16059,11 @@ Op_JmpIfAccLTu_Rnd:
                 RTS                                            ;80D2AB|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEs_Imm   (object VM op $7C)
+;    operands: u16, u16 target
+;    Jump to target if vmAcc >= the literal (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccGEs_Imm:
                 JSR.W VM_GetOperandImm                               ;80D2AC|80DCE9
                 STA.B refillTmp32                              ;80D2AF|000032
@@ -15440,6 +16085,11 @@ Op_JmpIfAccGEs_Imm:
                 RTS                                            ;80D2C3|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEs_Fld   (object VM op $7D)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc >= the field of this object (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccGEs_Fld:
                 JSR.W VM_GetOperandFld                               ;80D2C4|80DCEE
                 STA.B refillTmp32                              ;80D2C7|000032
@@ -15461,6 +16111,11 @@ Op_JmpIfAccGEs_Fld:
                 RTS                                            ;80D2DB|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEs_Ram   (object VM op $7E)
+;    operands: u16 addr, u16 target
+;    Jump to target if vmAcc >= the word at bank-0 address (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccGEs_Ram:
                 JSR.W VM_GetOperandRam                               ;80D2DC|80DD00
                 STA.B refillTmp32                              ;80D2DF|000032
@@ -15482,6 +16137,11 @@ Op_JmpIfAccGEs_Ram:
                 RTS                                            ;80D2F3|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEs_TFld   (object VM op $7F)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc >= the field of objTarget (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccGEs_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D2F4|80DD08
                 STA.B refillTmp32                              ;80D2F7|000032
@@ -15503,6 +16163,11 @@ Op_JmpIfAccGEs_TFld:
                 RTS                                            ;80D30B|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccGEs_Rnd   (object VM op $80)
+;    operands: -, u16 target
+;    Jump to target if vmAcc >= a random word (VM_GetRandom) (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccGEs_Rnd:
                 JSR.W VM_GetRandom                               ;80D30C|8091ED
                 STA.B refillTmp32                              ;80D30F|000032
@@ -15524,6 +16189,11 @@ Op_JmpIfAccGEs_Rnd:
                 RTS                                            ;80D323|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTs_Imm   (object VM op $81)
+;    operands: u16, u16 target
+;    Jump to target if vmAcc < the literal (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccLTs_Imm:
                 JSR.W VM_GetOperandImm                               ;80D324|80DCE9
                 STA.B refillTmp32                              ;80D327|000032
@@ -15545,6 +16215,11 @@ Op_JmpIfAccLTs_Imm:
                 RTS                                            ;80D33B|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTs_Fld   (object VM op $82)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc < the field of this object (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccLTs_Fld:
                 JSR.W VM_GetOperandFld                               ;80D33C|80DCEE
                 STA.B refillTmp32                              ;80D33F|000032
@@ -15566,6 +16241,11 @@ Op_JmpIfAccLTs_Fld:
                 RTS                                            ;80D353|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTs_Ram   (object VM op $83)
+;    operands: u16 addr, u16 target
+;    Jump to target if vmAcc < the word at bank-0 address (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccLTs_Ram:
                 JSR.W VM_GetOperandRam                               ;80D354|80DD00
                 STA.B refillTmp32                              ;80D357|000032
@@ -15587,6 +16267,11 @@ Op_JmpIfAccLTs_Ram:
                 RTS                                            ;80D36B|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTs_TFld   (object VM op $84)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc < the field of objTarget (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccLTs_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D36C|80DD08
                 STA.B refillTmp32                              ;80D36F|000032
@@ -15608,6 +16293,11 @@ Op_JmpIfAccLTs_TFld:
                 RTS                                            ;80D383|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccLTs_Rnd   (object VM op $85)
+;    operands: -, u16 target
+;    Jump to target if vmAcc < a random word (VM_GetRandom) (signed).
+;--------------------------------------------------------------
 Op_JmpIfAccLTs_Rnd:
                 JSR.W VM_GetRandom                               ;80D384|8091ED
                 STA.B refillTmp32                              ;80D387|000032
@@ -15629,6 +16319,11 @@ Op_JmpIfAccLTs_Rnd:
                 RTS                                            ;80D39B|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccEq_Imm   (object VM op $72)
+;    operands: u16, u16 target
+;    Jump to target if vmAcc == the literal.
+;--------------------------------------------------------------
 Op_JmpIfAccEq_Imm:
                 JSR.W VM_GetOperandImm                               ;80D39C|80DCE9
                 CMP.B vmAcc                                    ;80D39F|00008E
@@ -15641,6 +16336,11 @@ Op_JmpIfAccEq_Imm:
                 RTS                                            ;80D3A8|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccEq_Fld   (object VM op $73)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc == the field of this object.
+;--------------------------------------------------------------
 Op_JmpIfAccEq_Fld:
                 JSR.W VM_GetOperandFld                               ;80D3A9|80DCEE
                 CMP.B vmAcc                                    ;80D3AC|00008E
@@ -15653,6 +16353,11 @@ Op_JmpIfAccEq_Fld:
                 RTS                                            ;80D3B5|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccEq_Ram   (object VM op $74)
+;    operands: u16 addr, u16 target
+;    Jump to target if vmAcc == the word at bank-0 address.
+;--------------------------------------------------------------
 Op_JmpIfAccEq_Ram:
                 JSR.W VM_GetOperandRam                               ;80D3B6|80DD00
                 CMP.B vmAcc                                    ;80D3B9|00008E
@@ -15665,6 +16370,11 @@ Op_JmpIfAccEq_Ram:
                 RTS                                            ;80D3C2|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccEq_TFld   (object VM op $75)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc == the field of objTarget.
+;--------------------------------------------------------------
 Op_JmpIfAccEq_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D3C3|80DD08
                 CMP.B vmAcc                                    ;80D3C6|00008E
@@ -15677,6 +16387,11 @@ Op_JmpIfAccEq_TFld:
                 RTS                                            ;80D3CF|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccEq_Rnd   (object VM op $76)
+;    operands: -, u16 target
+;    Jump to target if vmAcc == a random word (VM_GetRandom).
+;--------------------------------------------------------------
 Op_JmpIfAccEq_Rnd:
                 JSR.W VM_GetRandom                               ;80D3D0|8091ED
                 CMP.B vmAcc                                    ;80D3D3|00008E
@@ -15689,6 +16404,11 @@ Op_JmpIfAccEq_Rnd:
                 RTS                                            ;80D3DC|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccNe_Imm   (object VM op $77)
+;    operands: u16, u16 target
+;    Jump to target if vmAcc != the literal.
+;--------------------------------------------------------------
 Op_JmpIfAccNe_Imm:
                 JSR.W VM_GetOperandImm                               ;80D3DD|80DCE9
                 CMP.B vmAcc                                    ;80D3E0|00008E
@@ -15701,6 +16421,11 @@ Op_JmpIfAccNe_Imm:
                 RTS                                            ;80D3E9|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccNe_Fld   (object VM op $78)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc != the field of this object.
+;--------------------------------------------------------------
 Op_JmpIfAccNe_Fld:
                 JSR.W VM_GetOperandFld                               ;80D3EA|80DCEE
                 CMP.B vmAcc                                    ;80D3ED|00008E
@@ -15713,6 +16438,11 @@ Op_JmpIfAccNe_Fld:
                 RTS                                            ;80D3F6|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccNe_Ram   (object VM op $79)
+;    operands: u16 addr, u16 target
+;    Jump to target if vmAcc != the word at bank-0 address.
+;--------------------------------------------------------------
 Op_JmpIfAccNe_Ram:
                 JSR.W VM_GetOperandRam                               ;80D3F7|80DD00
                 CMP.B vmAcc                                    ;80D3FA|00008E
@@ -15725,6 +16455,11 @@ Op_JmpIfAccNe_Ram:
                 RTS                                            ;80D403|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccNe_TFld   (object VM op $7A)
+;    operands: u8 fieldOfs, u16 target
+;    Jump to target if vmAcc != the field of objTarget.
+;--------------------------------------------------------------
 Op_JmpIfAccNe_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D404|80DD08
                 CMP.B vmAcc                                    ;80D407|00008E
@@ -15737,6 +16472,11 @@ Op_JmpIfAccNe_TFld:
                 RTS                                            ;80D410|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfAccNe_Rnd   (object VM op $7B)
+;    operands: -, u16 target
+;    Jump to target if vmAcc != a random word (VM_GetRandom).
+;--------------------------------------------------------------
 Op_JmpIfAccNe_Rnd:
                 JSR.W VM_GetRandom                               ;80D411|8091ED
                 CMP.B vmAcc                                    ;80D414|00008E
@@ -15749,6 +16489,11 @@ Op_JmpIfAccNe_Rnd:
                 RTS                                            ;80D41D|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccEq_Imm   (object VM op $86)
+;    operands: u16, u16 target
+;    CALL target if vmAcc == the literal.
+;--------------------------------------------------------------
 Op_CallIfAccEq_Imm:
                 JSR.W VM_GetOperandImm                               ;80D41E|80DCE9
                 CMP.B vmAcc                                    ;80D421|00008E
@@ -15761,6 +16506,11 @@ Op_CallIfAccEq_Imm:
                 RTS                                            ;80D42A|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccEq_Fld   (object VM op $87)
+;    operands: u8 fieldOfs, u16 target
+;    CALL target if vmAcc == the field of this object.
+;--------------------------------------------------------------
 Op_CallIfAccEq_Fld:
                 JSR.W VM_GetOperandFld                               ;80D42B|80DCEE
                 CMP.B vmAcc                                    ;80D42E|00008E
@@ -15773,6 +16523,11 @@ Op_CallIfAccEq_Fld:
                 RTS                                            ;80D437|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccEq_Ram   (object VM op $88)
+;    operands: u16 addr, u16 target
+;    CALL target if vmAcc == the word at bank-0 address.
+;--------------------------------------------------------------
 Op_CallIfAccEq_Ram:
                 JSR.W VM_GetOperandRam                               ;80D438|80DD00
                 CMP.B vmAcc                                    ;80D43B|00008E
@@ -15785,6 +16540,11 @@ Op_CallIfAccEq_Ram:
                 RTS                                            ;80D444|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccEq_TFld   (object VM op $89)
+;    operands: u8 fieldOfs, u16 target
+;    CALL target if vmAcc == the field of objTarget.
+;--------------------------------------------------------------
 Op_CallIfAccEq_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D445|80DD08
                 CMP.B vmAcc                                    ;80D448|00008E
@@ -15797,6 +16557,11 @@ Op_CallIfAccEq_TFld:
                 RTS                                            ;80D451|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccEq_Rnd   (object VM op $8A)
+;    operands: -, u16 target
+;    CALL target if vmAcc == a random word (VM_GetRandom).
+;--------------------------------------------------------------
 Op_CallIfAccEq_Rnd:
                 JSR.W VM_GetRandom                               ;80D452|8091ED
                 CMP.B vmAcc                                    ;80D455|00008E
@@ -15809,6 +16574,11 @@ Op_CallIfAccEq_Rnd:
                 RTS                                            ;80D45E|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccNe_Imm   (object VM op $8B)
+;    operands: u16, u16 target
+;    CALL target if vmAcc != the literal.
+;--------------------------------------------------------------
 Op_CallIfAccNe_Imm:
                 JSR.W VM_GetOperandImm                               ;80D45F|80DCE9
                 CMP.B vmAcc                                    ;80D462|00008E
@@ -15821,6 +16591,11 @@ Op_CallIfAccNe_Imm:
                 RTS                                            ;80D46B|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccNe_Fld   (object VM op $8C)
+;    operands: u8 fieldOfs, u16 target
+;    CALL target if vmAcc != the field of this object.
+;--------------------------------------------------------------
 Op_CallIfAccNe_Fld:
                 JSR.W VM_GetOperandFld                               ;80D46C|80DCEE
                 CMP.B vmAcc                                    ;80D46F|00008E
@@ -15833,6 +16608,11 @@ Op_CallIfAccNe_Fld:
                 RTS                                            ;80D478|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccNe_Ram   (object VM op $8D)
+;    operands: u16 addr, u16 target
+;    CALL target if vmAcc != the word at bank-0 address.
+;--------------------------------------------------------------
 Op_CallIfAccNe_Ram:
                 JSR.W VM_GetOperandRam                               ;80D479|80DD00
                 CMP.B vmAcc                                    ;80D47C|00008E
@@ -15845,6 +16625,11 @@ Op_CallIfAccNe_Ram:
                 RTS                                            ;80D485|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccNe_TFld   (object VM op $8E)
+;    operands: u8 fieldOfs, u16 target
+;    CALL target if vmAcc != the field of objTarget.
+;--------------------------------------------------------------
 Op_CallIfAccNe_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D486|80DD08
                 CMP.B vmAcc                                    ;80D489|00008E
@@ -15857,6 +16642,11 @@ Op_CallIfAccNe_TFld:
                 RTS                                            ;80D492|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfAccNe_Rnd   (object VM op $8F)
+;    operands: -, u16 target
+;    CALL target if vmAcc != a random word (VM_GetRandom).
+;--------------------------------------------------------------
 Op_CallIfAccNe_Rnd:
                 JSR.W VM_GetRandom                               ;80D493|8091ED
                 CMP.B vmAcc                                    ;80D496|00008E
@@ -15869,30 +16659,55 @@ Op_CallIfAccNe_Rnd:
                 RTS                                            ;80D49F|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAccBit_Imm   (object VM op $97)
+;    operands: u8 bit, u16
+;    vmAcc = 1 if that bit of the literal is set else 0.
+;--------------------------------------------------------------
 Op_LoadAccBit_Imm:
                 JSR.W VM_TestBit_Imm                               ;80D4A0|80DC60
                 STA.B vmAcc                                    ;80D4A3|00008E
                 RTS                                            ;80D4A5|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAccBit_Fld   (object VM op $98)
+;    operands: u8 bit, u8 fieldOfs
+;    vmAcc = 1 if that bit of the field of this object is set else 0.
+;--------------------------------------------------------------
 Op_LoadAccBit_Fld:
                 JSR.W VM_TestBit_Fld                               ;80D4A6|80DC75
                 STA.B vmAcc                                    ;80D4A9|00008E
                 RTS                                            ;80D4AB|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAccBit_Ram   (object VM op $99)
+;    operands: u8 bit, u16 addr
+;    vmAcc = 1 if that bit of the word at bank-0 address is set else 0.
+;--------------------------------------------------------------
 Op_LoadAccBit_Ram:
                 JSR.W VM_TestBit_Ram                               ;80D4AC|80DC97
                 STA.B vmAcc                                    ;80D4AF|00008E
                 RTS                                            ;80D4B1|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAccBit_TFld   (object VM op $9A)
+;    operands: u8 bit, u8 fieldOfs
+;    vmAcc = 1 if that bit of the field of objTarget is set else 0.
+;--------------------------------------------------------------
 Op_LoadAccBit_TFld:
                 JSR.W VM_TestBit_TFld                               ;80D4B2|80DCAF
                 STA.B vmAcc                                    ;80D4B5|00008E
                 RTS                                            ;80D4B7|
 
 
+;--------------------------------------------------------------
+;  Op_LoadAccBit_Rnd   (object VM op $9B)
+;    operands: -
+;    vmAcc = random & 1.
+;--------------------------------------------------------------
 Op_LoadAccBit_Rnd:
                 JSR.W VM_GetRandom                               ;80D4B8|8091ED
                 AND.W #$0001                                   ;80D4BB|
@@ -15900,6 +16715,11 @@ Op_LoadAccBit_Rnd:
                 RTS                                            ;80D4C0|
 
 
+;--------------------------------------------------------------
+;  Op_SetBitFromAcc_Fld   (object VM op $9C)
+;    operands: u8 bit, u8 fieldOfs
+;    Set (vmAcc != 0) or clear (vmAcc == 0) the given bit of the field of this object.
+;--------------------------------------------------------------
 Op_SetBitFromAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D4C1|000070
                 INY                                            ;80D4C3|
@@ -15920,13 +16740,18 @@ Op_SetBitFromAcc_Fld:
                 CLC                                            ;80D4E0|
                 ADC.B curObjIdx                                ;80D4E1|000042
                 TAX                                            ;80D4E3|
-                LDA.W objField_0F21,X                          ;80D4E4|800F21
+                LDA.W objBoxTop,X                          ;80D4E4|800F21
                 AND.B refillTmp32                              ;80D4E7|000032
                 ORA.B vmAcc                                    ;80D4E9|00008E
-                STA.W objField_0F21,X                          ;80D4EB|800F21
+                STA.W objBoxTop,X                          ;80D4EB|800F21
                 RTS                                            ;80D4EE|
 
 
+;--------------------------------------------------------------
+;  Op_SetBitFromAcc_Ram   (object VM op $9D)
+;    operands: u8 bit, u16 addr
+;    Set (vmAcc != 0) or clear (vmAcc == 0) the given bit of the word at bank-0 address.
+;--------------------------------------------------------------
 Op_SetBitFromAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D4EF|000070
                 INY                                            ;80D4F1|
@@ -15950,6 +16775,11 @@ Op_SetBitFromAcc_Ram:
                 RTS                                            ;80D511|
 
 
+;--------------------------------------------------------------
+;  Op_SetBitFromAcc_TFld   (object VM op $9E)
+;    operands: u8 bit, u8 fieldOfs
+;    Set (vmAcc != 0) or clear (vmAcc == 0) the given bit of the field of objTarget.
+;--------------------------------------------------------------
 Op_SetBitFromAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D512|000070
                 INY                                            ;80D514|
@@ -15971,13 +16801,19 @@ Op_SetBitFromAcc_TFld:
                 LDX.B curObjIdx                                ;80D532|000042
                 ADC.W objTarget,X                          ;80D534|8013D1
                 TAX                                            ;80D537|
-                LDA.W objField_0F21,X                          ;80D538|800F21
+                LDA.W objBoxTop,X                          ;80D538|800F21
                 AND.B refillTmp32                              ;80D53B|000032
                 ORA.B vmAcc                                    ;80D53D|00008E
-                STA.W objField_0F21,X                          ;80D53F|800F21
+                STA.W objBoxTop,X                          ;80D53F|800F21
                 RTS                                            ;80D542|
 
 
+;--------------------------------------------------------------
+;  Op_AndBitAcc_Fld   (object VM op $9F)
+;    operands: u8 bit, u8 fieldOfs
+;    the field of this object &= (vmAcc != 0 ? 1<<bit : 0): keeps only that bit, or zeroes the value
+;    when vmAcc == 0.
+;--------------------------------------------------------------
 Op_AndBitAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D543|000070
                 INY                                            ;80D545|
@@ -15996,12 +16832,18 @@ Op_AndBitAcc_Fld:
                 CLC                                            ;80D55D|
                 ADC.B curObjIdx                                ;80D55E|000042
                 TAX                                            ;80D560|
-                LDA.W objField_0F21,X                          ;80D561|800F21
+                LDA.W objBoxTop,X                          ;80D561|800F21
                 AND.B vmAcc                                    ;80D564|00008E
-                STA.W objField_0F21,X                          ;80D566|800F21
+                STA.W objBoxTop,X                          ;80D566|800F21
                 RTS                                            ;80D569|
 
 
+;--------------------------------------------------------------
+;  Op_AndBitAcc_Ram   (object VM op $A0)
+;    operands: u8 bit, u16 addr
+;    the word at bank-0 address &= (vmAcc != 0 ? 1<<bit : 0): keeps only that bit, or zeroes the
+;    value when vmAcc == 0.
+;--------------------------------------------------------------
 Op_AndBitAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D56A|000070
                 INY                                            ;80D56C|
@@ -16022,6 +16864,12 @@ Op_AndBitAcc_Ram:
                 RTS                                            ;80D585|
 
 
+;--------------------------------------------------------------
+;  Op_AndBitAcc_TFld   (object VM op $A1)
+;    operands: u8 bit, u8 fieldOfs
+;    the field of objTarget &= (vmAcc != 0 ? 1<<bit : 0): keeps only that bit, or zeroes the value
+;    when vmAcc == 0.
+;--------------------------------------------------------------
 Op_AndBitAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D586|000070
                 INY                                            ;80D588|
@@ -16041,12 +16889,17 @@ Op_AndBitAcc_TFld:
                 LDX.B curObjIdx                                ;80D5A1|000042
                 ADC.W objTarget,X                          ;80D5A3|8013D1
                 TAX                                            ;80D5A6|
-                LDA.W objField_0F21,X                          ;80D5A7|800F21
+                LDA.W objBoxTop,X                          ;80D5A7|800F21
                 AND.B vmAcc                                    ;80D5AA|00008E
-                STA.W objField_0F21,X                          ;80D5AC|800F21
+                STA.W objBoxTop,X                          ;80D5AC|800F21
                 RTS                                            ;80D5AF|
 
 
+;--------------------------------------------------------------
+;  Op_XorBitAcc_Fld   (object VM op $A5)
+;    operands: u8 bit, u8 fieldOfs
+;    the field of this object ^= (vmAcc != 0 ? 1<<bit : 0).
+;--------------------------------------------------------------
 Op_XorBitAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D5B0|000070
                 INY                                            ;80D5B2|
@@ -16065,12 +16918,17 @@ Op_XorBitAcc_Fld:
                 CLC                                            ;80D5CA|
                 ADC.B curObjIdx                                ;80D5CB|000042
                 TAX                                            ;80D5CD|
-                LDA.W objField_0F21,X                          ;80D5CE|800F21
+                LDA.W objBoxTop,X                          ;80D5CE|800F21
                 EOR.B vmAcc                                    ;80D5D1|00008E
-                STA.W objField_0F21,X                          ;80D5D3|800F21
+                STA.W objBoxTop,X                          ;80D5D3|800F21
                 RTS                                            ;80D5D6|
 
 
+;--------------------------------------------------------------
+;  Op_XorBitAcc_Ram   (object VM op $A6)
+;    operands: u8 bit, u16 addr
+;    the word at bank-0 address ^= (vmAcc != 0 ? 1<<bit : 0).
+;--------------------------------------------------------------
 Op_XorBitAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D5D7|000070
                 INY                                            ;80D5D9|
@@ -16091,6 +16949,11 @@ Op_XorBitAcc_Ram:
                 RTS                                            ;80D5F2|
 
 
+;--------------------------------------------------------------
+;  Op_XorBitAcc_TFld   (object VM op $A7)
+;    operands: u8 bit, u8 fieldOfs
+;    the field of objTarget ^= (vmAcc != 0 ? 1<<bit : 0).
+;--------------------------------------------------------------
 Op_XorBitAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D5F3|000070
                 INY                                            ;80D5F5|
@@ -16110,12 +16973,17 @@ Op_XorBitAcc_TFld:
                 LDX.B curObjIdx                                ;80D60E|000042
                 ADC.W objTarget,X                          ;80D610|8013D1
                 TAX                                            ;80D613|
-                LDA.W objField_0F21,X                          ;80D614|800F21
+                LDA.W objBoxTop,X                          ;80D614|800F21
                 EOR.B vmAcc                                    ;80D617|00008E
-                STA.W objField_0F21,X                          ;80D619|800F21
+                STA.W objBoxTop,X                          ;80D619|800F21
                 RTS                                            ;80D61C|
 
 
+;--------------------------------------------------------------
+;  Op_OrBitAcc_Fld   (object VM op $A2)
+;    operands: u8 bit, u8 fieldOfs
+;    the field of this object |= (vmAcc != 0 ? 1<<bit : 0).
+;--------------------------------------------------------------
 Op_OrBitAcc_Fld:
                 LDA.B [scriptPC],Y                             ;80D61D|000070
                 INY                                            ;80D61F|
@@ -16134,12 +17002,17 @@ Op_OrBitAcc_Fld:
                 CLC                                            ;80D637|
                 ADC.B curObjIdx                                ;80D638|000042
                 TAX                                            ;80D63A|
-                LDA.W objField_0F21,X                          ;80D63B|800F21
+                LDA.W objBoxTop,X                          ;80D63B|800F21
                 ORA.B vmAcc                                    ;80D63E|00008E
-                STA.W objField_0F21,X                          ;80D640|800F21
+                STA.W objBoxTop,X                          ;80D640|800F21
                 RTS                                            ;80D643|
 
 
+;--------------------------------------------------------------
+;  Op_OrBitAcc_Ram   (object VM op $A3)
+;    operands: u8 bit, u16 addr
+;    the word at bank-0 address |= (vmAcc != 0 ? 1<<bit : 0).
+;--------------------------------------------------------------
 Op_OrBitAcc_Ram:
                 LDA.B [scriptPC],Y                             ;80D644|000070
                 INY                                            ;80D646|
@@ -16160,6 +17033,11 @@ Op_OrBitAcc_Ram:
                 RTS                                            ;80D65F|
 
 
+;--------------------------------------------------------------
+;  Op_OrBitAcc_TFld   (object VM op $A4)
+;    operands: u8 bit, u8 fieldOfs
+;    the field of objTarget |= (vmAcc != 0 ? 1<<bit : 0).
+;--------------------------------------------------------------
 Op_OrBitAcc_TFld:
                 LDA.B [scriptPC],Y                             ;80D660|000070
                 INY                                            ;80D662|
@@ -16179,12 +17057,17 @@ Op_OrBitAcc_TFld:
                 LDX.B curObjIdx                                ;80D67B|000042
                 ADC.W objTarget,X                          ;80D67D|8013D1
                 TAX                                            ;80D680|
-                LDA.W objField_0F21,X                          ;80D681|800F21
+                LDA.W objBoxTop,X                          ;80D681|800F21
                 ORA.B vmAcc                                    ;80D684|00008E
-                STA.W objField_0F21,X                          ;80D686|800F21
+                STA.W objBoxTop,X                          ;80D686|800F21
                 RTS                                            ;80D689|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitEqAcc_Imm   (object VM op $A8)
+;    operands: u8 bit, u16, u16 target
+;    Jump to target if bit (of the literal) == vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitEqAcc_Imm:
                 JSR.W VM_TestBit_Imm                               ;80D68A|80DC60
                 CMP.B vmAcc                                    ;80D68D|00008E
@@ -16197,6 +17080,11 @@ Op_JmpIfBitEqAcc_Imm:
                 RTS                                            ;80D696|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitEqAcc_Fld   (object VM op $A9)
+;    operands: u8 bit, u8 fieldOfs, u16 target
+;    Jump to target if bit (of the field of this object) == vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitEqAcc_Fld:
                 JSR.W VM_TestBit_Fld                               ;80D697|80DC75
                 CMP.B vmAcc                                    ;80D69A|00008E
@@ -16209,6 +17097,11 @@ Op_JmpIfBitEqAcc_Fld:
                 RTS                                            ;80D6A3|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitEqAcc_Ram   (object VM op $AA)
+;    operands: u8 bit, u16 addr, u16 target
+;    Jump to target if bit (of the word at bank-0 address) == vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitEqAcc_Ram:
                 JSR.W VM_TestBit_Ram                               ;80D6A4|80DC97
                 CMP.B vmAcc                                    ;80D6A7|00008E
@@ -16221,6 +17114,11 @@ Op_JmpIfBitEqAcc_Ram:
                 RTS                                            ;80D6B0|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitEqAcc_TFld   (object VM op $AB)
+;    operands: u8 bit, u8 fieldOfs, u16 target
+;    Jump to target if bit (of the field of objTarget) == vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitEqAcc_TFld:
                 JSR.W VM_TestBit_TFld                               ;80D6B1|80DCAF
                 CMP.B vmAcc                                    ;80D6B4|00008E
@@ -16233,6 +17131,11 @@ Op_JmpIfBitEqAcc_TFld:
                 RTS                                            ;80D6BD|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitEqAcc_Rnd   (object VM op $AC)
+;    operands: -, u16 target
+;    Jump to target if (random & 1) == vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitEqAcc_Rnd:
                 JSR.W VM_GetRandom                               ;80D6BE|8091ED
                 AND.W #$0001                                   ;80D6C1|
@@ -16246,6 +17149,11 @@ Op_JmpIfBitEqAcc_Rnd:
                 RTS                                            ;80D6CD|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitNeAcc_Imm   (object VM op $AD)
+;    operands: u8 bit, u16, u16 target
+;    Jump to target if bit (of the literal) != vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitNeAcc_Imm:
                 JSR.W VM_TestBit_Imm                               ;80D6CE|80DC60
                 CMP.B vmAcc                                    ;80D6D1|00008E
@@ -16258,6 +17166,11 @@ Op_JmpIfBitNeAcc_Imm:
                 RTS                                            ;80D6DA|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitNeAcc_Fld   (object VM op $AE)
+;    operands: u8 bit, u8 fieldOfs, u16 target
+;    Jump to target if bit (of the field of this object) != vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitNeAcc_Fld:
                 JSR.W VM_TestBit_Fld                               ;80D6DB|80DC75
                 CMP.B vmAcc                                    ;80D6DE|00008E
@@ -16270,6 +17183,11 @@ Op_JmpIfBitNeAcc_Fld:
                 RTS                                            ;80D6E7|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitNeAcc_Ram   (object VM op $AF)
+;    operands: u8 bit, u16 addr, u16 target
+;    Jump to target if bit (of the word at bank-0 address) != vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitNeAcc_Ram:
                 JSR.W VM_TestBit_Ram                               ;80D6E8|80DC97
                 CMP.B vmAcc                                    ;80D6EB|00008E
@@ -16282,6 +17200,11 @@ Op_JmpIfBitNeAcc_Ram:
                 RTS                                            ;80D6F4|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitNeAcc_TFld   (object VM op $B0)
+;    operands: u8 bit, u8 fieldOfs, u16 target
+;    Jump to target if bit (of the field of objTarget) != vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitNeAcc_TFld:
                 JSR.W VM_TestBit_TFld                               ;80D6F5|80DCAF
                 CMP.B vmAcc                                    ;80D6F8|00008E
@@ -16294,6 +17217,11 @@ Op_JmpIfBitNeAcc_TFld:
                 RTS                                            ;80D701|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfBitNeAcc_Rnd   (object VM op $B1)
+;    operands: -, u16 target
+;    Jump to target if (random & 1) != vmAcc.
+;--------------------------------------------------------------
 Op_JmpIfBitNeAcc_Rnd:
                 JSR.W VM_GetRandom                               ;80D702|8091ED
                 AND.W #$0001                                   ;80D705|
@@ -16307,6 +17235,11 @@ Op_JmpIfBitNeAcc_Rnd:
                 RTS                                            ;80D711|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitEqAcc_Imm   (object VM op $B2)
+;    operands: u8 bit, u16, u16 target
+;    CALL target if bit (of the literal) == vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitEqAcc_Imm:
                 JSR.W VM_TestBit_Imm                               ;80D712|80DC60
                 CMP.B vmAcc                                    ;80D715|00008E
@@ -16319,6 +17252,11 @@ Op_CallIfBitEqAcc_Imm:
                 RTS                                            ;80D71E|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitEqAcc_Fld   (object VM op $B3)
+;    operands: u8 bit, u8 fieldOfs, u16 target
+;    CALL target if bit (of the field of this object) == vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitEqAcc_Fld:
                 JSR.W VM_TestBit_Fld                               ;80D71F|80DC75
                 CMP.B vmAcc                                    ;80D722|00008E
@@ -16331,6 +17269,11 @@ Op_CallIfBitEqAcc_Fld:
                 RTS                                            ;80D72B|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitEqAcc_Ram   (object VM op $B4)
+;    operands: u8 bit, u16 addr, u16 target
+;    CALL target if bit (of the word at bank-0 address) == vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitEqAcc_Ram:
                 JSR.W VM_TestBit_Ram                               ;80D72C|80DC97
                 CMP.B vmAcc                                    ;80D72F|00008E
@@ -16343,6 +17286,11 @@ Op_CallIfBitEqAcc_Ram:
                 RTS                                            ;80D738|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitEqAcc_TFld   (object VM op $B5)
+;    operands: u8 bit, u8 fieldOfs, u16 target
+;    CALL target if bit (of the field of objTarget) == vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitEqAcc_TFld:
                 JSR.W VM_TestBit_TFld                               ;80D739|80DCAF
                 CMP.B vmAcc                                    ;80D73C|00008E
@@ -16355,6 +17303,11 @@ Op_CallIfBitEqAcc_TFld:
                 RTS                                            ;80D745|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitEqAcc_Rnd   (object VM op $B6)
+;    operands: -, u16 target
+;    CALL target if (random & 1) == vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitEqAcc_Rnd:
                 JSR.W VM_GetRandom                               ;80D746|8091ED
                 AND.W #$0001                                   ;80D749|
@@ -16368,6 +17321,11 @@ Op_CallIfBitEqAcc_Rnd:
                 RTS                                            ;80D755|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitNeAcc_Imm   (object VM op $B7)
+;    operands: u8 bit, u16, u16 target
+;    CALL target if bit (of the literal) != vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitNeAcc_Imm:
                 JSR.W VM_TestBit_Imm                               ;80D756|80DC60
                 CMP.B vmAcc                                    ;80D759|00008E
@@ -16380,6 +17338,11 @@ Op_CallIfBitNeAcc_Imm:
                 RTS                                            ;80D762|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitNeAcc_Fld   (object VM op $B8)
+;    operands: u8 bit, u8 fieldOfs, u16 target
+;    CALL target if bit (of the field of this object) != vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitNeAcc_Fld:
                 JSR.W VM_TestBit_Fld                               ;80D763|80DC75
                 CMP.B vmAcc                                    ;80D766|00008E
@@ -16392,6 +17355,11 @@ Op_CallIfBitNeAcc_Fld:
                 RTS                                            ;80D76F|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitNeAcc_Ram   (object VM op $B9)
+;    operands: u8 bit, u16 addr, u16 target
+;    CALL target if bit (of the word at bank-0 address) != vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitNeAcc_Ram:
                 JSR.W VM_TestBit_Ram                               ;80D770|80DC97
                 CMP.B vmAcc                                    ;80D773|00008E
@@ -16404,6 +17372,11 @@ Op_CallIfBitNeAcc_Ram:
                 RTS                                            ;80D77C|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitNeAcc_TFld   (object VM op $BA)
+;    operands: u8 bit, u8 fieldOfs, u16 target
+;    CALL target if bit (of the field of objTarget) != vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitNeAcc_TFld:
                 JSR.W VM_TestBit_TFld                               ;80D77D|80DCAF
                 CMP.B vmAcc                                    ;80D780|00008E
@@ -16416,6 +17389,11 @@ Op_CallIfBitNeAcc_TFld:
                 RTS                                            ;80D789|
 
 
+;--------------------------------------------------------------
+;  Op_CallIfBitNeAcc_Rnd   (object VM op $BB)
+;    operands: -, u16 target
+;    CALL target if (random & 1) != vmAcc.
+;--------------------------------------------------------------
 Op_CallIfBitNeAcc_Rnd:
                 JSR.W VM_GetRandom                               ;80D78A|8091ED
                 AND.W #$0001                                   ;80D78D|
@@ -16429,6 +17407,12 @@ Op_CallIfBitNeAcc_Rnd:
                 RTS                                            ;80D799|
 
 
+;--------------------------------------------------------------
+;  Op_PixelsToTileXY   (object VM op $26)
+;    operands: u8 kinds(x|y<<3), x, y, u8 kinds(dx|dy<<3), dx, dy
+;    dst = src >> 4 for both coordinates (pixels -> 16px metatile). operand kinds: 0 u16 literal, 1
+;    u8 field of this object, 2 u16 bank-0 address, 3 u8 field of objTarget, 4 random word
+;--------------------------------------------------------------
 Op_PixelsToTileXY:
                 LDA.B [scriptPC],Y                             ;80D79A|000070
                 INY                                            ;80D79C|
@@ -16456,6 +17440,12 @@ Op_PixelsToTileXY:
                 JMP.W VM_SetOperandByType_Shr3                               ;80D7BD|80DD1D
 
 
+;--------------------------------------------------------------
+;  Op_GetTileCollisionAt   (object VM op $27)
+;    operands: u8 kinds(x|y<<3), x, y, u8 dstKind, dst
+;    dst = collision code of the metatile at (x,y) (tile word bits 10-15; 0 = empty, 1 = solid ...;
+;    out of range reads as $0400/0).
+;--------------------------------------------------------------
 Op_GetTileCollisionAt:
                 LDA.B [scriptPC],Y                             ;80D7C0|000070
                 PHA                                            ;80D7C2|
@@ -16475,6 +17465,11 @@ Op_GetTileCollisionAt:
                 JMP.W VM_SetOperandByType                               ;80D7D9|80DD20
 
 
+;--------------------------------------------------------------
+;  Op_SnapToTileCenterXY   (object VM op $28)
+;    operands: u8 kinds(x|y<<3), x, y, u8 kinds(dx|dy<<3), dx, dy
+;    dst = (src & $FFF0) | 8: centre of the 16px tile containing the point.
+;--------------------------------------------------------------
 Op_SnapToTileCenterXY:
                 LDA.B [scriptPC],Y                             ;80D7DC|000070
                 PHA                                            ;80D7DE|
@@ -16498,6 +17493,14 @@ Op_SnapToTileCenterXY:
                 JMP.W VM_SetOperandByType_Shr3                               ;80D803|80DD1D
 
 
+;--------------------------------------------------------------
+;  Op_SpawnObject   (object VM op $14)
+;    operands: u8 kinds(x|y<<3), x, y, u8 kinds(pool|flags<<3), pool, flags, u8 type
+;    Spawn an object of 'type' at (x,y) (SpawnObject). pool -> spawnOamPool; new objFlags =
+;    (self.objFlags & $00FE) | (flags & $0801). On success objChildIdx[self] = new slot; if the new
+;    slot is lower than self it is queued (newChildList) to run this frame. operand kinds: 0 u16
+;    literal, 1 u8 field of this object, 2 u16 bank-0 address, 3 u8 field of objTarget, 4 random word
+;--------------------------------------------------------------
 Op_SpawnObject:
                 LDA.B [scriptPC],Y                             ;80D806|000070
                 INY                                            ;80D808|
@@ -16511,13 +17514,13 @@ Op_SpawnObject:
                 INY                                            ;80D817|
                 PHA                                            ;80D818|
                 JSR.W VM_GetOperandByType                               ;80D819|80DCD7
-                STA.W ram_0382                                 ;80D81C|800382
+                STA.W spawnOamPool                                 ;80D81C|800382
                 PLA                                            ;80D81F|
                 JSR.W VM_GetOperandByType_Shr3                               ;80D820|80DCD4
                 AND.W #$0801                                   ;80D823|
                 STA.B refillTmp32                              ;80D826|000032
                 LDX.B curObjIdx                                ;80D828|000042
-                LDA.W objField_0FC1,X                          ;80D82A|800FC1
+                LDA.W objFlags,X                          ;80D82A|800FC1
                 AND.W #$00FE                                   ;80D82D|
                 ORA.B refillTmp32                              ;80D830|000032
                 TAX                                            ;80D832|
@@ -16526,29 +17529,39 @@ Op_SpawnObject:
                 PHY                                            ;80D836|
                 AND.W #$00FF                                   ;80D837|
                 LDY.W #$FFFF                                   ;80D83A|
-                STY.W ram_03FE                                 ;80D83D|8003FE
+                STY.W spawnHalfW                                 ;80D83D|8003FE
                 JSR.W SpawnObject                               ;80D840|80EC56
                 BCS .skip                                      ;80D843|80D85C
                 TYA                                            ;80D845|
                 LDX.B curObjIdx                                ;80D846|000042
-                STA.W ram_1269,X                               ;80D848|801269
+                STA.W objChildIdx,X                               ;80D848|801269
                 CMP.B curObjIdx                                ;80D84B|000042
                 BCS .skip                                      ;80D84D|80D85C
-                LDX.W earlyUpdateCount                                 ;80D84F|800384
+                LDX.W newChildCount                                 ;80D84F|800384
                 SEP #$20                                       ;80D852|
-                STA.W earlyUpdateQueue,X                               ;80D854|800386
+                STA.W newChildList,X                               ;80D854|800386
                 REP #$20                                       ;80D857|
-                INC.W earlyUpdateCount                                 ;80D859|800384
+                INC.W newChildCount                                 ;80D859|800384
 
          .skip: PLY                                            ;80D85C|
                 RTS                                            ;80D85D|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfTileClassAtXY   (object VM op $49)
+;    operands: u8 kinds(x|y<<3), x, y, u8 classSet, u16 target
+;    Jump if the point (x,y) lies in terrain or an object of a class in classSet (sub_80A734).
+;--------------------------------------------------------------
 Op_JmpIfTileClassAtXY:
                 PEA.W $0000                                    ;80D85E|
                 BRA loc_80D866                                 ;80D861|80D866
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotTileClassAtXY   (object VM op $4A)
+;    operands: u8 kinds(x|y<<3), x, y, u8 classSet, u16 target
+;    Jump if the point (x,y) is NOT in any such terrain/object.
+;--------------------------------------------------------------
 Op_JmpIfNotTileClassAtXY:
                 PEA.W $0002                                    ;80D863|
 
@@ -16570,6 +17583,12 @@ loc_80D866:
                 JMP.W (VM_CondBranchTable,X)                        ;80D880|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_MoveToXY   (object VM op $48)
+;    operands: u8 kinds(x|y<<3), x, y
+;    Slide/teleport to absolute (x,y) this frame: objMoveX/Y = target - current, objParent = $0100
+;    (one-shot move applied by loc_80ED85).
+;--------------------------------------------------------------
 Op_MoveToXY:
                 LDA.B [scriptPC],Y                             ;80D883|000070
                 INY                                            ;80D885|
@@ -16577,19 +17596,25 @@ Op_MoveToXY:
                 JSR.W VM_GetOperandByType                               ;80D887|80DCD7
                 LDX.B curObjIdx                                ;80D88A|000042
                 SEC                                            ;80D88C|
-                SBC.W objField_1179,X                          ;80D88D|801179
-                STA.W ram_1381,X                               ;80D890|801381
+                SBC.W objX,X                          ;80D88D|801179
+                STA.W objMoveX,X                               ;80D890|801381
                 PLA                                            ;80D893|
                 JSR.W VM_GetOperandByType_Shr3                               ;80D894|80DCD4
                 LDX.B curObjIdx                                ;80D897|000042
                 SEC                                            ;80D899|
-                SBC.W objField_11A1,X                          ;80D89A|8011A1
-                STA.W objField_13A9,X                          ;80D89D|8013A9
+                SBC.W objY,X                          ;80D89A|8011A1
+                STA.W objMoveY,X                          ;80D89D|8013A9
                 LDA.W #$0100                                   ;80D8A0|
-                STA.W ram_0E59,X                               ;80D8A3|800E59
+                STA.W objParent,X                               ;80D8A3|800E59
                 RTS                                            ;80D8A6|
 
 
+;--------------------------------------------------------------
+;  Op_SetMetatileXY   (object VM op $29)
+;    operands: u8 kinds(x|y<<3), x, y, u8 kind, word
+;    Store a whole metatile word (tile index AND collision bits) at (x,y) and queue the BG tilemap
+;    update (sub_80A2C7).
+;--------------------------------------------------------------
 Op_SetMetatileXY:
                 LDA.B [scriptPC],Y                             ;80D8A7|000070
                 INY                                            ;80D8A9|
@@ -16611,6 +17636,12 @@ Op_SetMetatileXY:
                 RTS                                            ;80D8C8|
 
 
+;--------------------------------------------------------------
+;  Op_SetTileCollisionXY   (object VM op $2B)
+;    operands: u8 kinds(x|y<<3), x, y, u8 kind, code
+;    Replace the collision code at (x,y), keeping the tile index. No tilemap update (invisible
+;    change).
+;--------------------------------------------------------------
 Op_SetTileCollisionXY:
                 LDA.B [scriptPC],Y                             ;80D8C9|000070
                 INY                                            ;80D8CB|
@@ -16640,6 +17671,11 @@ Op_SetTileCollisionXY:
                 RTS                                            ;80D8F8|
 
 
+;--------------------------------------------------------------
+;  Op_SetTileIndexXY   (object VM op $2A)
+;    operands: u8 kinds(x|y<<3), x, y, u8 kind, tile
+;    Replace the tile index at (x,y), keeping its collision bits, and queue the tilemap update.
+;--------------------------------------------------------------
 Op_SetTileIndexXY:
                 LDA.B [scriptPC],Y                             ;80D8F9|000070
                 INY                                            ;80D8FB|
@@ -16667,6 +17703,12 @@ Op_SetTileIndexXY:
                 RTS                                            ;80D928|
 
 
+;--------------------------------------------------------------
+;  Op_GetNearestPlayerDelta   (object VM op $34)
+;    operands: u8 kinds(dx|dy<<3), dx, dy
+;    Delta to the nearest living viking (smallest Manhattan distance among slots 0-2 with objArgHp !=
+;    0); mirrored like Op_GetDeltaToSelPlayer. Also leaves the chosen slot in $03E8.
+;--------------------------------------------------------------
 Op_GetNearestPlayerDelta:
                 PHY                                            ;80D929|
                 LDA.W #$FFFF                                   ;80D92A|
@@ -16674,19 +17716,19 @@ Op_GetNearestPlayerDelta:
                 LDY.B curObjIdx                                ;80D92F|000042
                 LDX.W #$0000                                   ;80D931|
 
-         .loop: LDA.W objHealth,X                               ;80D934|800FE9
+         .loop: LDA.W objArgHp,X                               ;80D934|800FE9
                 BEQ .skip                                      ;80D937|80D960
-                LDA.W objField_1179,Y                          ;80D939|801179
+                LDA.W objX,Y                          ;80D939|801179
                 SEC                                            ;80D93C|
-                SBC.W objField_1179,X                          ;80D93D|801179
+                SBC.W objX,X                          ;80D93D|801179
                 BPL +                                          ;80D940|80D946
                 EOR.W #$FFFF                                   ;80D942|
                 INC A                                          ;80D945|
 
              +: STA.B refillTmp32                              ;80D946|000032
-                LDA.W objField_11A1,Y                          ;80D948|8011A1
+                LDA.W objY,Y                          ;80D948|8011A1
                 SEC                                            ;80D94B|
-                SBC.W objField_11A1,X                          ;80D94C|8011A1
+                SBC.W objY,X                          ;80D94C|8011A1
                 BPL +                                          ;80D94F|80D955
                 EOR.W #$FFFF                                   ;80D951|
                 INC A                                          ;80D954|
@@ -16707,6 +17749,13 @@ Op_GetNearestPlayerDelta:
                 BRA loc_80D97C                                 ;80D96C|80D97C
 
 
+;--------------------------------------------------------------
+;  Op_GetDeltaToSelPlayer   (object VM op $15)
+;    operands: u8 kinds(dstA|dstB<<3), dstA, dstB
+;    Delta from this object to the player currently selected for input (inputAuxSel): dstA = dx, dstB
+;    = dy, mirrored by this object's facing/flip so positive = in front / below. Destination kinds: 0
+;    or 4 discard, 1 field, 2 ram, 3 target field.
+;--------------------------------------------------------------
 Op_GetDeltaToSelPlayer:
                 PHY                                            ;80D96E|
                 LDY.B curObjIdx                                ;80D96F|000042
@@ -16714,38 +17763,43 @@ Op_GetDeltaToSelPlayer:
                 BRA loc_80D97C                                 ;80D974|80D97C
 
 
+;--------------------------------------------------------------
+;  Op_GetDeltaToTarget   (object VM op $16)
+;    operands: u8 kinds(dstA|dstB<<3), dstA, dstB
+;    Same as Op_GetDeltaToSelPlayer but relative to objTarget.
+;--------------------------------------------------------------
 Op_GetDeltaToTarget:
                 PHY                                            ;80D976|
                 LDY.B curObjIdx                                ;80D977|000042
                 LDX.W objTarget,Y                          ;80D979|8013D1
 
 loc_80D97C:
-                LDA.W objField_0FC1,Y                          ;80D97C|800FC1
+                LDA.W objFlags,Y                          ;80D97C|800FC1
                 AND.W #$0040                                   ;80D97F|
                 BEQ .skip                                      ;80D982|80D98D
-                LDA.W objField_1179,Y                          ;80D984|801179
+                LDA.W objX,Y                          ;80D984|801179
                 SEC                                            ;80D987|
-                SBC.W objField_1179,X                          ;80D988|801179
+                SBC.W objX,X                          ;80D988|801179
                 BRA .cont                                      ;80D98B|80D994
 
 
-         .skip: LDA.W objField_1179,X                          ;80D98D|801179
+         .skip: LDA.W objX,X                          ;80D98D|801179
                 SEC                                            ;80D990|
-                SBC.W objField_1179,Y                          ;80D991|801179
+                SBC.W objX,Y                          ;80D991|801179
 
          .cont: STA.B zp_6C                                    ;80D994|00006C
-                LDA.W objField_0FC1,Y                          ;80D996|800FC1
+                LDA.W objFlags,Y                          ;80D996|800FC1
                 AND.W #$0080                                   ;80D999|
                 BEQ .skip2                                     ;80D99C|80D9A7
-                LDA.W objField_11A1,Y                          ;80D99E|8011A1
+                LDA.W objY,Y                          ;80D99E|8011A1
                 SEC                                            ;80D9A1|
-                SBC.W objField_11A1,X                          ;80D9A2|8011A1
+                SBC.W objY,X                          ;80D9A2|8011A1
                 BRA .cont2                                     ;80D9A5|80D9AE
 
 
-        .skip2: LDA.W objField_11A1,X                          ;80D9A7|8011A1
+        .skip2: LDA.W objY,X                          ;80D9A7|8011A1
                 SEC                                            ;80D9AA|
-                SBC.W objField_11A1,Y                          ;80D9AB|8011A1
+                SBC.W objY,Y                          ;80D9AB|8011A1
 
         .cont2: STA.B zp_6E                                    ;80D9AE|00006E
                 PLY                                            ;80D9B0|
@@ -16759,6 +17813,11 @@ loc_80D97C:
                 JMP.W VM_SetOperandByType_Shr3                               ;80D9BD|80DD1D
 
 
+;--------------------------------------------------------------
+;  Op_PlaySfx   (object VM op $02)
+;    operands: u8 id, u8 param
+;    Play sound effect (sound cmd 3 through farsub_858002). Skipped when SFX are off ($0304 = 0).
+;--------------------------------------------------------------
 Op_PlaySfx:
                 LDA.B [scriptPC],Y                             ;80D9C0|000070
                 INY                                            ;80D9C2|
@@ -16772,6 +17831,11 @@ Op_PlaySfx:
                 JMP.W sub_8088F8                               ;80D9D1|8088F8
 
 
+;--------------------------------------------------------------
+;  Op_StopSfx   (object VM op $04)
+;    operands: u8 id
+;    Stop sound effect (sound cmd 4, X = $FFFF). Skipped when SFX are off.
+;--------------------------------------------------------------
 Op_StopSfx:
                 LDA.B [scriptPC],Y                             ;80D9D4|000070
                 INY                                            ;80D9D6|
@@ -16780,6 +17844,12 @@ Op_StopSfx:
                 JMP.W sub_80890C                               ;80D9DD|80890C
 
 
+;--------------------------------------------------------------
+;  Op_StopSfx_Ex   (object VM op $D7)
+;    operands: u8 id, u16 param
+;    Like Op_StopSfx but with an explicit parameter word.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_StopSfx_Ex:
                 LDA.B [scriptPC],Y                             ;80D9E0|000070
                 INY                                            ;80D9E2|
@@ -16793,6 +17863,11 @@ Op_StopSfx_Ex:
                 JMP.W sub_80890C                               ;80D9EF|80890C
 
 
+;--------------------------------------------------------------
+;  Op_PlayMusic   (object VM op $D5)
+;    operands: u8 id
+;    Start music track id (sound cmd 3, X = $30). Skipped when music is off ($0302 = 0).
+;--------------------------------------------------------------
 Op_PlayMusic:
                 LDA.B [scriptPC],Y                             ;80D9F2|000070
                 INY                                            ;80D9F4|
@@ -16810,6 +17885,11 @@ Op_PlayMusic:
          .exit: RTS                                            ;80DA0D|
 
 
+;--------------------------------------------------------------
+;  Op_StopMusic   (object VM op $D6)
+;    operands: u8 id
+;    Stop music track id (sound cmd 4, param $80).
+;--------------------------------------------------------------
 Op_StopMusic:
                 LDA.B [scriptPC],Y                             ;80DA0E|000070
                 INY                                            ;80DA10|
@@ -16826,17 +17906,30 @@ Op_StopMusic:
          .exit: RTS                                            ;80DA26|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfPlayerAbove   (object VM op $BF)
+;    operands: u8 classSet, u16 target
+;    Jump if a viking overlaps the row above this object (objects only, players only: objTableEnd is
+;    temporarily 6).
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfPlayerAbove:
                 PEA.W $0000                                    ;80DA27|
                 BRA loc_80DA2F                                 ;80DA2A|80DA2F
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotPlayerAbove   (object VM op $C3)
+;    operands: u8 classSet, u16 target
+;    Jump if NO viking is above.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfNotPlayerAbove:
                 PEA.W $0002                                    ;80DA2C|
 
 loc_80DA2F:
                 LDA.W #$FFFF                                   ;80DA2F|
-                STA.W ram_03BE                                 ;80DA32|8003BE
+                STA.W hitObj                                 ;80DA32|8003BE
                 LDA.W objTableEnd                              ;80DA35|800380
                 PHA                                            ;80DA38|
                 LDA.W #$0006                                   ;80DA39|
@@ -16855,17 +17948,29 @@ loc_80DA2F:
                 JMP.W (VM_CondBranchTable,X)                        ;80DA52|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfPlayerBelow   (object VM op $C0)
+;    operands: u8 classSet, u16 target
+;    Jump if a viking overlaps the row below.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfPlayerBelow:
                 PEA.W $0000                                    ;80DA55|
                 BRA loc_80DA5D                                 ;80DA58|80DA5D
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotPlayerBelow   (object VM op $C4)
+;    operands: u8 classSet, u16 target
+;    Jump if NO viking is below.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfNotPlayerBelow:
                 PEA.W $0002                                    ;80DA5A|
 
 loc_80DA5D:
                 LDA.W #$FFFF                                   ;80DA5D|
-                STA.W ram_03BE                                 ;80DA60|8003BE
+                STA.W hitObj                                 ;80DA60|8003BE
                 LDA.W objTableEnd                              ;80DA63|800380
                 PHA                                            ;80DA66|
                 LDA.W #$0006                                   ;80DA67|
@@ -16884,23 +17989,35 @@ loc_80DA5D:
                 JMP.W (VM_CondBranchTable,X)                        ;80DA80|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfPlayerAhead   (object VM op $C2)
+;    operands: u8 classSet, u16 target
+;    Jump if a viking is AHEAD (facing side).
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfPlayerAhead:
                 PEA.W $0000                                    ;80DA83|
                 BRA loc_80DA8B                                 ;80DA86|80DA8B
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotPlayerAhead   (object VM op $C6)
+;    operands: u8 classSet, u16 target
+;    Jump if NO viking is ahead.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfNotPlayerAhead:
                 PEA.W $0002                                    ;80DA88|
 
 loc_80DA8B:
                 LDA.W #$FFFF                                   ;80DA8B|
-                STA.W ram_03BE                                 ;80DA8E|8003BE
+                STA.W hitObj                                 ;80DA8E|8003BE
                 LDA.W objTableEnd                              ;80DA91|800380
                 PHA                                            ;80DA94|
                 LDA.W #$0006                                   ;80DA95|
                 STA.W objTableEnd                              ;80DA98|800380
                 LDX.B curObjIdx                                ;80DA9B|000042
-                LDA.W objField_0FC1,X                          ;80DA9D|800FC1
+                LDA.W objFlags,X                          ;80DA9D|800FC1
                 AND.W #$0040                                   ;80DAA0|
                 BNE loc_80DADD                                 ;80DAA3|80DADD
 
@@ -16919,23 +18036,35 @@ loc_80DAA5:
                 JMP.W (VM_CondBranchTable,X)                        ;80DAB8|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfPlayerBehind   (object VM op $C1)
+;    operands: u8 classSet, u16 target
+;    Jump if a viking is BEHIND (opposite the facing side).
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfPlayerBehind:
                 PEA.W $0000                                    ;80DABB|
                 BRA loc_80DAC3                                 ;80DABE|80DAC3
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfNotPlayerBehind   (object VM op $C5)
+;    operands: u8 classSet, u16 target
+;    Jump if NO viking is behind.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_JmpIfNotPlayerBehind:
                 PEA.W $0002                                    ;80DAC0|
 
 loc_80DAC3:
                 LDA.W #$FFFF                                   ;80DAC3|
-                STA.W ram_03BE                                 ;80DAC6|8003BE
+                STA.W hitObj                                 ;80DAC6|8003BE
                 LDA.W objTableEnd                              ;80DAC9|800380
                 PHA                                            ;80DACC|
                 LDA.W #$0006                                   ;80DACD|
                 STA.W objTableEnd                              ;80DAD0|800380
                 LDX.B curObjIdx                                ;80DAD3|000042
-                LDA.W objField_0FC1,X                          ;80DAD5|800FC1
+                LDA.W objFlags,X                          ;80DAD5|800FC1
                 AND.W #$0040                                   ;80DAD8|
                 BNE loc_80DAA5                                 ;80DADB|80DAA5
 
@@ -16954,6 +18083,13 @@ loc_80DADD:
                 JMP.W (VM_CondBranchTable,X)                        ;80DAF0|80CF02
 
 
+;--------------------------------------------------------------
+;  Op_SetShakeX   (object VM op $2E)
+;    operands: u8 amplitude, u8 period
+;    Screen shake X: $039E = amplitude, $03A6 = period*2 (consumed by the scroll-adjust code that
+;    writes scrollAdjustX).
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_SetShakeX:
                 LDA.B [scriptPC],Y                             ;80DAF3|000070
                 INY                                            ;80DAF5|
@@ -16969,6 +18105,12 @@ Op_SetShakeX:
                 RTS                                            ;80DB07|
 
 
+;--------------------------------------------------------------
+;  Op_SetShakeY   (object VM op $3B)
+;    operands: u8 amplitude, u8 period
+;    Screen shake Y: $03A0 = amplitude, $03A8 = period*4.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_SetShakeY:
                 LDA.B [scriptPC],Y                             ;80DB08|000070
                 INY                                            ;80DB0A|
@@ -16985,9 +18127,15 @@ Op_SetShakeY:
                 RTS                                            ;80DB1D|
 
 
-Op_SetSpawnRecX:
+;--------------------------------------------------------------
+;  Op_SetPlacementX   (object VM op $C7)
+;    operands: -
+;    placement[objPlacementIdx].X = vmAcc: changes where the level placement will respawn this object
+;    (no-op for script-spawned objects).
+;--------------------------------------------------------------
+Op_SetPlacementX:
                 LDX.B curObjIdx                                ;80DB1E|000042
-                LDA.W ram_1101,X                               ;80DB20|801101
+                LDA.W objPlacementIdx,X                               ;80DB20|801101
                 BMI .exit                                      ;80DB23|80DB2A
                 LDX.W #$0000                                   ;80DB25|
                 BRA loc_80DB35                                 ;80DB28|80DB35
@@ -16996,9 +18144,14 @@ Op_SetSpawnRecX:
          .exit: RTS                                            ;80DB2A|
 
 
-Op_SetSpawnRecY:
+;--------------------------------------------------------------
+;  Op_SetPlacementY   (object VM op $C8)
+;    operands: -
+;    placement[objPlacementIdx].Y = vmAcc.
+;--------------------------------------------------------------
+Op_SetPlacementY:
                 LDX.B curObjIdx                                ;80DB2B|000042
-                LDA.W ram_1101,X                               ;80DB2D|801101
+                LDA.W objPlacementIdx,X                               ;80DB2D|801101
                 BMI loc_80DB4C                                 ;80DB30|80DB4C
                 LDX.W #$0002                                   ;80DB32|
 
@@ -17013,18 +18166,23 @@ loc_80DB35:
                 ADC.W RDMPYL                                   ;80DB43|804216
                 TAX                                            ;80DB46|
                 LDA.B vmAcc                                    ;80DB47|00008E
-                STA.W ram_1A0A,X                               ;80DB49|801A0A
+                STA.W placeX,X                               ;80DB49|801A0A
 
 loc_80DB4C:
                 RTS                                            ;80DB4C|
 
 
-Op_SetSpawnRecFlags:
+;--------------------------------------------------------------
+;  Op_SetPlacementFlags   (object VM op $C9)
+;    operands: -
+;    placement[objPlacementIdx].flags = vmAcc & $CDFF.
+;--------------------------------------------------------------
+Op_SetPlacementFlags:
                 LDA.B vmAcc                                    ;80DB4D|00008E
                 AND.W #$CDFF                                   ;80DB4F|
                 STA.B vmAcc                                    ;80DB52|00008E
                 LDX.B curObjIdx                                ;80DB54|000042
-                LDA.W ram_1101,X                               ;80DB56|801101
+                LDA.W objPlacementIdx,X                               ;80DB56|801101
                 BMI .exit                                      ;80DB59|80DB60
                 LDX.W #$000A                                   ;80DB5B|
                 BRA loc_80DB35                                 ;80DB5E|80DB35
@@ -17033,9 +18191,14 @@ Op_SetSpawnRecFlags:
          .exit: RTS                                            ;80DB60|
 
 
-Op_SetSpawnRecParam:
+;--------------------------------------------------------------
+;  Op_SetPlacementOamPool   (object VM op $CA)
+;    operands: -
+;    placement[objPlacementIdx].oamPool = vmAcc.
+;--------------------------------------------------------------
+Op_SetPlacementOamPool:
                 LDX.B curObjIdx                                ;80DB61|000042
-                LDA.W ram_1101,X                               ;80DB63|801101
+                LDA.W objPlacementIdx,X                               ;80DB63|801101
                 BMI .exit                                      ;80DB66|80DB6D
                 LDX.W #$000C                                   ;80DB68|
                 BRA loc_80DB35                                 ;80DB6B|80DB35
@@ -17044,11 +18207,21 @@ Op_SetSpawnRecParam:
          .exit: RTS                                            ;80DB6D|
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfTargetOffScreen   (object VM op $CF)
+;    operands: u16 target
+;    Jump if objTarget is outside the window.
+;--------------------------------------------------------------
 Op_JmpIfTargetOffScreen:
                 PEA.W $0002                                    ;80DB6E|
                 BRA loc_80DB76                                 ;80DB71|80DB76
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfTargetOnScreen   (object VM op $CD)
+;    operands: u16 target
+;    Jump if objTarget is inside that window.
+;--------------------------------------------------------------
 Op_JmpIfTargetOnScreen:
                 PEA.W $0000                                    ;80DB73|
 
@@ -17059,12 +18232,22 @@ loc_80DB76:
                 BRA loc_80DB8A                                 ;80DB7C|80DB8A
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfOffScreen   (object VM op $CE)
+;    operands: u16 target
+;    Jump if this object is outside the window.
+;--------------------------------------------------------------
 Op_JmpIfOffScreen:
                 PEA.W $0002                                    ;80DB7E|
                 LDX.B curObjIdx                                ;80DB81|000042
                 BRA loc_80DB8A                                 ;80DB83|80DB8A
 
 
+;--------------------------------------------------------------
+;  Op_JmpIfOnScreen   (object VM op $CC)
+;    operands: u16 target
+;    Jump if this object is inside the small on-screen window (camX+$1F.., camY+$1F..).
+;--------------------------------------------------------------
 Op_JmpIfOnScreen:
                 PEA.W $0000                                    ;80DB85|
                 LDX.B curObjIdx                                ;80DB88|000042
@@ -17073,18 +18256,18 @@ loc_80DB8A:
                 LDA.B playerCamX                               ;80DB8A|000044
                 CLC                                            ;80DB8C|
                 ADC.W #$001F                                   ;80DB8D|
-                CMP.W objField_1179,X                          ;80DB90|801179
+                CMP.W objX,X                          ;80DB90|801179
                 BCS .skip                                      ;80DB93|80DBB4
                 ADC.W #$00C2                                   ;80DB95|
-                CMP.W objField_1179,X                          ;80DB98|801179
+                CMP.W objX,X                          ;80DB98|801179
                 BCC .skip                                      ;80DB9B|80DBB4
                 LDA.B playerCamY                               ;80DB9D|000046
                 CLC                                            ;80DB9F|
                 ADC.W #$001F                                   ;80DBA0|
-                CMP.W objField_11A1,X                          ;80DBA3|8011A1
+                CMP.W objY,X                          ;80DBA3|8011A1
                 BCS .skip                                      ;80DBA6|80DBB4
                 ADC.W #$0072                                   ;80DBA8|
-                CMP.W objField_11A1,X                          ;80DBAB|8011A1
+                CMP.W objY,X                          ;80DBAB|8011A1
                 BCC .skip                                      ;80DBAE|80DBB4
                 PLX                                            ;80DBB0|
                 JMP.W (VM_OnScreenTable,X)                        ;80DBB1|80DBBB
@@ -17106,6 +18289,13 @@ VM_OffScreenTable:
                 dw loc_80DBB8                                  ;80DBBF|80DBB8   ; pointer/jump table (16-bit entries)
                 dw Op_Goto                                  ;80DBC1|80CD70
 
+;--------------------------------------------------------------
+;  Op_SetVelocityToward   (object VM op $D4)
+;    operands: u8 kinds(tx|ty<<3), tx, ty, u8 speed
+;    Aim: objVelX/objVelY = vector to (tx,ty), halved until the larger component fits 'speed'. Low
+;    confidence.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 Op_SetVelocityToward:
                 STZ.B refillSaveX                              ;80DBC3|00003E
                 STZ.B refillSaveY                              ;80DBC5|000040
@@ -17115,7 +18305,7 @@ Op_SetVelocityToward:
                 JSR.W VM_GetOperandByType                               ;80DBCC|80DCD7
                 SEC                                            ;80DBCF|
                 LDX.B curObjIdx                                ;80DBD0|000042
-                SBC.W objField_1179,X                          ;80DBD2|801179
+                SBC.W objX,X                          ;80DBD2|801179
                 BPL +                                          ;80DBD5|80DBDD
                 EOR.W #$FFFF                                   ;80DBD7|
                 INC A                                          ;80DBDA|
@@ -17126,7 +18316,7 @@ Op_SetVelocityToward:
                 JSR.W VM_GetOperandByType_Shr3                               ;80DBE1|80DCD4
                 SEC                                            ;80DBE4|
                 LDX.B curObjIdx                                ;80DBE5|000042
-                SBC.W objField_11A1,X                          ;80DBE7|8011A1
+                SBC.W objY,X                          ;80DBE7|8011A1
                 BPL +                                          ;80DBEA|80DBF2
                 EOR.W #$FFFF                                   ;80DBEC|
                 INC A                                          ;80DBEF|
@@ -17160,7 +18350,7 @@ Op_SetVelocityToward:
 
 
          .skip: LDX.B curObjIdx                                ;80DC1B|000042
-                LDA.W objField_0FC1,X                          ;80DC1D|800FC1
+                LDA.W objFlags,X                          ;80DC1D|800FC1
                 BIT.W #$0040                                   ;80DC20|
                 BEQ +                                          ;80DC23|80DC2C
                 LDA.B refillSaveX                              ;80DC25|00003E
@@ -17182,7 +18372,7 @@ Op_SetVelocityToward:
                 EOR.W #$FFFF                                   ;80DC44|
                 INC A                                          ;80DC47|
 
-             +: STA.W ram_1089,X                               ;80DC48|801089
+             +: STA.W objVelX,X                               ;80DC48|801089
                 LDA.B zp_36                                    ;80DC4B|000036
                 AND.W #$FF00                                   ;80DC4D|
                 ORA.B zp_6E                                    ;80DC50|00006E
@@ -17192,7 +18382,7 @@ Op_SetVelocityToward:
                 EOR.W #$FFFF                                   ;80DC57|
                 INC A                                          ;80DC5A|
 
-             +: STA.W ram_10B1,X                               ;80DC5B|8010B1
+             +: STA.W objVelY,X                               ;80DC5B|8010B1
                 PLY                                            ;80DC5E|
                 RTS                                            ;80DC5F|
 
@@ -17221,7 +18411,7 @@ VM_TestBit_Imm:
 ; --------------------------------------------------------
 ;  VM_TestBit_Fld   [18 ins, returns RTS]
 ;    callers: Op_SubAcc_TFld
-;    reads:     curObjIdx, scriptPC, objField_0F21
+;    reads:     curObjIdx, scriptPC, objBoxTop
 ; --------------------------------------------------------
 VM_TestBit_Fld:
                 LDA.B [scriptPC],Y                             ;80DC75|000070
@@ -17236,7 +18426,7 @@ VM_TestBit_Fld:
                 CLC                                            ;80DC86|
                 ADC.B curObjIdx                                ;80DC87|000042
                 TAX                                            ;80DC89|
-                LDA.W objField_0F21,X                          ;80DC8A|800F21
+                LDA.W objBoxTop,X                          ;80DC8A|800F21
                 PLX                                            ;80DC8D|
                 AND.W data_80F3F7,X                            ;80DC8E|80F3F7
                 BEQ .exit                                      ;80DC91|80DC96
@@ -17271,7 +18461,7 @@ VM_TestBit_Ram:
 ; --------------------------------------------------------
 ;  VM_TestBit_TFld   [19 ins, returns RTS]
 ;    callers: Op_SubAcc_TFld
-;    reads:     curObjIdx, scriptPC, objField_0F21, objTarget
+;    reads:     curObjIdx, scriptPC, objBoxTop, objTarget
 ; --------------------------------------------------------
 VM_TestBit_TFld:
                 LDA.B [scriptPC],Y                             ;80DCAF|000070
@@ -17287,7 +18477,7 @@ VM_TestBit_TFld:
                 LDX.B curObjIdx                                ;80DCC1|000042
                 ADC.W objTarget,X                          ;80DCC3|8013D1
                 TAX                                            ;80DCC6|
-                LDA.W objField_0F21,X                          ;80DCC7|800F21
+                LDA.W objBoxTop,X                          ;80DCC7|800F21
                 PLX                                            ;80DCCA|
                 AND.W data_80F3F7,X                            ;80DCCB|80F3F7
                 BEQ .exit                                      ;80DCCE|80DCD3
@@ -17338,7 +18528,7 @@ VM_GetOperandImm:
 ; --------------------------------------------------------
 ;  VM_GetOperandFld   [10 ins, returns RTS]
 ;    callers: Op_SubAcc_TFld
-;    reads:     curObjIdx, scriptPC, objField_0F21
+;    reads:     curObjIdx, scriptPC, objBoxTop
 ; --------------------------------------------------------
 VM_GetOperandFld:
                 LDA.B [scriptPC],Y                             ;80DCEE|000070
@@ -17349,7 +18539,7 @@ VM_GetOperandFld:
                 CLC                                            ;80DCF8|
                 ADC.B curObjIdx                                ;80DCF9|000042
                 TAX                                            ;80DCFB|
-                LDA.W objField_0F21,X                          ;80DCFC|800F21
+                LDA.W objBoxTop,X                          ;80DCFC|800F21
                 RTS                                            ;80DCFF|
 
 
@@ -17370,7 +18560,7 @@ VM_GetOperandRam:
 ; --------------------------------------------------------
 ;  VM_GetOperandTFld   [11 ins, returns RTS]
 ;    callers: Op_SubAcc_TFld
-;    reads:     curObjIdx, scriptPC, objField_0F21, objTarget
+;    reads:     curObjIdx, scriptPC, objBoxTop, objTarget
 ; --------------------------------------------------------
 VM_GetOperandTFld:
                 LDA.B [scriptPC],Y                             ;80DD08|000070
@@ -17382,7 +18572,7 @@ VM_GetOperandTFld:
                 LDX.B curObjIdx                                ;80DD13|000042
                 ADC.W objTarget,X                          ;80DD15|8013D1
                 TAX                                            ;80DD18|
-                LDA.W objField_0F21,X                          ;80DD19|800F21
+                LDA.W objBoxTop,X                          ;80DD19|800F21
                 RTS                                            ;80DD1C|
 
 
@@ -17398,7 +18588,7 @@ VM_SetOperandByType_Shr3:
 ; --------------------------------------------------------
 ;  VM_SetOperandByType   [35 ins, returns RTS]
 ;    callers: Op_SubAcc_TFld
-;    writes:    zp_00, objField_0F21
+;    writes:    zp_00, objBoxTop
 ;    reads:     curObjIdx, scriptPC, objTarget
 ;    calls:     VM_SetOperandTable
 ; --------------------------------------------------------
@@ -17425,7 +18615,7 @@ VM_SetOperandTable:
                 ADC.B curObjIdx                                ;80DD3E|000042
                 TAX                                            ;80DD40|
                 PLA                                            ;80DD41|
-                STA.W objField_0F21,X                          ;80DD42|800F21
+                STA.W objBoxTop,X                          ;80DD42|800F21
                 RTS                                            ;80DD45|
 
 
@@ -17448,7 +18638,7 @@ VM_SetOperandTable:
                 ADC.W objTarget,X                          ;80DD5C|8013D1
                 TAX                                            ;80DD5F|
                 PLA                                            ;80DD60|
-                STA.W objField_0F21,X                          ;80DD61|800F21
+                STA.W objBoxTop,X                          ;80DD61|800F21
 
          .exit: RTS                                            ;80DD64|
 
@@ -17456,24 +18646,24 @@ VM_SetOperandTable:
 ; --------------------------------------------------------
 ;  DamageObject   [7 ins, returns RTS]
 ;    callers: Op_Goto
-;    writes:    objHealth
-;    reads:     objHealth, objDamage
+;    writes:    objArgHp
+;    reads:     objArgHp, objDamage
 ; --------------------------------------------------------
 DamageObject:
-                LDA.W objHealth,X                               ;80DD65|800FE9
+                LDA.W objArgHp,X                               ;80DD65|800FE9
                 SEC                                            ;80DD68|
                 SBC.W objDamage,Y                               ;80DD69|801011
                 BCS +                                          ;80DD6C|80DD71
                 LDA.W #$0000                                   ;80DD6E|
 
-             +: STA.W objHealth,X                               ;80DD71|800FE9
+             +: STA.W objArgHp,X                               ;80DD71|800FE9
                 RTS                                            ;80DD74|
 
 
 ; --------------------------------------------------------
 ;  sub_80DD75   [9 ins, returns RTS]
 ;    callers: UpdateAllObjects
-;    writes:    ram_1381, objField_13A9
+;    writes:    objMoveX, objMoveY
 ;    reads:     objTableEnd
 ; --------------------------------------------------------
 sub_80DD75:
@@ -17481,8 +18671,8 @@ sub_80DD75:
                 DEX                                            ;80DD78|
                 DEX                                            ;80DD79|
 
-         .loop: STZ.W ram_1381,X                               ;80DD7A|801381
-                STZ.W objField_13A9,X                          ;80DD7D|8013A9
+         .loop: STZ.W objMoveX,X                               ;80DD7A|801381
+                STZ.W objMoveY,X                               ;80DD7D|8013A9
                 DEX                                            ;80DD80|
                 DEX                                            ;80DD81|
                 BPL .loop                                      ;80DD82|80DD7A
@@ -17697,10 +18887,10 @@ ObjVM_OpTable:
                 dw Op_JmpIfNotPlayerBelow                       ;80DF0D|80DA5A   ; op $C4 (name is a guess)
                 dw Op_JmpIfNotPlayerBehind                      ;80DF0F|80DAC0   ; op $C5 (name is a guess)
                 dw Op_JmpIfNotPlayerAhead                       ;80DF11|80DA88   ; op $C6 (name is a guess)
-                dw Op_SetSpawnRecX                              ;80DF13|80DB1E   ; op $C7
-                dw Op_SetSpawnRecY                              ;80DF15|80DB2B   ; op $C8
-                dw Op_SetSpawnRecFlags                          ;80DF17|80DB4D   ; op $C9
-                dw Op_SetSpawnRecParam                          ;80DF19|80DB61   ; op $CA
+                dw Op_SetPlacementX                             ;80DF13|80DB1E   ; op $C7
+                dw Op_SetPlacementY                             ;80DF15|80DB2B   ; op $C8
+                dw Op_SetPlacementFlags                         ;80DF17|80DB4D   ; op $C9
+                dw Op_SetPlacementOamPool                       ;80DF19|80DB61   ; op $CA
                 dw Op_WaitKeyPlayer                             ;80DF1B|809677   ; op $CB
                 dw Op_JmpIfOnScreen                             ;80DF1D|80DB85   ; op $CC
                 dw Op_JmpIfTargetOnScreen                       ;80DF1F|80DB73   ; op $CD
@@ -17788,7 +18978,7 @@ sub_80DF6F:
 ;  sub_80DF80   [34 ins, returns RTS]
 ;    callers: InitObjectFromSpawnRec
 ;    writes:    ram_0370
-;    reads:     ram_0370, ram_0382, ram_0CE9, ram_0D29
+;    reads:     ram_0370, spawnOamPool, gfxLoadedId, gfxLoadedBase
 ; --------------------------------------------------------
 sub_80DF80:
                 CMP.W #$FFFF                                   ;80DF80|
@@ -17797,14 +18987,14 @@ sub_80DF80:
                 BEQ .skip2                                     ;80DF88|80DFA0
                 LDY.W #$0000                                   ;80DF8A|
 
-         .loop: CMP.W ram_0CE9,Y                               ;80DF8D|800CE9
+         .loop: CMP.W gfxLoadedId,Y                               ;80DF8D|800CE9
                 BEQ +                                          ;80DF90|80DF96
                 INY                                            ;80DF92|
                 INY                                            ;80DF93|
                 BRA .loop                                      ;80DF94|80DF8D
 
 
-             +: LDA.W ram_0D29,Y                               ;80DF96|800D29
+             +: LDA.W gfxLoadedBase,Y                               ;80DF96|800D29
                 CLC                                            ;80DF99|
                 RTS                                            ;80DF9A|
 
@@ -17830,7 +19020,7 @@ sub_80DF80:
         .skip3: INC A                                          ;80DFB4|
                 STA.W ram_0370,Y                               ;80DFB5|800370
                 REP #$20                                       ;80DFB8|
-                INC.W ram_0382                                 ;80DFBA|800382
+                INC.W spawnOamPool                                 ;80DFBA|800382
                 LDA.W data_80DFC5,Y                            ;80DFBD|80DFC5
                 AND.W #$00FF                                   ;80DFC0|
                 CLC                                            ;80DFC3|
@@ -17845,13 +19035,13 @@ data_80DFC5:
 ;  sub_80DFD1   [20 ins, returns RTS]
 ;    callers: DestroyObject
 ;    writes:    ram_0370
-;    reads:     zp_2A, ram_1129, ram_1291
+;    reads:     zp_2A, objTypeId, objGfxBase
 ;    calls:     GetSpawnRecPtr
 ; --------------------------------------------------------
 sub_80DFD1:
                 PHY                                            ;80DFD1|
                 TYX                                            ;80DFD2|
-                LDA.W ram_1129,X                               ;80DFD3|801129
+                LDA.W objTypeId,X                               ;80DFD3|801129
                 JSR.W GetSpawnRecPtr                               ;80DFD6|80F11F
                 LDY.W #$0000                                   ;80DFD9|
                 LDA.B [zp_2A],Y                                ;80DFDC|00002A
@@ -17859,7 +19049,7 @@ sub_80DFD1:
                 BNE .skip                                      ;80DFE1|80DFFA
                 SEP #$20                                       ;80DFE3|
                 LDY.W #$0000                                   ;80DFE5|
-                LDA.W ram_1291,X                               ;80DFE8|801291
+                LDA.W objGfxBase,X                               ;80DFE8|801291
 
          .loop: CMP.W data_80DFC5,Y                            ;80DFEB|80DFC5
                 BEQ +                                          ;80DFEE|80DFF3
@@ -17966,17 +19156,17 @@ loc_80E03A:
 ;  UpdateObjectMotion_One   [51 ins, returns RTS]
 ;    callers: UpdateObjectMotion
 ;    writes:    refillTmp32, refillStageIdx, zp_36, oamSrcX, oamSrcY
-;    reads:     refillTmp32, refillStageIdx, zp_36, oamSrcX, oamSrcY, objScriptSrcBank ...
+;    reads:     refillTmp32, refillStageIdx, zp_36, oamSrcX, oamSrcY, objActive ...
 ;    calls:     ptrtbl_80E0B1
 ; --------------------------------------------------------
 UpdateObjectMotion_One:
-                LDA.W objScriptSrcBank,Y                  ;80E047|800D91
+                LDA.W objActive,Y                  ;80E047|800D91
                 BEQ .exit                                      ;80E04A|80E0B0
-                LDA.W ram_1511,Y                               ;80E04C|801511
+                LDA.W objOamCount,Y                               ;80E04C|801511
                 BEQ .exit                                      ;80E04F|80E0B0
-                LDA.W objField_1179,Y                          ;80E051|801179
+                LDA.W objX,Y                          ;80E051|801179
                 SEC                                            ;80E054|
-                SBC.W ram_0DE1,Y                               ;80E055|800DE1
+                SBC.W objPrevX,Y                               ;80E055|800DE1
                 BMI +                                          ;80E058|80E05F
                 JSR.W (ptrtbl_80E0B1,X)                        ;80E05A|80E0B1
                 BRA .cont                                      ;80E05D|80E06A
@@ -17989,9 +19179,9 @@ UpdateObjectMotion_One:
                 INC A                                          ;80E069|
 
          .cont: STA.B refillStageIdx                           ;80E06A|000034
-                LDA.W objField_11A1,Y                          ;80E06C|8011A1
+                LDA.W objY,Y                          ;80E06C|8011A1
                 SEC                                            ;80E06F|
-                SBC.W ram_0E09,Y                               ;80E070|800E09
+                SBC.W objPrevY,Y                               ;80E070|800E09
                 BMI +                                          ;80E073|80E07A
                 JSR.W (ptrtbl_80E0B1,X)                        ;80E075|80E0B1
                 BRA .cont2                                     ;80E078|80E085
@@ -18007,10 +19197,10 @@ UpdateObjectMotion_One:
                 ORA.B refillStageIdx                           ;80E087|000034
                 BEQ .exit                                      ;80E089|80E0B0
                 PHX                                            ;80E08B|
-                LDA.W ram_14E9,Y                               ;80E08C|8014E9
+                LDA.W objOamEnd,Y                               ;80E08C|8014E9
                 ASL A                                          ;80E08F|
                 STA.B refillTmp32                              ;80E090|000032
-                LDA.W ram_14C1,Y                               ;80E092|8014C1
+                LDA.W objOamFirst,Y                               ;80E092|8014C1
                 ASL A                                          ;80E095|
                 TAX                                            ;80E096|
 
@@ -18065,7 +19255,7 @@ BuildSpriteOam:
 ;    callers: BuildSpriteOam_Loop
 ;    writes HW: A1B1, A1B4, A1TL1, A1TL4, BBAD1, BBAD4, DASL1, DASL4, DMAP1, DMAP4
 ;    writes:    refillTmp32, oamBuildLo, ram_0573, oamBuildHi
-;    reads:     refillTmp32, playerCamX, playerCamY, splitYOffset, oamBuildHi, oamSrcTile ...
+;    reads:     refillTmp32, playerCamX, playerCamY, splitYOffset, oamBuildHi, ram_0793 ...
 ;    calls:     BuildSpriteOam_Loop
 ; --------------------------------------------------------
 BuildSpriteOam_Loop:
@@ -18102,7 +19292,7 @@ BuildSpriteOam_Loop:
                 AND.W #$00FF                                   ;80E0F5|
                 ORA.B refillTmp32                              ;80E0F8|000032
                 STA.W oamBuildLo,X                             ;80E0FA|800571
-                LDA.W oamSrcTile,X                               ;80E0FD|800793
+                LDA.W ram_0793,X                               ;80E0FD|800793
                 STA.W ram_0573,X                               ;80E100|800573
                 TYA                                            ;80E103|
                 LSR A                                          ;80E104|
@@ -18124,7 +19314,7 @@ BuildSpriteOam_Loop:
                 TAX                                            ;80E11E|
                 LDA.W #$E000                                   ;80E11F|   ; offscreen sprite parked: Y high byte = $E0 (LDA #$E000)
                 STA.W oamBuildLo,X                             ;80E122|800571
-                LDA.W oamSrcTile,X                               ;80E125|800793
+                LDA.W ram_0793,X                               ;80E125|800793
                 STA.W ram_0573,X                               ;80E128|800573
                 INY                                            ;80E12B|
                 CPY.W #$0080                                   ;80E12C|
@@ -18134,7 +19324,7 @@ BuildSpriteOam_Loop:
 
         .skip2: ORA.B refillTmp32                              ;80E133|000032
                 STA.W oamBuildLo,X                             ;80E135|800571
-                LDA.W oamSrcTile,X                               ;80E138|800793
+                LDA.W ram_0793,X                               ;80E138|800793
                 STA.W ram_0573,X                               ;80E13B|800573
                 TYA                                            ;80E13E|
                 LSR A                                          ;80E13F|
@@ -18251,6 +19441,12 @@ sub_80E1D0:
                 RTS                                            ;80E1E6|
 
 
+;--------------------------------------------------------------
+;  Op_AnimTick   (object VM op $2F)
+;    operands: -
+;    Run one tick of this object's animation script (Op_AnimTick -> AnimVM_TickObject -> AnimVM_Run).
+;    Does nothing if objAnimPtr = $FFFF. The bridge between the two VMs.
+;--------------------------------------------------------------
 Op_AnimTick:
                 PHY                                            ;80E1E7|
                 JSR.W AnimVM_TickObject                               ;80E1E8|80E1F0
@@ -18278,14 +19474,14 @@ AnimVM_TickObject:
                 STA.B animWait                                    ;80E203|000078
                 LDA.W objAnimRet,Y                               ;80E205|801499
                 STA.B animRet                                    ;80E208|00007A
-                LDA.W ram_14C1,Y                               ;80E20A|8014C1
+                LDA.W objOamFirst,Y                               ;80E20A|8014C1
                 STA.B animOamFirst                                    ;80E20D|00007C
                 ASL A                                          ;80E20F|
                 ASL A                                          ;80E210|
                 STA.B animOamFirstX4                                    ;80E211|00007E
-                LDA.W ram_14E9,Y                               ;80E213|8014E9
+                LDA.W objOamEnd,Y                               ;80E213|8014E9
                 STA.B animOamEnd                                    ;80E216|000080
-                STZ.W ram_038E                                 ;80E218|80038E
+                STZ.W animSpriteMask                                 ;80E218|80038E
                 JSR.W AnimVM_Run                               ;80E21B|80E230
                 LDY.B curObjIdx                                ;80E21E|000042
                 LDA.B animPC                                    ;80E220|000074
@@ -18323,6 +19519,11 @@ AnimVM_Run:
          .exit: RTS                                            ;80E246|
 
 
+;--------------------------------------------------------------
+;  AnimOp_AddTileDelta   (animation VM op $00)
+;    operands: u8 delta
+;    Add delta to the tile number of every sprite (masked by animSpriteMask if set).
+;--------------------------------------------------------------
 AnimOp_AddTileDelta:
                 LDA.B [animPC]                                  ;80E247|000074
                 INC.B animPC                                    ;80E249|000074
@@ -18330,16 +19531,16 @@ AnimOp_AddTileDelta:
                 STA.B refillStageIdx                           ;80E24E|000034
                 LDX.B animOamFirstX4                                    ;80E250|00007E
                 LDY.B animOamFirst                                    ;80E252|00007C
-                LDA.W ram_038E                                 ;80E254|80038E
+                LDA.W animSpriteMask                                 ;80E254|80038E
                 BEQ .loop2                                     ;80E257|80E274
 
          .loop: LDA.W ram_09F9,Y                               ;80E259|8009F9
-                AND.W ram_038E                                 ;80E25C|80038E
+                AND.W animSpriteMask                                 ;80E25C|80038E
                 BEQ .skip                                      ;80E25F|80E26A
-                LDA.W oamSrcTile,X                               ;80E261|800793
+                LDA.W ram_0793,X                               ;80E261|800793
                 CLC                                            ;80E264|
                 ADC.B refillStageIdx                           ;80E265|000034
-                STA.W oamSrcTile,X                               ;80E267|800793
+                STA.W ram_0793,X                               ;80E267|800793
 
          .skip: INX                                            ;80E26A|
                 INX                                            ;80E26B|
@@ -18351,10 +19552,10 @@ AnimOp_AddTileDelta:
                 RTS                                            ;80E273|
 
 
-        .loop2: LDA.W oamSrcTile,X                               ;80E274|800793
+        .loop2: LDA.W ram_0793,X                               ;80E274|800793
                 CLC                                            ;80E277|
                 ADC.B refillStageIdx                           ;80E278|000034
-                STA.W oamSrcTile,X                               ;80E27A|800793
+                STA.W ram_0793,X                               ;80E27A|800793
                 INX                                            ;80E27D|
                 INX                                            ;80E27E|
                 INX                                            ;80E27F|
@@ -18365,24 +19566,30 @@ AnimOp_AddTileDelta:
                 RTS                                            ;80E286|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SetTiles   (animation VM op $01)
+;    operands: u8 tile ...
+;    Set the tile number of each sprite: reads one byte per sprite (masked ones skipped), adds
+;    objGfxBase, stores 9 bits into the OAM source word.
+;--------------------------------------------------------------
 AnimOp_SetTiles:
                 LDY.B curObjIdx                                ;80E287|000042
-                LDA.W ram_1291,Y                               ;80E289|801291
+                LDA.W objGfxBase,Y                               ;80E289|801291
                 STA.B zp_3A                                    ;80E28C|00003A
                 LDX.B animOamFirstX4                                    ;80E28E|00007E
                 LDY.B animOamFirst                                    ;80E290|00007C
-                LDA.W ram_038E                                 ;80E292|80038E
+                LDA.W animSpriteMask                                 ;80E292|80038E
                 BEQ .loop2                                     ;80E295|80E2C9
 
          .loop: LDA.W ram_09F9,Y                               ;80E297|8009F9
-                AND.W ram_038E                                 ;80E29A|80038E
+                AND.W animSpriteMask                                 ;80E29A|80038E
                 BEQ .skip                                      ;80E29D|80E2BF
                 LDA.B [animPC]                                  ;80E29F|000074
                 AND.W #$00FF                                   ;80E2A1|
                 CLC                                            ;80E2A4|
                 ADC.B zp_3A                                    ;80E2A5|00003A
                 SEP #$20                                       ;80E2A7|
-                STA.W oamSrcTile,X                               ;80E2A9|800793
+                STA.W ram_0793,X                               ;80E2A9|800793
                 XBA                                            ;80E2AC|
                 AND.B #$01                                     ;80E2AD|
                 STA.B refillTmp32                              ;80E2AF|000032
@@ -18408,7 +19615,7 @@ AnimOp_SetTiles:
                 CLC                                            ;80E2CE|
                 ADC.B zp_3A                                    ;80E2CF|00003A
                 SEP #$20                                       ;80E2D1|
-                STA.W oamSrcTile,X                               ;80E2D3|800793
+                STA.W ram_0793,X                               ;80E2D3|800793
                 XBA                                            ;80E2D6|
                 AND.B #$01                                     ;80E2D7|
                 STA.B refillTmp32                              ;80E2D9|000032
@@ -18428,6 +19635,11 @@ AnimOp_SetTiles:
                 RTS                                            ;80E2F2|
 
 
+;--------------------------------------------------------------
+;  AnimOp_PlaySfx   (animation VM op $02)
+;    operands: u8 id, u8 param
+;    Play sound effect.
+;--------------------------------------------------------------
 AnimOp_PlaySfx:
                 LDA.B [animPC]                                  ;80E2F3|000074
                 INC.B animPC                                    ;80E2F5|000074
@@ -18441,6 +19653,11 @@ AnimOp_PlaySfx:
                 JMP.W sub_8088F8                               ;80E304|8088F8
 
 
+;--------------------------------------------------------------
+;  AnimOp_StopSfx   (animation VM op $04)
+;    operands: u8 id
+;    Stop sound effect.
+;--------------------------------------------------------------
 AnimOp_StopSfx:
                 LDA.B [animPC]                                  ;80E307|000074
                 INC.B animPC                                    ;80E309|000074
@@ -18449,6 +19666,12 @@ AnimOp_StopSfx:
                 JMP.W sub_80890C                               ;80E311|80890C
 
 
+;--------------------------------------------------------------
+;  AnimOp_MoveX   (animation VM op $07)
+;    operands: s8 dx
+;    Move: with an animSpriteMask shifts those sprites' X, otherwise adds dx*256 to objMoveX (a
+;    velocity nudge). Mirrored when facing left.
+;--------------------------------------------------------------
 AnimOp_MoveX:
                 LDA.B [animPC]                                  ;80E314|000074
                 INC.B animPC                                    ;80E316|000074
@@ -18459,7 +19682,7 @@ AnimOp_MoveX:
 
              +: TAX                                            ;80E323|
                 LDY.B curObjIdx                                ;80E324|000042
-                LDA.W objField_0FC1,Y                          ;80E326|800FC1
+                LDA.W objFlags,Y                          ;80E326|800FC1
                 AND.W #$0040                                   ;80E329|
                 BEQ .skip                                      ;80E32C|80E334
                 TXA                                            ;80E32E|
@@ -18468,7 +19691,7 @@ AnimOp_MoveX:
                 TAX                                            ;80E333|
 
          .skip: STX.B refillTmp32                              ;80E334|000032
-                LDA.W ram_038E                                 ;80E336|80038E
+                LDA.W animSpriteMask                                 ;80E336|80038E
                 BEQ .skip3                                     ;80E339|80E359
                 LDY.B animOamFirst                                    ;80E33B|00007C
                 TYA                                            ;80E33D|
@@ -18476,7 +19699,7 @@ AnimOp_MoveX:
                 TAX                                            ;80E33F|
 
          .loop: LDA.W ram_09F9,Y                               ;80E340|8009F9
-                AND.W ram_038E                                 ;80E343|80038E
+                AND.W animSpriteMask                                 ;80E343|80038E
                 BEQ .skip2                                     ;80E346|80E351
                 LDA.W oamSrcX,X                                ;80E348|800A61
                 CLC                                            ;80E34B|
@@ -18495,14 +19718,20 @@ AnimOp_MoveX:
                 AND.W #$00FF                                   ;80E35B|
                 XBA                                            ;80E35E|
                 CLC                                            ;80E35F|
-                ADC.W ram_1381,Y                               ;80E360|801381
-                STA.W ram_1381,Y                               ;80E363|801381
+                ADC.W objMoveX,Y                               ;80E360|801381
+                STA.W objMoveX,Y                               ;80E363|801381
                 RTS                                            ;80E366|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SetXPositions   (animation VM op $08)
+;    operands: s16 x ...
+;    Set each sprite's X to objX + value (one word per sprite); mirrors via sub_80EADE when facing
+;    left.
+;--------------------------------------------------------------
 AnimOp_SetXPositions:
                 LDY.B curObjIdx                                ;80E367|000042
-                LDA.W objField_1179,Y                          ;80E369|801179
+                LDA.W objX,Y                          ;80E369|801179
                 STA.B refillTmp32                              ;80E36C|000032
                 LDA.B animOamFirst                                    ;80E36E|00007C
                 TAY                                            ;80E370|
@@ -18521,7 +19750,7 @@ AnimOp_SetXPositions:
                 CPY.B animOamEnd                                    ;80E382|000080
                 BNE .loop                                      ;80E384|80E373
                 LDX.B curObjIdx                                ;80E386|000042
-                LDA.W objField_0FC1,X                          ;80E388|800FC1
+                LDA.W objFlags,X                          ;80E388|800FC1
                 BIT.W #$0040                                   ;80E38B|
                 BEQ .exit                                      ;80E38E|80E393
                 JSR.W sub_80EADE                               ;80E390|80EADE
@@ -18529,6 +19758,11 @@ AnimOp_SetXPositions:
          .exit: RTS                                            ;80E393|
 
 
+;--------------------------------------------------------------
+;  AnimOp_MoveY   (animation VM op $09)
+;    operands: s8 dy
+;    Y equivalent of AnimOp_MoveX.
+;--------------------------------------------------------------
 AnimOp_MoveY:
                 LDA.B [animPC]                                  ;80E394|000074
                 INC.B animPC                                    ;80E396|000074
@@ -18539,7 +19773,7 @@ AnimOp_MoveY:
 
              +: TAX                                            ;80E3A3|
                 LDY.B curObjIdx                                ;80E3A4|000042
-                LDA.W objField_0FC1,Y                          ;80E3A6|800FC1
+                LDA.W objFlags,Y                          ;80E3A6|800FC1
                 AND.W #$0080                                   ;80E3A9|
                 BEQ .skip                                      ;80E3AC|80E3B4
                 TXA                                            ;80E3AE|
@@ -18548,7 +19782,7 @@ AnimOp_MoveY:
                 TAX                                            ;80E3B3|
 
          .skip: STX.B refillTmp32                              ;80E3B4|000032
-                LDA.W ram_038E                                 ;80E3B6|80038E
+                LDA.W animSpriteMask                                 ;80E3B6|80038E
                 BEQ .skip3                                     ;80E3B9|80E3D9
                 LDY.B animOamFirst                                    ;80E3BB|00007C
                 TYA                                            ;80E3BD|
@@ -18556,7 +19790,7 @@ AnimOp_MoveY:
                 TAX                                            ;80E3BF|
 
          .loop: LDA.W ram_09F9,Y                               ;80E3C0|8009F9
-                AND.W ram_038E                                 ;80E3C3|80038E
+                AND.W animSpriteMask                                 ;80E3C3|80038E
                 BEQ .skip2                                     ;80E3C6|80E3D1
                 LDA.W oamSrcY,X                                ;80E3C8|800B49
                 CLC                                            ;80E3CB|
@@ -18575,14 +19809,19 @@ AnimOp_MoveY:
                 AND.W #$00FF                                   ;80E3DB|
                 XBA                                            ;80E3DE|
                 CLC                                            ;80E3DF|
-                ADC.W objField_13A9,Y                          ;80E3E0|8013A9
-                STA.W objField_13A9,Y                          ;80E3E3|8013A9
+                ADC.W objMoveY,Y                          ;80E3E0|8013A9
+                STA.W objMoveY,Y                          ;80E3E3|8013A9
                 RTS                                            ;80E3E6|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SetYPositions   (animation VM op $0A)
+;    operands: s16 y ...
+;    Y equivalent of AnimOp_SetXPositions.
+;--------------------------------------------------------------
 AnimOp_SetYPositions:
                 LDY.B curObjIdx                                ;80E3E7|000042
-                LDA.W objField_11A1,Y                          ;80E3E9|8011A1
+                LDA.W objY,Y                          ;80E3E9|8011A1
                 STA.B refillTmp32                              ;80E3EC|000032
                 LDA.B animOamFirst                                    ;80E3EE|00007C
                 TAY                                            ;80E3F0|
@@ -18601,7 +19840,7 @@ AnimOp_SetYPositions:
                 CPY.B animOamEnd                                    ;80E402|000080
                 BNE .loop                                      ;80E404|80E3F3
                 LDX.B curObjIdx                                ;80E406|000042
-                LDA.W objField_0FC1,X                          ;80E408|800FC1
+                LDA.W objFlags,X                          ;80E408|800FC1
                 BIT.W #$0080                                   ;80E40B|
                 BEQ .exit                                      ;80E40E|80E413
                 JSR.W sub_80EBE1                               ;80E410|80EBE1
@@ -18609,14 +19848,19 @@ AnimOp_SetYPositions:
          .exit: RTS                                            ;80E413|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SetPalette   (animation VM op $0C)
+;    operands: u8 attr
+;    Set palette bits (OAM attr & $F1 | attr) for each sprite.
+;--------------------------------------------------------------
 AnimOp_SetPalette:
                 LDX.B animOamFirstX4                                    ;80E414|00007E
                 LDY.B animOamFirst                                    ;80E416|00007C
-                LDA.W ram_038E                                 ;80E418|80038E
+                LDA.W animSpriteMask                                 ;80E418|80038E
                 BEQ .loop2                                     ;80E41B|80E43F
 
          .loop: LDA.W ram_09F9,Y                               ;80E41D|8009F9
-                AND.W ram_038E                                 ;80E420|80038E
+                AND.W animSpriteMask                                 ;80E420|80038E
                 BEQ .skip                                      ;80E423|80E435
                 SEP #$20                                       ;80E425|
                 LDA.W ram_0794,X                               ;80E427|800794
@@ -18653,17 +19897,22 @@ AnimOp_SetPalette:
                 RTS                                            ;80E458|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SetSizeBit   (animation VM op $15)
+;    operands: u8 bit
+;    Set/clear the OAM size bit (high table) for each sprite.
+;--------------------------------------------------------------
 AnimOp_SetSizeBit:
                 LDA.B [animPC]                                  ;80E459|000074
                 INC.B animPC                                    ;80E45B|000074
                 AND.W #$00FF                                   ;80E45D|
                 STA.B refillStageIdx                           ;80E460|000034
                 LDY.B animOamFirst                                    ;80E462|00007C
-                LDA.W ram_038E                                 ;80E464|80038E
+                LDA.W animSpriteMask                                 ;80E464|80038E
                 BEQ .loop2                                     ;80E467|80E47C
 
          .loop: LDA.W ram_09F9,Y                               ;80E469|8009F9
-                AND.W ram_038E                                 ;80E46C|80038E
+                AND.W animSpriteMask                                 ;80E46C|80038E
                 BEQ +                                          ;80E46F|80E476
                 LDA.B refillStageIdx                           ;80E471|000034
                 JSR.W sub_80E1A8                               ;80E473|80E1A8
@@ -18682,13 +19931,18 @@ AnimOp_SetSizeBit:
                 RTS                                            ;80E486|
 
 
+;--------------------------------------------------------------
+;  AnimOp_HideSprites   (animation VM op $18)
+;    operands: -
+;    Hide sprites (oamSrcAttr |= $40).
+;--------------------------------------------------------------
 AnimOp_HideSprites:
                 LDY.B animOamFirst                                    ;80E487|00007C
-                LDA.W ram_038E                                 ;80E489|80038E
+                LDA.W animSpriteMask                                 ;80E489|80038E
                 BEQ .loop2                                     ;80E48C|80E4A5
 
          .loop: LDA.W ram_09F9,Y                               ;80E48E|8009F9
-                AND.W ram_038E                                 ;80E491|80038E
+                AND.W animSpriteMask                                 ;80E491|80038E
                 BEQ +                                          ;80E494|80E49F
                 LDA.W oamSrcAttr,Y                             ;80E496|800985
                 ORA.W #$0040                                   ;80E499|
@@ -18709,13 +19963,19 @@ AnimOp_HideSprites:
                 RTS                                            ;80E4B3|
 
 
+;--------------------------------------------------------------
+;  AnimOp_ShowSprites   (animation VM op $19)
+;    operands: -
+;    Show sprites (clears $40; the unmasked path also clears $20, the masked path only $40 -
+;    asymmetric).
+;--------------------------------------------------------------
 AnimOp_ShowSprites:
                 LDY.B animOamFirst                                    ;80E4B4|00007C
-                LDA.W ram_038E                                 ;80E4B6|80038E
+                LDA.W animSpriteMask                                 ;80E4B6|80038E
                 BEQ .loop2                                     ;80E4B9|80E4D5
 
          .loop: LDA.W ram_09F9,Y                               ;80E4BB|8009F9
-                AND.W ram_038E                                 ;80E4BE|80038E
+                AND.W animSpriteMask                                 ;80E4BE|80038E
                 BEQ .skip                                      ;80E4C1|80E4CF
                 LDA.W oamSrcAttr,Y                             ;80E4C3|800985
                 AND.W #$FFBF                                   ;80E4C6|
@@ -18737,6 +19997,11 @@ AnimOp_ShowSprites:
                 RTS                                            ;80E4E3|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SetPriority   (animation VM op $16)
+;    operands: u8 prio
+;    Set the priority bits (attr & $CF | prio<<4).
+;--------------------------------------------------------------
 AnimOp_SetPriority:
                 LDA.B [animPC]                                  ;80E4E4|000074
                 INC.B animPC                                    ;80E4E6|000074
@@ -18748,11 +20013,11 @@ AnimOp_SetPriority:
                 STA.B refillTmp32                              ;80E4EF|000032
                 LDX.B animOamFirstX4                                    ;80E4F1|00007E
                 LDY.B animOamFirst                                    ;80E4F3|00007C
-                LDA.W ram_038E                                 ;80E4F5|80038E
+                LDA.W animSpriteMask                                 ;80E4F5|80038E
                 BEQ .loop2                                     ;80E4F8|80E51A
 
          .loop: LDA.W ram_09F9,Y                               ;80E4FA|8009F9
-                AND.W ram_038E                                 ;80E4FD|80038E
+                AND.W animSpriteMask                                 ;80E4FD|80038E
                 BEQ .skip                                      ;80E500|80E510
                 SEP #$20                                       ;80E502|
                 LDA.W ram_0794,X                               ;80E504|800794
@@ -18787,13 +20052,19 @@ AnimOp_SetPriority:
                 RTS                                            ;80E531|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SetSpriteFlags   (animation VM op $13)
+;    operands: u8 flag ...
+;    Set per-sprite flag bytes (ram_09F9,X) one per sprite. Low confidence.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 AnimOp_SetSpriteFlags:
                 LDX.B animOamFirst                                    ;80E532|00007C
-                LDA.W ram_038E                                 ;80E534|80038E
+                LDA.W animSpriteMask                                 ;80E534|80038E
                 BEQ .loop2                                     ;80E537|80E552
 
          .loop: LDA.W ram_09F9,X                               ;80E539|8009F9
-                AND.W ram_038E                                 ;80E53C|80038E
+                AND.W animSpriteMask                                 ;80E53C|80038E
                 BEQ .skip                                      ;80E53F|80E54C
                 SEP #$20                                       ;80E541|
                 LDA.B [animPC]                                  ;80E543|000074
@@ -18818,19 +20089,35 @@ AnimOp_SetSpriteFlags:
                 RTS                                            ;80E562|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SetSpriteMask   (animation VM op $0D)
+;    operands: u8 mask
+;    animSpriteMask = mask: later ops only affect sprites whose ram_09F9 flag ANDs with it (0 = all).
+;--------------------------------------------------------------
 AnimOp_SetSpriteMask:
                 LDA.B [animPC]                                  ;80E563|000074
                 INC.B animPC                                    ;80E565|000074
                 AND.W #$00FF                                   ;80E567|
-                STA.W ram_038E                                 ;80E56A|80038E
+                STA.W animSpriteMask                                 ;80E56A|80038E
                 RTS                                            ;80E56D|
 
 
+;--------------------------------------------------------------
+;  AnimOp_Yield   (animation VM op $0E)
+;    operands: -
+;    End this tick (PLA+RTS unwinds two frames); animWait unchanged, so the script continues next
+;    tick.
+;--------------------------------------------------------------
 AnimOp_Yield:
                 PLA                                            ;80E56E|
                 RTS                                            ;80E56F|
 
 
+;--------------------------------------------------------------
+;  AnimOp_End   (animation VM op $1A)
+;    operands: -
+;    End of animation: animPC = $FFFF (AnimVM_TickObject then skips this object).
+;--------------------------------------------------------------
 AnimOp_End:
                 LDA.W #$FFFF                                   ;80E570|
                 STA.B animPC                                    ;80E573|000074
@@ -18838,6 +20125,11 @@ AnimOp_End:
                 RTS                                            ;80E576|
 
 
+;--------------------------------------------------------------
+;  AnimOp_Wait   (animation VM op $0F)
+;    operands: u8 frames
+;    animWait = frames; end this tick.
+;--------------------------------------------------------------
 AnimOp_Wait:
                 LDA.B [animPC]                                  ;80E577|000074
                 INC.B animPC                                    ;80E579|000074
@@ -18847,16 +20139,31 @@ AnimOp_Wait:
                 RTS                                            ;80E581|
 
 
+;--------------------------------------------------------------
+;  AnimOp_ToggleFlipH   (animation VM op $10)
+;    operands: -
+;    Toggle H-flip bit on the sprites.
+;--------------------------------------------------------------
 AnimOp_ToggleFlipH:
                 LDA.W #$0040                                   ;80E582|
                 BRA loc_80E58F                                 ;80E585|80E58F
 
 
+;--------------------------------------------------------------
+;  AnimOp_ToggleFlipV   (animation VM op $11)
+;    operands: -
+;    Toggle V-flip bit.
+;--------------------------------------------------------------
 AnimOp_ToggleFlipV:
                 LDA.W #$0080                                   ;80E587|
                 BRA loc_80E58F                                 ;80E58A|80E58F
 
 
+;--------------------------------------------------------------
+;  AnimOp_ToggleFlipHV   (animation VM op $12)
+;    operands: -
+;    Toggle both flip bits.
+;--------------------------------------------------------------
 AnimOp_ToggleFlipHV:
                 LDA.W #$00C0                                   ;80E58C|
 
@@ -18864,11 +20171,11 @@ loc_80E58F:
                 STA.B refillTmp32                              ;80E58F|000032
                 LDX.B animOamFirstX4                                    ;80E591|00007E
                 LDY.B animOamFirst                                    ;80E593|00007C
-                LDA.W ram_038E                                 ;80E595|80038E
+                LDA.W animSpriteMask                                 ;80E595|80038E
                 BEQ .loop2                                     ;80E598|80E5B8
 
          .loop: LDA.W ram_09F9,Y                               ;80E59A|8009F9
-                AND.W ram_038E                                 ;80E59D|80038E
+                AND.W animSpriteMask                                 ;80E59D|80038E
                 BEQ .skip                                      ;80E5A0|80E5AE
                 SEP #$20                                       ;80E5A2|
                 LDA.W ram_0794,X                               ;80E5A4|800794
@@ -18901,18 +20208,33 @@ loc_80E58F:
                 RTS                                            ;80E5CD|
 
 
+;--------------------------------------------------------------
+;  AnimOp_Call   (animation VM op $05)
+;    operands: u16 target
+;    Call: animRet = animPC+2, then jump.
+;--------------------------------------------------------------
 AnimOp_Call:
                 LDA.B animPC                                    ;80E5CE|000074
                 INC A                                          ;80E5D0|
                 INC A                                          ;80E5D1|
                 STA.B animRet                                    ;80E5D2|00007A
 
+;--------------------------------------------------------------
+;  AnimOp_Goto   (animation VM op $03)
+;    operands: u16 target
+;    animPC = target.
+;--------------------------------------------------------------
 AnimOp_Goto:
                 LDA.B [animPC]                                  ;80E5D4|000074
                 STA.B animPC                                    ;80E5D6|000074
                 RTS                                            ;80E5D8|
 
 
+;--------------------------------------------------------------
+;  AnimOp_Return   (animation VM op $06)
+;    operands: -
+;    Return: animPC = animRet.
+;--------------------------------------------------------------
 AnimOp_Return:
                 LDA.B animRet                                    ;80E5D9|00007A
                 STA.B animPC                                    ;80E5DB|000074
@@ -18936,8 +20258,8 @@ DmaWramStagingUpload:
                 LDY.B curObjIdx                      ;80E5DE|000042
                 LDA.B [animPC]                                  ;80E5E0|000074
                 AND.W #$00FF                                   ;80E5E2|
-                STA.W ram_1359,Y                               ;80E5E5|801359
-                LDA.W ram_1291,Y                               ;80E5E8|801291
+                STA.W objGfxFrame,Y                               ;80E5E5|801359
+                LDA.W objGfxBase,Y                               ;80E5E8|801291
                 ASL A                                          ;80E5EB|
                 ASL A                                          ;80E5EC|
                 ASL A                                          ;80E5ED|
@@ -18947,18 +20269,18 @@ DmaWramStagingUpload:
                 STA.B zp_2E                                    ;80E5F3|00002E
                 LDA.W #$007E                                   ;80E5F5|
                 STA.B zp_30                                    ;80E5F8|000030
-                LDA.W ram_1539,Y                               ;80E5FA|801539
+                LDA.W objGfxSetIdx,Y                               ;80E5FA|801539
                 ASL A                                          ;80E5FD|
                 TAY                                            ;80E5FE|
                 LDA.B [animPC]                                  ;80E5FF|000074
                 INC.B animPC                                    ;80E601|000074
                 STA.B mulMultiplicand                          ;80E603|0000AC
-                LDA.W ram_0CC9,Y                               ;80E605|800CC9
+                LDA.W gfxSetFrameBytes,Y                               ;80E605|800CC9
                 STA.B mulMultiplierLo                          ;80E608|0000B0
                 JSR.W Mul8x16                                  ;80E60A|809152
-                LDA.W ram_0CA9,Y                               ;80E60D|800CA9
+                LDA.W gfxSetSrcBank,Y                               ;80E60D|800CA9
                 STA.B zp_2C                                    ;80E610|00002C
-                LDA.W ram_0C89,Y                               ;80E612|800C89
+                LDA.W gfxSetSrcLo,Y                               ;80E612|800C89
                 CLC                                            ;80E615|
                 ADC.B mulResult                                ;80E616|0000B2
                 BCC +                                          ;80E618|80E620
@@ -19205,7 +20527,7 @@ dma_80E7D4:
 
 loc_80E848:
                 LDY.B curObjIdx                                ;80E848|000042
-                LDA.W ram_1291,Y                               ;80E84A|801291
+                LDA.W objGfxBase,Y                               ;80E84A|801291
                 CMP.W #$0080                                   ;80E84D|
                 BCS +                                          ;80E850|80E859
                 LDA.W #$0001                                   ;80E852|
@@ -19247,8 +20569,8 @@ sub_80E860:
 ;  sub_80E885   [32 ins, returns RTS]
 ;    callers: vbwait_808081, MainLoop_PauseOrMenu, sub_80A0A3
 ;    writes HW: A1B5, A1TL5, BBAD5, DASL5, DMAP5
-;    writes:    refillTmp32, ram_1539
-;    reads:     refillTmp32, curObjIdx, animPC, pendingMapFillFlag, ram_0C49
+;    writes:    refillTmp32, objGfxSetIdx
+;    reads:     refillTmp32, curObjIdx, animPC, pendingMapFillFlag, gfxSetId
 ; --------------------------------------------------------
 sub_80E885:
                 LDA.W pendingMapFillFlag                       ;80E885|80037E
@@ -19269,15 +20591,21 @@ sub_80E885:
          .exit: RTS                                            ;80E8A9|
 
 
+;--------------------------------------------------------------
+;  AnimOp_SelectGfxSet   (animation VM op $17)
+;    operands: u16 key
+;    Find key in the gfxSet table (ram_0C49) and store its index in objGfxSetIdx.
+;    (name/behaviour is a best guess)
+;--------------------------------------------------------------
 AnimOp_SelectGfxSet:
                 LDA.B [animPC]                                  ;80E8AA|000074
                 INC.B animPC                                    ;80E8AC|000074
-                INC.B animPC                                    ;80E8AE|000074
-                STA.B refillTmp32                              ;80E8B0|000032
-                LDX.W #$0000                                   ;80E8B2|
-                TXY                                            ;80E8B5|
+            INC.B animPC                                        ;80E8AE|000074
+                STA.B refillTmp32                               ;80E8B0|000032
+                LDX.W #$0000                                    ;80E8B2|
+                TXY                                             ;80E8B5|
 
-         .loop: LDA.W ram_0C49,Y                               ;80E8B6|800C49
+         .loop: LDA.W gfxSetId,Y                               ;80E8B6|800C49
                 CMP.B refillTmp32                              ;80E8B9|000032
                 BEQ .skip                                      ;80E8BB|80E8C2
                 INY                                            ;80E8BD|
@@ -19288,103 +20616,103 @@ AnimOp_SelectGfxSet:
 
          .skip: LDY.B curObjIdx                                ;80E8C2|000042
                 TXA                                            ;80E8C4|
-                STA.W ram_1539,Y                               ;80E8C5|801539
+                STA.W objGfxSetIdx,Y                               ;80E8C5|801539
                 RTS                                            ;80E8C8|
 
 
 ; --------------------------------------------------------
 ;  sub_80E8C9   [79 ins, returns RTS]
 ;    callers: sub_80E1D0
-;    writes:    ram_1089, ram_10B1, ram_1381, objField_13A9
-;    reads:     curObjIdx, ram_0E59, objField_0FC1, ram_1089, ram_10B1, ram_11C9 ...
+;    writes:    objVelX, objVelY, objMoveX, objMoveY
+;    reads:     curObjIdx, objParent, objFlags, objVelX, objVelY, objMaxVelX ...
 ; --------------------------------------------------------
 sub_80E8C9:
-                LDA.W ram_0E59,Y                               ;80E8C9|800E59
+                LDA.W objParent,Y                               ;80E8C9|800E59
                 BMI +                                          ;80E8CC|80E8CF
                 RTS                                            ;80E8CE|
 
 
-             +: LDA.W objField_0FC1,Y                          ;80E8CF|800FC1
+             +: LDA.W objFlags,Y                          ;80E8CF|800FC1
                 BIT.W #$8000                                   ;80E8D2|
                 BEQ .skip                                      ;80E8D5|80E8E1
                 LDA.W ram_19C9                                 ;80E8D7|8019C9
                 CLC                                            ;80E8DA|
-                ADC.W ram_10B1,Y                               ;80E8DB|8010B1
-                STA.W ram_10B1,Y                               ;80E8DE|8010B1
+                ADC.W objVelY,Y                               ;80E8DB|8010B1
+                STA.W objVelY,Y                               ;80E8DE|8010B1
 
-         .skip: LDA.W objField_0FC1,Y                          ;80E8E1|800FC1
+         .skip: LDA.W objFlags,Y                          ;80E8E1|800FC1
                 BIT.W #$4000                                   ;80E8E4|
                 BEQ .skip2                                     ;80E8E7|80E8F3
                 LDA.W ram_19C7                                 ;80E8E9|8019C7
                 CLC                                            ;80E8EC|
-                ADC.W ram_1089,Y                               ;80E8ED|801089
-                STA.W ram_1089,Y                               ;80E8F0|801089
+                ADC.W objVelX,Y                               ;80E8ED|801089
+                STA.W objVelX,Y                               ;80E8F0|801089
 
-        .skip2: LDA.W ram_1089,Y                               ;80E8F3|801089
+        .skip2: LDA.W objVelX,Y                               ;80E8F3|801089
                 BMI .skip3                                     ;80E8F6|80E902
-                CMP.W ram_11C9,Y                               ;80E8F8|8011C9
+                CMP.W objMaxVelX,Y                               ;80E8F8|8011C9
                 BCC .skip4                                     ;80E8FB|80E912
-                LDA.W ram_11C9,Y                               ;80E8FD|8011C9
+                LDA.W objMaxVelX,Y                               ;80E8FD|8011C9
                 BRA .skip4                                     ;80E900|80E912
 
 
         .skip3: EOR.W #$FFFF                                   ;80E902|
                 INC A                                          ;80E905|
-                CMP.W ram_11C9,Y                               ;80E906|8011C9
+                CMP.W objMaxVelX,Y                               ;80E906|8011C9
                 BCC +                                          ;80E909|80E90E
-                LDA.W ram_11C9,Y                               ;80E90B|8011C9
+                LDA.W objMaxVelX,Y                               ;80E90B|8011C9
 
              +: EOR.W #$FFFF                                   ;80E90E|
                 INC A                                          ;80E911|
 
-        .skip4: STA.W ram_1089,Y                               ;80E912|801089
-                LDA.W ram_10B1,Y                               ;80E915|8010B1
+        .skip4: STA.W objVelX,Y                               ;80E912|801089
+                LDA.W objVelY,Y                               ;80E915|8010B1
                 BMI .skip5                                     ;80E918|80E924
-                CMP.W ram_11F1,Y                               ;80E91A|8011F1
+                CMP.W objMaxVelY,Y                               ;80E91A|8011F1
                 BCC .skip6                                     ;80E91D|80E934
-                LDA.W ram_11F1,Y                               ;80E91F|8011F1
+                LDA.W objMaxVelY,Y                               ;80E91F|8011F1
                 BRA .skip6                                     ;80E922|80E934
 
 
         .skip5: EOR.W #$FFFF                                   ;80E924|
                 INC A                                          ;80E927|
-                CMP.W ram_11F1,Y                               ;80E928|8011F1
+                CMP.W objMaxVelY,Y                               ;80E928|8011F1
                 BCC +                                          ;80E92B|80E930
-                LDA.W ram_11F1,Y                               ;80E92D|8011F1
+                LDA.W objMaxVelY,Y                               ;80E92D|8011F1
 
              +: EOR.W #$FFFF                                   ;80E930|
                 INC A                                          ;80E933|
 
-        .skip6: STA.W ram_10B1,Y                               ;80E934|8010B1
-                LDA.W objField_0FC1,Y                          ;80E937|800FC1
+        .skip6: STA.W objVelY,Y                               ;80E934|8010B1
+                LDA.W objFlags,Y                          ;80E937|800FC1
                 BIT.W #$0040                                   ;80E93A|
                 BNE +                                          ;80E93D|80E944
-                LDA.W ram_1089,Y                               ;80E93F|801089
+                LDA.W objVelX,Y                               ;80E93F|801089
                 BRA .cont                                      ;80E942|80E94B
 
 
-             +: LDA.W ram_1089,Y                               ;80E944|801089
+             +: LDA.W objVelX,Y                               ;80E944|801089
                 EOR.W #$FFFF                                   ;80E947|
                 INC A                                          ;80E94A|
 
          .cont: CLC                                            ;80E94B|
-                ADC.W ram_1381,Y                               ;80E94C|801381
-                STA.W ram_1381,Y                               ;80E94F|801381
-                LDA.W objField_0FC1,Y                          ;80E952|800FC1
+                ADC.W objMoveX,Y                               ;80E94C|801381
+                STA.W objMoveX,Y                               ;80E94F|801381
+                LDA.W objFlags,Y                          ;80E952|800FC1
                 BIT.W #$0080                                   ;80E955|
                 BNE +                                          ;80E958|80E95F
-                LDA.W ram_10B1,Y                               ;80E95A|8010B1
+                LDA.W objVelY,Y                               ;80E95A|8010B1
                 BRA .cont2                                     ;80E95D|80E966
 
 
-             +: LDA.W ram_10B1,Y                               ;80E95F|8010B1
+             +: LDA.W objVelY,Y                               ;80E95F|8010B1
                 EOR.W #$FFFF                                   ;80E962|
                 INC A                                          ;80E965|
 
         .cont2: CLC                                            ;80E966|
-                ADC.W objField_13A9,Y                          ;80E967|8013A9
-                STA.W objField_13A9,Y                          ;80E96A|8013A9
-                RTS                                            ;80E96D|
+                ADC.W objMoveY,Y                          ;80E967|8013A9
+                STA.W objMoveY,Y                          ;80E96A|8013A9
+                RTS                              `              ;80E96D|
 
 ; ---------------------------------------------------------------
 ;  ANIMATION VM (29 opcodes) -- run per object by Op_AnimTick -> AnimVM_TickObject -> AnimVM_Run
@@ -19392,35 +20720,35 @@ sub_80E8C9:
 ;    Yield/Wait/End do PLA+RTS (unwind two frames).
 ; ---------------------------------------------------------------
 AnimVM_OpTable:
-                dw AnimOp_AddTileDelta                          ;80E96E|80E247   ; pointer/jump table (16-bit entries)   ; anim op $00
-                dw AnimOp_SetTiles                              ;80E970|80E287   ; anim op $01
-                dw AnimOp_PlaySfx                               ;80E972|80E2F3   ; anim op $02
-                dw AnimOp_Goto                                  ;80E974|80E5D4   ; anim op $03
-                dw AnimOp_StopSfx                               ;80E976|80E307   ; anim op $04
-                dw AnimOp_Call                                  ;80E978|80E5CE   ; anim op $05
-                dw AnimOp_Return                                ;80E97A|80E5D9   ; anim op $06
-                dw AnimOp_MoveX                                 ;80E97C|80E314   ; anim op $07
-                dw AnimOp_SetXPositions                         ;80E97E|80E367   ; anim op $08
-                dw AnimOp_MoveY                                 ;80E980|80E394   ; anim op $09
-                dw AnimOp_SetYPositions                         ;80E982|80E3E7   ; anim op $0A
-                dw $0000                                        ;80E984|800000   ; anim op $0B  UNUSED: table entry is $0000 -> JSR $8000 = Reset. Any anim script using it reboots the game.
-                dw AnimOp_SetPalette                            ;80E986|80E414   ; anim op $0C
-                dw AnimOp_SetSpriteMask                         ;80E988|80E563   ; anim op $0D
-                dw AnimOp_Yield                                 ;80E98A|80E56E   ; anim op $0E
-                dw AnimOp_Wait                                  ;80E98C|80E577   ; anim op $0F
-                dw AnimOp_ToggleFlipH                           ;80E98E|80E582   ; anim op $10
-                dw AnimOp_ToggleFlipV                           ;80E990|80E587   ; anim op $11
-                dw AnimOp_ToggleFlipHV                          ;80E992|80E58C   ; anim op $12
-                dw AnimOp_SetSpriteFlags                        ;80E994|80E532   ; anim op $13 (name is a guess)
-                dw DmaWramStagingUpload                         ;80E996|80E5DE   ; anim op $14  already named DmaWramStagingUpload (uploads the frame's tile data)
-                dw AnimOp_SetSizeBit                            ;80E998|80E459   ; anim op $15
-                dw AnimOp_SetPriority                           ;80E99A|80E4E4   ; anim op $16
-                dw AnimOp_SelectGfxSet                          ;80E99C|80E8AA   ; anim op $17 (name is a guess)
-                dw AnimOp_HideSprites                           ;80E99E|80E487   ; anim op $18
-                dw AnimOp_ShowSprites                           ;80E9A0|80E4B4   ; anim op $19
-                dw AnimOp_End                                   ;80E9A2|80E570   ; anim op $1A
-                dw EMPTY_80FFBE                                 ;80E9A4|80FFBE   ; anim op $1B  UNUSED: points at $80FFBE (two $00 bytes = BRK)
-                dw loc_80BFEF                                   ;80E9A6|80BFEF   ; anim op $1C  UNUSED/suspect: lands in the middle of LatchBgScroll ($80BFEF)
+                dw AnimOp_AddTileDelta                              ;80E96E|80E247   ; pointer/jump table (16-bit entries)   ; anim op $00
+                dw AnimOp_SetTiles                                  ;80E970|80E287   ; anim op $01
+                dw AnimOp_PlaySfx                                   ;80E972|80E2F3   ; anim op $02
+                dw AnimOp_Goto                                      ;80E974|80E5D4   ; anim op $03
+                dw AnimOp_StopSfx                                   ;80E976|80E307   ; anim op $04
+                dw AnimOp_Call                                      ;80E978|80E5CE   ; anim op $05
+                dw AnimOp_Return                                    ;80E97A|80E5D9   ; anim op $06
+                dw AnimOp_MoveX                                     ;80E97C|80E314   ; anim op $07
+                dw AnimOp_SetXPositions                             ;80E97E|80E367   ; anim op $08
+                dw AnimOp_MoveY                                     ;80E980|80E394   ; anim op $09
+                dw AnimOp_SetYPositions                             ;80E982|80E3E7   ; anim op $0A
+                dw $0000                                            ;80E984|800000   ; anim op $0B  UNUSED: table entry is $0000 -> JSR $8000 = Reset. Any anim script using it reboots the game.
+                dw AnimOp_SetPalette                                ;80E986|80E414   ; anim op $0C
+                dw AnimOp_SetSpriteMask                             ;80E988|80E563   ; anim op $0D
+                dw AnimOp_Yield                                     ;80E98A|80E56E   ; anim op $0E
+                dw AnimOp_Wait                                      ;80E98C|80E577   ; anim op $0F
+                dw AnimOp_ToggleFlipH                               ;80E98E|80E582   ; anim op $10
+                dw AnimOp_ToggleFlipV                               ;80E990|80E587   ; anim op $11
+                dw AnimOp_ToggleFlipHV                              ;80E992|80E58C   ; anim op $12
+                dw AnimOp_SetSpriteFlags                            ;80E994|80E532   ; anim op $13 (name is a guess)
+                dw DmaWramStagingUpload                             ;80E996|80E5DE   ; anim op $14  already named DmaWramStagingUpload (uploads the frame's tile data)
+                dw AnimOp_SetSizeBit                                ;80E998|80E459   ; anim op $15
+                dw AnimOp_SetPriority                               ;80E99A|80E4E4   ; anim op $16
+                dw AnimOp_SelectGfxSet                              ;80E99C|80E8AA   ; anim op $17 (name is a guess)
+                dw AnimOp_HideSprites                               ;80E99E|80E487   ; anim op $18
+                dw AnimOp_ShowSprites                               ;80E9A0|80E4B4   ; anim op $19
+                dw AnimOp_End                                       ;80E9A2|80E570   ; anim op $1A
+                dw EMPTY_80FFBE                                     ;80E9A4|80FFBE   ; anim op $1B  UNUSED: points at $80FFBE (two $00 bytes = BRK)
+                dw loc_80BFEF                                       ;80E9A6|80BFEF   ; anim op $1C  UNUSED/suspect: lands in the middle of LatchBgScroll ($80BFEF)
 
 data_80E9A8:
                        db $FD,$F7,$DF,$7F                             ;80E9A8|
@@ -19452,22 +20780,38 @@ data_80EA30:
 data_80EA36:
                 dw $2010,$2040,$4040                           ;80EA36|
 
+;--------------------------------------------------------------
+;  Op_FaceRight   (object VM op $08)
+;    operands: -
+;    Face right: if objFlags bit6 is set, mirror the object (clears it).
+;--------------------------------------------------------------
 Op_FaceRight:
                 LDX.B curObjIdx                                ;80EA3C|000042
-                LDA.W objField_0FC1,X                          ;80EA3E|800FC1
+                LDA.W objFlags,X                          ;80EA3E|800FC1
                 AND.W #$0040                                   ;80EA41|
                 BNE sub_80EA54                                 ;80EA44|80EA54
                 RTS                                            ;80EA46|
 
 
+;--------------------------------------------------------------
+;  Op_FaceLeft   (object VM op $07)
+;    operands: -
+;    Face left: if objFlags bit6 ($40) is clear, mirror the object (sub_80EA54: flips the hitbox
+;    around objX and toggles the sprites' H-flip/X offsets).
+;--------------------------------------------------------------
 Op_FaceLeft:
                 LDX.B curObjIdx                                ;80EA47|000042
-                LDA.W objField_0FC1,X                          ;80EA49|800FC1
+                LDA.W objFlags,X                          ;80EA49|800FC1
                 AND.W #$0040                                   ;80EA4C|
                 BEQ sub_80EA54                                 ;80EA4F|80EA54
                 RTS                                            ;80EA51|
 
 
+;--------------------------------------------------------------
+;  Op_ToggleFlipH   (object VM op $0B)
+;    operands: -
+;    Toggle horizontal flip unconditionally.
+;--------------------------------------------------------------
 Op_ToggleFlipH:
                 LDX.B curObjIdx                                ;80EA52|000042
 
@@ -19481,34 +20825,34 @@ Op_ToggleFlipH:
 sub_80EA54:
                 PHX                                            ;80EA54|
                 PHY                                            ;80EA55|
-                LDA.W objField_0FC1,X                          ;80EA56|800FC1
+                LDA.W objFlags,X                          ;80EA56|800FC1
                 EOR.W #$0040                                   ;80EA59|
-                STA.W objField_0FC1,X                          ;80EA5C|800FC1
-                LDA.W objField_1179,X                          ;80EA5F|801179
+                STA.W objFlags,X                          ;80EA5C|800FC1
+                LDA.W objX,X                          ;80EA5F|801179
                 CLC                                            ;80EA62|
-                ADC.W objField_1179,X                          ;80EA63|801179
+                ADC.W objX,X                          ;80EA63|801179
                 CLC                                            ;80EA66|
-                SBC.W objField_0F99,X                          ;80EA67|800F99
+                SBC.W objBoxRight,X                          ;80EA67|800F99
                 PHA                                            ;80EA6A|
-                LDA.W objField_1179,X                          ;80EA6B|801179
+                LDA.W objX,X                          ;80EA6B|801179
                 CLC                                            ;80EA6E|
-                ADC.W objField_1179,X                          ;80EA6F|801179
+                ADC.W objX,X                          ;80EA6F|801179
                 CLC                                            ;80EA72|
-                SBC.W objField_0F71,X                          ;80EA73|800F71
-                STA.W objField_0F99,X                          ;80EA76|800F99
+                SBC.W objBoxLeft,X                          ;80EA73|800F71
+                STA.W objBoxRight,X                          ;80EA76|800F99
                 PLA                                            ;80EA79|
-                STA.W objField_0F71,X                          ;80EA7A|800F71
-                LDA.W ram_1511,X                               ;80EA7D|801511
+                STA.W objBoxLeft,X                          ;80EA7A|800F71
+                LDA.W objOamCount,X                               ;80EA7D|801511
                 BEQ .skip2                                     ;80EA80|80EADB
-                LDA.W objField_1179,X                          ;80EA82|801179
+                LDA.W objX,X                          ;80EA82|801179
                 CLC                                            ;80EA85|
-                ADC.W objField_1179,X                          ;80EA86|801179
+                ADC.W objX,X                          ;80EA86|801179
                 STA.B refillTmp32                              ;80EA89|000032
-                LDA.W ram_14E9,X                               ;80EA8B|8014E9
+                LDA.W objOamEnd,X                               ;80EA8B|8014E9
                 ASL A                                          ;80EA8E|
                 ASL A                                          ;80EA8F|
                 STA.B zp_3A                                    ;80EA90|00003A
-                LDA.W ram_14C1,X                               ;80EA92|8014C1
+                LDA.W objOamFirst,X                               ;80EA92|8014C1
                 STA.B zp_36                                    ;80EA95|000036
                 ASL A                                          ;80EA97|
                 TAY                                            ;80EA98|
@@ -19561,17 +20905,17 @@ sub_80EA54:
 ; --------------------------------------------------------
 sub_80EADE:
                 PHX                                            ;80EADE|
-                LDA.W ram_1511,X                               ;80EADF|801511
+                LDA.W objOamCount,X                               ;80EADF|801511
                 BEQ .skip2                                     ;80EAE2|80EB3D
-                LDA.W objField_1179,X                          ;80EAE4|801179
+                LDA.W objX,X                          ;80EAE4|801179
                 CLC                                            ;80EAE7|
-                ADC.W objField_1179,X                          ;80EAE8|801179
+                ADC.W objX,X                          ;80EAE8|801179
                 STA.B refillTmp32                              ;80EAEB|000032
-                LDA.W ram_14E9,X                               ;80EAED|8014E9
+                LDA.W objOamEnd,X                               ;80EAED|8014E9
                 ASL A                                          ;80EAF0|
                 ASL A                                          ;80EAF1|
                 STA.B zp_3A                                    ;80EAF2|00003A
-                LDA.W ram_14C1,X                               ;80EAF4|8014C1
+                LDA.W objOamFirst,X                               ;80EAF4|8014C1
                 STA.B zp_36                                    ;80EAF7|000036
                 ASL A                                          ;80EAF9|
                 TAY                                            ;80EAFA|
@@ -19614,22 +20958,37 @@ sub_80EADE:
                 RTS                                            ;80EB3E|
 
 
+;--------------------------------------------------------------
+;  Op_ClearFlipV   (object VM op $0A)
+;    operands: -
+;    Clear vertical flip: if objFlags bit7 is set, flip back.
+;--------------------------------------------------------------
 Op_ClearFlipV:
                 LDX.B curObjIdx                                ;80EB3F|000042
-                LDA.W objField_0FC1,X                          ;80EB41|800FC1
+                LDA.W objFlags,X                          ;80EB41|800FC1
                 AND.W #$0080                                   ;80EB44|
                 BNE sub_80EB57                                 ;80EB47|80EB57
                 RTS                                            ;80EB49|
 
 
+;--------------------------------------------------------------
+;  Op_SetFlipV   (object VM op $09)
+;    operands: -
+;    Set vertical flip: if objFlags bit7 ($80) is clear, flip vertically (sub_80EB57).
+;--------------------------------------------------------------
 Op_SetFlipV:
                 LDX.B curObjIdx                                ;80EB4A|000042
-                LDA.W objField_0FC1,X                          ;80EB4C|800FC1
+                LDA.W objFlags,X                          ;80EB4C|800FC1
                 AND.W #$0080                                   ;80EB4F|
                 BEQ sub_80EB57                                 ;80EB52|80EB57
                 RTS                                            ;80EB54|
 
 
+;--------------------------------------------------------------
+;  Op_ToggleFlipV   (object VM op $0C)
+;    operands: -
+;    Toggle vertical flip unconditionally.
+;--------------------------------------------------------------
 Op_ToggleFlipV:
                 LDX.B curObjIdx                                ;80EB55|000042
 
@@ -19643,34 +21002,34 @@ Op_ToggleFlipV:
 sub_80EB57:
                 PHX                                            ;80EB57|
                 PHY                                            ;80EB58|
-                LDA.W objField_0FC1,X                          ;80EB59|800FC1
+                LDA.W objFlags,X                          ;80EB59|800FC1
                 EOR.W #$0080                                   ;80EB5C|
-                STA.W objField_0FC1,X                          ;80EB5F|800FC1
-                LDA.W objField_11A1,X                          ;80EB62|8011A1
+                STA.W objFlags,X                          ;80EB5F|800FC1
+                LDA.W objY,X                          ;80EB62|8011A1
                 CLC                                            ;80EB65|
-                ADC.W objField_11A1,X                          ;80EB66|8011A1
+                ADC.W objY,X                          ;80EB66|8011A1
                 CLC                                            ;80EB69|
-                SBC.W objField_0F49,X                          ;80EB6A|800F49
+                SBC.W objBoxBottom,X                          ;80EB6A|800F49
                 PHA                                            ;80EB6D|
-                LDA.W objField_11A1,X                          ;80EB6E|8011A1
+                LDA.W objY,X                          ;80EB6E|8011A1
                 CLC                                            ;80EB71|
-                ADC.W objField_11A1,X                          ;80EB72|8011A1
+                ADC.W objY,X                          ;80EB72|8011A1
                 CLC                                            ;80EB75|
-                SBC.W objField_0F21,X                          ;80EB76|800F21
-                STA.W objField_0F49,X                          ;80EB79|800F49
+                SBC.W objBoxTop,X                          ;80EB76|800F21
+                STA.W objBoxBottom,X                          ;80EB79|800F49
                 PLA                                            ;80EB7C|
-                STA.W objField_0F21,X                          ;80EB7D|800F21
-                LDA.W ram_1511,X                               ;80EB80|801511
+                STA.W objBoxTop,X                          ;80EB7D|800F21
+                LDA.W objOamCount,X                               ;80EB80|801511
                 BEQ .skip2                                     ;80EB83|80EBDE
-                LDA.W objField_11A1,X                          ;80EB85|8011A1
+                LDA.W objY,X                          ;80EB85|8011A1
                 CLC                                            ;80EB88|
-                ADC.W objField_11A1,X                          ;80EB89|8011A1
+                ADC.W objY,X                          ;80EB89|8011A1
                 STA.B refillTmp32                              ;80EB8C|000032
-                LDA.W ram_14E9,X                               ;80EB8E|8014E9
+                LDA.W objOamEnd,X                               ;80EB8E|8014E9
                 ASL A                                          ;80EB91|
                 ASL A                                          ;80EB92|
                 STA.B zp_3A                                    ;80EB93|00003A
-                LDA.W ram_14C1,X                               ;80EB95|8014C1
+                LDA.W objOamFirst,X                               ;80EB95|8014C1
                 STA.B zp_36                                    ;80EB98|000036
                 ASL A                                          ;80EB9A|
                 TAY                                            ;80EB9B|
@@ -19723,17 +21082,17 @@ sub_80EB57:
 ; --------------------------------------------------------
 sub_80EBE1:
                 PHX                                            ;80EBE1|
-                LDA.W ram_1511,X                               ;80EBE2|801511
+                LDA.W objOamCount,X                               ;80EBE2|801511
                 BEQ .skip2                                     ;80EBE5|80EC40
-                LDA.W objField_11A1,X                          ;80EBE7|8011A1
+                LDA.W objY,X                          ;80EBE7|8011A1
                 CLC                                            ;80EBEA|
-                ADC.W objField_11A1,X                          ;80EBEB|8011A1
+                ADC.W objY,X                          ;80EBEB|8011A1
                 STA.B refillTmp32                              ;80EBEE|000032
-                LDA.W ram_14E9,X                               ;80EBF0|8014E9
+                LDA.W objOamEnd,X                               ;80EBF0|8014E9
                 ASL A                                          ;80EBF3|
                 ASL A                                          ;80EBF4|
                 STA.B zp_3A                                    ;80EBF5|00003A
-                LDA.W ram_14C1,X                               ;80EBF7|8014C1
+                LDA.W objOamFirst,X                               ;80EBF7|8014C1
                 STA.B zp_36                                    ;80EBFA|000036
                 ASL A                                          ;80EBFC|
                 TAY                                            ;80EBFD|
@@ -19779,12 +21138,12 @@ sub_80EBE1:
 ; --------------------------------------------------------
 ;  sub_80EC42   [9 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    objScriptSrcBank, objAnimPtr
+;    writes:    objActive, objAnimPtr
 ; --------------------------------------------------------
 sub_80EC42:
                 LDX.W #$0000                                   ;80EC42|
 
-         .loop: STZ.W objScriptSrcBank,X                              ;80EC45|800D91
+         .loop: STZ.W objActive,X                              ;80EC45|800D91
                 LDA.W #$FFFF                                   ;80EC48|
                 STA.W objAnimPtr,X                               ;80EC4B|801449
                 INX                                            ;80EC4E|
@@ -19797,8 +21156,8 @@ sub_80EC42:
 ; --------------------------------------------------------
 ;  SpawnObject   [38 ins, returns RTS]
 ;    callers: sub_809F07, loc_809F71, sub_80A015, Op_SubAcc_TFld, sub_80EF35, sub_80EFD7
-;    writes:    refillStageIdx, zp_36, zp_38, objTableEnd, objScriptSrcBank, ram_14C1 ...
-;    reads:     refillStageIdx, zp_38, zp_3A, objTableEnd, ram_1511
+;    writes:    refillStageIdx, zp_36, zp_38, objTableEnd, objActive, objOamFirst ...
+;    reads:     refillStageIdx, zp_38, zp_3A, objTableEnd, objOamCount
 ;    calls:     sub_80F135, sub_80F158, GetSpawnRecPtr, InitObjectFromSpawnRec, sub_80F16B, sub_80F1BE, +3 more
 ; --------------------------------------------------------
 SpawnObject:
@@ -19813,14 +21172,14 @@ SpawnObject:
                 JSR.W GetSpawnRecPtr                               ;80EC68|80F11F
                 JSR.W InitObjectFromSpawnRec                               ;80EC6B|80F249
                 BCS .skip3                                     ;80EC6E|80EC9F
-                LDA.W ram_1511,X                               ;80EC70|801511
+                LDA.W objOamCount,X                               ;80EC70|801511
                 BEQ .skip                                      ;80EC73|80EC8A
                 JSR.W sub_80F16B                               ;80EC75|80F16B
                 BCS .skip3                                     ;80EC78|80EC9F
                 LDA.B zp_3A                                    ;80EC7A|00003A
-                STA.W ram_14C1,X                               ;80EC7C|8014C1
+                STA.W objOamFirst,X                               ;80EC7C|8014C1
                 LDA.B zp_38                                    ;80EC7F|000038
-                STA.W ram_14E9,X                               ;80EC81|8014E9
+                STA.W objOamEnd,X                               ;80EC81|8014E9
                 JSR.W sub_80F1BE                               ;80EC84|80F1BE
                 JSR.W sub_80F1EC                               ;80EC87|80F1EC
 
@@ -19840,7 +21199,7 @@ SpawnObject:
 
 
         .skip3: REP #$20                                       ;80EC9F|
-                STZ.W objScriptSrcBank,X                              ;80ECA1|800D91
+                STZ.W objActive,X                              ;80ECA1|800D91
 
         .skip4: LDY.W #$0000                                   ;80ECA4|
                 SEC                                            ;80ECA7|
@@ -19860,38 +21219,38 @@ sub_80ECA9:
 ; --------------------------------------------------------
 ;  loc_80ECAE   [90 ins, returns ?]
 ;    callers: sub_80ED78
-;    writes:    ram_0DE1, ram_0E09, objField_0F21, objField_0F49, objField_0F71, objField_0F99 ...
-;    reads:     objScriptSrcBank, ram_0E59, objField_0F21, objField_0F49, objField_0F71, objField_0F99 ...
+;    writes:    objPrevX, objPrevY, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight ...
+;    reads:     objActive, objParent, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight ...
 ;    calls:     sub_80ED78
 ; --------------------------------------------------------
 loc_80ECAE:
-                LDA.W objScriptSrcBank,Y                              ;80ECAE|800D91
+                LDA.W objActive,Y                              ;80ECAE|800D91
                 BNE +                                          ;80ECB1|80ECB6
                 JMP.W sub_80ED78                               ;80ECB3|80ED78
 
 
-             +: LDA.W objField_1179,Y                          ;80ECB6|801179
-                STA.W ram_0DE1,Y                               ;80ECB9|800DE1
-                LDA.W objField_11A1,Y                          ;80ECBC|8011A1
-                STA.W ram_0E09,Y                               ;80ECBF|800E09
-                LDA.W ram_0E59,Y                               ;80ECC2|800E59
+             +: LDA.W objX,Y                          ;80ECB6|801179
+                STA.W objPrevX,Y                               ;80ECB9|800DE1
+                LDA.W objY,Y                          ;80ECBC|8011A1
+                STA.W objPrevY,Y                               ;80ECBF|800E09
+                LDA.W objParent,Y                               ;80ECC2|800E59
                 BMI +                                          ;80ECC5|80ECCA
                 JMP.W sub_80ED78                               ;80ECC7|80ED78
 
 
-             +: LDA.W ram_1381,Y                               ;80ECCA|801381
+             +: LDA.W objMoveX,Y                               ;80ECCA|801381
                 BMI .skip                                      ;80ECCD|80ECD9
-                CMP.W ram_11C9,Y                               ;80ECCF|8011C9
+                CMP.W objMaxVelX,Y                               ;80ECCF|8011C9
                 BCC .skip2                                     ;80ECD2|80ECE9
-                LDA.W ram_11C9,Y                               ;80ECD4|8011C9
+                LDA.W objMaxVelX,Y                               ;80ECD4|8011C9
                 BRA .skip2                                     ;80ECD7|80ECE9
 
 
          .skip: EOR.W #$FFFF                                   ;80ECD9|
                 INC A                                          ;80ECDC|
-                CMP.W ram_11C9,Y                               ;80ECDD|8011C9
+                CMP.W objMaxVelX,Y                               ;80ECDD|8011C9
                 BCC +                                          ;80ECE0|80ECE5
-                LDA.W ram_11C9,Y                               ;80ECE2|8011C9
+                LDA.W objMaxVelX,Y                               ;80ECE2|8011C9
 
              +: EOR.W #$FFFF                                   ;80ECE5|
                 INC A                                          ;80ECE8|
@@ -19900,8 +21259,8 @@ loc_80ECAE:
                 TAX                                            ;80ECEA|
                 AND.W #$FF00                                   ;80ECEB|
                 CLC                                            ;80ECEE|
-                ADC.W ram_13F9,Y                               ;80ECEF|8013F9
-                STA.W ram_13F9,Y                               ;80ECF2|8013F9
+                ADC.W objFracX,Y                               ;80ECEF|8013F9
+                STA.W objFracX,Y                               ;80ECF2|8013F9
                 PHP                                            ;80ECF5|
                 TXA                                            ;80ECF6|
                 AND.W #$00FF                                   ;80ECF7|
@@ -19911,32 +21270,32 @@ loc_80ECAE:
 
              +: PLP                                            ;80ED02|
                 ADC.W #$0000                                   ;80ED03|
-                STA.W ram_1381,Y                               ;80ED06|801381
+                STA.W objMoveX,Y                               ;80ED06|801381
                 TAX                                            ;80ED09|
                 CLC                                            ;80ED0A|
-                ADC.W objField_1179,Y                          ;80ED0B|801179
-                STA.W objField_1179,Y                          ;80ED0E|801179
+                ADC.W objX,Y                          ;80ED0B|801179
+                STA.W objX,Y                          ;80ED0E|801179
                 TXA                                            ;80ED11|
                 CLC                                            ;80ED12|
-                ADC.W objField_0F71,Y                          ;80ED13|800F71
-                STA.W objField_0F71,Y                          ;80ED16|800F71
+                ADC.W objBoxLeft,Y                          ;80ED13|800F71
+                STA.W objBoxLeft,Y                          ;80ED16|800F71
                 TXA                                            ;80ED19|
                 CLC                                            ;80ED1A|
-                ADC.W objField_0F99,Y                          ;80ED1B|800F99
-                STA.W objField_0F99,Y                          ;80ED1E|800F99
-                LDA.W objField_13A9,Y                          ;80ED21|8013A9
+                ADC.W objBoxRight,Y                          ;80ED1B|800F99
+                STA.W objBoxRight,Y                          ;80ED1E|800F99
+                LDA.W objMoveY,Y                          ;80ED21|8013A9
                 BMI .skip3                                     ;80ED24|80ED30
-                CMP.W ram_11F1,Y                               ;80ED26|8011F1
+                CMP.W objMaxVelY,Y                               ;80ED26|8011F1
                 BCC .skip4                                     ;80ED29|80ED40
-                LDA.W ram_11F1,Y                               ;80ED2B|8011F1
+                LDA.W objMaxVelY,Y                               ;80ED2B|8011F1
                 BRA .skip4                                     ;80ED2E|80ED40
 
 
         .skip3: EOR.W #$FFFF                                   ;80ED30|
                 INC A                                          ;80ED33|
-                CMP.W ram_11F1,Y                               ;80ED34|8011F1
+                CMP.W objMaxVelY,Y                               ;80ED34|8011F1
                 BCC +                                          ;80ED37|80ED3C
-                LDA.W ram_11F1,Y                               ;80ED39|8011F1
+                LDA.W objMaxVelY,Y                               ;80ED39|8011F1
 
              +: EOR.W #$FFFF                                   ;80ED3C|
                 INC A                                          ;80ED3F|
@@ -19945,8 +21304,8 @@ loc_80ECAE:
                 TAX                                            ;80ED41|
                 AND.W #$FF00                                   ;80ED42|
                 CLC                                            ;80ED45|
-                ADC.W ram_1421,Y                               ;80ED46|801421
-                STA.W ram_1421,Y                               ;80ED49|801421
+                ADC.W objFracY,Y                               ;80ED46|801421
+                STA.W objFracY,Y                               ;80ED49|801421
                 PHP                                            ;80ED4C|
                 TXA                                            ;80ED4D|
                 AND.W #$00FF                                   ;80ED4E|
@@ -19956,19 +21315,19 @@ loc_80ECAE:
 
              +: PLP                                            ;80ED59|
                 ADC.W #$0000                                   ;80ED5A|
-                STA.W objField_13A9,Y                          ;80ED5D|8013A9
+                STA.W objMoveY,Y                          ;80ED5D|8013A9
                 TAX                                            ;80ED60|
                 CLC                                            ;80ED61|
-                ADC.W objField_11A1,Y                          ;80ED62|8011A1
-                STA.W objField_11A1,Y                          ;80ED65|8011A1
+                ADC.W objY,Y                          ;80ED62|8011A1
+                STA.W objY,Y                          ;80ED65|8011A1
                 TXA                                            ;80ED68|
                 CLC                                            ;80ED69|
-                ADC.W objField_0F21,Y                          ;80ED6A|800F21
-                STA.W objField_0F21,Y                          ;80ED6D|800F21
+                ADC.W objBoxTop,Y                          ;80ED6A|800F21
+                STA.W objBoxTop,Y                          ;80ED6D|800F21
                 TXA                                            ;80ED70|
                 CLC                                            ;80ED71|
-                ADC.W objField_0F49,Y                          ;80ED72|800F49
-                STA.W objField_0F49,Y                          ;80ED75|800F49
+                ADC.W objBoxBottom,Y                          ;80ED72|800F49
+                STA.W objBoxBottom,Y                          ;80ED75|800F49
 
 ; --------------------------------------------------------
 ;  sub_80ED78   [5 ins, returns RTS]
@@ -19998,59 +21357,59 @@ sub_80ED80:
 ; --------------------------------------------------------
 ;  loc_80ED85   [105 ins, returns ?]
 ;    callers: sub_80EE72
-;    writes:    zp_6C, zp_6E, ram_0E59, objField_0F21, objField_0F49, objField_0F71 ...
-;    reads:     zp_6E, objScriptSrcBank, ram_0E59, objField_0F21, objField_0F49, objField_0F71 ...
+;    writes:    zp_6C, zp_6E, objParent, objBoxTop, objBoxBottom, objBoxLeft ...
+;    reads:     zp_6E, objActive, objParent, objBoxTop, objBoxBottom, objBoxLeft ...
 ;    calls:     sub_80EA54, sub_80EB57, sub_80EE72
 ; --------------------------------------------------------
 loc_80ED85:
-                LDA.W objScriptSrcBank,X                              ;80ED85|800D91
+                LDA.W objActive,X                              ;80ED85|800D91
                 BNE +                                          ;80ED88|80ED8D
                 JMP.W sub_80EE72                               ;80ED8A|80EE72
 
 
-             +: LDA.W ram_0E59,X                               ;80ED8D|800E59
+             +: LDA.W objParent,X                               ;80ED8D|800E59
                 BPL +                                          ;80ED90|80ED95
                 JMP.W sub_80EE72                               ;80ED92|80EE72
 
 
              +: CMP.W #$0100                                   ;80ED95|
                 BCC .skip                                      ;80ED98|80EDD9
-                LDA.W ram_1381,X                               ;80ED9A|801381
+                LDA.W objMoveX,X                               ;80ED9A|801381
                 TAY                                            ;80ED9D|
                 CLC                                            ;80ED9E|
-                ADC.W objField_1179,X                          ;80ED9F|801179
-                STA.W objField_1179,X                          ;80EDA2|801179
+                ADC.W objX,X                          ;80ED9F|801179
+                STA.W objX,X                          ;80EDA2|801179
                 TYA                                            ;80EDA5|
                 CLC                                            ;80EDA6|
-                ADC.W objField_0F71,X                          ;80EDA7|800F71
-                STA.W objField_0F71,X                          ;80EDAA|800F71
+                ADC.W objBoxLeft,X                          ;80EDA7|800F71
+                STA.W objBoxLeft,X                          ;80EDAA|800F71
                 TYA                                            ;80EDAD|
                 CLC                                            ;80EDAE|
-                ADC.W objField_0F99,X                          ;80EDAF|800F99
-                STA.W objField_0F99,X                          ;80EDB2|800F99
-                LDA.W objField_13A9,X                          ;80EDB5|8013A9
+                ADC.W objBoxRight,X                          ;80EDAF|800F99
+                STA.W objBoxRight,X                          ;80EDB2|800F99
+                LDA.W objMoveY,X                          ;80EDB5|8013A9
                 TAY                                            ;80EDB8|
                 CLC                                            ;80EDB9|
-                ADC.W objField_11A1,X                          ;80EDBA|8011A1
-                STA.W objField_11A1,X                          ;80EDBD|8011A1
+                ADC.W objY,X                          ;80EDBA|8011A1
+                STA.W objY,X                          ;80EDBD|8011A1
                 TYA                                            ;80EDC0|
                 CLC                                            ;80EDC1|
-                ADC.W objField_0F21,X                          ;80EDC2|800F21
-                STA.W objField_0F21,X                          ;80EDC5|800F21
+                ADC.W objBoxTop,X                          ;80EDC2|800F21
+                STA.W objBoxTop,X                          ;80EDC5|800F21
                 TYA                                            ;80EDC8|
                 CLC                                            ;80EDC9|
-                ADC.W objField_0F49,X                          ;80EDCA|800F49
-                STA.W objField_0F49,X                          ;80EDCD|800F49
+                ADC.W objBoxBottom,X                          ;80EDCA|800F49
+                STA.W objBoxBottom,X                          ;80EDCD|800F49
                 LDA.W #$FFFF                                   ;80EDD0|
-                STA.W ram_0E59,X                               ;80EDD3|800E59
+                STA.W objParent,X                               ;80EDD3|800E59
                 JMP.W sub_80EE72                               ;80EDD6|80EE72
 
 
          .skip: TAY                                            ;80EDD9|
                 STY.B zp_6E                                    ;80EDDA|00006E
                 STX.B zp_6C                                    ;80EDDC|00006C
-                LDA.W objField_0FC1,Y                          ;80EDDE|800FC1
-                EOR.W objField_0FC1,X                          ;80EDE1|800FC1
+                LDA.W objFlags,Y                          ;80EDDE|800FC1
+                EOR.W objFlags,X                          ;80EDE1|800FC1
                 PHA                                            ;80EDE4|
                 BIT.W #$0040                                   ;80EDE5|
                 BEQ +                                          ;80EDE8|80EDED
@@ -20062,66 +21421,66 @@ loc_80ED85:
                 JSR.W sub_80EB57                               ;80EDF3|80EB57
 
              +: LDY.B zp_6E                                    ;80EDF6|00006E
-                LDA.W objField_1179,Y                          ;80EDF8|801179
+                LDA.W objX,Y                          ;80EDF8|801179
                 SEC                                            ;80EDFB|
-                SBC.W objField_1179,X                          ;80EDFC|801179
+                SBC.W objX,X                          ;80EDFC|801179
                 PHA                                            ;80EDFF|
-                LDA.W objField_11A1,Y                          ;80EE00|8011A1
+                LDA.W objY,Y                          ;80EE00|8011A1
                 SEC                                            ;80EE03|
-                SBC.W objField_11A1,X                          ;80EE04|8011A1
+                SBC.W objY,X                          ;80EE04|8011A1
                 TAY                                            ;80EE07|
-                LDA.W objField_0FC1,X                          ;80EE08|800FC1
+                LDA.W objFlags,X                          ;80EE08|800FC1
                 BIT.W #$0040                                   ;80EE0B|
                 BEQ .skip2                                     ;80EE0E|80EE17
                 PLA                                            ;80EE10|
                 SEC                                            ;80EE11|
-                SBC.W ram_1381,X                               ;80EE12|801381
+                SBC.W objMoveX,X                               ;80EE12|801381
                 BRA .cont                                      ;80EE15|80EE1C
 
 
         .skip2: PLA                                            ;80EE17|
                 CLC                                            ;80EE18|
-                ADC.W ram_1381,X                               ;80EE19|801381
+                ADC.W objMoveX,X                               ;80EE19|801381
 
-         .cont: STA.W ram_1381,X                               ;80EE1C|801381
+         .cont: STA.W objMoveX,X                               ;80EE1C|801381
                 CLC                                            ;80EE1F|
-                ADC.W objField_1179,X                          ;80EE20|801179
-                STA.W objField_1179,X                          ;80EE23|801179
-                LDA.W ram_1381,X                               ;80EE26|801381
+                ADC.W objX,X                          ;80EE20|801179
+                STA.W objX,X                          ;80EE23|801179
+                LDA.W objMoveX,X                               ;80EE26|801381
                 CLC                                            ;80EE29|
-                ADC.W objField_0F71,X                          ;80EE2A|800F71
-                STA.W objField_0F71,X                          ;80EE2D|800F71
-                LDA.W ram_1381,X                               ;80EE30|801381
+                ADC.W objBoxLeft,X                          ;80EE2A|800F71
+                STA.W objBoxLeft,X                          ;80EE2D|800F71
+                LDA.W objMoveX,X                               ;80EE30|801381
                 CLC                                            ;80EE33|
-                ADC.W objField_0F99,X                          ;80EE34|800F99
-                STA.W objField_0F99,X                          ;80EE37|800F99
-                LDA.W objField_0FC1,X                          ;80EE3A|800FC1
+                ADC.W objBoxRight,X                          ;80EE34|800F99
+                STA.W objBoxRight,X                          ;80EE37|800F99
+                LDA.W objFlags,X                          ;80EE3A|800FC1
                 BIT.W #$0080                                   ;80EE3D|
                 BEQ .skip3                                     ;80EE40|80EE49
                 TYA                                            ;80EE42|
                 SEC                                            ;80EE43|
-                SBC.W objField_13A9,X                          ;80EE44|8013A9
+                SBC.W objMoveY,X                          ;80EE44|8013A9
                 BRA .cont2                                     ;80EE47|80EE4E
 
 
         .skip3: TYA                                            ;80EE49|
                 CLC                                            ;80EE4A|
-                ADC.W objField_13A9,X                          ;80EE4B|8013A9
+                ADC.W objMoveY,X                          ;80EE4B|8013A9
 
-        .cont2: STA.W objField_13A9,X                          ;80EE4E|8013A9
+        .cont2: STA.W objMoveY,X                          ;80EE4E|8013A9
                 CLC                                            ;80EE51|
-                ADC.W objField_11A1,X                          ;80EE52|8011A1
-                STA.W objField_11A1,X                          ;80EE55|8011A1
-                LDA.W objField_13A9,X                          ;80EE58|8013A9
+                ADC.W objY,X                          ;80EE52|8011A1
+                STA.W objY,X                          ;80EE55|8011A1
+                LDA.W objMoveY,X                          ;80EE58|8013A9
                 CLC                                            ;80EE5B|
-                ADC.W objField_0F21,X                          ;80EE5C|800F21
-                STA.W objField_0F21,X                          ;80EE5F|800F21
-                LDA.W objField_13A9,X                          ;80EE62|8013A9
+                ADC.W objBoxTop,X                          ;80EE5C|800F21
+                STA.W objBoxTop,X                          ;80EE5F|800F21
+                LDA.W objMoveY,X                          ;80EE62|8013A9
                 CLC                                            ;80EE65|
-                ADC.W objField_0F49,X                          ;80EE66|800F49
-                STA.W objField_0F49,X                          ;80EE69|800F49
+                ADC.W objBoxBottom,X                          ;80EE66|800F49
+                STA.W objBoxBottom,X                          ;80EE69|800F49
                 LDA.W #$FFFF                                   ;80EE6C|
-                STA.W ram_0E59,X                               ;80EE6F|800E59
+                STA.W objParent,X                               ;80EE6F|800E59
 
 ; --------------------------------------------------------
 ;  sub_80EE72   [5 ins, returns RTS]
@@ -20312,31 +21671,31 @@ sub_80EF03:
 ;    calls:     SpawnObject
 ; --------------------------------------------------------
 sub_80EF35:
-                LDA.W ram_1A0A,Y                               ;80EF35|801A0A
+                LDA.W placeX,Y                               ;80EF35|801A0A
                 CMP.W #$FFFF                                   ;80EF38|
                 BEQ .skip3                                     ;80EF3B|80EFBB
-                ADC.W ram_1A0E,Y                               ;80EF3D|801A0E
+                ADC.W placeHalfW,Y                               ;80EF3D|801A0E
                 SBC.B refillStageIdx                           ;80EF40|000034
                 BMI .skip2                                     ;80EF42|80EFB9
-                LDA.W ram_1A0A,Y                               ;80EF44|801A0A
-                SBC.W ram_1A0E,Y                               ;80EF47|801A0E
+                LDA.W placeX,Y                               ;80EF44|801A0A
+                SBC.W placeHalfW,Y                               ;80EF47|801A0E
                 SBC.B zp_36                                    ;80EF4A|000036
                 BPL .skip2                                     ;80EF4C|80EFB9
-                LDA.W ram_1A0C,Y                               ;80EF4E|801A0C
-                ADC.W ram_1A10,Y                               ;80EF51|801A10
+                LDA.W placeY,Y                               ;80EF4E|801A0C
+                ADC.W placeHalfH,Y                               ;80EF51|801A10
                 SBC.B zp_38                                    ;80EF54|000038
                 BMI .skip2                                     ;80EF56|80EFB9
-                LDA.W ram_1A0C,Y                               ;80EF58|801A0C
-                SBC.W ram_1A10,Y                               ;80EF5B|801A10
+                LDA.W placeY,Y                               ;80EF58|801A0C
+                SBC.W placeHalfH,Y                               ;80EF5B|801A10
                 SBC.B zp_3A                                    ;80EF5E|00003A
                 BPL .skip2                                     ;80EF60|80EFB9
                 PHX                                            ;80EF62|
                 STX.B refillTmp32                              ;80EF63|000032
                 LDX.W ram_033E                                 ;80EF65|80033E
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80EF68|800D91
+         .loop: LDA.W objActive,X                              ;80EF68|800D91
                 BEQ +                                          ;80EF6B|80EF74
-                LDA.W ram_1101,X                               ;80EF6D|801101
+                LDA.W objPlacementIdx,X                               ;80EF6D|801101
                 CMP.B refillTmp32                              ;80EF70|000032
                 BEQ .skip                                      ;80EF72|80EFB8
 
@@ -20349,18 +21708,18 @@ sub_80EF35:
                 PEI.B ($36)                                    ;80EF7E|000036
                 PEI.B ($38)                                    ;80EF80|000038
                 PEI.B ($3A)                                    ;80EF82|00003A
-                LDA.W ram_1A0A,Y                               ;80EF84|801A0A
+                LDA.W placeX,Y                               ;80EF84|801A0A
                 STA.B zp_6C                                    ;80EF87|00006C
-                LDA.W ram_1A0C,Y                               ;80EF89|801A0C
+                LDA.W placeY,Y                               ;80EF89|801A0C
                 STA.B zp_6E                                    ;80EF8C|00006E
-                LDA.W ram_1A0E,Y                               ;80EF8E|801A0E
-                STA.W ram_03FE                                 ;80EF91|8003FE
-                LDA.W ram_1A10,Y                               ;80EF94|801A10
-                STA.W ram_0400                                 ;80EF97|800400
-                LDA.W ram_1A16,Y                               ;80EF9A|801A16
-                STA.W ram_0382                                 ;80EF9D|800382
-                LDA.W ram_1A12,Y                               ;80EFA0|801A12
-                LDX.W ram_1A14,Y                               ;80EFA3|801A14
+                LDA.W placeHalfW,Y                               ;80EF8E|801A0E
+                STA.W spawnHalfW                                 ;80EF91|8003FE
+                LDA.W placeHalfH,Y                               ;80EF94|801A10
+                STA.W spawnHalfH                                 ;80EF97|800400
+                LDA.W placeOamPool,Y                               ;80EF9A|801A16
+                STA.W spawnOamPool                                 ;80EF9D|800382
+                LDA.W placeType,Y                               ;80EFA0|801A12
+                LDX.W placeFlags,Y                               ;80EFA3|801A14
                 LDY.B refillTmp32                              ;80EFA6|000032
                 JSR.W SpawnObject                               ;80EFA8|80EC56
                 PLA                                            ;80EFAB|
@@ -20411,32 +21770,32 @@ sub_80EFBD:
 ; --------------------------------------------------------
 ;  sub_80EFD7   [29 ins, returns RTS]
 ;    callers: sub_80EFBD
-;    writes:    refillTmp32, zp_6C, zp_6E, ram_0382, ram_03FE, ram_0400
-;    reads:     refillTmp32, ram_1A0A, ram_1A0C, ram_1A0E, ram_1A10, ram_1A12 ...
+;    writes:    refillTmp32, zp_6C, zp_6E, spawnOamPool, spawnHalfW, spawnHalfH
+;    reads:     refillTmp32, placeX, placeY, placeHalfW, placeHalfH, placeType ...
 ;    calls:     SpawnObject
 ; --------------------------------------------------------
 sub_80EFD7:
-                LDA.W ram_1A0A,Y                               ;80EFD7|801A0A
+                LDA.W placeX,Y                               ;80EFD7|801A0A
                 CMP.W #$FFFF                                   ;80EFDA|
                 BEQ .skip2                                     ;80EFDD|80F016
-                LDA.W ram_1A14,Y                               ;80EFDF|801A14
+                LDA.W placeFlags,Y                               ;80EFDF|801A14
                 AND.W #$0800                                   ;80EFE2|
                 BEQ .skip                                      ;80EFE5|80F014
                 PHY                                            ;80EFE7|
                 PHX                                            ;80EFE8|
                 STX.B refillTmp32                              ;80EFE9|000032
-                LDA.W ram_1A0A,Y                               ;80EFEB|801A0A
+                LDA.W placeX,Y                               ;80EFEB|801A0A
                 STA.B zp_6C                                    ;80EFEE|00006C
-                LDA.W ram_1A0C,Y                               ;80EFF0|801A0C
+                LDA.W placeY,Y                               ;80EFF0|801A0C
                 STA.B zp_6E                                    ;80EFF3|00006E
-                LDA.W ram_1A0E,Y                               ;80EFF5|801A0E
-                STA.W ram_03FE                                 ;80EFF8|8003FE
-                LDA.W ram_1A10,Y                               ;80EFFB|801A10
-                STA.W ram_0400                                 ;80EFFE|800400
-                LDA.W ram_1A16,Y                               ;80F001|801A16
-                STA.W ram_0382                                 ;80F004|800382
-                LDA.W ram_1A12,Y                               ;80F007|801A12
-                LDX.W ram_1A14,Y                               ;80F00A|801A14
+                LDA.W placeHalfW,Y                               ;80EFF5|801A0E
+                STA.W spawnHalfW                                 ;80EFF8|8003FE
+                LDA.W placeHalfH,Y                               ;80EFFB|801A10
+                STA.W spawnHalfH                                 ;80EFFE|800400
+                LDA.W placeOamPool,Y                               ;80F001|801A16
+                STA.W spawnOamPool                                 ;80F004|800382
+                LDA.W placeType,Y                               ;80F007|801A12
+                LDX.W placeFlags,Y                               ;80F00A|801A14
                 LDY.B refillTmp32                              ;80F00D|000032
                 JSR.W SpawnObject                               ;80F00F|80EC56
                 PLX                                            ;80F012|
@@ -20453,7 +21812,7 @@ sub_80EFD7:
 ; --------------------------------------------------------
 ;  sub_80F018   [60 ins, returns RTS]
 ;    callers: vbwait_808081, sub_80A0A3
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, objField_0FC1
+;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, objFlags
 ;    reads:     refillStageIdx, zp_36, zp_38, zp_3A, playerCamX, playerCamY ...
 ; --------------------------------------------------------
 sub_80F018:
@@ -20483,39 +21842,39 @@ sub_80F018:
                 STA.B zp_3A                                    ;80F042|00003A
                 LDX.W ram_033E                                 ;80F044|80033E
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80F047|800D91
+         .loop: LDA.W objActive,X                              ;80F047|800D91
                 BEQ .skip2                                     ;80F04A|80F08D
-                LDA.W objField_0FC1,X                          ;80F04C|800FC1
+                LDA.W objFlags,X                          ;80F04C|800FC1
                 AND.W #$0800                                   ;80F04F|
                 BNE .skip2                                     ;80F052|80F08D
-                LDA.W objField_1179,X                          ;80F054|801179
+                LDA.W objX,X                          ;80F054|801179
                 CLC                                            ;80F057|
-                ADC.W ram_0EF9,X                               ;80F058|800EF9
+                ADC.W objCullHalfW,X                               ;80F058|800EF9
                 SEC                                            ;80F05B|
                 SBC.B refillStageIdx                           ;80F05C|000034
                 BMI .skip                                      ;80F05E|80F084
-                LDA.W objField_1179,X                          ;80F060|801179
+                LDA.W objX,X                          ;80F060|801179
                 SEC                                            ;80F063|
-                SBC.W ram_0EF9,X                               ;80F064|800EF9
+                SBC.W objCullHalfW,X                               ;80F064|800EF9
                 SEC                                            ;80F067|
                 SBC.B zp_36                                    ;80F068|000036
                 BPL .skip                                      ;80F06A|80F084
-                LDA.W objField_11A1,X                          ;80F06C|8011A1
+                LDA.W objY,X                          ;80F06C|8011A1
                 CLC                                            ;80F06F|
-                ADC.W ram_0ED1,X                               ;80F070|800ED1
+                ADC.W objCullHalfH,X                               ;80F070|800ED1
                 SEC                                            ;80F073|
                 SBC.B zp_38                                    ;80F074|000038
                 BMI .skip                                      ;80F076|80F084
-                LDA.W objField_11A1,X                          ;80F078|8011A1
+                LDA.W objY,X                          ;80F078|8011A1
                 SEC                                            ;80F07B|
-                SBC.W ram_0ED1,X                               ;80F07C|800ED1
+                SBC.W objCullHalfH,X                               ;80F07C|800ED1
                 SEC                                            ;80F07F|
                 SBC.B zp_3A                                    ;80F080|00003A
                 BMI .skip2                                     ;80F082|80F08D
 
-         .skip: LDA.W objField_0FC1,X                          ;80F084|800FC1
+         .skip: LDA.W objFlags,X                          ;80F084|800FC1
                 ORA.W #$0200                                   ;80F087|
-                STA.W objField_0FC1,X                          ;80F08A|800FC1
+                STA.W objFlags,X                          ;80F08A|800FC1
 
         .skip2: INX                                            ;80F08D|
                 INX                                            ;80F08E|
@@ -20528,15 +21887,15 @@ sub_80F018:
 ;  DestroyObject   [62 ins, returns RTS]
 ;    callers: Op_Goto
 ;    writes:    refillTmp32, curObjIdx, mulMultiplicand, mulMultiplierLo, objTableEnd, oamSrcAttr ...
-;    reads:     refillTmp32, curObjIdx, objTableEnd, objScriptSrcBank, objField_0FC1, ram_1101 ...
+;    reads:     refillTmp32, curObjIdx, objTableEnd, objActive, objFlags, objPlacementIdx ...
 ;    calls:     sub_80DFD1, sub_80EE80, Mul8x16, sub_80EF35
 ; --------------------------------------------------------
 DestroyObject:
-                LDA.W ram_1511,Y                               ;80F095|801511
+                LDA.W objOamCount,Y                               ;80F095|801511
                 BEQ .skip                                      ;80F098|80F0B1
-                LDA.W ram_14E9,Y                               ;80F09A|8014E9
+                LDA.W objOamEnd,Y                               ;80F09A|8014E9
                 STA.B refillTmp32                              ;80F09D|000032
-                LDX.W ram_14C1,Y                               ;80F09F|8014C1
+                LDX.W objOamFirst,Y                               ;80F09F|8014C1
                 SEP #$20                                       ;80F0A2|
 
          .loop: STZ.W oamSrcAttr,X                             ;80F0A4|800985
@@ -20546,18 +21905,18 @@ DestroyObject:
                 REP #$20                                       ;80F0AC|
                 JSR.W sub_80DFD1                               ;80F0AE|80DFD1
 
-         .skip: LDX.W ram_1241,Y                               ;80F0B1|801241
+         .skip: LDX.W objSpawnerIdx,Y                               ;80F0B1|801241
                 BMI +                                          ;80F0B4|80F0BC
                 LDA.W #$FFFF                                   ;80F0B6|
-                STA.W ram_1269,X                               ;80F0B9|801269
+                STA.W objChildIdx,X                               ;80F0B9|801269
 
-             +: LDX.W ram_1269,Y                               ;80F0BC|801269
+             +: LDX.W objChildIdx,Y                               ;80F0BC|801269
                 BMI +                                          ;80F0BF|80F0C7
                 LDA.W #$FFFF                                   ;80F0C1|
-                STA.W ram_1241,X                               ;80F0C4|801241
+                STA.W objSpawnerIdx,X                               ;80F0C4|801241
 
              +: LDA.W #$0000                                   ;80F0C7|
-                STA.W objScriptSrcBank,Y                              ;80F0CA|800D91
+                STA.W objActive,Y                              ;80F0CA|800D91
                 LDA.W #$FFFF                                   ;80F0CD|
                 STA.W objAnimPtr,Y                               ;80F0D0|801449
                 PHY                                            ;80F0D3|
@@ -20569,7 +21928,7 @@ DestroyObject:
         .loop2: DEY                                            ;80F0DB|
                 DEY                                            ;80F0DC|
                 BMI +                                          ;80F0DD|80F0E4
-                LDA.W objScriptSrcBank,Y                              ;80F0DF|800D91
+                LDA.W objActive,Y                              ;80F0DF|800D91
                 BEQ .loop2                                     ;80F0E2|80F0DB
 
              +: INY                                            ;80F0E4|
@@ -20577,18 +21936,18 @@ DestroyObject:
                 STY.W objTableEnd                              ;80F0E6|800380
 
         .skip2: PLY                                            ;80F0E9|
-                LDA.W ram_1101,Y                               ;80F0EA|801101
+                LDA.W objPlacementIdx,Y                               ;80F0EA|801101
                 CMP.W #$FFFF                                   ;80F0ED|
                 BEQ .exit                                      ;80F0F0|80F11E
-                LDA.W objField_0FC1,Y                          ;80F0F2|800FC1
+                LDA.W objFlags,Y                          ;80F0F2|800FC1
                 AND.W #$0100                                   ;80F0F5|
                 BEQ .exit                                      ;80F0F8|80F11E
                 PHY                                            ;80F0FA|
                 JSR.W sub_80EE80                               ;80F0FB|80EE80
-                LDX.W ram_1101,Y                               ;80F0FE|801101
+                LDX.W objPlacementIdx,Y                               ;80F0FE|801101
                 LDA.W #$000E                                   ;80F101|
                 STA.B mulMultiplicand                          ;80F104|0000AC
-                LDA.W ram_1101,Y                               ;80F106|801101
+                LDA.W objPlacementIdx,Y                               ;80F106|801101
                 STA.B mulMultiplierLo                          ;80F109|0000B0
                 JSR.W Mul8x16                                  ;80F10B|809152
                 TAY                                            ;80F10E|
@@ -20658,12 +22017,12 @@ sub_80F135:
 ; --------------------------------------------------------
 ;  sub_80F158   [11 ins, returns RTS]
 ;    callers: SpawnObject
-;    reads:     ram_033E, objScriptSrcBank
+;    reads:     ram_033E, objActive
 ; --------------------------------------------------------
 sub_80F158:
                 LDX.W ram_033E                                 ;80F158|80033E
 
-         .loop: LDA.W objScriptSrcBank,X                              ;80F15B|800D91
+         .loop: LDA.W objActive,X                              ;80F15B|800D91
                 BEQ .skip                                      ;80F15E|80F169
                 INX                                            ;80F160|
                 INX                                            ;80F161|
@@ -20681,10 +22040,10 @@ sub_80F158:
 ;  sub_80F16B   [39 ins, returns RTS]
 ;    callers: SpawnObject
 ;    writes:    refillTmp32, zp_38, zp_3A
-;    reads:     refillTmp32, zp_38, ram_0382, oamSrcAttr, ram_1511
+;    reads:     refillTmp32, zp_38, spawnOamPool, oamSrcAttr, objOamCount
 ; --------------------------------------------------------
 sub_80F16B:
-                LDA.W ram_0382                                 ;80F16B|800382
+                LDA.W spawnOamPool                                 ;80F16B|800382
                 BEQ .skip2                                     ;80F16E|80F189
                 CMP.W #$0001                                   ;80F170|
                 BEQ .skip                                      ;80F173|80F17F
@@ -20718,7 +22077,7 @@ sub_80F16B:
         .skip3: STY.B zp_3A                                    ;80F1A0|00003A
                 TYA                                            ;80F1A2|
                 CLC                                            ;80F1A3|
-                ADC.W ram_1511,X                               ;80F1A4|801511
+                ADC.W objOamCount,X                               ;80F1A4|801511
                 STA.B zp_38                                    ;80F1A7|000038
 
         .loop3: INY                                            ;80F1A9|
@@ -20740,16 +22099,16 @@ sub_80F16B:
 ;  sub_80F1BE   [26 ins, returns RTS]
 ;    callers: SpawnObject
 ;    writes:    refillTmp32, zp_38, ram_0794, oamSrcAttr
-;    reads:     refillTmp32, zp_38, objField_0FC1, ram_14C1, ram_14E9
+;    reads:     refillTmp32, zp_38, objFlags, objOamFirst, objOamEnd
 ; --------------------------------------------------------
 sub_80F1BE:
                 PHX                                            ;80F1BE|
-                LDA.W objField_0FC1,X                          ;80F1BF|800FC1
+                LDA.W objFlags,X                          ;80F1BF|800FC1
                 AND.W #$003E                                   ;80F1C2|
                 STA.B refillTmp32                              ;80F1C5|000032
-                LDA.W ram_14E9,X                               ;80F1C7|8014E9
+                LDA.W objOamEnd,X                               ;80F1C7|8014E9
                 STA.B zp_38                                    ;80F1CA|000038
-                LDA.W ram_14C1,X                               ;80F1CC|8014C1
+                LDA.W objOamFirst,X                               ;80F1CC|8014C1
                 TAY                                            ;80F1CF|
                 ASL A                                          ;80F1D0|
                 ASL A                                          ;80F1D1|
@@ -20776,16 +22135,16 @@ sub_80F1BE:
 ;  sub_80F1EC   [12 ins, returns RTS]
 ;    callers: SpawnObject
 ;    writes:    refillStageIdx, zp_38
-;    reads:     refillStageIdx, zp_38, objField_0FC1, ram_14C1, ram_14E9
+;    reads:     refillStageIdx, zp_38, objFlags, objOamFirst, objOamEnd
 ;    calls:     sub_80E1A8
 ; --------------------------------------------------------
 sub_80F1EC:
-                LDA.W objField_0FC1,X                          ;80F1EC|800FC1
+                LDA.W objFlags,X                          ;80F1EC|800FC1
                 AND.W #$0001                                   ;80F1EF|
                 STA.B refillStageIdx                           ;80F1F2|000034
-                LDA.W ram_14E9,X                               ;80F1F4|8014E9
+                LDA.W objOamEnd,X                               ;80F1F4|8014E9
                 STA.B zp_38                                    ;80F1F7|000038
-                LDY.W ram_14C1,X                               ;80F1F9|8014C1
+                LDY.W objOamFirst,X                               ;80F1F9|8014C1
 
          .loop: LDA.B refillStageIdx                           ;80F1FC|000034
                 JSR.W sub_80E1A8                               ;80F1FE|80E1A8
@@ -20799,15 +22158,15 @@ sub_80F1EC:
 ;  sub_80F207   [16 ins, returns RTS]
 ;    callers: SpawnObject
 ;    writes:    refillTmp32, oamSrcX
-;    reads:     refillTmp32, playerCamX, ram_14C1, ram_14E9, ram_1511
+;    reads:     refillTmp32, playerCamX, objOamFirst, objOamEnd, objOamCount
 ; --------------------------------------------------------
 sub_80F207:
-                LDA.W ram_1511,X                               ;80F207|801511
+                LDA.W objOamCount,X                               ;80F207|801511
                 BEQ .exit                                      ;80F20A|80F225
-                LDA.W ram_14E9,X                               ;80F20C|8014E9
+                LDA.W objOamEnd,X                               ;80F20C|8014E9
                 ASL A                                          ;80F20F|
                 STA.B refillTmp32                              ;80F210|000032
-                LDA.W ram_14C1,X                               ;80F212|8014C1
+                LDA.W objOamFirst,X                               ;80F212|8014C1
                 ASL A                                          ;80F215|
                 TAY                                            ;80F216|
                 LDA.B playerCamX                               ;80F217|000044
@@ -20825,23 +22184,23 @@ sub_80F207:
 ; --------------------------------------------------------
 ;  sub_80F226   [13 ins, returns RTS]
 ;    callers: SpawnObject
-;    writes:    objField_0FC1
-;    reads:     objField_0FC1
+;    writes:    objFlags
+;    reads:     objFlags
 ;    calls:     sub_80EA54, sub_80EB57
 ; --------------------------------------------------------
 sub_80F226:
-                LDA.W objField_0FC1,X                          ;80F226|800FC1
+                LDA.W objFlags,X                          ;80F226|800FC1
                 BIT.W #$0040                                   ;80F229|
                 BEQ +                                          ;80F22C|80F237
                 AND.W #$FFBF                                   ;80F22E|
-                STA.W objField_0FC1,X                          ;80F231|800FC1
+                STA.W objFlags,X                          ;80F231|800FC1
                 JSR.W sub_80EA54                               ;80F234|80EA54
 
-             +: LDA.W objField_0FC1,X                          ;80F237|800FC1
+             +: LDA.W objFlags,X                          ;80F237|800FC1
                 BIT.W #$0080                                   ;80F23A|
                 BEQ .exit                                      ;80F23D|80F248
                 AND.W #$FF7F                                   ;80F23F|
-                STA.W objField_0FC1,X                          ;80F242|800FC1
+                STA.W objFlags,X                          ;80F242|800FC1
                 JSR.W sub_80EB57                               ;80F245|80EB57
 
          .exit: RTS                                            ;80F248|
@@ -20850,20 +22209,20 @@ sub_80F226:
 ; --------------------------------------------------------
 ;  InitObjectFromSpawnRec   [123 ins, returns RTS]
 ;    callers: SpawnObject
-;    writes:    refillTmp32, ram_0382, ram_0400, objScriptPtr, objScriptSrcBank, ram_0DE1 ...
+;    writes:    refillTmp32, spawnOamPool, spawnHalfH, objScriptPtr, objActive, objPrevX ...
 ;    reads:     zp_2A, refillTmp32, refillStageIdx, zp_36, zp_38, curObjIdx ...
 ;    calls:     sub_80DF80
 ; --------------------------------------------------------
 InitObjectFromSpawnRec:
                 LDA.B refillStageIdx                           ;80F249|000034
-                STA.W ram_1129,X                               ;80F24B|801129
+                STA.W objTypeId,X                               ;80F24B|801129
                 LDA.B zp_36                                    ;80F24E|000036
-                STA.W ram_1101,X                               ;80F250|801101
+                STA.W objPlacementIdx,X                               ;80F250|801101
                 LDA.B zp_38                                    ;80F253|000038
-                STA.W objField_0FC1,X                          ;80F255|800FC1
-                LDA.W ram_0382                                 ;80F258|800382
-                STA.W ram_10D9,X                               ;80F25B|8010D9
-                STZ.W ram_0382                                 ;80F25E|800382
+                STA.W objFlags,X                          ;80F255|800FC1
+                LDA.W spawnOamPool                                 ;80F258|800382
+                STA.W objOamPool,X                               ;80F25B|8010D9
+                STZ.W spawnOamPool                                 ;80F25E|800382
                 LDY.W #$0000                                   ;80F261|
                 LDA.B [zp_2A],Y                                ;80F264|00002A
                 JSR.W sub_80DF80                               ;80F266|80DF80
@@ -20871,16 +22230,16 @@ InitObjectFromSpawnRec:
                 RTS                                            ;80F26B|
 
 
-             +: STA.W ram_1291,X                               ;80F26C|801291
+             +: STA.W objGfxBase,X                               ;80F26C|801291
                 LDY.W #$0002                                   ;80F26F|
                 LDA.B [zp_2A],Y                                ;80F272|00002A
                 BIT.W #$0080                                   ;80F274|
                 BEQ +                                          ;80F277|80F27F
-                INC.W ram_0382                                 ;80F279|800382
-                INC.W ram_0382                                 ;80F27C|800382
+                INC.W spawnOamPool                                 ;80F279|800382
+                INC.W spawnOamPool                                 ;80F27C|800382
 
              +: AND.W #$007F                                   ;80F27F|
-                STA.W ram_1511,X                               ;80F282|801511
+                STA.W objOamCount,X                               ;80F282|801511
                 INY                                            ;80F285|
                 LDA.B [zp_2A],Y                                ;80F286|00002A
                 CLC                                            ;80F288|
@@ -20889,39 +22248,39 @@ InitObjectFromSpawnRec:
                 INY                                            ;80F28F|
                 INY                                            ;80F290|
                 LDA.B [zp_2A],Y                                ;80F291|00002A
-                STA.W objScriptSrcBank,X                              ;80F293|800D91
+                STA.W objActive,X                              ;80F293|800D91
                 INY                                            ;80F296|
                 INY                                            ;80F297|
                 LDA.B [zp_2A],Y                                ;80F298|00002A
-                STA.W objHealth,X                               ;80F29A|800FE9
+                STA.W objArgHp,X                               ;80F29A|800FE9
                 INY                                            ;80F29D|
                 INY                                            ;80F29E|
                 LDA.B [zp_2A],Y                                ;80F29F|00002A
                 AND.W #$00FF                                   ;80F2A1|
-                STA.W ram_0E81,X                               ;80F2A4|800E81
+                STA.W objWidth,X                               ;80F2A4|800E81
                 INY                                            ;80F2A7|
                 LDA.B [zp_2A],Y                                ;80F2A8|00002A
                 AND.W #$00FF                                   ;80F2AA|
-                STA.W ram_0EA9,X                               ;80F2AD|800EA9
+                STA.W objHeight,X                               ;80F2AD|800EA9
                 INY                                            ;80F2B0|
                 LDA.B [zp_2A],Y                                ;80F2B1|00002A
                 STA.W objDamage,X                               ;80F2B3|801011
                 INY                                            ;80F2B6|
                 INY                                            ;80F2B7|
                 LDA.B [zp_2A],Y                                ;80F2B8|00002A
-                STA.W ram_1039,X                               ;80F2BA|801039
+                STA.W objTouchType,X                               ;80F2BA|801039
                 INY                                            ;80F2BD|
                 INY                                            ;80F2BE|
                 LDA.B [zp_2A],Y                                ;80F2BF|00002A
-                STA.W ram_1061,X                               ;80F2C1|801061
+                STA.W objHitMask,X                               ;80F2C1|801061
                 INY                                            ;80F2C4|
                 INY                                            ;80F2C5|
                 LDA.B [zp_2A],Y                                ;80F2C6|00002A
-                STA.W ram_11C9,X                               ;80F2C8|8011C9
+                STA.W objMaxVelX,X                               ;80F2C8|8011C9
                 INY                                            ;80F2CB|
                 INY                                            ;80F2CC|
                 LDA.B [zp_2A],Y                                ;80F2CD|00002A
-                STA.W ram_11F1,X                               ;80F2CF|8011F1
+                STA.W objMaxVelY,X                               ;80F2CF|8011F1
                 LDA.W modFlags                                 ;INSERT|
                 AND.W #$0001                                   ;INSERT| ; is mod active?
                 BEQ .noShift                                   ;INSERT|
@@ -20930,63 +22289,63 @@ InitObjectFromSpawnRec:
                 ADC.W #$0020                                   ;INSERT| ; +32px
                 BRA .store                                     ;INSERT|
     .noShift:   LDA.B zp_6C                                    ;INSERT|
-       .store:  STA.W objField_1179,X                          ;80F2D4|801179
-                STA.W ram_0DE1,X                               ;80F2D7|800DE1
+       .store:  STA.W objX,X                          ;80F2D4|801179
+                STA.W objPrevX,X                               ;80F2D7|800DE1
                 LDA.B zp_6E                                    ;80F2DA|00006E
-                STA.W objField_11A1,X                          ;80F2DC|8011A1
-                STA.W ram_0E09,X                               ;80F2DF|800E09
+                STA.W objY,X                          ;80F2DC|8011A1
+                STA.W objPrevY,X                               ;80F2DF|800E09
                 LDA.B curObjIdx                                ;80F2E2|000042
-                STA.W ram_1241,X                               ;80F2E4|801241
-                STZ.W ram_13F9,X                               ;80F2E7|8013F9
-                STZ.W ram_1421,X                               ;80F2EA|801421
-                STZ.W ram_1151,X                               ;80F2ED|801151
-                STZ.W ram_1089,X                               ;80F2F0|801089
-                STZ.W ram_10B1,X                               ;80F2F3|8010B1
-                STZ.W ram_1381,X                               ;80F2F6|801381
-                STZ.W objField_13A9,X                          ;80F2F9|8013A9
-                STZ.W ram_1219,X                               ;80F2FC|801219
-                STZ.W ram_12E1,X                               ;80F2FF|8012E1
-                STZ.W ram_1309,X                               ;80F302|801309
-                STZ.W ram_1359,X                               ;80F305|801359
-                STZ.W ram_12B9,X                               ;80F308|8012B9
-                STZ.W ram_1331,X                               ;80F30B|801331
+                STA.W objSpawnerIdx,X                               ;80F2E4|801241
+                STZ.W objFracX,X                               ;80F2E7|8013F9
+                STZ.W objFracY,X                               ;80F2EA|801421
+                STZ.W objTimer,X                               ;80F2ED|801151
+                STZ.W objVelX,X                               ;80F2F0|801089
+                STZ.W objVelY,X                               ;80F2F3|8010B1
+                STZ.W objMoveX,X                               ;80F2F6|801381
+                STZ.W objMoveY,X                          ;80F2F9|8013A9
+                STZ.W objSolidClass,X                               ;80F2FC|801219
+                STZ.W objVar1,X                               ;80F2FF|8012E1
+                STZ.W objVar2,X                               ;80F302|801309
+                STZ.W objGfxFrame,X                               ;80F305|801359
+                STZ.W objVar0,X                               ;80F308|8012B9
+                STZ.W objVar3,X                               ;80F30B|801331
                 LDA.W #$FFFF                                   ;80F30E|
-                STA.W ram_1269,X                               ;80F311|801269
+                STA.W objChildIdx,X                               ;80F311|801269
                 STA.W objAnimPtr,X                               ;80F314|801449
-                STA.W ram_0E59,X                               ;80F317|800E59
-                LDA.W ram_0E81,X                               ;80F31A|800E81
+                STA.W objParent,X                               ;80F317|800E59
+                LDA.W objWidth,X                               ;80F31A|800E81
                 LSR A                                          ;80F31D|
                 STA.B refillTmp32                              ;80F31E|000032
-                LDA.W objField_1179,X                          ;80F320|801179
+                LDA.W objX,X                          ;80F320|801179
                 SEC                                            ;80F323|
                 SBC.B refillTmp32                              ;80F324|000032
-                STA.W objField_0F71,X                          ;80F326|800F71
+                STA.W objBoxLeft,X                          ;80F326|800F71
                 CLC                                            ;80F329|
-                ADC.W ram_0E81,X                               ;80F32A|800E81
+                ADC.W objWidth,X                               ;80F32A|800E81
                 DEC A                                          ;80F32D|
-                STA.W objField_0F99,X                          ;80F32E|800F99
-                LDA.W ram_0EA9,X                               ;80F331|800EA9
+                STA.W objBoxRight,X                          ;80F32E|800F99
+                LDA.W objHeight,X                               ;80F331|800EA9
                 LSR A                                          ;80F334|
                 STA.B refillTmp32                              ;80F335|000032
-                LDA.W objField_11A1,X                          ;80F337|8011A1
+                LDA.W objY,X                          ;80F337|8011A1
                 SEC                                            ;80F33A|
                 SBC.B refillTmp32                              ;80F33B|000032
-                STA.W objField_0F21,X                          ;80F33D|800F21
+                STA.W objBoxTop,X                          ;80F33D|800F21
                 CLC                                            ;80F340|
-                ADC.W ram_0EA9,X                               ;80F341|800EA9
+                ADC.W objHeight,X                               ;80F341|800EA9
                 DEC A                                          ;80F344|
-                STA.W objField_0F49,X                          ;80F345|800F49
-                LDA.W ram_03FE                                 ;80F348|8003FE
+                STA.W objBoxBottom,X                          ;80F345|800F49
+                LDA.W spawnHalfW                                 ;80F348|8003FE
                 BPL .skip                                      ;80F34B|80F358
-                LDA.W ram_0EA9,X                               ;80F34D|800EA9
+                LDA.W objHeight,X                               ;80F34D|800EA9
                 LSR A                                          ;80F350|
-                STA.W ram_0400                                 ;80F351|800400
-                LDA.W ram_0E81,X                               ;80F354|800E81
+                STA.W spawnHalfH                                 ;80F351|800400
+                LDA.W objWidth,X                               ;80F354|800E81
                 LSR A                                          ;80F357|
 
-         .skip: STA.W ram_0EF9,X                               ;80F358|800EF9
-                LDA.W ram_0400                                 ;80F35B|800400
-                STA.W ram_0ED1,X                               ;80F35E|800ED1
+         .skip: STA.W objCullHalfW,X                               ;80F358|800EF9
+                LDA.W spawnHalfH                                 ;80F35B|800400
+                STA.W objCullHalfH,X                               ;80F35E|800ED1
                 CLC                                            ;80F361|
                 RTS                                            ;80F362|
 

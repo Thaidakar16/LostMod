@@ -20712,7 +20712,7 @@ sub_80E8C9:
         .cont2: CLC                                            ;80E966|
                 ADC.W objMoveY,Y                          ;80E967|8013A9
                 STA.W objMoveY,Y                          ;80E96A|8013A9
-                RTS                              `              ;80E96D|
+                RTS                                            ;80E96D|
 
 ; ---------------------------------------------------------------
 ;  ANIMATION VM (29 opcodes) -- run per object by Op_AnimTick -> AnimVM_TickObject -> AnimVM_Run
@@ -21671,13 +21671,13 @@ sub_80EF03:
 ;    calls:     SpawnObject
 ; --------------------------------------------------------
 sub_80EF35:
-                LDA.W placeX,Y                               ;80EF35|801A0A
+                LDA.W placeX,Y                                 ;80EF35|801A0A
                 CMP.W #$FFFF                                   ;80EF38|
                 BEQ .skip3                                     ;80EF3B|80EFBB
-                ADC.W placeHalfW,Y                               ;80EF3D|801A0E
+                JSR.W Mod_PlacementX_PlusHalfW                 ;INSERT|  was: ADC.W placeHalfW,Y  (placeX + halfW, now + modShift)                SBC.B refillStageIdx                           ;80EF40|000034
                 SBC.B refillStageIdx                           ;80EF40|000034
                 BMI .skip2                                     ;80EF42|80EFB9
-                LDA.W placeX,Y                               ;80EF44|801A0A
+                JSR.W Mod_PlacementX_Shifted                   ;INSERT|  was: LDA.W placeX,Y  (placeX, now + modShift)
                 SBC.W placeHalfW,Y                               ;80EF47|801A0E
                 SBC.B zp_36                                    ;80EF4A|000036
                 BPL .skip2                                     ;80EF4C|80EFB9
@@ -22457,6 +22457,57 @@ data_80F5CB:
                 dw $007D,$011C,$0129,$0131                     ;80F613|
                 dw $0136,$0137,$012A,$0157                     ;80F61B|
                 dw $0158,$0159,$015A,$0082                     ;80F623|
+
+; ==============================================================================
+;  MOD: spawn-detection X correction  (lives in the free space after data_80F5CB
+;  so NOTHING in bank 80 moves; the two hooks in sub_80EF35 are same-size
+;  replacements: ADC abs,Y -> JSR abs, LDA abs,Y -> JSR abs, both 3 bytes)
+;
+;  Why: with the mod active, sub_80F249 adds +$20 to every spawned object's X,
+;  and the camera (playerCamX) follows those shifted objects, so the spawn box
+;  built in sub_80EE80 / loc_80EEA1 / loc_80EEB1 / loc_80EEF5 is in SHIFTED space.
+;  sub_80EF35 compared it against the RAW placement X ($1A0A,Y), so placements
+;  were detected $20 px too early. These helpers make the comparison use
+;  placeX + modShift, where modShift = $20 when (modFlags & 1) else 0 --
+;  the exact same condition sub_80F249 uses, so the two can never disagree.
+;  With the mod off, modShift = 0 and behaviour is identical to the original.
+;
+;  Both helpers are called from the middle of a carry-dependent ADC/SBC chain
+;  (sub_80EF35 relies on the carry left by each instruction), so they keep
+;  the carry exactly as the instruction they replaced would have left it.
+; ==============================================================================
+
+; --- replaces `ADC.W placeHalfW,Y` at $80EF3D.  Entry: C=0 (after CMP #$FFFF, A != $FFFF)
+; --- returns A = placeX + halfW + modShift, C = 0 (same as the original ADC).
+Mod_PlacementX_PlusHalfW:
+                LDA.W modFlags                                 ;INSERT|
+                AND.W #$0001                                   ;INSERT|
+                ASL A                                          ;INSERT|  x2
+                ASL A                                          ;INSERT|  x4
+                ASL A                                          ;INSERT|  x8
+                ASL A                                          ;INSERT|  x16
+                ASL A                                          ;INSERT|  x32 -> A = 0 or $0020, C = 0
+                ADC.W placeX,Y                               ;INSERT|  + placeX
+                ADC.W placeHalfW,Y                               ;INSERT|  + halfW
+                RTS                                            ;INSERT|
+
+; --- replaces `LDA.W placeX,Y` at $80EF44.  Entry: C = carry from the previous SBC
+; --- returns A = placeX + modShift, C preserved (LDA never touched it).
+Mod_PlacementX_Shifted:
+                PHP                                            ;INSERT|  save C
+                LDA.W modFlags                                 ;INSERT|
+                AND.W #$0001                                   ;INSERT|
+                ASL A                                          ;INSERT|
+                ASL A                                          ;INSERT|
+                ASL A                                          ;INSERT|
+                ASL A                                          ;INSERT|
+                ASL A                                          ;INSERT|  A = 0 or $0020
+                CLC                                            ;INSERT|
+                ADC.W placeX,Y                               ;INSERT|  + placeX
+                PLP                                            ;INSERT|  restore C (and M/X, unchanged)
+                RTS                                            ;INSERT|
+
+
 
 ; this whole span is dead ROM padding (all zero, never read or executed);
 ; reclaimed as free space instead of writing it out byte-for-byte.

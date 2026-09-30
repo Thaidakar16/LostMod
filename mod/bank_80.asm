@@ -790,8 +790,9 @@ wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 ; my vars (IS THERE A SINGLE FREE VWRAM SPOT???!!!)
 
 		modFlags = $0310                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
-RefillFlags = $0560                ; bit 0 = left half of metatile, bit 1 = right half of metatile, bit 2 = top half of metatile, bit 3 = bottom half of metatile
-
+;RefillFlags = $0560                ; bit 0 = left half of metatile, bit 1 = right half of metatile, bit 2 = top half of metatile, bit 3 = bottom half of metatile
+refillStageStart = $0560
+P1rowDmaDest = $0562 ; hopefully this is free....         
 ; jsl label defines (far calls into other banks):
 
 InitPpuRegisters       = $818000
@@ -816,6 +817,11 @@ expandDstPtr  = $0063   ; 3 bytes: lo, hi, bank of dest pointer
 expandColCtr  = $0066   ; 2 bytes: inner (column) loop counter
 expandRowCtr  = $0068   ; 2 bytes: outer (row) loop counter
 expandNewEnd  = $006A   ; 2 bytes: return value (new data end offset)
+
+P1rowStagedMetaTileLU    = $1775
+P1rowStagedMetaTileRU    = $1777
+P1rowStagedMetaTileLD    = $17B5
+P1rowStagedMetaTileRD    = $17B7
 
                        ORG $808000
 
@@ -12135,7 +12141,6 @@ ProcessTilemapEdits:
                 CLC                                            ;80C050|
                 RTS                                            ;80C051|
 
-
              +: BIT.W #$0001                                   ;80C052|
                 BEQ +                                          ;80C055|80C05A
                 JSR.W UploadTilemapColumn                      ;80C057|80C517
@@ -12154,7 +12159,27 @@ ProcessTilemapEdits:
                 BIT.W #$0008                                   ;80C073|
                 BEQ +                                          ;80C076|80C07B
                 JSR.W VramColUpload_D                          ;80C078|80CBFF
+             
+            ;  +: LDA.W tilemapUploadMask                        ;INSERT|8003AE
+            ;     BIT.W #$0010                                   ;INSERT|
+            ;     BEQ +                                          ;INSERT|
+            ;     JSR.W UploadTilemapColumnP1
 
+            ;  +: LDA.W tilemapUploadMask                        ;INSERT|8003AE
+            ;     BIT.W #$0020                                   ;INSERT|
+            ;     BEQ +                                          ;INSERT|
+            ;     JSR.W UploadTilemapColumnP2
+
+             +: LDA.W tilemapUploadMask                        ;INSERT|8003AE
+                BIT.W #$0040                                   ;INSERT|
+                BEQ +                                          ;INSERT|
+                JSR.W UploadTilemapRowP1
+
+            ;  +: LDA.W tilemapUploadMask                        ;INSERT|8003AE
+            ;     BIT.W #$0080                                   ;INSERT|
+            ;     BEQ +                                          ;INSERT|
+            ;     JSR.W UploadTilemapRowP2
+             
              +: STZ.W tilemapUploadMask                        ;80C07B|8003AE
                 SEC                                            ;80C07E|
                 RTS                                            ;80C07F|
@@ -12414,35 +12439,34 @@ sub_80C14E:
 
 RefillTilemapOnScroll:
 
-              ; Vertical refill
-                     ;   LDA.W modFlags                                 ;INSERT|
-                     ;   BIT.W #$0001                                   ;INSERT|
-                     ;   BEQ .original                                  ;INSERT|
-
-                     ; ; modded logic:
-                     ;   LDA.W refillLastCamY                           ;INSERT|
-                     ;   AND.W #$FFFC                                   ;INSERT|
-                     ;   STA.B refillTmp32                              ;INSERT|
-                     ;   LDA.B playerCamY                               ;INSERT|
-                     ;   AND.W #$FFFC                                   ;INSERT|
-                     ;   BRA ++                                         ;INSERT|
-
-
-    .originalY: LDA.W refillLastCamY                           ;80C176|8016AB   
+              
+                ;Vertical refill
+                LDA.W refillLastCamY                           ;80C176|8016AB   
                 AND.W #$FFF8                                   ;80C179|         
                 STA.B refillTmp32                              ;80C17C|000032   
                 LDA.B playerCamY                               ;80C17E|000046   
                 AND.W #$FFF8                                   ;80C180|         
 
-            ++: SEC                                            ;80C183|
+                SEC                                            ;80C183|
                 SBC.B refillTmp32                              ;80C184|000032   ; A = new snapped camY - old snapped camY: 0 = same row, nonzero = crossed at least one row
                 BEQ .refillX                                   ;80C186|80C192   ; no vertical crossing -> skip straight to the horizontal check
-                BPL +                                          ;80C188|80C18F   ; positive delta = camera moved DOWN -> refill the row revealed at the bottom
-                JSR.W RefillRowUp                              ;80C18A|80C269   ; negative delta = camera moved UP -> refill the row revealed at the top
+                BPL .goDown                                          ;80C188|80C18F   ; positive delta = camera moved DOWN -> refill the row revealed at the bottom
+                
+                LDA.W modFlags
+                BIT.W #$0001
+                BEQ .upOrig
+                JSR.W RefillRowUpMod
+                BRA .refillX
+       .upOrig: JSR.W RefillRowUp                              ;80C18A|80C269   ; negative delta = camera moved UP -> refill the row revealed at the top
                 BRA .refillX                                   ;80C18D|80C192
 
 
-             +: JSR.W RefillRowDown                            ;80C18F|80C20C
+       .goDown: LDA.W modFlags
+                BIT.W #$0001
+                BEQ .downOrig
+                JSR.W RefillRowDownMod
+                BRA .refillX
+     .downOrig: JSR.W RefillRowDown                            ;80C18F|80C20C
 
 
                 ;Horizontal refill
@@ -12568,7 +12592,188 @@ RefillColumnLeft:
                 JSR.W SetPpuUpdateBits                         ;80C206|80C044
                 JMP.W loc_80EEA1                               ;80C209|80EEA1   ; step 6: tail-call into the sprite/object clip-window setup for the left edge
 
-; MODDED FUNCTIONS:
+; --------------------------------------------------------
+;  RefillRowDown   [42 ins, returns RTS]
+;    callers: RefillTilemapOnScroll
+;    writes:    refillRowTileY
+;    reads:     playerCamY, refillLastCamY, refillColTileX, refillRowTileY
+;    calls:     BuildTilemapRow, SetPpuUpdateBits, loc_80EED3
+; --------------------------------------------------------
+RefillRowDown:
+                LDA.B playerCamY                               ;80C20C|000046   ; step 1: refillRowTileY = arithmetic-shift-right-3(camY), rounded down to
+                LSR A                                          ;80C20E|         ; an EVEN tile row (i.e. aligned to a 16px metatile row). LSR A x3 is a
+                LSR A                                          ;80C20F|         ; pixel->tile conversion (/8) but it's a LOGICAL shift, so...
+                LSR A                                          ;80C210|
+
+                AND.W #$FFFE                                   ;80C211|         ; ...round down to even tile (metatile-aligned) by clearing bit0...
+                LDX.B playerCamY                               ;80C214|000046   ; ...then check the sign of the ORIGINAL (pre-shift) camY...
+                BPL +                                          ;80C216|80C21B
+                ORA.W #$E000                                   ;80C218|         ; ...and if it was negative, manually sign-extend the top 3 bits that
+                                                                                        ; the logical LSRs left as 0 (emulates an arithmetic >>3 for negative camY)
+             +: STA.W refillRowTileY                           ;80C21B|8016C7
+                LDA.B playerCamY                               ;80C21E|000046   ; step 2: is camY sitting on the first half of the metatile, or the second half?
+                AND.W #$0008                                   ;80C220|         ; (bit3 = the 8px sub-position within the current metatile row)
+                BEQ .firstHalf                                 ;80C223|80C241   ; bit3 CLEAR (on a metatile) -> the "first half" path below (.skip)
+                                                                                        ; bit3 SET (mid-metatile, i.e. we just crossed into a new row) -> fall
+                                                                                        ; through and stage the row one metatile-row AHEAD right now:
+                LDX.W refillColTileX                           ;80C225|8016C5
+                DEX                                            ;80C228|         ; X = refillColTileX-2 (left edge of the staging window, matches the
+                DEX                                            ;80C229|         ; look-ahead margin BuildTilemapCol/BuildTilemapColumn expect)
+                LDA.W refillRowTileY                           ;80C22A|8016C7
+                CLC                                            ;80C22D|
+                ADC.W #$001E                                   ;80C22E|         ; Y = refillRowTileY + $1E: the off-screen row just below the visible+
+                TAY                                            ;80C231|         ; look-ahead window (the "near" catch-up distance for a normal 1-row step)
+                LDA.W #$001E                                   ;80C232|         ; A = same +$1E, passed through as BuildTilemapRow's signed row offset
+                JSR.W BuildTilemapRow                          ;80C235|80C3D4
+                LDA.W #$0002                                   ;80C238|         ; flag bit1 = "a row DMA is ready" for VBlank_Flush_Tilemap
+                JSR.W SetPpuUpdateBits                         ;80C23B|80C044
+                JMP.W loc_80EED3                               ;80C23E|80EED3   ; tail-call: sprite/object clip-window setup for the bottom edge
+
+
+    .firstHalf: LDA.B playerCamY                               ;80C241|000046   ; step 3 (aligned case): how far did camY move THIS FRAME compared to the
+                SEC                                            ;80C243|         ; last latched camera (refillLastCamY, set back in RefillTilemapOnScroll)?
+                SBC.W refillLastCamY                           ;80C244|8016AB
+                CMP.W #$0009                                   ;80C247|         ; moved less than 9px this frame -> the mid-metatile branch above already
+                BCC .exit                                      ;80C24A|80C268   ; staged everything needed for a normal single-row step; nothing more to do
+                LDX.W refillColTileX                           ;80C24C|8016C5   ; moved 9px+ in one frame (fast scroll / teleport / level-load jump) ->
+                DEX                                            ;80C24F|         ; the mid-metatile branch's one-row catch-up wasn't enough, so stage a
+                DEX                                            ;80C250|         ; SECOND row further out to cover the extra distance:
+                LDA.W refillRowTileY                           ;80C251|8016C7
+                CLC                                            ;80C254|
+                ADC.W #$001C                                   ;80C255|         ; Y = refillRowTileY + $1C (one metatile-row closer in than the +$1E
+                TAY                                            ;80C258|         ; case above, since this is a supplementary/catch-up refill, not the
+                LDA.W #$001C                                   ;80C259|         ; normal one)
+                JSR.W BuildTilemapRow                          ;80C25C|80C3D4
+                LDA.W #$0002                                   ;80C25F|
+                JSR.W SetPpuUpdateBits                         ;80C262|80C044
+                JMP.W loc_80EED3                               ;80C265|80EED3
+
+
+         .exit: RTS                                            ;80C268|
+
+
+; --------------------------------------------------------
+;  RefillRowUp   [38 ins, returns RTS]
+;    callers: RefillTilemapOnScroll
+;    writes:    refillRowTileY
+;    reads:     playerCamY, refillLastCamY, refillColTileX, refillRowTileY
+;    calls:     BuildTilemapRow, SetPpuUpdateBits, loc_80EEE7
+; --------------------------------------------------------
+RefillRowUp:
+                LDA.B playerCamY                              ;80C269|000046   ; step 1: same arithmetic-shift-right-3 + round-to-even as RefillRowDown
+                LSR A                                          ;80C26B|         ; (see its comments for the LSR/AND/sign-extend explanation) --
+                LSR A                                          ;80C26C|         ; refillRowTileY = camY>>3 rounded down to an even (metatile-aligned) tile
+                LSR A                                          ;80C26D|
+                AND.W #$FFFE                                   ;80C26E|
+                LDX.B playerCamY                               ;80C271|000046
+                BPL +                                          ;80C273|80C278
+                ORA.W #$E000                                   ;80C275|
+
+             +: STA.W refillRowTileY                           ;80C278|8016C7
+                LDA.B playerCamY                               ;80C27B|000046   ; step 2: same metatile-alignment check as RefillRowDown, but NOTE THE
+                AND.W #$0008                                   ;80C27D|         ; POLARITY IS FLIPPED (BNE here vs BEQ there) -- this is deliberate, not
+                BNE .skip                                      ;80C280|80C29B   ; a bug: rounding DOWN to an even tile lands on a different side of the
+                                                                                        ; boundary depending on scroll direction, so "aligned" vs "mid-metatile"
+                                                                                        ; swap which branch is the immediate/near one for up vs down.
+                                                                                        ; bit3 CLEAR (aligned) -> near case, stage the row right now:
+                LDX.W refillColTileX                           ;80C282|8016C5
+                DEX                                            ;80C285|         ; X = refillColTileX-2 (left edge of the staging window, as elsewhere)
+                DEX                                            ;80C286|
+                LDY.W refillRowTileY                           ;80C287|8016C7
+                DEY                                            ;80C28A|         ; Y = refillRowTileY-2: the off-screen row just above the visible+
+                DEY                                            ;80C28B|         ; look-ahead window
+                LDA.W #$FFFE                                   ;80C28C|         ; A = -2, the matching signed row offset for BuildTilemapRow
+                JSR.W BuildTilemapRow                          ;80C28F|80C3D4
+                LDA.W #$0002                                   ;80C292|         ; flag bit1 = "a row DMA is ready", same as RefillRowDown
+                JSR.W SetPpuUpdateBits                         ;80C295|80C044
+                JMP.W loc_80EEE7                               ;80C298|80EEE7   ; tail-call: sprite/object clip-window setup for the top edge
+
+
+         .skip: LDA.W refillLastCamY                           ;80C29B|8016AB   ; step 3 (mid-metatile / "far" case): distance moved this frame, computed
+                SEC                                            ;80C29E|         ; as OLD-minus-NEW here (camY is DEcreasing while scrolling up, so this
+                SBC.B playerCamY                               ;80C29F|000046   ; order keeps the result positive) -- compare to RefillRowDown's NEW-minus-OLD
+                CMP.W #$0009                                   ;80C2A1|         ; moved less than 9px this frame -> the near case already covered it,
+                BCC .exit                                      ;80C2A4|80C2BD   ; nothing more to do
+                LDX.W refillColTileX                           ;80C2A6|8016C5   ; moved 9px+ (fast scroll/teleport) -> stage a second, closer-in catch-up
+                DEX                                            ;80C2A9|         ; row: X = refillColTileX-2 as usual, Y = refillRowTileY UNCHANGED (no
+                DEX                                            ;80C2AA|         ; DEY this time) with a signed offset of 0
+                LDY.W refillRowTileY                           ;80C2AB|8016C7
+                LDA.W #$0000                                   ;80C2AE|
+                JSR.W BuildTilemapRow                          ;80C2B1|80C3D4
+                LDA.W #$0002                                   ;80C2B4|
+                JSR.W SetPpuUpdateBits                         ;80C2B7|80C044
+                JMP.W loc_80EEE7                               ;80C2BA|80EEE7
+
+
+         .exit: RTS                                            ;80C2BD|
+
+; MODDED REFILL FUNCTIONS:
+
+RefillColumnRightMod:
+                LDA.B playerCamX                               ;INSERT|
+                LSR A                                          ;INSERT|
+                LSR A                                          ;INSERT|
+                LSR A                                          ;INSERT|
+
+
+                AND.W #$FFFE                                   ;INSERT|
+                LDX.B playerCamX                               ;INSERT|
+                BPL +                                          ;INSERT|
+                ORA.W #$E000                                   ;INSERT|
+             +: STA.W refillColTileX                           ;INSERT|
+
+
+                LDA.B playerCamX                               ;INSERT|
+                AND.W #$0008                                   ;INSERT|
+                BEQ .firstHalf                                 ;INSERT|
+
+
+                LDA.W refillColTileX                           ;INSERT|
+                CLC                                            ;INSERT|
+                ADC.W #$0022                                   ;INSERT|
+                TAX                                            ;INSERT|
+                LDY.W refillRowTileY                           ;INSERT|
+                LDA.B playerCamY                               ;INSERT|
+                AND.W #$0008                                   ;INSERT|
+                BNE +                                          ;INSERT|
+                DEY                                            ;INSERT|
+                DEY                                            ;INSERT|
+
+             +: LDA.W #$0022                                   ;INSERT|
+
+                JSR.W BuildTilemapCol                          ;INSERT|
+                LDA.W #$0001                                   ;INSERT|
+                JSR.W SetPpuUpdateBits                         ;INSERT|
+                JMP.W loc_80EEB1                               ;INSERT|
+
+
+    .firstHalf: LDA.B playerCamX                               ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.W refillLastCamX                           ;INSERT|
+                CMP.W #$0009                                   ;INSERT|
+                BCC .exit                                      ;INSERT|
+
+                LDA.W refillColTileX                           ;INSERT|
+                CLC                                            ;INSERT|
+                ADC.W #$0020                                   ;INSERT|
+                TAX                                            ;INSERT|
+                LDY.W refillRowTileY                           ;INSERT|
+                LDA.B playerCamY                               ;INSERT|
+                AND.W #$0008                                   ;INSERT|
+                BNE +                                          ;INSERT|
+                DEY                                            ;INSERT|
+                DEY                                            ;INSERT|
+
+             +: LDA.W #$0020                                   ;INSERT|
+
+                JSR.W BuildTilemapCol                          ;INSERT|
+                LDA.W #$0001                                   ;INSERT|
+                JSR.W SetPpuUpdateBits                         ;INSERT|
+                JMP.W loc_80EEB1                               ;INSERT|
+
+
+         .exit: RTS                                            ;INSERT|
+
 
 RefillColumnLeftMod:
                 LDA.B playerCamX                               ;INSERT|
@@ -12624,217 +12829,101 @@ RefillColumnLeftMod:
 
          .exit: RTS                                            ;INSERT|
 
-
-RefillColumnRightMod:
-                LDA.B playerCamX                               ;INSERT|
-                LSR A                                          ;INSERT|
-                LSR A                                          ;INSERT|
-                LSR A                                          ;INSERT|
-
-
-                AND.W #$FFFE                                   ;INSERT|
-                LDX.B playerCamX                               ;INSERT|
-                BPL +                                          ;INSERT|
-                ORA.W #$E000                                   ;INSERT|                                                                      ;INSERT|
-             +: STA.W refillColTileX                           ;INSERT|
-
-
-                LDA.B playerCamX                               ;INSERT|
-                AND.W #$0008                                   ;INSERT|
-                BEQ .firstHalf                                 ;INSERT|
-
-
-                LDA.W refillColTileX                           ;INSERT|
-                CLC                                            ;INSERT|
-                ADC.W #$0022                                   ;INSERT|
-                TAX                                            ;INSERT|
-                LDY.W refillRowTileY                           ;INSERT|
-                LDA.B playerCamY                               ;INSERT|
-                AND.W #$0008                                   ;INSERT|
-                BNE +                                          ;INSERT|
-                DEY                                            ;INSERT|
-                DEY                                            ;INSERT|
-
-             +: LDA.W #$0022                                   ;INSERT|
-
-                JSR.W BuildTilemapCol                          ;INSERT|
-                LDA.W #$0001                                   ;INSERT|
-                JSR.W SetPpuUpdateBits                         ;INSERT|
-                JMP.W loc_80EEB1                               ;INSERT|
+RefillRowDownMod:
+                LDA.B playerCamY                                ;INSERT|
+                LSR A                                           ;INSERT|
+                LSR A                                           ;INSERT|
+                LSR A                                           ;INSERT|
+                AND.W #$FFFE                                    ;INSERT|
+                LDX.B playerCamY                                ;INSERT|
+                BPL +                                           ;INSERT|
+                ORA.W #$E000                                    ;INSERT|
+                                                                ;INSERT|
+             +: STA.W refillRowTileY                            ;INSERT|
+                LDA.B playerCamY                                ;INSERT|
+                AND.W #$0008                                    ;INSERT|
+                BEQ .firstHalf                                  ;INSERT|
+                                                                ;INSERT|
+                                                                ;INSERT|
+                LDX.W refillColTileX                            ;INSERT|
+                INX                                             ;INSERT|
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC                                             ;INSERT|
+                ADC.W #$001E                                    ;INSERT|
+                TAY                                             ;INSERT|
+                LDA.W #$001E                                    ;INSERT|
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                LDA.W #$0040                                    ;INSERT|
+                JSR.W SetPpuUpdateBits                          ;INSERT|
+                JMP.W loc_80EED3                                ;INSERT|
 
 
-    .firstHalf: LDA.B playerCamX                               ;INSERT|
-                SEC                                            ;INSERT|
-                SBC.W refillLastCamX                           ;INSERT|
-                CMP.W #$0009                                   ;INSERT|
-                BCC .exit                                      ;INSERT|
-
-                LDA.W refillColTileX                           ;INSERT|
-                CLC                                            ;INSERT|
-                ADC.W #$0020                                   ;INSERT|
-                TAX                                            ;INSERT|
-                LDY.W refillRowTileY                           ;INSERT|
-                LDA.B playerCamY                               ;INSERT|
-                AND.W #$0008                                   ;INSERT|
-                BNE +                                          ;INSERT|
-                DEY                                            ;INSERT|
-                DEY                                            ;INSERT|
-
-             +: LDA.W #$0020                                   ;INSERT|
-
-                JSR.W BuildTilemapCol                          ;INSERT|
-                LDA.W #$0001                                   ;INSERT|
-                JSR.W SetPpuUpdateBits                         ;INSERT|
-                JMP.W loc_80EEB1                               ;INSERT|
-
-
-         .exit: RTS                                            ;INSERT|
-; --------------------------------------------------------
-;  RefillRowDown   [42 ins, returns RTS]
-;    callers: RefillTilemapOnScroll
-;    writes:    refillRowTileY
-;    reads:     playerCamY, refillLastCamY, refillColTileX, refillRowTileY
-;    calls:     BuildTilemapRow, SetPpuUpdateBits, loc_80EED3
-; --------------------------------------------------------
-RefillRowDown:
-                LDA.B playerCamY                               ;80C20C|000046   ; step 1: refillRowTileY = arithmetic-shift-right-3(camY), rounded down to
-                LSR A                                          ;80C20E|         ; an EVEN tile row (i.e. aligned to a 16px metatile row). LSR A x3 is a
-                LSR A                                          ;80C20F|         ; pixel->tile conversion (/8) but it's a LOGICAL shift, so...
-                LSR A                                          ;80C210|
-
-                     ;   TAX                                            ;INSERT|
-                     ;   AND.W #$0001                                   ;INSERT|
-                     ;   STA.W RefillFlags                            ;INSERT|
-                     ;   TXA                                            ;INSERT|
-
-                AND.W #$FFFE                                   ;80C211|         ; ...round down to even tile (metatile-aligned) by clearing bit0...
-                LDX.B playerCamY                               ;80C214|000046   ; ...then check the sign of the ORIGINAL (pre-shift) camY...
-                BPL +                                          ;80C216|80C21B
-                ORA.W #$E000                                   ;80C218|         ; ...and if it was negative, manually sign-extend the top 3 bits that
-                                                                                        ; the logical LSRs left as 0 (emulates an arithmetic >>3 for negative camY)
-             +: STA.W refillRowTileY                           ;80C21B|8016C7
-
-                     ;   LDA.W modFlags                                 ;INSERT|
-                     ;   BIT.W #$0001                                   ;INSERT|
-                     ;   BEQ +                                          ;INSERT|
-
-                     ;   LDA.W playerCamY                               ;INSERT|
-                     ;   AND.W #$0004                                   ;INSERT|
-                     ;   BEQ .firstHalfMod                              ;INSERT|
-
-                     ;   LDX.W refillColTileX                           ;INSERT|
-                     ;   DEX                                            ;INSERT|
-                     ;   LDA.W refillRowTileY                           ;INSERT|
-                     ;   CLC                                            ;INSERT|
-                     ;   ADC.W #$001E                                   ;INSERT|
-                     ;   TAY                                            ;INSERT|
-                     ;   LDA.W #$001E                                   ;INSERT|
-                     ;   JSR.W BuildTilemapRow                          ;INSERT|
-                     ;   LDA.W #$0002                                   ;INSERT|
-                     ;   JSR.W SetPpuUpdateBits                         ;INSERT|
-                     ;   JMP.W loc_80EED3                               ;INSERT|
-
-                LDA.B playerCamY                               ;80C21E|000046   ; step 2: is camY sitting on the first half of the metatile, or the second half?
-                AND.W #$0008                                   ;80C220|         ; (bit3 = the 8px sub-position within the current metatile row)
-                BEQ .firstHalf                                 ;80C223|80C241   ; bit3 CLEAR (on a metatile) -> the "first half" path below (.skip)
-                                                                                        ; bit3 SET (mid-metatile, i.e. we just crossed into a new row) -> fall
-                                                                                        ; through and stage the row one metatile-row AHEAD right now:
-                LDX.W refillColTileX                           ;80C225|8016C5
-                DEX                                            ;80C228|         ; X = refillColTileX-2 (left edge of the staging window, matches the
-                DEX                                            ;80C229|         ; look-ahead margin BuildTilemapCol/BuildTilemapColumn expect)
-                LDA.W refillRowTileY                           ;80C22A|8016C7
-                CLC                                            ;80C22D|
-                ADC.W #$001E                                   ;80C22E|         ; Y = refillRowTileY + $1E: the off-screen row just below the visible+
-                TAY                                            ;80C231|         ; look-ahead window (the "near" catch-up distance for a normal 1-row step)
-                LDA.W #$001E                                   ;80C232|         ; A = same +$1E, passed through as BuildTilemapRow's signed row offset
-                JSR.W BuildTilemapRow                          ;80C235|80C3D4
-                LDA.W #$0002                                   ;80C238|         ; flag bit1 = "a row DMA is ready" for VBlank_Flush_Tilemap
-                JSR.W SetPpuUpdateBits                         ;80C23B|80C044
-                JMP.W loc_80EED3                               ;80C23E|80EED3   ; tail-call: sprite/object clip-window setup for the bottom edge
-
-
-    .firstHalf: LDA.B playerCamY                               ;80C241|000046   ; step 3 (aligned case): how far did camY move THIS FRAME compared to the
-                SEC                                            ;80C243|         ; last latched camera (refillLastCamY, set back in RefillTilemapOnScroll)?
-                SBC.W refillLastCamY                           ;80C244|8016AB
-                CMP.W #$0009                                   ;80C247|         ; moved less than 9px this frame -> the mid-metatile branch above already
-                BCC .exit                                      ;80C24A|80C268   ; staged everything needed for a normal single-row step; nothing more to do
-                LDX.W refillColTileX                           ;80C24C|8016C5   ; moved 9px+ in one frame (fast scroll / teleport / level-load jump) ->
-                DEX                                            ;80C24F|         ; the mid-metatile branch's one-row catch-up wasn't enough, so stage a
-                DEX                                            ;80C250|         ; SECOND row further out to cover the extra distance:
-                LDA.W refillRowTileY                           ;80C251|8016C7
-                CLC                                            ;80C254|
-                ADC.W #$001C                                   ;80C255|         ; Y = refillRowTileY + $1C (one metatile-row closer in than the +$1E
-                TAY                                            ;80C258|         ; case above, since this is a supplementary/catch-up refill, not the
-                LDA.W #$001C                                   ;80C259|         ; normal one)
-                JSR.W BuildTilemapRow                          ;80C25C|80C3D4
-                LDA.W #$0002                                   ;80C25F|
-                JSR.W SetPpuUpdateBits                         ;80C262|80C044
-                JMP.W loc_80EED3                               ;80C265|80EED3
+    .firstHalf: LDA.B playerCamY                                ;INSERT|
+                SEC                                             ;INSERT|
+                SBC.W refillLastCamY                            ;INSERT|
+                CMP.W #$0009                                    ;INSERT|
+                BCC .exit                                       ;INSERT|
+                LDX.W refillColTileX                            ;INSERT|
+                INX                                             ;INSERT|
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC                                             ;INSERT|
+                ADC.W #$001C                                    ;INSERT|
+                TAY                                             ;INSERT|
+                LDA.W #$001C                                    ;INSERT|
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                LDA.W #$0040                                    ;INSERT|
+                JSR.W SetPpuUpdateBits                          ;INSERT|
+                JMP.W loc_80EED3                                ;INSERT|
 
 
          .exit: RTS                                            ;80C268|
 
+RefillRowUpMod:
+                LDA.B playerCamY                              
+                LSR A                                         
+                LSR A                                         
+                LSR A                                         
+                AND.W #$FFFE                                  
+                LDX.B playerCamY                              
+                BPL +                                         
+                ORA.W #$E000                                  
 
-; --------------------------------------------------------
-;  RefillRowUp   [38 ins, returns RTS]
-;    callers: RefillTilemapOnScroll
-;    writes:    refillRowTileY
-;    reads:     playerCamY, refillLastCamY, refillColTileX, refillRowTileY
-;    calls:     BuildTilemapRow, SetPpuUpdateBits, loc_80EEE7
-; --------------------------------------------------------
-RefillRowUp:
-                LDA.B playerCamY                              ;80C269|000046   ; step 1: same arithmetic-shift-right-3 + round-to-even as RefillRowDown
-                LSR A                                          ;80C26B|         ; (see its comments for the LSR/AND/sign-extend explanation) --
-                LSR A                                          ;80C26C|         ; refillRowTileY = camY>>3 rounded down to an even (metatile-aligned) tile
-                LSR A                                          ;80C26D|
-
-                     ;   TAX                                            ;INSERT|
-                     ;   AND.W #$0001                                   ;INSERT|
-                     ;   STA.W RefillFlags                            ;INSERT|
-                     ;   TXA                                            ;INSERT|
-
-                AND.W #$FFFE                                   ;80C26E|
-                LDX.B playerCamY                               ;80C271|000046
-                BPL +                                          ;80C273|80C278
-                ORA.W #$E000                                   ;80C275|
-
-             +: STA.W refillRowTileY                           ;80C278|8016C7
-                LDA.B playerCamY                               ;80C27B|000046   ; step 2: same metatile-alignment check as RefillRowDown, but NOTE THE
-                AND.W #$0008                                   ;80C27D|         ; POLARITY IS FLIPPED (BNE here vs BEQ there) -- this is deliberate, not
-                BNE .skip                                      ;80C280|80C29B   ; a bug: rounding DOWN to an even tile lands on a different side of the
-                                                                                        ; boundary depending on scroll direction, so "aligned" vs "mid-metatile"
-                                                                                        ; swap which branch is the immediate/near one for up vs down.
-                                                                                        ; bit3 CLEAR (aligned) -> near case, stage the row right now:
-                LDX.W refillColTileX                           ;80C282|8016C5
-                DEX                                            ;80C285|         ; X = refillColTileX-2 (left edge of the staging window, as elsewhere)
-                DEX                                            ;80C286|
-                LDY.W refillRowTileY                           ;80C287|8016C7
-                DEY                                            ;80C28A|         ; Y = refillRowTileY-2: the off-screen row just above the visible+
-                DEY                                            ;80C28B|         ; look-ahead window
-                LDA.W #$FFFE                                   ;80C28C|         ; A = -2, the matching signed row offset for BuildTilemapRow
-                JSR.W BuildTilemapRow                          ;80C28F|80C3D4
-                LDA.W #$0002                                   ;80C292|         ; flag bit1 = "a row DMA is ready", same as RefillRowDown
-                JSR.W SetPpuUpdateBits                         ;80C295|80C044
-                JMP.W loc_80EEE7                               ;80C298|80EEE7   ; tail-call: sprite/object clip-window setup for the top edge
+             +: STA.W refillRowTileY                          
+                LDA.B playerCamY                              
+                AND.W #$0008                                  
+                BNE .skip                                     
+                                                            
+                                                            
+                                                            
+                LDX.W refillColTileX                          
+                INX                                           
+                LDY.W refillRowTileY                                                                     
+                DEY                                           
+                LDA.W #$FFFE                                  
+                JSR.W BuildTilemapRowMod                         
+                LDA.W #$0040                                  
+                JSR.W SetPpuUpdateBits                        
+                JMP.W loc_80EEE7                              
 
 
-         .skip: LDA.W refillLastCamY                           ;80C29B|8016AB   ; step 3 (mid-metatile / "far" case): distance moved this frame, computed
-                SEC                                            ;80C29E|         ; as OLD-minus-NEW here (camY is DEcreasing while scrolling up, so this
-                SBC.B playerCamY                               ;80C29F|000046   ; order keeps the result positive) -- compare to RefillRowDown's NEW-minus-OLD
-                CMP.W #$0009                                   ;80C2A1|         ; moved less than 9px this frame -> the near case already covered it,
-                BCC .exit                                      ;80C2A4|80C2BD   ; nothing more to do
-                LDX.W refillColTileX                           ;80C2A6|8016C5   ; moved 9px+ (fast scroll/teleport) -> stage a second, closer-in catch-up
-                DEX                                            ;80C2A9|         ; row: X = refillColTileX-2 as usual, Y = refillRowTileY UNCHANGED (no
-                DEX                                            ;80C2AA|         ; DEY this time) with a signed offset of 0
-                LDY.W refillRowTileY                           ;80C2AB|8016C7
-                LDA.W #$0000                                   ;80C2AE|
-                JSR.W BuildTilemapRow                          ;80C2B1|80C3D4
-                LDA.W #$0002                                   ;80C2B4|
-                JSR.W SetPpuUpdateBits                         ;80C2B7|80C044
-                JMP.W loc_80EEE7                               ;80C2BA|80EEE7
+         .skip: LDA.W refillLastCamY                          
+                SEC                                           
+                SBC.B playerCamY                              
+                CMP.W #$0009                                  
+                BCC .exit                                     
+                LDX.W refillColTileX                          
+                INX                                          
+                LDY.W refillRowTileY
+                INY                          
+                LDA.W #$0000                                  
+                JSR.W BuildTilemapRowMod                         
+                LDA.W #$0040                                  
+                JSR.W SetPpuUpdateBits                        
+                JMP.W loc_80EEE7                              
 
 
-         .exit: RTS                                            ;80C2BD|
+         .exit: RTS                                           
+
 
 
 ; --------------------------------------------------------
@@ -13129,12 +13218,12 @@ BuildTilemapRow:
                 CLC                                            ;80C3E8|         ; (4 bytes/metatile: 2 BG words for the row's top tile-line, 2 for its
                 ADC.W #$0004                                   ;80C3E9|         ; bottom tile-line -- see FetchConvertMetatileRow)
                 STA.B refillStageIdx                           ;80C3EC|000034
-                CMP.W #$0050                                   ;80C3EE|   ; row loop runs 16 metatile-cols ($34: 0,4,..,4C; ends at #$0050)
+                CMP.W #$0050                                   ;80C3EE|         ; row loop runs 16 metatile-cols ($34: 0,4,..,4C; ends at #$0050)
                 BCC .loop                                      ;80C3F1|80C3E2   ; NOTE: 0..$4C step 4 is actually 20 iterations, not 16 -- the header
-                                                                                        ; comment above (and the original disassembly note) undercounts this;
-                                                                                        ; the column loop in BuildTilemapCol really is 16 (to #$0040), but
-                                                                                        ; this row loop covers 20 metatile-columns (40 tiles) of horizontal
-                                                                                        ; look-ahead/staging buffer, not 16.
+                                                                                ; comment above (and the original disassembly note) undercounts this;
+                                                                                ; the column loop in BuildTilemapCol really is 16 (to #$0040), but
+                                                                                ; this row loop covers 20 metatile-columns (40 tiles) of horizontal
+                                                                                ; look-ahead/staging buffer, not 16.
                 LDX.W tilemapBaseLo                            ;80C3F3|8019EA   ; --- from here: figure out WHERE in VRAM this row lands (mirrors ---
                 LDY.W tilemapBaseHi                            ;80C3F6|80199D   ; --- BuildTilemapCol, but tracking BOTH tile-lines at once) ---
                 PLA                                            ;80C3F9|         ; restore the signed row offset (first of the two PHA/PHX pushes)
@@ -13149,7 +13238,7 @@ BuildTilemapRow:
                 STX.W rowDmaVramDest0                          ;80C40D|8016D5   ; dest0 and dest2 both start from the SAME quadrant base (X) -- dest0 is
                 STX.W rowDmaVramDest2                          ;80C410|8016DD   ; this row's TOP tile-line, dest2 its BOTTOM tile-line, and since both
                 STY.W rowDmaVramDest1                          ;80C413|8016D9   ; lines start in the same quadrant, they share a base; dest1 (the OTHER
-                                                                                        ; quadrant, Y) is reserved for whichever line's data wraps the seam.
+                                                                                ; quadrant, Y) is reserved for whichever line's data wraps the seam.
                 CLC                                            ;80C416|
                 ADC.W rowDmaVramDest0                          ;80C417|8016D5   ; fold destWord into dest0's base
                 STA.W rowDmaVramDest0                          ;80C41A|8016D5
@@ -13270,14 +13359,6 @@ FetchConvertMetatileRow:
                 ASL A                                          ;80C4E7|
                 ASL A                                          ;80C4E8|
                 TAY                                            ;80C4E9|
-
-                     ;   LDA.W modFlags                                 ;INSERT|
-                     ;   BIT.W #$0001                                   ;INSERT|
-                     ;   BEQ +                                          ;INSERT|
-                     ;   LDA.W RefillFlags                              ;INSERT|
-                     ;   BIT.W #$0001                                   ;INSERT|
-
-
              +: LDA.B [tileVisualPtr],Y                        ;80C4EA|000054
                 LDX.B refillStageIdx                           ;80C4EC|000034
                 ORA.W tileAttrOr                               ;80C4EE|801997
@@ -13302,6 +13383,165 @@ FetchConvertMetatileRow:
                 LDX.B refillSaveX                              ;80C512|00003E
                 LDY.B refillSaveY                              ;80C514|000040
                 RTS                                            ;80C516|
+
+
+BuildTilemapRowMod:
+                PHA                                                                            
+                TXA                                      
+                ASL A                                    
+                TXA                                      
+                ROR A                                    
+                TAX                                      
+                TYA                                      
+                ASL A                                    
+                TYA                                      
+                ROR A                                    
+                TAY                                      
+                
+                TXA
+                AND.W #$000F
+            
+                ASL A
+                ASL A
+                STA.W refillStageStart
+                STA.B refillStageIdx                     
+
+
+         .loop: JSR.W FetchConvertMetatileRowMod            
+                                                         
+                INX                                      
+                LDA.B refillStageIdx                     
+                CLC                                      
+                ADC.W #$0004                             
+                STA.B refillStageIdx                     
+                CMP.W #$0040                             
+                BCC .loop                                
+                
+                
+                LDA.W refillStageStart
+                BEQ .skip
+                STZ.B refillStageIdx
+                
+        .loop2: JSR.W FetchConvertMetatileRowMod
+                INX
+                LDA.B refillStageIdx
+                CLC
+                ADC.W #$0004
+                STA.B refillStageIdx
+                CMP.W refillStageStart
+                BCC .loop2
+                                                         
+         .skip: PLA                     ; row offset
+                CLC
+                ADC.W refillRowTileY
+                AND.W #$001F
+                ASL A
+                TAY
+                LDA.W data_80F363,Y     ; row * $20
+                CLC
+                ADC.W tilemapBaseLo     ; P1 subscreen base
+                STA.W P1rowDmaDest      ; one dest word, no len variables
+                RTS                                   
+
+
+FetchConvertMetatileRowMod:
+                STX.B refillSaveX                              ;80C469|00003E
+                STY.B refillSaveY                              ;80C46B|000040
+                CPX.W levelWidthMetaTiles                      ;80C46D|8019F0
+                BCS +                                          ;80C470|80C477
+                CPY.W levelHeightMetaTiles                     ;80C472|8019F2
+                BCC .main                                      ;80C475|80C4D2
+
+             +: LDA.W levelWrapFlags                           ;80C477|8019F4
+                BIT.W #$0002                                   ;80C47A|
+                BEQ .skip                                      ;80C47D|80C493
+                STX.B refillTmp32                              ;80C47F|000032
+                LDA.W levelWidthMetaTiles                      ;80C481|8019F0
+                DEC A                                          ;80C484|
+                AND.B refillTmp32                              ;80C485|000032
+                TAX                                            ;80C487|
+                STY.B refillTmp32                              ;80C488|000032
+                LDA.W levelHeightMetaTiles                     ;80C48A|8019F2
+                DEC A                                          ;80C48D|
+                AND.B refillTmp32                              ;80C48E|000032
+                TAY                                            ;80C490|
+                BRA .main                                      ;80C491|80C4D2
+
+
+         .skip: BIT.W #$0008                                   ;80C493|
+                BEQ .skip2                                     ;80C496|80C4AC
+                LDX.B refillStageIdx                           ;80C498|000034
+                LDA.W tileAttrOr                               ;80C49A|801997
+                STA.W P1rowStagedMetaTileLU,X                  ;80C49D|801775
+                STA.W P1rowStagedMetaTileLD,X                  ;80C4A0|8017C5
+                STA.W P1rowStagedMetaTileRD,X                  ;80C4A6|8017C7
+                STA.W P1rowStagedMetaTileRU,X                  ;80C4A3|801777
+                LDX.B refillSaveX                              ;80C4A9|00003E
+                RTS                                            ;80C4AB|
+
+
+        .skip2: CPX.W levelWidthMetaTiles                      ;80C4AC|8019F0
+                BCC .skip3                                     ;80C4AF|80C4BF
+                CPX.W #$8000                                   ;80C4B1|
+                BCC +                                          ;80C4B4|80C4BB
+                LDX.W #$0000                                   ;80C4B6|
+                BRA .skip3                                     ;80C4B9|80C4BF
+
+
+             +: LDX.W levelWidthMetaTiles                      ;80C4BB|8019F0
+                DEX                                            ;80C4BE|
+
+        .skip3: CPY.W levelHeightMetaTiles                     ;80C4BF|8019F2
+                BCC .main                                      ;80C4C2|80C4D2
+                CPY.W #$8000                                   ;80C4C4|
+                BCC +                                          ;80C4C7|80C4CE
+                LDY.W #$0000                                   ;80C4C9|
+                BRA .main                                      ;80C4CC|80C4D2
+
+
+             +: LDY.W levelHeightMetaTiles                     ;80C4CE|8019F2
+                DEY                                            ;80C4D1|
+
+         .main: STY.B mulMultiplicand                          ;80C4D2|0000AC
+                LDA.W levelRowStride                           ;80C4D4|8019AB
+                STA.B mulMultiplierLo                          ;80C4D7|0000B0
+                JSR.W Mul8x16                                  ;80C4D9|809152
+                TXA                                            ;80C4DC|
+                ASL A                                          ;80C4DD|
+                ADC.B mulResult                                ;80C4DE|0000B2
+                TAY                                            ;80C4E0|          ;Y is now the metatlile index ((Y*X) + X)
+                LDA.B [levelTileMapPtr],Y                      ;80C4E1|000050
+                AND.W #$03FF                                   ;80C4E3|
+                ASL A                                          ;80C4E6|
+                ASL A                                          ;80C4E7|
+                ASL A                                          ;80C4E8|
+                TAY                                            ;80C4E9|
+             +: LDA.B [tileVisualPtr],Y                        ;80C4EA|000054
+                LDX.B refillStageIdx                           ;80C4EC|000034
+                ORA.W tileAttrOr                               ;80C4EE|801997
+                STA.W P1rowStagedMetaTileLU,X                    ;80C4F1|801775
+                INY                                            ;80C4F4|
+                INY                                            ;80C4F5|
+                LDA.B [tileVisualPtr],Y                        ;80C4F6|000054
+                ORA.W tileAttrOr                               ;80C4F8|801997
+                STA.W P1rowStagedMetaTileRU,X                    ;80C4FB|801777
+
+
+                INY                                            ;80C4FE|
+                INY                                            ;80C4FF|
+                LDA.B [tileVisualPtr],Y                        ;80C500|000054
+                ORA.W tileAttrOr                               ;80C502|801997
+                STA.W P1rowStagedMetaTileLD,X                    ;80C505|8017C5
+                INY                                            ;80C508|
+                INY                                            ;80C509|8017C5
+                LDA.B [tileVisualPtr],Y                        ;80C50A|000054
+                ORA.W tileAttrOr                               ;80C50C|801997
+                STA.W P1rowStagedMetaTileRD,X                    ;80C50F|8017C7
+                LDX.B refillSaveX                              ;80C512|00003E
+                LDY.B refillSaveY                              ;80C514|000040
+                RTS                                            ;80C516|
+
+
 
 
 ; --------------------------------------------------------
@@ -13463,7 +13703,61 @@ UploadTilemapRow:
         .skip2: REP #$30                                       ;80C652|
                 RTS                                            ;80C654|
 
-
+; UploadTilemapRowP1:
+;         SEP #$30
+;         LDA.B #$80
+;         STA.W VMAIN             ; word-increment after high byte (use your label for $2115)
+;         LDA.B #$01
+;         STA.W DMAP0
+;         LDA.B #$18
+;         STA.W BBAD0
+;         LDA.B #$7E
+;         STA.W A1B0
+;         REP #$30
+;         LDA.W P1rowDmaDest
+;         STA.W VMADDL
+;         LDA.W #$1775
+;         STA.W A1TL0
+;         LDA.W #$0080
+;         STA.W DASL0
+;         SEP #$30
+;         LDA.B #$01
+;         STA.W MDMAEN
+;         REP #$30
+;         RTS
+UploadTilemapRowP1:
+                SEP #$30                                  
+                LDA.B #$01                               
+                STA.W DMAP0                              
+                LDA.B #$18                               
+                STA.W BBAD0                              
+                REP #$30                                 
+                LDA.W P1rowDmaDest                       
+                STA.W VMADDL                             
+                LDA.W #$1775                             
+                STA.W A1TL0                              
+                LDA.W #$0080                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$7E                               
+                STA.W A1B0                               
+                LDA.B #$01                               
+                STA.W MDMAEN                             
+                REP #$30                                 
+                ; LDA.W P1rowDmaDest                       
+                ; CLC
+                ; ADC.W #$0200
+                
+                ; STA.W VMADDL                             
+                ; LDA.W #$1775                             
+                ; STA.W A1TL0                              
+                ; LDA.W #$0080                             
+                ; STA.W DASL0                              
+                ; SEP #$30                                 
+                ; LDA.B #$01                               
+                ; STA.W MDMAEN                             
+                ; REP #$30                                 
+                RTS
 ; --------------------------------------------------------
 ;  sub_80C655   [60 ins, returns RTS]
 ;    callers: ppucfg_809EE2
@@ -20705,9 +20999,9 @@ sub_80E8C9:
                 BRA .cont2                                     ;80E95D|80E966
 
 
-             +: LDA.W objVelY,Y                               ;80E95F|8010B1
-                EOR.W #$FFFF                                   ;80E962|
-                INC A                                          ;80E965|
+             +: LDA.W objVelY,Y                                 ;80E95F|8010B1
+                EOR.W #$FFFF                                    ;80E962|
+                INC A                                           ;80E965|
 
         .cont2: CLC                                            ;80E966|
                 ADC.W objMoveY,Y                          ;80E967|8013A9

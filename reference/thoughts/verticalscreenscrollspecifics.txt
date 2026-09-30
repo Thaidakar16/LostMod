@@ -1,0 +1,8 @@
+okay. lets go through this  case by case.
+if we have cam at 0, we need to run the loop 15 times, starting at offset 01, then then once more for offset 00.
+if at 1, we need to run the loop 14 times, starting at 02. then twice more at offset 00. 
+and so on.
+
+
+for values 0-f, we need to start at destination x+1, run until we reach the edge, then run again for the first bit. 
+so we need to wrap to 0-f. 

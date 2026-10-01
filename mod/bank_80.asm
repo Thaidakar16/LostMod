@@ -12847,6 +12847,7 @@ RefillRowDownMod:
                                                                 ;INSERT|
                 LDX.W refillColTileX                            ;INSERT|
                 INX                                             ;INSERT|
+                INX
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$001E                                    ;INSERT|
@@ -12865,6 +12866,7 @@ RefillRowDownMod:
                 BCC .exit                                       ;INSERT|
                 LDX.W refillColTileX                            ;INSERT|
                 INX                                             ;INSERT|
+                INX
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$001C                                    ;INSERT|
@@ -12897,6 +12899,7 @@ RefillRowUpMod:
                                                             
                 LDX.W refillColTileX                          
                 INX                                           
+                INX
                 LDY.W refillRowTileY                                                                     
                 DEY                                           
                 LDA.W #$FFFE                                  
@@ -12913,6 +12916,7 @@ RefillRowUpMod:
                 BCC .exit                                     
                 LDX.W refillColTileX                          
                 INX                                          
+                INX
                 LDY.W refillRowTileY
                 INY                          
                 LDA.W #$0000                                  

@@ -1,0 +1,113 @@
+--- /mnt/project/bank_80.asm	1979-12-31 00:00:00.000000000 +0000
++++ bank_80_patched2.asm	2026-09-29 18:07:01.248495955 +0000
+@@ -16503,8 +16503,7 @@
+                 INY                                            ;80D808|
+                 PHA                                            ;80D809|
+                 JSR.W sub_80DCD7                               ;80D80A|80DCD7
+-                STA.B zp_6C                                    ;80D80D|00006C
+-                PLA                                            ;80D80F|
++                JSR.W Mod_SpawnObjX_Compensate                 ;INSERT|  was: STA.B zp_6C / PLA  (3 bytes -> 3 bytes)
+                 JSR.W sub_80DCD4                               ;80D810|80DCD4
+                 STA.B zp_6E                                    ;80D813|00006E
+                 LDA.B [scriptPC],Y                             ;80D815|000070
+@@ -20301,10 +20300,10 @@
+                 LDA.W ram_1A0A,Y                               ;80EF35|801A0A
+                 CMP.W #$FFFF                                   ;80EF38|
+                 BEQ .skip3                                     ;80EF3B|80EFBB
+-                ADC.W ram_1A0E,Y                               ;80EF3D|801A0E
++                JSR.W Mod_PlacementX_PlusHalfW                 ;INSERT|  was: ADC.W ram_1A0E,Y  (placeX + halfW, now + modShift)
+                 SBC.B refillStageIdx                           ;80EF40|000034
+                 BMI .skip2                                     ;80EF42|80EFB9
+-                LDA.W ram_1A0A,Y                               ;80EF44|801A0A
++                JSR.W Mod_PlacementX_Shifted                   ;INSERT|  was: LDA.W ram_1A0A,Y  (placeX, now + modShift)
+                 SBC.W ram_1A0E,Y                               ;80EF47|801A0E
+                 SBC.B zp_36                                    ;80EF4A|000036
+                 BPL .skip2                                     ;80EF4C|80EFB9
+@@ -21085,6 +21084,87 @@
+                 dw $0136,$0137,$012A,$0157                     ;80F61B|
+                 dw $0158,$0159,$015A,$0082                     ;80F623|
+ 
++; ==============================================================================
++;  MOD: spawn-detection X correction  (lives in the free space after data_80F5CB
++;  so NOTHING in bank 80 moves; the two hooks in sub_80EF35 are same-size
++;  replacements: ADC abs,Y -> JSR abs, LDA abs,Y -> JSR abs, both 3 bytes)
++;
++;  Why: with the mod active, sub_80F249 adds +$20 to every spawned object's X,
++;  and the camera (playerCamX) follows those shifted objects, so the spawn box
++;  built in sub_80EE80 / loc_80EEA1 / loc_80EEB1 / loc_80EEF5 is in SHIFTED space.
++;  sub_80EF35 compared it against the RAW placement X ($1A0A,Y), so placements
++;  were detected $20 px too early. These helpers make the comparison use
++;  placeX + modShift, where modShift = $20 when (modFlags & 1) else 0 --
++;  the exact same condition sub_80F249 uses, so the two can never disagree.
++;  With the mod off, modShift = 0 and behaviour is identical to the original.
++;
++;  Both helpers are called from the middle of a carry-dependent ADC/SBC chain
++;  (sub_80EF35 relies on the carry left by each instruction), so they keep
++;  the carry exactly as the instruction they replaced would have left it.
++; ==============================================================================
++
++; --- replaces `ADC.W ram_1A0E,Y` at $80EF3D.  Entry: C=0 (after CMP #$FFFF, A != $FFFF)
++; --- returns A = placeX + halfW + modShift, C = 0 (same as the original ADC).
++Mod_PlacementX_PlusHalfW:
++                LDA.W modFlags                                 ;INSERT|
++                AND.W #$0001                                   ;INSERT|
++                ASL A                                          ;INSERT|  x2
++                ASL A                                          ;INSERT|  x4
++                ASL A                                          ;INSERT|  x8
++                ASL A                                          ;INSERT|  x16
++                ASL A                                          ;INSERT|  x32 -> A = 0 or $0020, C = 0
++                ADC.W ram_1A0A,Y                               ;INSERT|  + placeX
++                ADC.W ram_1A0E,Y                               ;INSERT|  + halfW
++                RTS                                            ;INSERT|
++
++; --- replaces `LDA.W ram_1A0A,Y` at $80EF44.  Entry: C = carry from the previous SBC
++; --- returns A = placeX + modShift, C preserved (LDA never touched it).
++Mod_PlacementX_Shifted:
++                PHP                                            ;INSERT|  save C
++                LDA.W modFlags                                 ;INSERT|
++                AND.W #$0001                                   ;INSERT|
++                ASL A                                          ;INSERT|
++                ASL A                                          ;INSERT|
++                ASL A                                          ;INSERT|
++                ASL A                                          ;INSERT|
++                ASL A                                          ;INSERT|  A = 0 or $0020
++                CLC                                            ;INSERT|
++                ADC.W ram_1A0A,Y                               ;INSERT|  + placeX
++                PLP                                            ;INSERT|  restore C (and M/X, unchanged)
++                RTS                                            ;INSERT|
++
++
++; ------------------------------------------------------------------------------
++;  MOD: Op_SpawnObject X-coordinate double-shift fix
++;
++;  Why: Op_SpawnObject's x/y operands come from VM_GetOperandByType, i.e. a
++;  literal, a field of the CALLING object, a bank-0 RAM address, or a field of
++;  objTarget -- never the raw placement table. Every one of those is already in
++;  live (shifted) world space, since the calling object itself was shifted when
++;  IT was spawned. But InitObjectFromSpawnRec (sub_80F249) adds the mod's +$20
++;  unconditionally, with no way to tell "this is raw level data" apart from
++;  "this is already-shifted". So every script-spawned object -- projectiles,
++;  summons, anything from Op_SpawnObject -- landed $20 too far right.
++;
++;  Fix: cancel the coming +$20 right here, at the one call site that supplies
++;  already-shifted coordinates, instead of touching sub_80F249 (which must stay
++;  as-is for the four callers that DO supply raw data: the two player-spawn
++;  sites in sub_809F07, the two ScreenModeSetupTable sites in sub_80A015, and
++;  the placement-table spawns in sub_80EF35 / sub_80EFD7).
++; ------------------------------------------------------------------------------
++; replaces `STA.B zp_6C` + `PLA` (3 bytes) at $80D80D in Op_SpawnObject.
++Mod_SpawnObjX_Compensate:
++                STA.B zp_6C                                    ;INSERT|
++                LDA.W modFlags                                 ;INSERT|
++                AND.W #$0001                                   ;INSERT|
++                BEQ +                                          ;INSERT|
++                LDA.B zp_6C                                    ;INSERT|
++                SEC                                             ;INSERT|
++                SBC.W #$0020                                   ;INSERT|
++                STA.B zp_6C                                    ;INSERT|
++             +: PLA                                            ;INSERT|
++                RTS                                            ;INSERT|
++
+ ; this whole span is dead ROM padding (all zero, never read or executed);
+ ; reclaimed as free space instead of writing it out byte-for-byte.
+                 assert pc() <= $80FFBE

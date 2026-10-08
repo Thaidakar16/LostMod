@@ -240,10 +240,16 @@ zp_2B                  = $002B  ; refs=6 (r3/w3) [INC:3,STA:3], 3 site(s)
 zp_2C                  = $002C  ; refs=31 (r15/w16) [STA:15,INC:10,LDA:3,LDX:2], 15 site(s); indexed (,X/,Y) -> array/table
 zp_2E                  = $002E  ; refs=49 (r13/w36) [STA:32,LDA:10,STX:3,LDX:2], 18 site(s); indexed (,X/,Y) -> array/table
 zp_30                  = $0030  ; refs=21 (r3/w18) [STA:14,STY:3,LDA:2,STX:1], 14 site(s); indexed (,X/,Y) -> array/table
-refillTmp32            = $0032  ; refs=322 (r174/w148) [STA:122,SBC:46,LDA:34,ADC:33], 75 site(s); indexed (,X/,Y) -> array/table
+
+; I am removing the "refill" from refillTmp32, because I am not sure if it is only used in refills. 
+tmp32            = $0032  ; refs=322 (r174/w148) [STA:122,SBC:46,LDA:34,ADC:33], 75 site(s); indexed (,X/,Y) -> array/table
+
 zp_33                  = $0033  ; refs=2 (r0/w2) [STA:2], 2 site(s)
-refillStageIdx         = $0034  ; refs=120 (r62/w58) [STA:34,LDA:25,STX:16,LDX:15], 53 site(s); indexed (,X/,Y) -> array/table
-zp_36                  = $0036  ; refs=74 (r38/w36) [STA:24,LDA:18,LDX:8,STX:8], 36 site(s); indexed (,X/,Y) -> array/table
+
+; IMPORTANT!!!! I am renaming wram 0034 to tmp34, because I think that it is used as a temporary variable. 
+;The name it has had up till now was "refillStageIdx", but I think it will make more sense to me if it is just tmp
+tmp34         = $0034  ; refs=120 (r62/w58) [STA:34,LDA:25,STX:16,LDX:15], 53 site(s); indexed (,X/,Y) -> array/table
+tmp36                  = $0036  ; refs=74 (r38/w36) [STA:24,LDA:18,LDX:8,STX:8], 36 site(s); indexed (,X/,Y) -> array/table
 zp_38                  = $0038  ; refs=81 (r43/w38) [STA:29,LDA:13,LDX:12,STX:6], 35 site(s); indexed (,X/,Y) -> array/table
 zp_3A                  = $003A  ; refs=58 (r30/w28) [STA:18,LDX:11,LDA:7,STX:7], 30 site(s); indexed (,X/,Y) -> array/table
 zp_3C                  = $003C  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s); indexed (,X/,Y) -> array/table
@@ -1221,8 +1227,8 @@ sub_808219:
 ; --------------------------------------------------------
 ;  sub_808249   [41 ins, returns RTS]
 ;    callers: sub_808219
-;    writes:    zp_2A, zp_2E, zp_30, refillTmp32, refillStageIdx, zp_36
-;    reads:     zp_2A, zp_2E, refillTmp32, refillStageIdx, zp_36, ram_1967 ...
+;    writes:    zp_2A, zp_2E, zp_30, tmp32, tmp34, tmp36
+;    reads:     zp_2A, zp_2E, tmp32, tmp34, tmp36, ram_1967 ...
 ; --------------------------------------------------------
 sub_808249:
                 LDA.W #$3000                                   ;808249|
@@ -1231,20 +1237,20 @@ sub_808249:
                 STA.B zp_30                                    ;808251|000030
                 LDA.W ram_1977,X                               ;808253|801977
                 ASL A                                          ;808256|
-                STA.B refillTmp32                              ;808257|000032
+                STA.B tmp32                              ;808257|000032
                 LDA.W ram_1967,X                               ;808259|801967
                 ASL A                                          ;80825C|
                 TAY                                            ;80825D|
 
          .loop: LDA.B [zp_2E],Y                                ;80825E|00002E
-                STA.B zp_36                                    ;808260|000036
-                LDA.B refillStageIdx                           ;808262|000034
+                STA.B tmp36                                    ;808260|000036
+                LDA.B tmp34                           ;808262|000034
                 STA.B [zp_2E],Y                                ;808264|00002E
-                LDA.B zp_36                                    ;808266|000036
-                STA.B refillStageIdx                           ;808268|000034
+                LDA.B tmp36                                    ;808266|000036
+                STA.B tmp34                           ;808268|000034
                 INY                                            ;80826A|
                 INY                                            ;80826B|
-                CPY.B refillTmp32                              ;80826C|000032
+                CPY.B tmp32                              ;80826C|000032
                 BCC .loop                                      ;80826E|80825E
                 BEQ .loop                                      ;808270|80825E
                 LDA.W ram_1987,X                               ;808272|801987
@@ -1254,11 +1260,11 @@ sub_808249:
         .loop2: LDA.B (zp_2A),Y                                ;80827A|00002A
                 CMP.W #$FFFF                                   ;80827C|
                 BEQ .skip                                      ;80827F|80828F
-                STA.B zp_36                                    ;808281|000036
-                LDA.B refillStageIdx                           ;808283|000034
+                STA.B tmp36                                    ;808281|000036
+                LDA.B tmp34                           ;808283|000034
                 STA.B (zp_2A),Y                                ;808285|00002A
-                LDA.B zp_36                                    ;808287|000036
-                STA.B refillStageIdx                           ;808289|000034
+                LDA.B tmp36                                    ;808287|000036
+                STA.B tmp34                           ;808289|000034
                 INY                                            ;80828B|
                 INY                                            ;80828C|
                 BRA .loop2                                     ;80828D|80827A
@@ -1267,7 +1273,7 @@ sub_808249:
          .skip: LDA.W ram_1967,X                               ;80828F|801967
                 ASL A                                          ;808292|
                 TAY                                            ;808293|
-                LDA.B refillStageIdx                           ;808294|000034
+                LDA.B tmp34                           ;808294|000034
                 STA.B [zp_2E],Y                                ;808296|00002E
                 RTS                                            ;808298|
 
@@ -1275,8 +1281,8 @@ sub_808249:
 ; --------------------------------------------------------
 ;  sub_808299   [52 ins, returns RTS]
 ;    callers: sub_808219
-;    writes:    zp_2A, zp_2E, zp_30, refillTmp32, refillStageIdx, zp_36
-;    reads:     zp_2A, zp_2E, refillTmp32, refillStageIdx, zp_36, ram_1967 ...
+;    writes:    zp_2A, zp_2E, zp_30, tmp32, tmp34, tmp36
+;    reads:     zp_2A, zp_2E, tmp32, tmp34, tmp36, ram_1967 ...
 ; --------------------------------------------------------
 sub_808299:
                 LDA.W #$3000                                   ;808299|
@@ -1285,13 +1291,13 @@ sub_808299:
                 STA.B zp_30                                    ;8082A1|000030
                 LDA.W ram_1967,X                               ;8082A3|801967
                 ASL A                                          ;8082A6|
-                STA.B refillTmp32                              ;8082A7|000032
+                STA.B tmp32                              ;8082A7|000032
                 LDA.W ram_1977,X                               ;8082A9|801977
                 ASL A                                          ;8082AC|
                 TAY                                            ;8082AD|
                 LDA.B [zp_2E],Y                                ;8082AE|00002E
-                STA.B refillStageIdx                           ;8082B0|000034
-                STA.B zp_36                                    ;8082B2|000036
+                STA.B tmp34                           ;8082B0|000034
+                STA.B tmp36                                    ;8082B2|000036
 
          .loop: INY                                            ;8082B4|
                 INY                                            ;8082B5|
@@ -1301,7 +1307,7 @@ sub_808299:
                 STA.B [zp_2E],Y                                ;8082BA|00002E
                 INY                                            ;8082BC|
                 INY                                            ;8082BD|
-                CPY.B refillTmp32                              ;8082BE|000032
+                CPY.B tmp32                              ;8082BE|000032
                 BCC .loop                                      ;8082C0|8082B4
                 LDA.W ram_1987,X                               ;8082C2|801987
                 STA.B zp_2A                                    ;8082C5|00002A
@@ -1309,7 +1315,7 @@ sub_808299:
                 LDA.B (zp_2A),Y                                ;8082CA|00002A
                 CMP.W #$FFFF                                   ;8082CC|
                 BEQ .skip2                                     ;8082CF|8082EC
-                STA.B zp_36                                    ;8082D1|000036
+                STA.B tmp36                                    ;8082D1|000036
 
         .loop2: LDA.B (zp_2A),Y                                ;8082D3|00002A
                 CMP.W #$FFFF                                   ;8082D5|
@@ -1327,13 +1333,13 @@ sub_808299:
 
          .skip: DEY                                            ;8082E6|
                 DEY                                            ;8082E7|
-                LDA.B refillStageIdx                           ;8082E8|000034
+                LDA.B tmp34                           ;8082E8|000034
                 STA.B (zp_2A),Y                                ;8082EA|00002A
 
         .skip2: LDA.W ram_1967,X                               ;8082EC|801967
                 ASL A                                          ;8082EF|
                 TAY                                            ;8082F0|
-                LDA.B zp_36                                    ;8082F1|000036
+                LDA.B tmp36                                    ;8082F1|000036
                 STA.B [zp_2E],Y                                ;8082F3|00002E
                 RTS                                            ;8082F5|
 
@@ -3576,7 +3582,7 @@ ppucfg_808F57:
 ;  vramwr_808F7B   [45 ins, returns RTS]
 ;    callers: sub_80A115
 ;    writes HW: VMADDL, VMDATAL
-;    writes:    zp_2A, zp_2C, zp_2E, refillTmp32, zp_6C, zp_6E
+;    writes:    zp_2A, zp_2C, zp_2E, tmp32, zp_6C, zp_6E
 ;    reads:     zp_03, zp_05, zp_07, zp_09, zp_0B, zp_2A ...
 ; --------------------------------------------------------
 vramwr_808F7B:
@@ -3597,7 +3603,7 @@ vramwr_808F7B:
                 ASL A                                          ;808F92|
                 ASL A                                          ;808F93|
                 ASL A                                          ;808F94|
-                STA.B refillTmp32                              ;808F95|000032
+                STA.B tmp32                              ;808F95|000032
                 LDA.B zp_07,S                                  ;808F97|000007
                 TAX                                            ;808F99|
                 LDA.B zp_05,S                                  ;808F9A|000005
@@ -3612,7 +3618,7 @@ vramwr_808F7B:
                 STA.W VMDATAL                                  ;808FA7|802118
                 INY                                            ;808FAA|
                 INY                                            ;808FAB|
-                CPY.B refillTmp32                              ;808FAC|000032
+                CPY.B tmp32                              ;808FAC|000032
                 BCC .loop2                                     ;808FAE|808FA5
                 LDA.B zp_2E                                    ;808FB0|00002E
                 CLC                                            ;808FB2|
@@ -3621,7 +3627,7 @@ vramwr_808F7B:
                 STA.W VMADDL                                   ;808FB8|802116   ; set VRAM addr (low) for upcoming write
                 LDA.B zp_2A                                    ;808FBB|00002A
                 CLC                                            ;808FBD|
-                ADC.B refillTmp32                              ;808FBE|000032
+                ADC.B tmp32                              ;808FBE|000032
                 STA.B zp_2A                                    ;808FC0|00002A
                 DEX                                            ;808FC2|
                 BNE .loop                                      ;808FC3|808FA2
@@ -3633,7 +3639,7 @@ vramwr_808F7B:
 ; --------------------------------------------------------
 ;  sub_808FCA   [42 ins, returns RTS]
 ;    callers: sub_80B337, sub_80B370, sub_80B3DA
-;    writes:    zp_2A, zp_2B, zp_2C, zp_2E, zp_30, refillTmp32
+;    writes:    zp_2A, zp_2B, zp_2C, zp_2E, zp_30, tmp32
 ;    reads:     zp_03, zp_05, zp_07, zp_09, zp_0B, zp_0D ...
 ; --------------------------------------------------------
 sub_808FCA:
@@ -3651,13 +3657,13 @@ sub_808FCA:
                 ASL A                                          ;808FDE|
                 ASL A                                          ;808FDF|
                 ASL A                                          ;808FE0|
-                STA.B refillTmp32                              ;808FE1|000032
+                STA.B tmp32                              ;808FE1|000032
                 LDA.B zp_05,S                                  ;808FE3|000005
                 TAX                                            ;808FE5|
 
          .loop: PHX                                            ;808FE6|
                 SEP #$30                                       ;808FE7|
-                LDX.B refillTmp32                              ;808FE9|000032
+                LDX.B tmp32                              ;808FE9|000032
                 LDY.B #$00                                     ;808FEB|
 
         .loop2: LDA.B [zp_2A]                                  ;808FED|00002A
@@ -3689,8 +3695,8 @@ sub_808FCA:
 ;    callers: color_80CF31, Op_ClearBackdrop
 ;    reads HW:  RDDIVL, RDMPYL
 ;    writes HW: WRDIVB, WRDIVL
-;    writes:    zp_2A, zp_2C, zp_2E, zp_30, refillTmp32, refillStageIdx ...
-;    reads:     zp_2A, refillTmp32, refillStageIdx, zp_36, zp_38, mulMultiplicand ...
+;    writes:    zp_2A, zp_2C, zp_2E, zp_30, tmp32, tmp34 ...
+;    reads:     zp_2A, tmp32, tmp34, tmp36, zp_38, mulMultiplicand ...
 ; --------------------------------------------------------
 hwmath_809011:
                 LDA.W cgadsubShadow                            ;809011|800350
@@ -3710,7 +3716,7 @@ hwmath_809011:
          .loop: LDA.B [zp_2A],Y                                ;809031|00002A
                 TAX                                            ;809033|
                 AND.W #$001F                                   ;809034|
-                STA.B refillStageIdx                           ;809037|000034
+                STA.B tmp34                           ;809037|000034
                 TXA                                            ;809039|
                 LSR A                                          ;80903A|
                 LSR A                                          ;80903B|
@@ -3718,27 +3724,27 @@ hwmath_809011:
                 LSR A                                          ;80903D|
                 LSR A                                          ;80903E|
                 AND.W #$001F                                   ;80903F|
-                STA.B zp_36                                    ;809042|000036
+                STA.B tmp36                                    ;809042|000036
                 TXA                                            ;809044|
                 XBA                                            ;809045|
                 LSR A                                          ;809046|
                 LSR A                                          ;809047|
                 AND.W #$001F                                   ;809048|
                 STA.B zp_38                                    ;80904B|000038
-                LDA.B refillStageIdx                           ;80904D|000034
+                LDA.B tmp34                           ;80904D|000034
                 SEC                                            ;80904F|
                 SBC.W backdropColorR                           ;809050|800344
                 BCS +                                          ;809053|809058
                 LDA.W #$0000                                   ;809055|
 
-             +: STA.B refillStageIdx                           ;809058|000034
-                LDA.B zp_36                                    ;80905A|000036
+             +: STA.B tmp34                           ;809058|000034
+                LDA.B tmp36                                    ;80905A|000036
                 SEC                                            ;80905C|
                 SBC.W backdropColorG                           ;80905D|800346
                 BCS +                                          ;809060|809065
                 LDA.W #$0000                                   ;809062|
 
-             +: STA.B zp_36                                    ;809065|000036
+             +: STA.B tmp36                                    ;809065|000036
                 LDA.B zp_38                                    ;809067|000038
                 SEC                                            ;809069|
                 SBC.W backdropColorB                           ;80906A|800348
@@ -3750,15 +3756,15 @@ hwmath_809011:
                 XBA                                            ;809076|
                 ASL A                                          ;809077|
                 ASL A                                          ;809078|
-                STA.B refillTmp32                              ;809079|000032
-                LDA.B zp_36                                    ;80907B|000036
+                STA.B tmp32                              ;809079|000032
+                LDA.B tmp36                                    ;80907B|000036
                 ASL A                                          ;80907D|
                 ASL A                                          ;80907E|
                 ASL A                                          ;80907F|
                 ASL A                                          ;809080|
                 ASL A                                          ;809081|
-                ORA.B refillTmp32                              ;809082|000032
-                ORA.B refillStageIdx                           ;809084|000034
+                ORA.B tmp32                              ;809082|000032
+                ORA.B tmp34                           ;809084|000034
                 STA.B [zp_2E],Y                                ;809086|00002E
                 INY                                            ;809088|
                 INY                                            ;809089|
@@ -3805,10 +3811,10 @@ DivBy3Round_SubA:
                 ASL A                                          ;8090B9|
                 INC A                                          ;8090BA|
 
-         .cont: STA.B refillTmp32                              ;8090BB|000032
+         .cont: STA.B tmp32                              ;8090BB|000032
                 PLA                                            ;8090BD|
                 SEC                                            ;8090BE|
-                SBC.B refillTmp32                              ;8090BF|000032
+                SBC.B tmp32                              ;8090BF|000032
 
          .exit: RTS                                            ;8090C1|
 
@@ -3874,17 +3880,17 @@ DivBy3Trunc:
                 RTS                                            ;80911E|
 
                 PHX                                            ;80911F|
-                STZ.B refillTmp32                              ;809120|000032
+                STZ.B tmp32                              ;809120|000032
                 LDX.W #$0020                                   ;809122|
 
         .loop2: ASL.B mulMultiplicand                          ;809125|0000AC
                 ROL.B zp_AE                                    ;809127|0000AE
-                ROL.B refillTmp32                              ;809129|000032
-                LDA.B refillTmp32                              ;80912B|000032
+                ROL.B tmp32                              ;809129|000032
+                LDA.B tmp32                              ;80912B|000032
                 SEC                                            ;80912D|
                 SBC.B mulMultiplierLo                          ;80912E|0000B0
                 BCC +                                          ;809130|809134
-                STA.B refillTmp32                              ;809132|000032
+                STA.B tmp32                              ;809132|000032
 
              +: ROL.B mulResult                                ;809134|0000B2
                 ROL.B zp_B4                                    ;809136|0000B4
@@ -4266,8 +4272,8 @@ vramwr_809302:
 ; --------------------------------------------------------
 ;  sub_80931B   [87 ins, returns RTS]
 ;    callers: sub_809420, sub_8094A2
-;    writes:    zp_2E, zp_30, refillTmp32, zp_6C, zp_6E, ram_19B9
-;    reads:     refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, zp_6C ...
+;    writes:    zp_2E, zp_30, tmp32, zp_6C, zp_6E, ram_19B9
+;    reads:     tmp32, tmp34, tmp36, zp_38, zp_3A, zp_6C ...
 ;    calls:     sub_8093D9, sub_8093E8
 ; --------------------------------------------------------
 sub_80931B:
@@ -4283,7 +4289,7 @@ sub_80931B:
                 JSR.W sub_8093D9                               ;80932F|8093D9
                 LDA.W #$0012                                   ;809332|
                 JSR.W sub_8093E8                               ;809335|8093E8
-                LDX.B refillStageIdx                           ;809338|000034
+                LDX.B tmp34                           ;809338|000034
                 DEX                                            ;80933A|
                 DEX                                            ;80933B|
 
@@ -4295,7 +4301,7 @@ sub_80931B:
                 JSR.W sub_8093E8                               ;809348|8093E8
                 LDA.W #$000D                                   ;80934B|
                 JSR.W sub_8093E8                               ;80934E|8093E8
-                LDX.B zp_36                                    ;809351|000036
+                LDX.B tmp36                                    ;809351|000036
                 DEX                                            ;809353|
                 DEX                                            ;809354|
 
@@ -4307,7 +4313,7 @@ sub_80931B:
                 BNE .loop2                                     ;809362|809355
                 LDA.W #$0017                                   ;809364|
                 JSR.W sub_8093E8                               ;809367|8093E8
-                LDX.B refillStageIdx                           ;80936A|000034
+                LDX.B tmp34                           ;80936A|000034
                 DEX                                            ;80936C|
                 DEX                                            ;80936D|
 
@@ -4321,13 +4327,13 @@ sub_80931B:
                 JSR.W sub_8093E8                               ;809380|8093E8
                 LDA.B zp_6C                                    ;809383|00006C
                 CLC                                            ;809385|
-                ADC.B refillStageIdx                           ;809386|000034
+                ADC.B tmp34                           ;809386|000034
                 DEC A                                          ;809388|
                 TAX                                            ;809389|
                 LDA.B zp_6E                                    ;80938A|00006E
                 INC A                                          ;80938C|
                 JSR.W sub_8093D9                               ;80938D|8093D9
-                LDX.B zp_36                                    ;809390|000036
+                LDX.B tmp36                                    ;809390|000036
                 DEX                                            ;809392|
                 DEX                                            ;809393|
 
@@ -4345,12 +4351,12 @@ sub_80931B:
                 LDA.B zp_6E                                    ;8093AF|00006E
                 CLC                                            ;8093B1|
                 ADC.B zp_3A                                    ;8093B2|00003A
-                STA.B refillTmp32                              ;8093B4|000032
+                STA.B tmp32                              ;8093B4|000032
                 LDA.B zp_6C                                    ;8093B6|00006C
                 CLC                                            ;8093B8|
                 ADC.B zp_38                                    ;8093B9|000038
                 TAX                                            ;8093BB|
-                LDA.B refillTmp32                              ;8093BC|000032
+                LDA.B tmp32                              ;8093BC|000032
                 JSR.W sub_8093D9                               ;8093BE|8093D9
                 LDX.W #$001A                                   ;8093C1|
                 LDA.B zp_3A                                    ;8093C4|00003A
@@ -4369,18 +4375,18 @@ sub_80931B:
 ; --------------------------------------------------------
 ;  sub_8093D9   [9 ins, returns ?]
 ;    callers: sub_80931B, sub_8094BB, sub_8096EB
-;    writes:    refillTmp32
-;    reads:     refillTmp32, tilemapVramAddr
+;    writes:    tmp32
+;    reads:     tmp32, tilemapVramAddr
 ;    calls:     sub_809404
 ; --------------------------------------------------------
 sub_8093D9:
-                STX.B refillTmp32                              ;8093D9|000032
+                STX.B tmp32                              ;8093D9|000032
                 ASL A                                          ;8093DB|
                 ASL A                                          ;8093DC|
                 ASL A                                          ;8093DD|
                 ASL A                                          ;8093DE|
                 ASL A                                          ;8093DF|
-                ADC.B refillTmp32                              ;8093E0|000032
+                ADC.B tmp32                              ;8093E0|000032
                 ADC.W tilemapVramAddr                          ;8093E2|8019EE
                 JMP.W sub_809404                               ;8093E5|809404
 
@@ -4435,7 +4441,7 @@ sub_809404:
 ; --------------------------------------------------------
 ;  sub_809420   [70 ins, returns RTS]
 ;    callers: StreamTilemap
-;    writes:    refillTmp32
+;    writes:    tmp32
 ;    reads:     zp_2A, zp_86
 ;    calls:     sub_8094FF, sub_809515, sub_809528, sub_809577, sub_8095D6, sub_80931B, +2 more
 ; --------------------------------------------------------
@@ -4491,7 +4497,7 @@ Op_ShowDialogAtObj:
                 PHA                                            ;809463|
                 JSR.W sub_809577                               ;809464|809577
                 JSR.W sub_8095D6                               ;809467|8095D6
-                STY.B refillTmp32                              ;80946A|000032
+                STY.B tmp32                              ;80946A|000032
                 TAY                                            ;80946C|
                 PLA                                            ;80946D|
                 PEI.B ($32)                                    ;80946E|000032
@@ -4519,7 +4525,7 @@ Op_ShowDialogAtPos:
                 PHA                                            ;809487|
                 JSR.W sub_8095C3                               ;809488|8095C3
                 JSR.W sub_8095D6                               ;80948B|8095D6
-                STY.B refillTmp32                              ;80948E|000032
+                STY.B tmp32                              ;80948E|000032
                 TAY                                            ;809490|
                 PLA                                            ;809491|
                 PEI.B ($32)                                    ;809492|000032
@@ -4562,14 +4568,14 @@ sub_8094A2:
 ;  sub_8094BB   [29 ins, returns RTS]
 ;    callers: sub_809420, sub_8094A2, sub_8095D6, sub_80961A
 ;    writes:    zp_38, ram_19B9
-;    reads:     zp_2A, refillStageIdx, zp_38
+;    reads:     zp_2A, tmp34, zp_38
 ;    calls:     sub_8093D9, sub_8093E8
 ; --------------------------------------------------------
 sub_8094BB:
                 JSR.W sub_8093D9                               ;8094BB|8093D9
                 STZ.B zp_38                                    ;8094BE|000038
-                DEC.B refillStageIdx                           ;8094C0|000034
-                DEC.B refillStageIdx                           ;8094C2|000034
+                DEC.B tmp34                           ;8094C0|000034
+                DEC.B tmp34                           ;8094C2|000034
 
          .loop: LDA.B [zp_2A]                                  ;8094C4|00002A
                 AND.W #$00FF                                   ;8094C6|
@@ -4578,7 +4584,7 @@ sub_8094BB:
                 BNE .skip2                                     ;8094CE|8094EC
 
         .loop2: LDA.B zp_38                                    ;8094D0|000038
-                CMP.B refillStageIdx                           ;8094D2|000034
+                CMP.B tmp34                           ;8094D2|000034
                 BCS .skip                                      ;8094D4|8094E0
                 LDA.W #$0020                                   ;8094D6|
                 JSR.W sub_8093E8                               ;8094D9|8093E8
@@ -4607,14 +4613,14 @@ sub_8094BB:
 ; --------------------------------------------------------
 ;  sub_8094FF   [4 ins, returns ?]
 ;    callers: sub_809420, sub_8095D6
-;    writes:    refillTmp32
+;    writes:    tmp32
 ;    reads:     scriptPC
 ;    calls:     VM_GetOperandByType
 ; --------------------------------------------------------
 sub_8094FF:
                 LDA.B [scriptPC],Y                             ;8094FF|000070
                 INY                                            ;809501|
-                STA.B refillTmp32                              ;809502|000032
+                STA.B tmp32                              ;809502|000032
                 JSR.W VM_GetOperandByType                               ;809504|80DCD7
 
 ; --------------------------------------------------------
@@ -4635,17 +4641,17 @@ sub_809507:
 ; --------------------------------------------------------
 ;  sub_809515   [9 ins, returns RTS]
 ;    callers: sub_809420, sub_8094A2
-;    writes:    refillStageIdx, zp_36
+;    writes:    tmp34, tmp36
 ;    reads:     zp_2A
 ; --------------------------------------------------------
 sub_809515:
                 LDA.B [zp_2A]                                  ;809515|00002A
                 AND.W #$00FF                                   ;809517|
-                STA.B refillStageIdx                           ;80951A|000034
+                STA.B tmp34                           ;80951A|000034
                 INC.B zp_2A                                    ;80951C|00002A
                 LDA.B [zp_2A]                                  ;80951E|00002A
                 AND.W #$00FF                                   ;809520|
-                STA.B zp_36                                    ;809523|000036
+                STA.B tmp36                                    ;809523|000036
                 INC.B zp_2A                                    ;809525|00002A
                 RTS                                            ;809527|
 
@@ -4654,11 +4660,11 @@ sub_809515:
 ;  sub_809528   [41 ins, returns RTS]
 ;    callers: sub_809420
 ;    writes:    zp_38, zp_3A
-;    reads:     refillTmp32, refillStageIdx, zp_36
+;    reads:     tmp32, tmp34, tmp36
 ;    calls:     VM_GetOperandByType_Shr3
 ; --------------------------------------------------------
 sub_809528:
-                LDA.B refillTmp32                              ;809528|000032
+                LDA.B tmp32                              ;809528|000032
                 JSR.W VM_GetOperandByType_Shr3                               ;80952A|80DCD4
                 PHA                                            ;80952D|
                 CMP.W #$0005                                   ;80952E|
@@ -4673,12 +4679,12 @@ sub_809528:
                 BEQ .skip3                                     ;809545|809560
                 CMP.W #$0006                                   ;809547|
                 BEQ .skip3                                     ;80954A|809560
-                LDA.B refillStageIdx                           ;80954C|000034
+                LDA.B tmp34                           ;80954C|000034
                 LSR A                                          ;80954E|
                 BRA .cont                                      ;80954F|80955A
 
 
-         .skip: LDA.B refillStageIdx                           ;809551|000034
+         .skip: LDA.B tmp34                           ;809551|000034
                 DEC A                                          ;809553|
                 DEC A                                          ;809554|
                 BRA .cont                                      ;809555|80955A
@@ -4692,7 +4698,7 @@ sub_809528:
                 RTS                                            ;80955F|
 
 
-        .skip3: LDA.B refillStageIdx                           ;809560|000034
+        .skip3: LDA.B tmp34                           ;809560|000034
                 LSR A                                          ;809562|
                 BRA .cont2                                     ;809563|80956E
 
@@ -4701,12 +4707,12 @@ sub_809528:
                 BRA .cont2                                     ;809568|80956E
 
 
-        .skip5: LDA.B refillStageIdx                           ;80956A|000034
+        .skip5: LDA.B tmp34                           ;80956A|000034
                 DEC A                                          ;80956C|
                 DEC A                                          ;80956D|
 
         .cont2: STA.B zp_38                                    ;80956E|000038
-                LDA.B zp_36                                    ;809570|000036
+                LDA.B tmp36                                    ;809570|000036
                 DEC A                                          ;809572|
                 STA.B zp_3A                                    ;809573|00003A
                 PLA                                            ;809575|
@@ -4795,34 +4801,34 @@ sub_8095C3:
 ; --------------------------------------------------------
 ;  sub_8095D6   [34 ins, returns RTS]
 ;    callers: sub_809420
-;    writes:    zp_2E, zp_30, refillTmp32, refillStageIdx
-;    reads:     refillTmp32, refillStageIdx, zp_36, ram_19B9
+;    writes:    zp_2E, zp_30, tmp32, tmp34
+;    reads:     tmp32, tmp34, tmp36, ram_19B9
 ;    calls:     sub_8094FF, sub_8095C3, sub_8094BB
 ; --------------------------------------------------------
 sub_8095D6:
-                STA.B refillTmp32                              ;8095D6|000032
+                STA.B tmp32                              ;8095D6|000032
                 TXA                                            ;8095D8|
                 CLC                                            ;8095D9|
-                ADC.B refillStageIdx                           ;8095DA|000034
+                ADC.B tmp34                           ;8095DA|000034
                 CMP.W #$001F                                   ;8095DC|
                 BCC .skip                                      ;8095DF|8095E8
                 LDA.W #$001E                                   ;8095E1|
                 SEC                                            ;8095E4|
-                SBC.B refillStageIdx                           ;8095E5|000034
+                SBC.B tmp34                           ;8095E5|000034
                 TAX                                            ;8095E7|
 
-         .skip: LDA.B refillTmp32                              ;8095E8|000032
+         .skip: LDA.B tmp32                              ;8095E8|000032
                 CLC                                            ;8095EA|
-                ADC.B zp_36                                    ;8095EB|000036
+                ADC.B tmp36                                    ;8095EB|000036
                 CMP.W #$001A                                   ;8095ED|
                 BCC .skip2                                     ;8095F0|8095F9
                 LDA.W #$0019                                   ;8095F2|
                 SEC                                            ;8095F5|
-                SBC.B zp_36                                    ;8095F6|000036
+                SBC.B tmp36                                    ;8095F6|000036
                 RTS                                            ;8095F8|
 
 
-        .skip2: LDA.B refillTmp32                              ;8095F9|000032
+        .skip2: LDA.B tmp32                              ;8095F9|000032
                 RTS                                            ;8095FB|
 
 
@@ -4842,7 +4848,7 @@ Op_PrintText:
                 LDY.W #$3280                                   ;809608|
                 STY.B zp_2E                                    ;80960B|00002E
                 LDY.W #$0002                                   ;80960D|
-                STY.B refillStageIdx                           ;809610|000034
+                STY.B tmp34                           ;809610|000034
                 LDY.W ram_19B9                                 ;809612|8019B9
                 JSR.W sub_8094BB                               ;809615|8094BB
                 PLY                                            ;809618|
@@ -4852,7 +4858,7 @@ Op_PrintText:
 ; --------------------------------------------------------
 ;  sub_80961A   [17 ins, returns ?]
 ;    callers: GiveUpDialog_Run, sub_80847D, GiveUpDialog_NavConfirm
-;    writes:    zp_2A, zp_2C, zp_2E, zp_30, refillStageIdx
+;    writes:    zp_2A, zp_2C, zp_2E, zp_30, tmp34
 ;    reads:     ram_19B9
 ;    calls:     sub_8094BB
 ; --------------------------------------------------------
@@ -4869,7 +4875,7 @@ sub_80961A:
                 LDA.W #$3280                                   ;80962D|
                 STA.B zp_2E                                    ;809630|00002E
                 LDA.W #$0002                                   ;809632|
-                STA.B refillStageIdx                           ;809635|000034
+                STA.B tmp34                           ;809635|000034
                 PLX                                            ;809637|
                 TYA                                            ;809638|
                 LDY.W ram_19B9                                 ;809639|8019B9
@@ -4879,8 +4885,8 @@ sub_80961A:
 ; --------------------------------------------------------
 ;  Op_ClearDialog   [75 ins, returns RTS]
 ;    callers: GiveUpDialog_Run
-;    writes:    zp_2E, zp_30, refillStageIdx, ram_19B9
-;    reads:     refillStageIdx, scriptPC, vmAcc, inputAux2, ram_19B9, gameModeFlags
+;    writes:    zp_2E, zp_30, tmp34, ram_19B9
+;    reads:     tmp34, scriptPC, vmAcc, inputAux2, ram_19B9, gameModeFlags
 ;    calls:     sub_809404
 ; --------------------------------------------------------
 ;--------------------------------------------------------------
@@ -4967,7 +4973,7 @@ Op_DialogCmd06:
                 LDA.B [scriptPC],Y                             ;8096A1|000070
                 INY                                            ;8096A3|
                 AND.W #$00FF                                   ;8096A4|
-                STA.B refillStageIdx                           ;8096A7|000034
+                STA.B tmp34                           ;8096A7|000034
                 PHY                                            ;8096A9|
                 LDA.W #$007E                                   ;8096AA|
                 STA.B zp_30                                    ;8096AD|000030
@@ -4976,7 +4982,7 @@ Op_DialogCmd06:
                 LDY.W ram_19B9                                 ;8096B4|8019B9
                 LDA.W #$8006                                   ;8096B7|
                 JSR.W sub_809404                               ;8096BA|809404
-                LDA.B refillStageIdx                           ;8096BD|000034
+                LDA.B tmp34                           ;8096BD|000034
                 JSR.W sub_809404                               ;8096BF|809404
                 STY.W ram_19B9                                 ;8096C2|8019B9
                 PLY                                            ;8096C5|
@@ -4992,7 +4998,7 @@ Op_SetDialogColor:
                 LDA.B [scriptPC],Y                             ;8096C7|000070
                 INY                                            ;8096C9|
                 INY                                            ;8096CA|
-                STA.B refillStageIdx                           ;8096CB|000034
+                STA.B tmp34                           ;8096CB|000034
                 PHY                                            ;8096CD|
                 LDA.W #$007E                                   ;8096CE|
                 STA.B zp_30                                    ;8096D1|000030
@@ -5001,7 +5007,7 @@ Op_SetDialogColor:
                 LDY.W ram_19B9                                 ;8096D8|8019B9
                 LDA.W #$8005                                   ;8096DB|
                 JSR.W sub_809404                               ;8096DE|809404
-                LDA.B refillStageIdx                           ;8096E1|000034
+                LDA.B tmp34                           ;8096E1|000034
                 JSR.W sub_809404                               ;8096E3|809404
                 STY.W ram_19B9                                 ;8096E6|8019B9
                 PLY                                            ;8096E9|
@@ -5011,8 +5017,8 @@ Op_SetDialogColor:
 ; --------------------------------------------------------
 ;  sub_8096EB   [40 ins, returns RTS]
 ;    callers: input_80814E, input_8081DE, StreamTilemap
-;    writes:    zp_2E, zp_30, refillStageIdx, zp_6C, zp_6E, ram_19B7 ...
-;    reads:     refillStageIdx, zp_6C, zp_6E, scriptPC, ram_19B7, ram_19B9
+;    writes:    zp_2E, zp_30, tmp34, zp_6C, zp_6E, ram_19B7 ...
+;    reads:     tmp34, zp_6C, zp_6E, scriptPC, ram_19B7, ram_19B9
 ;    calls:     VM_GetOperandByType, sub_809404, sub_8093D9, sub_8093E8
 ; --------------------------------------------------------
 sub_8096EB:
@@ -5039,7 +5045,7 @@ Op_TextPutChar:
                 INY                                            ;8096FF|
                 PHA                                            ;809700|
                 JSR.W VM_GetOperandByType                               ;809701|80DCD7
-                STA.B refillStageIdx                           ;809704|000034
+                STA.B tmp34                           ;809704|000034
                 PLA                                            ;809706|
                 LSR A                                          ;809707|
                 LSR A                                          ;809708|
@@ -5061,7 +5067,7 @@ Op_TextPutChar:
                 LDA.B zp_6E                                    ;80972B|00006E
                 LDX.B zp_6C                                    ;80972D|00006C
                 JSR.W sub_8093D9                               ;80972F|8093D9
-                LDA.B refillStageIdx                           ;809732|000034
+                LDA.B tmp34                           ;809732|000034
                 JSR.W sub_8093E8                               ;809734|8093E8
                 STY.W ram_19B9                                 ;809737|8019B9
                 PLY                                            ;80973A|
@@ -5668,8 +5674,8 @@ sub_809B89:
 ;  oam_809BC3   [69 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
 ;    writes HW: BG12NBA, BG1SC, BG2SC, BG34NBA, BG3HOFS, BG3SC, BG3VOFS, CGADSUB, CGWSEL, OBSEL
-;    writes:    refillTmp32, ram_033C, backdropColorR, backdropColorG, backdropColorB, backdropColorR2 ...
-;    reads:     refillTmp32, ram_19DF, ram_19E5, bg12nbaShadow, ram_19E9, tilemapBaseLo ...
+;    writes:    tmp32, ram_033C, backdropColorR, backdropColorG, backdropColorB, backdropColorR2 ...
+;    reads:     tmp32, ram_19DF, ram_19E5, bg12nbaShadow, ram_19E9, tilemapBaseLo ...
 ; --------------------------------------------------------
 oam_809BC3:
                 SEP #$20                                       ;809BC3|
@@ -5679,14 +5685,14 @@ oam_809BC3:
                 LSR A                                          ;809BCA|
                 LSR A                                          ;809BCB|
                 LSR A                                          ;809BCC|
-                STA.B refillTmp32                              ;809BCD|000032
+                STA.B tmp32                              ;809BCD|000032
                 LDA.W ram_19DF                                 ;809BCF|8019DF
                 ASL A                                          ;809BD2|
                 ASL A                                          ;809BD3|
                 ASL A                                          ;809BD4|
                 ASL A                                          ;809BD5|
                 ASL A                                          ;809BD6|
-                ORA.B refillTmp32                              ;809BD7|000032
+                ORA.B tmp32                              ;809BD7|000032
                 STA.W OBSEL                                    ;809BD9|802101
 
                 LDA.W modFlags                                 ;INSERT|
@@ -5964,8 +5970,8 @@ ExpandLevelTilemap:
 ; --------------------------------------------------------
 ;  sub_809CA6   [32 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    refillTmp32, zp_58, zp_5A, zp_5C, zp_5E
-;    reads:     refillTmp32, tileVisualPtr, ram_19E4, ram_19F9, ram_1A00, ram_1A02 ...
+;    writes:    tmp32, zp_58, zp_5A, zp_5C, zp_5E
+;    reads:     tmp32, tileVisualPtr, ram_19E4, ram_19F9, ram_1A00, ram_1A02 ...
 ;    calls:     sub_80BCCD, sub_80BBFF, DecompressGfxEntry
 ; --------------------------------------------------------
 sub_809CA6:
@@ -5991,12 +5997,12 @@ sub_809CA6:
                 BMI .skip2                                     ;809CD1|809CEA
                 JSR.W sub_80BBFF                               ;809CD3|80BBFF
                 LSR A                                          ;809CD6|
-                STA.B refillTmp32                              ;809CD7|000032
+                STA.B tmp32                              ;809CD7|000032
                 LDA.W ram_19E4                                 ;809CD9|8019E4
                 CLC                                            ;809CDC|
                 ADC.W #$4000                                   ;809CDD|
                 SEC                                            ;809CE0|
-                SBC.B refillTmp32                              ;809CE1|000032
+                SBC.B tmp32                              ;809CE1|000032
                 TAX                                            ;809CE3|
                 LDA.W ram_1A02                                 ;809CE4|801A02
                 JSR.W DecompressGfxEntry                       ;809CE7|80BD06
@@ -6265,8 +6271,8 @@ ComputeCameraBounds:
 ; --------------------------------------------------------
 ;  ComputeCameras   [54 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    refillTmp32, playerCamX, playerCamY, mulMultiplicand, mulMultiplierLo, bg2CamXSrc ...
-;    reads:     refillTmp32, playerCamX, playerCamY, mulResult, zp_B3, splitYOffset ...
+;    writes:    tmp32, playerCamX, playerCamY, mulMultiplicand, mulMultiplierLo, bg2CamXSrc ...
+;    reads:     tmp32, playerCamX, playerCamY, mulResult, zp_B3, splitYOffset ...
 ;    calls:     Mul16x16
 ; --------------------------------------------------------
 
@@ -6319,10 +6325,10 @@ ComputeCameras:
                 SEC                                            ;809E91|
                 SBC.W splitYOffset                             ;809E92|800340
                 LSR A                                          ;809E95|
-                STA.B refillTmp32                              ;809E96|000032
+                STA.B tmp32                              ;809E96|000032
                 LDA.W objY,X                          ;809E98|8011A1
                 SEC                                            ;809E9B|
-                SBC.B refillTmp32                              ;809E9C|000032
+                SBC.B tmp32                              ;809E9C|000032
                 BMI +                                          ;809E9E|809EA2
                 BCS .skip3                                     ;809EA0|809EA5
 
@@ -6919,12 +6925,12 @@ input_80A28E:
 ; --------------------------------------------------------
 ;  sub_80A2C7   [83 ins, returns RTS]
 ;    callers: Op_SubAcc_TFld
-;    writes:    refillTmp32, zp_6C, zp_6E, vramWordWriteCount, ram_0471, ram_0473 ...
-;    reads:     refillTmp32, tileVisualPtr, zp_6C, zp_6E, vramWordWriteCount, ram_04F1 ...
+;    writes:    tmp32, zp_6C, zp_6E, vramWordWriteCount, ram_0471, ram_0473 ...
+;    reads:     tmp32, tileVisualPtr, zp_6C, zp_6E, vramWordWriteCount, ram_04F1 ...
 ;    calls:     sub_80A368
 ; --------------------------------------------------------
 sub_80A2C7:
-                STA.B refillTmp32                              ;80A2C7|000032
+                STA.B tmp32                              ;80A2C7|000032
                 TXA                                            ;80A2C9|
                 ASL A                                          ;80A2CA|
                 STA.B zp_6C                                    ;80A2CB|00006C
@@ -6961,7 +6967,7 @@ sub_80A2C7:
                 PHA                                            ;80A2FF|
                 ASL A                                          ;80A300|
                 TAX                                            ;80A301|
-                LDA.B refillTmp32                              ;80A302|000032
+                LDA.B tmp32                              ;80A302|000032
                 AND.W #$03FF                                   ;80A304|
                 ASL A                                          ;80A307|
                 ASL A                                          ;80A308|
@@ -6989,9 +6995,9 @@ sub_80A2C7:
                 LDY.W tilemapBaseHi                            ;80A332|80199D
                 AND.W #$001F                                   ;80A335|
 
-             +: STY.B refillTmp32                              ;80A338|000032
+             +: STY.B tmp32                              ;80A338|000032
                 CLC                                            ;80A33A|
-                ADC.B refillTmp32                              ;80A33B|000032
+                ADC.B tmp32                              ;80A33B|000032
                 STA.W ram_04F1,X                               ;80A33D|8004F1
                 LDA.B zp_6E                                    ;80A340|00006E
                 AND.W #$001F                                   ;80A342|
@@ -7109,7 +7115,7 @@ sub_80A3AA:
 ; --------------------------------------------------------
 ;  sub_80A3B1   [19 ins, returns RTS]
 ;    callers: sub_80A3A0, sub_80A3AA, Op_SubAcc_TFld
-;    writes:    refillTmp32, mulMultiplicand, mulMultiplierLo
+;    writes:    tmp32, mulMultiplicand, mulMultiplierLo
 ;    reads:     levelTileMapPtr, mulResult, levelRowStride, levelWidthMetaTiles, levelHeightMetaTiles
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
@@ -7130,7 +7136,7 @@ sub_80A3B1:
                 LDA.W levelRowStride                           ;80A3C5|8019AB
                 STA.B mulMultiplierLo                          ;80A3C8|0000B0
                 JSR.W Mul8x16                                  ;80A3CA|809152
-                STA.B refillTmp32                              ;80A3CD|000032
+                STA.B tmp32                              ;80A3CD|000032
                 TXA                                            ;80A3CF|
                 ASL A                                          ;80A3D0|
                 ADC.B mulResult                                ;80A3D1|0000B2
@@ -7142,14 +7148,14 @@ sub_80A3B1:
 ; --------------------------------------------------------
 ;  sub_80A3D7   [25 ins, returns RTS]
 ;    callers: Op_SubAcc_TFld
-;    writes:    refillTmp32, levelTileMapPtr, mulMultiplicand, mulMultiplierLo
-;    reads:     refillTmp32, mulResult, levelRowStride
+;    writes:    tmp32, levelTileMapPtr, mulMultiplicand, mulMultiplierLo
+;    reads:     tmp32, mulResult, levelRowStride
 ;    calls:     Mul8x16, sub_80A402
 ; --------------------------------------------------------
 sub_80A3D7:
                 PHX                                            ;80A3D7|
                 PHY                                            ;80A3D8|
-                STA.B refillTmp32                              ;80A3D9|000032
+                STA.B tmp32                              ;80A3D9|000032
                 STY.B mulMultiplicand                          ;80A3DB|0000AC
                 LDA.W levelRowStride                           ;80A3DD|8019AB
                 STA.B mulMultiplierLo                          ;80A3E0|0000B0
@@ -7158,7 +7164,7 @@ sub_80A3D7:
                 ASL A                                          ;80A3E6|
                 ADC.B mulResult                                ;80A3E7|0000B2
                 TAY                                            ;80A3E9|
-                LDA.B refillTmp32                              ;80A3EA|000032
+                LDA.B tmp32                              ;80A3EA|000032
                 STA.B [levelTileMapPtr],Y                      ;80A3EC|000050
                 PLY                                            ;80A3EE|
                 PLX                                            ;80A3EF|
@@ -7179,18 +7185,18 @@ sub_80A3D7:
 ; --------------------------------------------------------
 ;  sub_80A402   [39 ins, returns RTS]
 ;    callers: sub_80A3D7
-;    writes:    refillTmp32, zp_58, mulMultiplicand, mulMultiplierLo
-;    reads:     refillTmp32, zp_58, mulResult, ram_19B5, ram_19FB, ram_19FD
+;    writes:    tmp32, zp_58, mulMultiplicand, mulMultiplierLo
+;    reads:     tmp32, zp_58, mulResult, ram_19B5, ram_19FB, ram_19FD
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
 sub_80A402:
                 LDA.W ram_19FD                                 ;80A402|8019FD
                 DEC A                                          ;80A405|
-                STA.B refillTmp32                              ;80A406|000032
+                STA.B tmp32                              ;80A406|000032
                 TYA                                            ;80A408|
                 CMP.W ram_19FD                                 ;80A409|8019FD
                 BCC +                                          ;80A40C|80A410
-                AND.B refillTmp32                              ;80A40E|000032
+                AND.B tmp32                              ;80A40E|000032
 
              +: STA.B mulMultiplicand                          ;80A410|0000AC
                 LDA.W ram_19B5                                 ;80A412|8019B5
@@ -7198,11 +7204,11 @@ sub_80A402:
                 JSR.W Mul8x16                                  ;80A417|809152
                 LDA.W ram_19FB                                 ;80A41A|8019FB
                 DEC A                                          ;80A41D|
-                STA.B refillTmp32                              ;80A41E|000032
+                STA.B tmp32                              ;80A41E|000032
                 TXA                                            ;80A420|
                 CMP.W ram_19FB                                 ;80A421|8019FB
                 BCC +                                          ;80A424|80A428
-                AND.B refillTmp32                              ;80A426|000032
+                AND.B tmp32                              ;80A426|000032
 
              +: ASL A                                          ;80A428|
                 ADC.B mulResult                                ;80A429|0000B2
@@ -7212,7 +7218,7 @@ sub_80A402:
 
                 PHX                                            ;80A42F|
                 PHY                                            ;80A430|
-                STA.B refillTmp32                              ;80A431|000032
+                STA.B tmp32                              ;80A431|000032
                 STY.B mulMultiplicand                          ;80A433|0000AC
                 LDA.W ram_19B5                                 ;80A435|8019B5
                 STA.B mulMultiplierLo                          ;80A438|0000B0
@@ -7221,7 +7227,7 @@ sub_80A402:
                 ASL A                                          ;80A43E|
                 ADC.B mulResult                                ;80A43F|0000B2
                 TAY                                            ;80A441|
-                LDA.B refillTmp32                              ;80A442|000032
+                LDA.B tmp32                              ;80A442|000032
                 STA.B [zp_58],Y                                ;80A444|000058
                 PLY                                            ;80A446|
                 PLX                                            ;80A447|
@@ -7365,8 +7371,8 @@ Op_CallIfTouchType:
 ; --------------------------------------------------------
 ;  TouchType_Check   [95 ins, returns RTS]
 ;    callers: RunOneObjectScript
-;    writes:    refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, objTableEnd ...
-;    reads:     refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx ...
+;    writes:    tmp32, tmp34, tmp36, zp_38, zp_3A, objTableEnd ...
+;    reads:     tmp32, tmp34, tmp36, zp_38, zp_3A, curObjIdx ...
 ;    calls:     sub_80B012, sub_80B02B, TouchMask_Check, Op_Call
 ; --------------------------------------------------------
 TouchType_Check:
@@ -7376,13 +7382,13 @@ TouchType_Check:
                 LDA.B [scriptPC],Y                             ;80A4DD|000070
                 INY                                            ;80A4DF|
                 AND.W #$00FF                                   ;80A4E0|
-                STA.B refillTmp32                              ;80A4E3|000032
+                STA.B tmp32                              ;80A4E3|000032
                 PHY                                            ;80A4E5|
                 LDY.B curObjIdx                                ;80A4E6|000042
                 LDA.W objBoxLeft,Y                          ;80A4E8|800F71
-                STA.B refillStageIdx                           ;80A4EB|000034
+                STA.B tmp34                           ;80A4EB|000034
                 LDA.W objBoxRight,Y                          ;80A4ED|800F99
-                STA.B zp_36                                    ;80A4F0|000036
+                STA.B tmp36                                    ;80A4F0|000036
                 LDA.W objBoxTop,Y                          ;80A4F2|800F21
                 STA.B zp_38                                    ;80A4F5|000038
                 LDA.W objBoxBottom,Y                          ;80A4F7|800F49
@@ -7392,15 +7398,15 @@ TouchType_Check:
          .loop: LDA.W objActive,X                              ;80A4FF|800D91
                 BEQ .skip                                      ;80A502|80A53F
                 LDA.W objTouchType,X                               ;80A504|801039
-                CMP.B refillTmp32                              ;80A507|000032
+                CMP.B tmp32                              ;80A507|000032
                 BNE .skip                                      ;80A509|80A53F
                 CPX.B curObjIdx                                ;80A50B|000042
                 BEQ .skip                                      ;80A50D|80A53F
-                LDA.B zp_36                                    ;80A50F|000036
+                LDA.B tmp36                                    ;80A50F|000036
                 CMP.W objBoxLeft,X                          ;80A511|800F71
                 BCC .skip                                      ;80A514|80A53F
                 LDA.W objBoxRight,X                          ;80A516|800F99
-                CMP.B refillStageIdx                           ;80A519|000034
+                CMP.B tmp34                           ;80A519|000034
                 BCC .skip                                      ;80A51B|80A53F
                 LDA.B zp_3A                                    ;80A51D|00003A
                 CMP.W objBoxTop,X                          ;80A51F|800F21
@@ -7499,8 +7505,8 @@ Op_CallIfTouchMask:
 ; --------------------------------------------------------
 ;  TouchMask_Check   [81 ins, returns RTS]
 ;    callers: TouchType_Check
-;    writes:    refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, vmQuerySlot2 ...
-;    reads:     refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx ...
+;    writes:    tmp32, tmp34, tmp36, zp_38, zp_3A, vmQuerySlot2 ...
+;    reads:     tmp32, tmp34, tmp36, zp_38, zp_3A, curObjIdx ...
 ;    calls:     sub_80B012, sub_80B02B, CollideX_Resolve, Op_Call
 ; --------------------------------------------------------
 TouchMask_Check:
@@ -7508,15 +7514,15 @@ TouchMask_Check:
                 BEQ .skip3                                     ;80A59B|80A60D
                 BPL .skip2                                     ;80A59D|80A609
                 LDA.B [scriptPC],Y                             ;80A59F|000070
-                STA.B refillTmp32                              ;80A5A1|000032
+                STA.B tmp32                              ;80A5A1|000032
                 INY                                            ;80A5A3|
                 INY                                            ;80A5A4|
                 PHY                                            ;80A5A5|
                 LDY.B curObjIdx                                ;80A5A6|000042
                 LDA.W objBoxLeft,Y                          ;80A5A8|800F71
-                STA.B refillStageIdx                           ;80A5AB|000034
+                STA.B tmp34                           ;80A5AB|000034
                 LDA.W objBoxRight,Y                          ;80A5AD|800F99
-                STA.B zp_36                                    ;80A5B0|000036
+                STA.B tmp36                                    ;80A5B0|000036
                 LDA.W objBoxTop,Y                          ;80A5B2|800F21
                 STA.B zp_38                                    ;80A5B5|000038
                 LDA.W objBoxBottom,Y                          ;80A5B7|800F49
@@ -7526,15 +7532,15 @@ TouchMask_Check:
          .loop: LDA.W objActive,X                              ;80A5BF|800D91
                 BEQ .skip                                      ;80A5C2|80A5FF
                 LDA.W objHitMask,X                               ;80A5C4|801061
-                AND.B refillTmp32                              ;80A5C7|000032
+                AND.B tmp32                              ;80A5C7|000032
                 BEQ .skip                                      ;80A5C9|80A5FF
                 CPX.B curObjIdx                                ;80A5CB|000042
                 BEQ .skip                                      ;80A5CD|80A5FF
-                LDA.B zp_36                                    ;80A5CF|000036
+                LDA.B tmp36                                    ;80A5CF|000036
                 CMP.W objBoxLeft,X                          ;80A5D1|800F71
                 BCC .skip                                      ;80A5D4|80A5FF
                 LDA.W objBoxRight,X                          ;80A5D6|800F99
-                CMP.B refillStageIdx                           ;80A5D9|000034
+                CMP.B tmp34                           ;80A5D9|000034
                 BCC .skip                                      ;80A5DB|80A5FF
                 LDA.B zp_3A                                    ;80A5DD|00003A
                 CMP.W objBoxTop,X                          ;80A5DF|800F21
@@ -7966,8 +7972,8 @@ CollideY_PickDirection:
 ; --------------------------------------------------------
 ;  SnapX_ResolveOverlap   [42 ins, returns RTS]
 ;    callers: CollideX_Resolve
-;    writes:    refillTmp32, objBoxLeft, objBoxRight, objX, objFracX
-;    reads:     refillTmp32, objBoxLeft, objBoxRight, objX
+;    writes:    tmp32, objBoxLeft, objBoxRight, objX, objFracX
+;    reads:     tmp32, objBoxLeft, objBoxRight, objX
 ;    operands: A = 0/1 direction from CollideX_PickDirection
 ;    Snaps objX (and its box) flush against the obstacle found by the preceding probe, zeroing
 ;    objFracX. Shares its name pattern with SnapX_ResolveOverlap2 (FindObjectOverlapX2's own,
@@ -7978,21 +7984,21 @@ SnapX_ResolveOverlap:
                 CMP.W #$0000                                   ;80A7C4|
                 BNE .skip                                      ;80A7C7|80A7F6
                 LDA.W objBoxRight,Y                          ;80A7C9|800F99
-                STA.B refillTmp32                              ;80A7CC|000032
+                STA.B tmp32                              ;80A7CC|000032
                 AND.W #$FFF0                                   ;80A7CE|
                 DEC A                                          ;80A7D1|
                 STA.W objBoxRight,Y                          ;80A7D2|800F99
-                LDA.B refillTmp32                              ;80A7D5|000032
+                LDA.B tmp32                              ;80A7D5|000032
                 SEC                                            ;80A7D7|
                 SBC.W objBoxRight,Y                          ;80A7D8|800F99
-                STA.B refillTmp32                              ;80A7DB|000032
+                STA.B tmp32                              ;80A7DB|000032
                 LDA.W objX,Y                          ;80A7DD|801179
                 SEC                                            ;80A7E0|
-                SBC.B refillTmp32                              ;80A7E1|000032
+                SBC.B tmp32                              ;80A7E1|000032
                 STA.W objX,Y                          ;80A7E3|801179
                 LDA.W objBoxLeft,Y                          ;80A7E6|800F71
                 SEC                                            ;80A7E9|
-                SBC.B refillTmp32                              ;80A7EA|000032
+                SBC.B tmp32                              ;80A7EA|000032
                 STA.W objBoxLeft,Y                          ;80A7EC|800F71
                 LDA.W #$0000                                   ;80A7EF|
                 STA.W objFracX,Y                               ;80A7F2|8013F9
@@ -8000,21 +8006,21 @@ SnapX_ResolveOverlap:
 
 
          .skip: LDA.W objBoxLeft,Y                          ;80A7F6|800F71
-                STA.B refillTmp32                              ;80A7F9|000032
+                STA.B tmp32                              ;80A7F9|000032
                 ORA.W #$000F                                   ;80A7FB|
                 INC A                                          ;80A7FE|
                 STA.W objBoxLeft,Y                          ;80A7FF|800F71
                 LDA.W objBoxLeft,Y                          ;80A802|800F71
                 SEC                                            ;80A805|
-                SBC.B refillTmp32                              ;80A806|000032
-                STA.B refillTmp32                              ;80A808|000032
+                SBC.B tmp32                              ;80A806|000032
+                STA.B tmp32                              ;80A808|000032
                 LDA.W objX,Y                          ;80A80A|801179
                 CLC                                            ;80A80D|
-                ADC.B refillTmp32                              ;80A80E|000032
+                ADC.B tmp32                              ;80A80E|000032
                 STA.W objX,Y                          ;80A810|801179
                 LDA.W objBoxRight,Y                          ;80A813|800F99
                 CLC                                            ;80A816|
-                ADC.B refillTmp32                              ;80A817|000032
+                ADC.B tmp32                              ;80A817|000032
                 STA.W objBoxRight,Y                          ;80A819|800F99
                 LDA.W #$0000                                   ;80A81C|
                 STA.W objFracX,Y                               ;80A81F|8013F9
@@ -8024,8 +8030,8 @@ SnapX_ResolveOverlap:
 ; --------------------------------------------------------
 ;  SnapY_ResolveOverlap   [50 ins, returns RTS]
 ;    callers: CollideY_Resolve, CollideY_Slope_Resolve
-;    writes:    refillTmp32, objBoxTop, objBoxBottom, objY, objFracY
-;    reads:     refillTmp32, objBoxTop, objBoxBottom, objY
+;    writes:    tmp32, objBoxTop, objBoxBottom, objY, objFracY
+;    reads:     tmp32, objBoxTop, objBoxBottom, objY
 ;    operands: A = 0/1 direction from CollideY_PickDirection
 ;    Y-axis counterpart of SnapX_ResolveOverlap.
 ; --------------------------------------------------------
@@ -8034,31 +8040,31 @@ SnapY_ResolveOverlap:
                 BEQ .skip                                      ;80A826|80A83A
                 BPL .skip2                                     ;80A828|80A867
                 AND.W #$00FF                                   ;80A82A|
-                STA.B refillTmp32                              ;80A82D|000032
+                STA.B tmp32                              ;80A82D|000032
                 LDA.W objBoxBottom,Y                          ;80A82F|800F49
                 SEC                                            ;80A832|
-                SBC.B refillTmp32                              ;80A833|000032
+                SBC.B tmp32                              ;80A833|000032
                 STA.W objBoxBottom,Y                          ;80A835|800F49
                 BRA .cont                                      ;80A838|80A84E
 
 
          .skip: LDA.W objBoxBottom,Y                          ;80A83A|800F49
-                STA.B refillTmp32                              ;80A83D|000032
+                STA.B tmp32                              ;80A83D|000032
                 AND.W #$FFF0                                   ;80A83F|
                 DEC A                                          ;80A842|
                 STA.W objBoxBottom,Y                          ;80A843|800F49
-                LDA.B refillTmp32                              ;80A846|000032
+                LDA.B tmp32                              ;80A846|000032
                 SEC                                            ;80A848|
                 SBC.W objBoxBottom,Y                          ;80A849|800F49
-                STA.B refillTmp32                              ;80A84C|000032
+                STA.B tmp32                              ;80A84C|000032
 
          .cont: LDA.W objY,Y                          ;80A84E|8011A1
                 SEC                                            ;80A851|
-                SBC.B refillTmp32                              ;80A852|000032
+                SBC.B tmp32                              ;80A852|000032
                 STA.W objY,Y                          ;80A854|8011A1
                 LDA.W objBoxTop,Y                          ;80A857|800F21
                 SEC                                            ;80A85A|
-                SBC.B refillTmp32                              ;80A85B|000032
+                SBC.B tmp32                              ;80A85B|000032
                 STA.W objBoxTop,Y                          ;80A85D|800F21
                 LDA.W #$0000                                   ;80A860|
                 STA.W objFracY,Y                               ;80A863|801421
@@ -8066,21 +8072,21 @@ SnapY_ResolveOverlap:
 
 
         .skip2: LDA.W objBoxTop,Y                          ;80A867|800F21
-                STA.B refillTmp32                              ;80A86A|000032
+                STA.B tmp32                              ;80A86A|000032
                 ORA.W #$000F                                   ;80A86C|
                 INC A                                          ;80A86F|
                 STA.W objBoxTop,Y                          ;80A870|800F21
                 LDA.W objBoxTop,Y                          ;80A873|800F21
                 SEC                                            ;80A876|
-                SBC.B refillTmp32                              ;80A877|000032
-                STA.B refillTmp32                              ;80A879|000032
+                SBC.B tmp32                              ;80A877|000032
+                STA.B tmp32                              ;80A879|000032
                 LDA.W objY,Y                          ;80A87B|8011A1
                 CLC                                            ;80A87E|
-                ADC.B refillTmp32                              ;80A87F|000032
+                ADC.B tmp32                              ;80A87F|000032
                 STA.W objY,Y                          ;80A881|8011A1
                 LDA.W objBoxBottom,Y                          ;80A884|800F49
                 CLC                                            ;80A887|
-                ADC.B refillTmp32                              ;80A888|000032
+                ADC.B tmp32                              ;80A888|000032
                 STA.W objBoxBottom,Y                          ;80A88A|800F49
                 LDA.W #$0000                                   ;80A88D|
                 STA.W objFracY,Y                               ;80A890|801421
@@ -8090,7 +8096,7 @@ SnapY_ResolveOverlap:
 ; --------------------------------------------------------
 ;  ProbeColAtBoxLeftMinus1   [6 ins, returns ?]
 ;    callers: sub_80A743
-;    writes:    refillStageIdx
+;    writes:    tmp34
 ;    reads:     objBoxLeft
 ;    operands: Y = this object
 ;    Sets up a 1-pixel-wide probe column at objBoxLeft-1 and falls into ProbeRowAndScanClass_Setup's
@@ -8099,7 +8105,7 @@ SnapY_ResolveOverlap:
 ProbeColAtBoxLeftMinus1:
                 PHX                                            ;80A894|
                 PHY                                            ;80A895|
-                STX.B refillStageIdx                           ;80A896|000034
+                STX.B tmp34                           ;80A896|000034
                 LDX.W objBoxLeft,Y                          ;80A898|800F71
                 DEX                                            ;80A89B|
                 BRA loc_80A8B8                                 ;80A89C|80A8B8
@@ -8108,7 +8114,7 @@ ProbeColAtBoxLeftMinus1:
 ; --------------------------------------------------------
 ;  ProbeColAtBoxLeft   [5 ins, returns ?]
 ;    callers: CollideX_PickDirection
-;    writes:    refillStageIdx
+;    writes:    tmp34
 ;    reads:     objBoxLeft
 ;    operands: Y = this object
 ;    Same shape, probe column at objBoxLeft exactly (no -1).
@@ -8116,7 +8122,7 @@ ProbeColAtBoxLeftMinus1:
 ProbeColAtBoxLeft:
                 PHX                                            ;80A89E|
                 PHY                                            ;80A89F|
-                STX.B refillStageIdx                           ;80A8A0|000034
+                STX.B tmp34                           ;80A8A0|000034
                 LDX.W objBoxLeft,Y                          ;80A8A2|800F71
                 BRA loc_80A8B8                                 ;80A8A5|80A8B8
 
@@ -8124,7 +8130,7 @@ ProbeColAtBoxLeft:
 ; --------------------------------------------------------
 ;  ProbeColAtBoxRightPlus1   [6 ins, returns ?]
 ;    callers: sub_80A752
-;    writes:    refillStageIdx
+;    writes:    tmp34
 ;    reads:     objBoxRight
 ;    operands: Y = this object
 ;    Probe column at objBoxRight+1 -- used when approaching from the left.
@@ -8132,7 +8138,7 @@ ProbeColAtBoxLeft:
 ProbeColAtBoxRightPlus1:
                 PHX                                            ;80A8A7|
                 PHY                                            ;80A8A8|
-                STX.B refillStageIdx                           ;80A8A9|000034
+                STX.B tmp34                           ;80A8A9|000034
                 LDX.W objBoxRight,Y                          ;80A8AB|800F99
                 INX                                            ;80A8AE|
                 BRA loc_80A8B8                                 ;80A8AF|80A8B8
@@ -8141,8 +8147,8 @@ ProbeColAtBoxRightPlus1:
 ; --------------------------------------------------------
 ;  ProbeColAndScanClass   [52 ins, returns RTS]
 ;    callers: CollideX_PickDirection
-;    writes:    refillStageIdx, zp_36, zp_38, hitClass
-;    reads:     refillStageIdx, zp_36, zp_38, objBoxTop, objBoxBottom, objBoxRight ...
+;    writes:    tmp34, tmp36, zp_38, hitClass
+;    reads:     tmp34, tmp36, zp_38, objBoxTop, objBoxBottom, objBoxRight ...
 ;    calls:     GetTerrainClassAtPixel, ProbeClass_NoHit
 ;    operands: X = this object's objX (pixel), Y = the other object
 ;    The 'rightward' arm of CollideX_PickDirection: builds a one-metatile-tall probe column at the
@@ -8154,11 +8160,11 @@ ProbeColAtBoxRightPlus1:
 ProbeColAndScanClass:
                 PHX                                            ;80A8B1|
                 PHY                                            ;80A8B2|
-                STX.B refillStageIdx                           ;80A8B3|000034
+                STX.B tmp34                           ;80A8B3|000034
                 LDX.W objBoxRight,Y                          ;80A8B5|800F99
 
 loc_80A8B8:
-                STX.B zp_36                                    ;80A8B8|000036
+                STX.B tmp36                                    ;80A8B8|000036
                 LDA.W objBoxBottom,Y                          ;80A8BA|800F49
                 SEC                                            ;80A8BD|
                 SBC.W objMoveY,Y                          ;80A8BE|8013A9
@@ -8184,10 +8190,10 @@ loc_80A8B8:
 
              +: TAY                                            ;80A8E5|
 
-         .loop: LDX.B zp_36                                    ;80A8E6|000036
+         .loop: LDX.B tmp36                                    ;80A8E6|000036
                 JSR.W GetTerrainClassAtPixel                               ;80A8E8|80A38C
                 SEP #$20                                       ;80A8EB|
-                LDX.B refillStageIdx                           ;80A8ED|000034
+                LDX.B tmp34                           ;80A8ED|000034
 
         .loop2: CMP.W data_80F537,X                            ;80A8EF|80F537
                 BCC +                                          ;80A8F2|80A8F9
@@ -8234,7 +8240,7 @@ ProbeClass_NoHit:
 ; --------------------------------------------------------
 ;  ProbeRowAtBoxTopMinus1   [6 ins, returns ?]
 ;    callers: sub_80A761
-;    writes:    refillStageIdx
+;    writes:    tmp34
 ;    reads:     objBoxTop
 ;    operands: Y = this object
 ;    Y-axis sibling of ProbeColAtBoxLeftMinus1: probe row at objBoxTop-1 (the row ABOVE). Feeds
@@ -8244,7 +8250,7 @@ ProbeClass_NoHit:
 ProbeRowAtBoxTopMinus1:
                 PHX                                            ;80A91D|
                 PHY                                            ;80A91E|
-                STX.B refillStageIdx                           ;80A91F|000034
+                STX.B tmp34                           ;80A91F|000034
                 LDX.W objBoxTop,Y                          ;80A921|800F21
                 DEX                                            ;80A924|
                 BRA loc_80A941                                 ;80A925|80A941
@@ -8253,7 +8259,7 @@ ProbeRowAtBoxTopMinus1:
 ; --------------------------------------------------------
 ;  ProbeRowAtBoxTop   [5 ins, returns ?]
 ;    callers: CollideY_PickDirection
-;    writes:    refillStageIdx
+;    writes:    tmp34
 ;    reads:     objBoxTop
 ;    operands: Y = this object
 ;    Probe row at objBoxTop exactly.
@@ -8261,7 +8267,7 @@ ProbeRowAtBoxTopMinus1:
 ProbeRowAtBoxTop:
                 PHX                                            ;80A927|
                 PHY                                            ;80A928|
-                STX.B refillStageIdx                           ;80A929|000034
+                STX.B tmp34                           ;80A929|000034
                 LDX.W objBoxTop,Y                          ;80A92B|800F21
                 BRA loc_80A941                                 ;80A92E|80A941
 
@@ -8269,7 +8275,7 @@ ProbeRowAtBoxTop:
 ; --------------------------------------------------------
 ;  ProbeRowAtBoxBottomPlus1   [6 ins, returns ?]
 ;    callers: sub_80A770
-;    writes:    refillStageIdx
+;    writes:    tmp34
 ;    reads:     objBoxBottom
 ;    operands: Y = this object
 ;    Probe row at objBoxBottom+1 (the row BELOW). Feeds Op_JmpIfBlockedBelow /
@@ -8278,7 +8284,7 @@ ProbeRowAtBoxTop:
 ProbeRowAtBoxBottomPlus1:
                 PHX                                            ;80A930|
                 PHY                                            ;80A931|
-                STX.B refillStageIdx                           ;80A932|000034
+                STX.B tmp34                           ;80A932|000034
                 LDX.W objBoxBottom,Y                          ;80A934|800F49
                 INX                                            ;80A937|
                 BRA loc_80A941                                 ;80A938|80A941
@@ -8287,7 +8293,7 @@ ProbeRowAtBoxBottomPlus1:
 ; --------------------------------------------------------
 ;  ProbeRowAndScanClass_Setup   [8 ins, returns ?]
 ;    callers: CollideY_PickDirection
-;    writes:    refillStageIdx, zp_36, zp_38
+;    writes:    tmp34, tmp36, zp_38
 ;    reads:     objBoxBottom, objBoxLeft, objBoxRight
 ;    operands: Y = this object
 ;    Sets up a probe row at objBoxBottom with the probe's X-range taken from objBoxLeft..objBoxRight,
@@ -8296,11 +8302,11 @@ ProbeRowAtBoxBottomPlus1:
 ProbeRowAndScanClass_Setup:
                 PHX                                            ;80A93A|
                 PHY                                            ;80A93B|
-                STX.B refillStageIdx                           ;80A93C|000034
+                STX.B tmp34                           ;80A93C|000034
                 LDX.W objBoxBottom,Y                          ;80A93E|800F49
 
 loc_80A941:
-                STX.B zp_36                                    ;80A941|000036
+                STX.B tmp36                                    ;80A941|000036
                 LDA.W objBoxRight,Y                          ;80A943|800F99
                 STA.B zp_38                                    ;80A946|000038
                 LDX.W objBoxLeft,Y                          ;80A948|800F71
@@ -8309,20 +8315,20 @@ loc_80A941:
 ;  ProbeRowAndScanClass   [31 ins, returns RTS]
 ;    callers: ProbeAheadBelow_Setup, ProbePointAndScanClass_Setup
 ;    writes:    hitClass
-;    reads:     refillStageIdx, zp_36, zp_38
+;    reads:     tmp34, tmp36, zp_38
 ;    calls:     GetTerrainClassAtPixel
-;    operands: X = probe row (pixel), Y/refillStageIdx/zp_36 = probe X-range
-;    Walks the probe row one metatile at a time across [refillStageIdx..zp_36], testing each against
+;    operands: X = probe row (pixel), Y/tmp34/tmp36 = probe X-range
+;    Walks the probe row one metatile at a time across [tmp34..tmp36], testing each against
 ;    the data_80F537 class list via GetTerrainClassAtPixel. On a hit, stores the class in hitClass
 ;    and returns with carry set. This is the shared terrain-class scanner behind the whole
 ;    Above/Below/Behind/Ahead probe family; GetTerrainClassAtPixel does the single-point lookup, this
 ;    does the sweep.
 ; --------------------------------------------------------
 ProbeRowAndScanClass:
-                LDY.B zp_36                                    ;80A94B|000036
+                LDY.B tmp36                                    ;80A94B|000036
                 JSR.W GetTerrainClassAtPixel                               ;80A94D|80A38C
                 SEP #$20                                       ;80A950|
-                LDY.B refillStageIdx                           ;80A952|000034
+                LDY.B tmp34                           ;80A952|000034
 
          .loop: CMP.W data_80F537,Y                            ;80A954|80F537
                 BCC +                                          ;80A957|80A95E
@@ -8362,7 +8368,7 @@ ProbeRowAndScanClass:
 ; --------------------------------------------------------
 ;  ProbeAheadBelow_Setup   [16 ins, returns ?]
 ;    callers: sub_80A77F
-;    writes:    refillStageIdx, zp_36, zp_38
+;    writes:    tmp34, tmp36, zp_38
 ;    reads:     objBoxBottom, objBoxLeft, objBoxRight, objFlags
 ;    calls:     ProbeRowAndScanClass
 ;    operands: Y = this object
@@ -8373,7 +8379,7 @@ ProbeRowAndScanClass:
 ProbeAheadBelow_Setup:
                 PHX                                            ;80A982|
                 PHY                                            ;80A983|
-                STX.B refillStageIdx                           ;80A984|000034
+                STX.B tmp34                           ;80A984|000034
                 LDA.W objFlags,Y                          ;80A986|800FC1
                 BIT.W #$0040                                   ;80A989|
                 BNE +                                          ;80A98C|80A994
@@ -8388,14 +8394,14 @@ ProbeAheadBelow_Setup:
          .cont: STX.B zp_38                                    ;80A998|000038
                 LDA.W objBoxBottom,Y                          ;80A99A|800F49
                 INC A                                          ;80A99D|
-                STA.B zp_36                                    ;80A99E|000036
+                STA.B tmp36                                    ;80A99E|000036
                 JMP.W ProbeRowAndScanClass                               ;80A9A0|80A94B
 
 
 ; --------------------------------------------------------
 ;  ProbePointAndScanClass_Setup   [8 ins, returns ?]
 ;    callers: sub_80A734
-;    writes:    refillStageIdx, zp_36, zp_38
+;    writes:    tmp34, tmp36, zp_38
 ;    reads:     zp_6C, zp_6E
 ;    calls:     ProbeRowAndScanClass
 ;    operands: zp_6C/zp_6E = the point to test
@@ -8406,10 +8412,10 @@ ProbeAheadBelow_Setup:
 ProbePointAndScanClass_Setup:
                 PHX                                            ;80A9A3|
                 PHY                                            ;80A9A4|
-                STX.B refillStageIdx                           ;80A9A5|000034
+                STX.B tmp34                           ;80A9A5|000034
                 LDX.B zp_6C                                    ;80A9A7|00006C
                 LDY.B zp_6E                                    ;80A9A9|00006E
-                STY.B zp_36                                    ;80A9AB|000036
+                STY.B tmp36                                    ;80A9AB|000036
                 STX.B zp_38                                    ;80A9AD|000038
                 JMP.W ProbeRowAndScanClass                               ;80A9AF|80A94B
 
@@ -8433,8 +8439,8 @@ CollideY_Slope_PickDirection:
 ; --------------------------------------------------------
 ;  CollideY_Slope_Resolve_Flat   [115 ins, returns RTS]
 ;    callers: CollideY_Slope_Resolve_Flat
-;    writes:    refillTmp32, zp_36, zp_38, zp_3A, zp_6C, zp_6E ...
-;    reads:     refillTmp32, zp_36, zp_38, zp_3A, zp_6C, zp_6E ...
+;    writes:    tmp32, tmp36, zp_38, zp_3A, zp_6C, zp_6E ...
+;    reads:     tmp32, tmp36, zp_38, zp_3A, zp_6C, zp_6E ...
 ;    calls:     GetTerrainClassAtPixel, sub_80B177, CollideY_Slope_Resolve_Flat
 ;    The 'moved zero pixels vertically' exit for the slope collider -- just RTS with carry clear.
 ; --------------------------------------------------------
@@ -8492,12 +8498,12 @@ CollideY_Slope_Resolve_Step:
                 LDA.B zp_3A                                    ;80AA0A|00003A
                 JSR.W sub_80B177                               ;80AA0C|80B177
                 BMI .skip                                      ;80AA0F|80AA20
-                STA.B refillTmp32                              ;80AA11|000032
+                STA.B tmp32                              ;80AA11|000032
                 PLA                                            ;80AA13|
                 STA.W objBoxBottom,Y                          ;80AA14|800F49
                 AND.W #$000F                                   ;80AA17|
                 CLC                                            ;80AA1A|
-                ADC.B refillTmp32                              ;80AA1B|000032
+                ADC.B tmp32                              ;80AA1B|000032
                 INC A                                          ;80AA1D|
                 BRA .cont                                      ;80AA1E|80AA3C
 
@@ -8531,21 +8537,21 @@ CollideY_Slope_Resolve_Step:
                 CLC                                            ;80AA50|
                 ADC.W objPrevY,Y                               ;80AA51|800E09
                 AND.W #$FFF0                                   ;80AA54|
-                STA.B refillTmp32                              ;80AA57|000032
+                STA.B tmp32                              ;80AA57|000032
                 LDA.W objBoxBottom,Y                          ;80AA59|800F49
                 AND.W #$FFF0                                   ;80AA5C|
-                CMP.B refillTmp32                              ;80AA5F|000032
+                CMP.B tmp32                              ;80AA5F|000032
                 BNE +                                          ;80AA61|80AA66
                 JMP.W CollideY_Slope_Resolve_Flat                               ;80AA63|80A9BD
 
 
              +: LDX.W objBoxBottom,Y                          ;80AA66|800F49
-                STX.B zp_36                                    ;80AA69|000036
+                STX.B tmp36                                    ;80AA69|000036
                 LDA.W objBoxRight,Y                          ;80AA6B|800F99
                 STA.B zp_38                                    ;80AA6E|000038
                 LDX.W objBoxLeft,Y                          ;80AA70|800F71
 
-        .loop2: LDY.B zp_36                                    ;80AA73|000036
+        .loop2: LDY.B tmp36                                    ;80AA73|000036
                 JSR.W GetTerrainClassAtPixel                               ;80AA75|80A38C
                 CMP.W #$0030                                   ;80AA78|
                 BCS .skip4                                     ;80AA7B|80AA8B
@@ -8733,8 +8739,8 @@ ProbeOverlapX_LeftEdge:
 ; --------------------------------------------------------
 ;  ProbeOverlapX_RightEdge   [28 ins, returns RTS]
 ;    callers: FindObjectOverlapX
-;    writes:    refillTmp32
-;    reads:     refillTmp32, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight, objMoveY
+;    writes:    tmp32
+;    reads:     tmp32, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight, objMoveY
 ;    operands: X/Y = the two objects
 ;    Same test, right-edge entry (falls into the same shared comparison as ProbeOverlapX_LeftEdge via
 ;    loc_80AB58).
@@ -8751,20 +8757,20 @@ loc_80AB58:
                 LDA.W objBoxTop,X                          ;80AB63|800F21
                 SEC                                            ;80AB66|
                 SBC.W objMoveY,X                          ;80AB67|8013A9
-                STA.B refillTmp32                              ;80AB6A|000032
+                STA.B tmp32                              ;80AB6A|000032
                 LDA.W objBoxBottom,Y                          ;80AB6C|800F49
                 SEC                                            ;80AB6F|
                 SBC.W objMoveY,Y                          ;80AB70|8013A9
-                CMP.B refillTmp32                              ;80AB73|000032
+                CMP.B tmp32                              ;80AB73|000032
                 BCC .skip                                      ;80AB75|80AB8D
                 LDA.W objBoxTop,Y                          ;80AB77|800F21
                 SEC                                            ;80AB7A|
                 SBC.W objMoveY,Y                          ;80AB7B|8013A9
-                STA.B refillTmp32                              ;80AB7E|000032
+                STA.B tmp32                              ;80AB7E|000032
                 LDA.W objBoxBottom,X                          ;80AB80|800F49
                 SEC                                            ;80AB83|
                 SBC.W objMoveY,X                          ;80AB84|8013A9
-                CMP.B refillTmp32                              ;80AB87|000032
+                CMP.B tmp32                              ;80AB87|000032
                 BCC .skip                                      ;80AB89|80AB8D
                 SEC                                            ;80AB8B|
                 RTS                                            ;80AB8C|
@@ -8822,8 +8828,8 @@ loc_80AB97:
 ; --------------------------------------------------------
 ;  SnapX_ResolveOverlap2   [42 ins, returns RTS]
 ;    callers: CollideX_Resolve
-;    writes:    refillTmp32, objBoxLeft, objBoxRight, objX, objFracX
-;    reads:     refillTmp32, objBoxLeft, objBoxRight, objX
+;    writes:    tmp32, objBoxLeft, objBoxRight, objX, objFracX
+;    reads:     tmp32, objBoxLeft, objBoxRight, objX
 ;    operands: A = 0/1 direction
 ;    FindObjectOverlapX2's own X-snap, used by the push/collide-with-object code path. Structurally
 ;    identical to SnapX_ResolveOverlap but a separate copy (reads/writes the same
@@ -8836,18 +8842,18 @@ SnapX_ResolveOverlap2:
                 SEC                                            ;80ABC0|
                 SBC.W objBoxLeft,X                          ;80ABC1|800F71
                 INC A                                          ;80ABC4|
-                STA.B refillTmp32                              ;80ABC5|000032
+                STA.B tmp32                              ;80ABC5|000032
                 LDA.W objX,Y                          ;80ABC7|801179
                 SEC                                            ;80ABCA|
-                SBC.B refillTmp32                              ;80ABCB|000032
+                SBC.B tmp32                              ;80ABCB|000032
                 STA.W objX,Y                          ;80ABCD|801179
                 LDA.W objBoxLeft,Y                          ;80ABD0|800F71
                 SEC                                            ;80ABD3|
-                SBC.B refillTmp32                              ;80ABD4|000032
+                SBC.B tmp32                              ;80ABD4|000032
                 STA.W objBoxLeft,Y                          ;80ABD6|800F71
                 LDA.W objBoxRight,Y                          ;80ABD9|800F99
                 SEC                                            ;80ABDC|
-                SBC.B refillTmp32                              ;80ABDD|000032
+                SBC.B tmp32                              ;80ABDD|000032
                 STA.W objBoxRight,Y                          ;80ABDF|800F99
                 LDA.W #$0000                                   ;80ABE2|
                 STA.W objFracX,Y                               ;80ABE5|8013F9
@@ -8858,18 +8864,18 @@ SnapX_ResolveOverlap2:
                 SEC                                            ;80ABEC|
                 SBC.W objBoxLeft,Y                          ;80ABED|800F71
                 INC A                                          ;80ABF0|
-                STA.B refillTmp32                              ;80ABF1|000032
+                STA.B tmp32                              ;80ABF1|000032
                 LDA.W objX,Y                          ;80ABF3|801179
                 CLC                                            ;80ABF6|
-                ADC.B refillTmp32                              ;80ABF7|000032
+                ADC.B tmp32                              ;80ABF7|000032
                 STA.W objX,Y                          ;80ABF9|801179
                 LDA.W objBoxLeft,Y                          ;80ABFC|800F71
                 CLC                                            ;80ABFF|
-                ADC.B refillTmp32                              ;80AC00|000032
+                ADC.B tmp32                              ;80AC00|000032
                 STA.W objBoxLeft,Y                          ;80AC02|800F71
                 LDA.W objBoxRight,Y                          ;80AC05|800F99
                 CLC                                            ;80AC08|
-                ADC.B refillTmp32                              ;80AC09|000032
+                ADC.B tmp32                              ;80AC09|000032
                 STA.W objBoxRight,Y                          ;80AC0B|800F99
                 LDA.W #$0000                                   ;80AC0E|
                 STA.W objFracX,Y                               ;80AC11|8013F9
@@ -8879,8 +8885,8 @@ SnapX_ResolveOverlap2:
 ; --------------------------------------------------------
 ;  SnapY_ResolveOverlap2   [42 ins, returns RTS]
 ;    callers: CollideY_Resolve, CollideY_Slope_Resolve
-;    writes:    refillTmp32, objBoxTop, objBoxBottom, objY, objFracY
-;    reads:     refillTmp32, objBoxTop, objBoxBottom, objY
+;    writes:    tmp32, objBoxTop, objBoxBottom, objY, objFracY
+;    reads:     tmp32, objBoxTop, objBoxBottom, objY
 ;    operands: A = 0/1 direction
 ;    Y-axis counterpart of SnapX_ResolveOverlap2.
 ; --------------------------------------------------------
@@ -8891,18 +8897,18 @@ SnapY_ResolveOverlap2:
                 SEC                                            ;80AC1D|
                 SBC.W objBoxTop,X                          ;80AC1E|800F21
                 INC A                                          ;80AC21|
-                STA.B refillTmp32                              ;80AC22|000032
+                STA.B tmp32                              ;80AC22|000032
                 LDA.W objY,Y                          ;80AC24|8011A1
                 SEC                                            ;80AC27|
-                SBC.B refillTmp32                              ;80AC28|000032
+                SBC.B tmp32                              ;80AC28|000032
                 STA.W objY,Y                          ;80AC2A|8011A1
                 LDA.W objBoxTop,Y                          ;80AC2D|800F21
                 SEC                                            ;80AC30|
-                SBC.B refillTmp32                              ;80AC31|000032
+                SBC.B tmp32                              ;80AC31|000032
                 STA.W objBoxTop,Y                          ;80AC33|800F21
                 LDA.W objBoxBottom,Y                          ;80AC36|800F49
                 SEC                                            ;80AC39|
-                SBC.B refillTmp32                              ;80AC3A|000032
+                SBC.B tmp32                              ;80AC3A|000032
                 STA.W objBoxBottom,Y                          ;80AC3C|800F49
                 LDA.W #$0000                                   ;80AC3F|
                 STA.W objFracY,Y                               ;80AC42|801421
@@ -8913,18 +8919,18 @@ SnapY_ResolveOverlap2:
                 SEC                                            ;80AC49|
                 SBC.W objBoxTop,Y                          ;80AC4A|800F21
                 INC A                                          ;80AC4D|
-                STA.B refillTmp32                              ;80AC4E|000032
+                STA.B tmp32                              ;80AC4E|000032
                 LDA.W objY,Y                          ;80AC50|8011A1
                 CLC                                            ;80AC53|
-                ADC.B refillTmp32                              ;80AC54|000032
+                ADC.B tmp32                              ;80AC54|000032
                 STA.W objY,Y                          ;80AC56|8011A1
                 LDA.W objBoxTop,Y                          ;80AC59|800F21
                 CLC                                            ;80AC5C|
-                ADC.B refillTmp32                              ;80AC5D|000032
+                ADC.B tmp32                              ;80AC5D|000032
                 STA.W objBoxTop,Y                          ;80AC5F|800F21
                 LDA.W objBoxBottom,Y                          ;80AC62|800F49
                 CLC                                            ;80AC65|
-                ADC.B refillTmp32                              ;80AC66|000032
+                ADC.B tmp32                              ;80AC66|000032
                 STA.W objBoxBottom,Y                          ;80AC68|800F49
                 LDA.W #$0000                                   ;80AC6B|
                 STA.W objFracY,Y                               ;80AC6E|801421
@@ -8934,7 +8940,7 @@ SnapY_ResolveOverlap2:
 ; --------------------------------------------------------
 ;  ProbeRowAboveForObjects_Narrow   [6 ins, returns ?]
 ;    callers: sub_80A743, Op_SubAcc_TFld
-;    writes:    refillStageIdx
+;    writes:    tmp34
 ;    reads:     objBoxLeft
 ;    operands: Y = this object
 ;    Sets up a one-metatile-wide (not full-box-width) probe row at objBoxTop-1, X-range centred on
@@ -8944,7 +8950,7 @@ SnapY_ResolveOverlap2:
 ProbeRowAboveForObjects_Narrow:
                 PHX                                            ;80AC72|
                 PHY                                            ;80AC73|
-                STX.B refillStageIdx                           ;80AC74|000034
+                STX.B tmp34                           ;80AC74|000034
                 LDX.W objBoxLeft,Y                          ;80AC76|800F71
                 DEX                                            ;80AC79|
                 BRA ProbeRowForObjects_Entry                                 ;80AC7A|80AC84
@@ -8953,8 +8959,8 @@ ProbeRowAboveForObjects_Narrow:
 ; --------------------------------------------------------
 ;  ProbeRowForObjects   [193 ins, returns RTS]
 ;    callers: sub_80A752, Op_SubAcc_TFld
-;    writes:    refillStageIdx, zp_36, zp_3A, scriptPC, vmScanType, vmScanTarget ...
-;    reads:     refillStageIdx, zp_36, zp_3A, curObjIdx, scriptPC, objTableEnd ...
+;    writes:    tmp34, tmp36, zp_3A, scriptPC, vmScanType, vmScanTarget ...
+;    reads:     tmp34, tmp36, zp_3A, curObjIdx, scriptPC, objTableEnd ...
 ;    operands: Y = this object
 ;    Sets up a probe row at objBoxBottom+1 across the full box width, then falls into
 ;    ProbeRowForObjects_Entry.
@@ -8962,13 +8968,13 @@ ProbeRowAboveForObjects_Narrow:
 ProbeRowForObjects:
                 PHX                                            ;80AC7C|
                 PHY                                            ;80AC7D|
-                STX.B refillStageIdx                           ;80AC7E|000034
+                STX.B tmp34                           ;80AC7E|000034
                 LDX.W objBoxRight,Y                          ;80AC80|800F99
                 INX                                            ;80AC83|
 
 ;--------------------------------------------------------------
 ;  ProbeRowForObjects_Entry
-;    operands: X = probe row, zp_36 = probe X-range end, refillStageIdx = probe X-range start
+;    operands: X = probe row, tmp36 = probe X-range end, tmp34 = probe X-range start
 ;    Scans every active object (skipping self) for one whose objSolidClass is in the data_80F537
 ;    class list AND whose box overlaps the probe row/X-range AND whose projected Y-range (offset by
 ;    objMoveY) overlaps the caller's box-bottom. On a hit, stores the class in hitClass and the slot
@@ -8977,7 +8983,7 @@ ProbeRowForObjects:
 ;    objects.
 ;--------------------------------------------------------------
 ProbeRowForObjects_Entry:
-                STX.B zp_36                                    ;80AC84|000036
+                STX.B tmp36                                    ;80AC84|000036
                 LDX.W #$0000                                   ;80AC86|
 
          .loop: LDA.W objActive,X                              ;80AC89|800D91
@@ -8987,7 +8993,7 @@ ProbeRowForObjects_Entry:
                 STX.B zp_3A                                    ;80AC92|00003A
                 LDA.W objSolidClass,X                               ;80AC94|801219
                 SEP #$20                                       ;80AC97|
-                LDX.B refillStageIdx                           ;80AC99|000034
+                LDX.B tmp34                           ;80AC99|000034
 
         .loop2: CMP.W data_80F537,X                            ;80AC9B|80F537
                 BCC .skip                                      ;80AC9E|80ACDE
@@ -8998,7 +9004,7 @@ ProbeRowForObjects_Entry:
 
              +: REP #$20                                       ;80ACA5|
                 LDX.B zp_3A                                    ;80ACA7|00003A
-                LDA.B zp_36                                    ;80ACA9|000036
+                LDA.B tmp36                                    ;80ACA9|000036
                 CMP.W objBoxLeft,X                          ;80ACAB|800F71
                 BCC .skip2                                     ;80ACAE|80ACE2
                 DEC A                                          ;80ACB0|
@@ -9257,13 +9263,13 @@ loc_80ADFF:
 ; --------------------------------------------------------
 ;  FindObjectAtEdgeX   [6 ins, returns ?]
 ;    callers: sub_80A761, Op_SubAcc_TFld
-;    writes:    refillStageIdx
+;    writes:    tmp34
 ;    reads:     objBoxTop
 ; --------------------------------------------------------
 FindObjectAtEdgeX:
                 PHX                                     ;80AE0B|
                 PHY                                            ;80AE0C|
-                STX.B refillStageIdx                           ;80AE0D|000034
+                STX.B tmp34                           ;80AE0D|000034
                 LDX.W objBoxTop,Y                          ;80AE0F|800F21
                 DEX                                            ;80AE12|
                 BRA loc_80AE1D                                 ;80AE13|80AE1D
@@ -9272,18 +9278,18 @@ FindObjectAtEdgeX:
 ; --------------------------------------------------------
 ;  FindObjectAtEdgeX_RightEntry   [54 ins, returns RTS]
 ;    callers: sub_80A770, loc_80B051, Op_SubAcc_TFld
-;    writes:    refillStageIdx, zp_36, zp_3A, hitClass, hitObj
-;    reads:     refillStageIdx, zp_36, zp_3A, curObjIdx, objTableEnd, objActive ...
+;    writes:    tmp34, tmp36, zp_3A, hitClass, hitObj
+;    reads:     tmp34, tmp36, zp_3A, curObjIdx, objTableEnd, objActive ...
 ; --------------------------------------------------------
 FindObjectAtEdgeX_RightEntry:
                 PHX                          ;80AE15|
                 PHY                                            ;80AE16|
-                STX.B refillStageIdx                           ;80AE17|000034
+                STX.B tmp34                           ;80AE17|000034
                 LDX.W objBoxBottom,Y                          ;80AE19|800F49
                 INX                                            ;80AE1C|
 
 loc_80AE1D:
-                STX.B zp_36                                    ;80AE1D|000036
+                STX.B tmp36                                    ;80AE1D|000036
                 LDX.W #$0000                                   ;80AE1F|
 
          .loop: LDA.W objActive,X                              ;80AE22|800D91
@@ -9293,7 +9299,7 @@ loc_80AE1D:
                 STX.B zp_3A                                    ;80AE2B|00003A
                 LDA.W objSolidClass,X                               ;80AE2D|801219
                 SEP #$20                                       ;80AE30|
-                LDX.B refillStageIdx                           ;80AE32|000034
+                LDX.B tmp34                           ;80AE32|000034
 
         .loop2: CMP.W data_80F537,X                            ;80AE34|80F537
                 BCC .skip                                      ;80AE37|80AE6F
@@ -9304,7 +9310,7 @@ loc_80AE1D:
 
              +: REP #$20                                       ;80AE3E|
                 LDX.B zp_3A                                    ;80AE40|00003A
-                LDA.B zp_36                                    ;80AE42|000036
+                LDA.B tmp36                                    ;80AE42|000036
                 CMP.W objBoxTop,X                          ;80AE44|800F21
                 BCC .skip2                                     ;80AE47|80AE73
                 DEC A                                          ;80AE49|
@@ -9344,13 +9350,13 @@ loc_80AE1D:
 ; --------------------------------------------------------
 ;  FindObjectAtEdgeY   [60 ins, returns RTS]
 ;    callers: sub_80A77F
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, hitClass, hitObj
-;    reads:     refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx, objTableEnd ...
+;    writes:    tmp34, tmp36, zp_38, zp_3A, hitClass, hitObj
+;    reads:     tmp34, tmp36, zp_38, zp_3A, curObjIdx, objTableEnd ...
 ; --------------------------------------------------------
 FindObjectAtEdgeY:
                 PHX                                     ;80AE7E|
                 PHY                                            ;80AE7F|
-                STX.B refillStageIdx                           ;80AE80|000034
+                STX.B tmp34                           ;80AE80|000034
                 LDA.W objFlags,Y                          ;80AE82|800FC1
                 BIT.W #$0040                                   ;80AE85|
                 BNE +                                          ;80AE88|80AE90
@@ -9362,7 +9368,7 @@ FindObjectAtEdgeY:
              +: LDX.W objBoxLeft,Y                          ;80AE90|800F71
                 DEX                                            ;80AE93|
 
-         .cont: STX.B zp_36                                    ;80AE94|000036
+         .cont: STX.B tmp36                                    ;80AE94|000036
                 LDA.W objBoxBottom,Y                          ;80AE96|800F49
                 INC A                                          ;80AE99|
                 STA.B zp_38                                    ;80AE9A|000038
@@ -9375,7 +9381,7 @@ FindObjectAtEdgeY:
                 STX.B zp_3A                                    ;80AEA8|00003A
                 LDA.W objSolidClass,X                               ;80AEAA|801219
                 SEP #$20                                       ;80AEAD|
-                LDX.B refillStageIdx                           ;80AEAF|000034
+                LDX.B tmp34                           ;80AEAF|000034
 
         .loop2: CMP.W data_80F537,X                            ;80AEB1|80F537
                 BCC .skip                                      ;80AEB4|80AEE6
@@ -9386,7 +9392,7 @@ FindObjectAtEdgeY:
 
              +: REP #$20                                       ;80AEBB|
                 LDX.B zp_3A                                    ;80AEBD|00003A
-                LDA.B zp_36                                    ;80AEBF|000036
+                LDA.B tmp36                                    ;80AEBF|000036
                 CMP.W objBoxLeft,X                          ;80AEC1|800F71
                 BCC .skip2                                     ;80AEC4|80AEEA
                 DEC A                                          ;80AEC6|
@@ -9423,15 +9429,15 @@ FindObjectAtEdgeY:
 ; --------------------------------------------------------
 ;  sub_80AEF5   [52 ins, returns RTS]
 ;    callers: sub_80A734
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, hitClass, hitObj
-;    reads:     refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx, zp_6C ...
+;    writes:    tmp34, tmp36, zp_38, zp_3A, hitClass, hitObj
+;    reads:     tmp34, tmp36, zp_38, zp_3A, curObjIdx, zp_6C ...
 ; --------------------------------------------------------
 sub_80AEF5:
                 PHX                                            ;80AEF5|
                 PHY                                            ;80AEF6|
-                STX.B refillStageIdx                           ;80AEF7|000034
+                STX.B tmp34                           ;80AEF7|000034
                 LDX.B zp_6C                                    ;80AEF9|00006C
-                STX.B zp_36                                    ;80AEFB|000036
+                STX.B tmp36                                    ;80AEFB|000036
                 LDA.B zp_6E                                    ;80AEFD|00006E
                 STA.B zp_38                                    ;80AEFF|000038
                 LDX.W #$0000                                   ;80AF01|
@@ -9443,7 +9449,7 @@ sub_80AEF5:
                 STX.B zp_3A                                    ;80AF0D|00003A
                 LDA.W objSolidClass,X                               ;80AF0F|801219
                 SEP #$20                                       ;80AF12|
-                LDX.B refillStageIdx                           ;80AF14|000034
+                LDX.B tmp34                           ;80AF14|000034
 
         .loop2: CMP.W data_80F537,X                            ;80AF16|80F537
                 BCC .skip                                      ;80AF19|80AF4B
@@ -9454,7 +9460,7 @@ sub_80AEF5:
 
              +: REP #$20                                       ;80AF20|
                 LDX.B zp_3A                                    ;80AF22|00003A
-                LDA.B zp_36                                    ;80AF24|000036
+                LDA.B tmp36                                    ;80AF24|000036
                 CMP.W objBoxLeft,X                          ;80AF26|800F71
                 BCC .skip2                                     ;80AF29|80AF4F
                 DEC A                                          ;80AF2B|
@@ -9542,8 +9548,8 @@ sub_80AF5A:
 ; --------------------------------------------------------
 ;  sub_80AFA0   [55 ins, returns RTS]
 ;    callers: sub_80AF5A
-;    writes:    refillTmp32, refillStageIdx, zp_36
-;    reads:     refillTmp32, refillStageIdx, zp_36, objPrevY, objBoxTop, objBoxBottom ...
+;    writes:    tmp32, tmp34, tmp36
+;    reads:     tmp32, tmp34, tmp36, objPrevY, objBoxTop, objBoxBottom ...
 ; --------------------------------------------------------
 sub_80AFA0:
                 LDA.W objBoxRight,Y                          ;80AFA0|800F99
@@ -9558,7 +9564,7 @@ sub_80AFA0:
                 BPL +                                          ;80AFB5|80AFBA
                 LDA.W #$0000                                   ;80AFB7|
 
-             +: STA.B refillTmp32                              ;80AFBA|000032
+             +: STA.B tmp32                              ;80AFBA|000032
                 LDA.W objBoxBottom,Y                          ;80AFBC|800F49
                 SEC                                            ;80AFBF|
                 SBC.W objY,Y                          ;80AFC0|8011A1
@@ -9567,17 +9573,17 @@ sub_80AFA0:
                 BPL +                                          ;80AFC7|80AFCC
                 LDA.W #$0000                                   ;80AFC9|
 
-             +: CMP.B refillTmp32                              ;80AFCC|000032
+             +: CMP.B tmp32                              ;80AFCC|000032
                 BCS .skip                                      ;80AFCE|80AFD8
-                STA.B refillStageIdx                           ;80AFD0|000034
-                LDA.B refillTmp32                              ;80AFD2|000032
-                STA.B zp_36                                    ;80AFD4|000036
+                STA.B tmp34                           ;80AFD0|000034
+                LDA.B tmp32                              ;80AFD2|000032
+                STA.B tmp36                                    ;80AFD4|000036
                 BRA .cont                                      ;80AFD6|80AFDE
 
 
-         .skip: STA.B zp_36                                    ;80AFD8|000036
-                LDA.B refillTmp32                              ;80AFDA|000032
-                STA.B refillStageIdx                           ;80AFDC|000034
+         .skip: STA.B tmp36                                    ;80AFD8|000036
+                LDA.B tmp32                              ;80AFDA|000032
+                STA.B tmp34                           ;80AFDC|000034
 
          .cont: LDA.W objBoxTop,X                          ;80AFDE|800F21
                 SEC                                            ;80AFE1|
@@ -9586,23 +9592,23 @@ sub_80AFA0:
                 ADC.W objPrevY,X                               ;80AFE6|800E09
                 CMP.W objBoxTop,X                          ;80AFE9|800F21
                 BCS .skip2                                     ;80AFEC|80AFFF
-                STA.B refillTmp32                              ;80AFEE|000032
-                LDA.B zp_36                                    ;80AFF0|000036
-                CMP.B refillTmp32                              ;80AFF2|000032
+                STA.B tmp32                              ;80AFEE|000032
+                LDA.B tmp36                                    ;80AFF0|000036
+                CMP.B tmp32                              ;80AFF2|000032
                 BCC .skip3                                     ;80AFF4|80B010
                 LDA.W objBoxTop,X                          ;80AFF6|800F21
-                CMP.B refillStageIdx                           ;80AFF9|000034
+                CMP.B tmp34                           ;80AFF9|000034
                 BCC .skip3                                     ;80AFFB|80B010
                 SEC                                            ;80AFFD|
                 RTS                                            ;80AFFE|
 
 
-        .skip2: STA.B refillTmp32                              ;80AFFF|000032
-                LDA.B zp_36                                    ;80B001|000036
+        .skip2: STA.B tmp32                              ;80AFFF|000032
+                LDA.B tmp36                                    ;80B001|000036
                 CMP.W objBoxTop,X                          ;80B003|800F21
                 BCC .skip3                                     ;80B006|80B010
-                LDA.B refillTmp32                              ;80B008|000032
-                CMP.B refillStageIdx                           ;80B00A|000034
+                LDA.B tmp32                              ;80B008|000032
+                CMP.B tmp34                           ;80B00A|000034
                 BCC .skip3                                     ;80B00C|80B010
                 SEC                                            ;80B00E|
                 RTS                                            ;80B00F|
@@ -9615,8 +9621,8 @@ sub_80AFA0:
 ; --------------------------------------------------------
 ;  sub_80B012   [17 ins, returns RTS]
 ;    callers: TouchType_Check, TouchMask_Check
-;    writes:    refillTmp32, objTouchSlots
-;    reads:     refillTmp32, vmQuerySlot2
+;    writes:    tmp32, objTouchSlots
+;    reads:     tmp32, vmQuerySlot2
 ; --------------------------------------------------------
 sub_80B012:
                 PHY                                            ;80B012|
@@ -9624,11 +9630,11 @@ sub_80B012:
                 ASL A                                          ;80B014|
                 ASL A                                          ;80B015|
                 ASL A                                          ;80B016|
-                STA.B refillTmp32                              ;80B017|000032
+                STA.B tmp32                              ;80B017|000032
                 LDA.W vmQuerySlot2                                 ;80B019|800390
                 LSR A                                          ;80B01C|
                 CLC                                            ;80B01D|
-                ADC.B refillTmp32                              ;80B01E|000032
+                ADC.B tmp32                              ;80B01E|000032
                 TAY                                            ;80B020|
                 SEP #$20                                       ;80B021|
                 TXA                                            ;80B023|
@@ -9641,8 +9647,8 @@ sub_80B012:
 ; --------------------------------------------------------
 ;  sub_80B02B   [20 ins, returns RTS]
 ;    callers: TouchType_Check, TouchMask_Check
-;    writes:    refillTmp32, objFlags
-;    reads:     refillTmp32, curObjIdx, vmQuerySlot2, objFlags, objTouchSlots
+;    writes:    tmp32, objFlags
+;    reads:     tmp32, curObjIdx, vmQuerySlot2, objFlags, objTouchSlots
 ; --------------------------------------------------------
 sub_80B02B:
                 PHY                                            ;80B02B|
@@ -9650,11 +9656,11 @@ sub_80B02B:
                 ASL A                                          ;80B02D|
                 ASL A                                          ;80B02E|
                 ASL A                                          ;80B02F|
-                STA.B refillTmp32                              ;80B030|000032
+                STA.B tmp32                              ;80B030|000032
                 LDA.W vmQuerySlot2                                 ;80B032|800390
                 LSR A                                          ;80B035|
                 CLC                                            ;80B036|
-                ADC.B refillTmp32                              ;80B037|000032
+                ADC.B tmp32                              ;80B037|000032
                 TAY                                            ;80B039|
                 LDA.W objTouchSlots,Y                               ;80B03A|801561
                 PLY                                            ;80B03D|
@@ -9814,22 +9820,22 @@ loc_80B051:
 ; --------------------------------------------------------
 ;  loc_80B147   [15 ins, returns ?]
 ;    callers: loc_80B051
-;    writes:    refillTmp32, objBoxTop, objBoxBottom, objY, objMoveY
-;    reads:     refillTmp32, objBoxTop, objBoxBottom, objY
+;    writes:    tmp32, objBoxTop, objBoxBottom, objY, objMoveY
+;    reads:     tmp32, objBoxTop, objBoxBottom, objY
 ; --------------------------------------------------------
 loc_80B147:
-                STA.B refillTmp32                              ;80B147|000032
+                STA.B tmp32                              ;80B147|000032
                 LDA.W objBoxTop,Y                          ;80B149|800F21
                 SEC                                            ;80B14C|
-                SBC.B refillTmp32                              ;80B14D|000032
+                SBC.B tmp32                              ;80B14D|000032
                 STA.W objBoxTop,Y                          ;80B14F|800F21
                 LDA.W objY,Y                          ;80B152|8011A1
                 SEC                                            ;80B155|
-                SBC.B refillTmp32                              ;80B156|000032
+                SBC.B tmp32                              ;80B156|000032
                 STA.W objY,Y                          ;80B158|8011A1
                 LDA.W objBoxBottom,Y                          ;80B15B|800F49
                 SEC                                            ;80B15E|
-                SBC.B refillTmp32                              ;80B15F|000032
+                SBC.B tmp32                              ;80B15F|000032
                 STA.W objBoxBottom,Y                          ;80B161|800F49
                 LDA.W #$0000                                   ;80B164|
                 STA.W objMoveY,Y                          ;80B167|8013A9
@@ -9855,8 +9861,8 @@ sub_80B16A:
 ; --------------------------------------------------------
 ;  sub_80B177   [18 ins, returns RTS]
 ;    callers: CollideY_Slope_Resolve_Flat, loc_80B051
-;    writes:    refillTmp32
-;    reads:     refillTmp32, objBoxBottom
+;    writes:    tmp32
+;    reads:     tmp32, objBoxBottom
 ; --------------------------------------------------------
 sub_80B177:
                 AND.W #$000F                                   ;80B177|
@@ -9864,18 +9870,18 @@ sub_80B177:
                 ASL A                                          ;80B17B|
                 ASL A                                          ;80B17C|
                 ASL A                                          ;80B17D|
-                STA.B refillTmp32                              ;80B17E|000032
+                STA.B tmp32                              ;80B17E|000032
                 TXA                                            ;80B180|
                 AND.W #$000F                                   ;80B181|
-                ADC.B refillTmp32                              ;80B184|000032
+                ADC.B tmp32                              ;80B184|000032
                 TAX                                            ;80B186|
                 LDA.W data_80B225,X                            ;80B187|80B225
                 AND.W #$000F                                   ;80B18A|
-                STA.B refillTmp32                              ;80B18D|000032
+                STA.B tmp32                              ;80B18D|000032
                 LDA.W objBoxBottom,Y                          ;80B18F|800F49
                 AND.W #$000F                                   ;80B192|
                 SEC                                            ;80B195|
-                SBC.B refillTmp32                              ;80B196|000032
+                SBC.B tmp32                              ;80B196|000032
                 RTS                                            ;80B198|
 
 
@@ -10088,17 +10094,17 @@ VramDmaBlockC:
 ; --------------------------------------------------------
 ;  sub_80B337   [29 ins, returns RTS]
 ;    callers: input_80B8DC, input_80B965
-;    writes:    refillTmp32
-;    reads:     refillTmp32, ram_0455
+;    writes:    tmp32
+;    reads:     tmp32, ram_0455
 ;    calls:     sub_80BC34, sub_808FCA
 ; --------------------------------------------------------
 sub_80B337:
-                STA.B refillTmp32                              ;80B337|000032
+                STA.B tmp32                              ;80B337|000032
                 ASL A                                          ;80B339|
-                ADC.B refillTmp32                              ;80B33A|000032
-                STA.B refillTmp32                              ;80B33C|000032
+                ADC.B tmp32                              ;80B33A|000032
+                STA.B tmp32                              ;80B33C|000032
                 TYA                                            ;80B33E|
-                ADC.B refillTmp32                              ;80B33F|000032
+                ADC.B tmp32                              ;80B33F|000032
                 ADC.W #$0004                                   ;80B341|
                 JSR.W sub_80BC34                               ;80B344|80BC34
                 PHA                                            ;80B347|
@@ -10811,8 +10817,8 @@ sub_80B832:
 ; --------------------------------------------------------
 ;  input_80B834   [40 ins, returns RTS]
 ;    callers: vbwait_80B54E, input_80B6EF
-;    writes:    refillTmp32, ram_046B, ram_046D
-;    reads:     refillTmp32, inputAux1, objArgHp, objX, objY
+;    writes:    tmp32, ram_046B, ram_046D
+;    reads:     tmp32, inputAux1, objArgHp, objX, objY
 ; --------------------------------------------------------
 input_80B834:
                 PHX                                            ;80B834|
@@ -10832,7 +10838,7 @@ input_80B834:
                 EOR.W #$FFFF                                   ;80B855|
                 INC A                                          ;80B858|
 
-             +: STA.B refillTmp32                              ;80B859|000032
+             +: STA.B tmp32                              ;80B859|000032
                 LDA.W objY,X                          ;80B85B|8011A1
                 SEC                                            ;80B85E|
                 SBC.W objY,Y                          ;80B85F|8011A1
@@ -10841,7 +10847,7 @@ input_80B834:
                 INC A                                          ;80B867|
 
              +: CLC                                            ;80B868|
-                ADC.B refillTmp32                              ;80B869|000032
+                ADC.B tmp32                              ;80B869|000032
                 CMP.W #$0040                                   ;80B86B|
                 BCS .skip                                      ;80B86E|80B87C
                 PHX                                            ;80B870|
@@ -10864,8 +10870,8 @@ input_80B834:
 ; --------------------------------------------------------
 ;  sub_80B885   [40 ins, returns RTS]
 ;    callers: input_80B63B
-;    writes:    refillTmp32, ram_0402, ram_0432, ram_0469
-;    reads:     refillTmp32, ram_0402, ram_0432, ram_043F, ram_0463, ram_0465
+;    writes:    tmp32, ram_0402, ram_0432, ram_0469
+;    reads:     tmp32, ram_0402, ram_0432, ram_043F, ram_0463, ram_0465
 ;    calls:     sub_8088E7, sub_80B370, sub_80BB99
 ; --------------------------------------------------------
 sub_80B885:
@@ -10890,10 +10896,10 @@ sub_80B885:
                 TAX                                            ;80B8A9|
                 ASL A                                          ;80B8AA|
                 ASL A                                          ;80B8AB|
-                STA.B refillTmp32                              ;80B8AC|000032
+                STA.B tmp32                              ;80B8AC|000032
                 LDA.W ram_0432,X                               ;80B8AE|800432
                 ASL A                                          ;80B8B1|
-                ADC.B refillTmp32                              ;80B8B2|000032
+                ADC.B tmp32                              ;80B8B2|000032
                 TAY                                            ;80B8B4|
                 LDA.W ram_0402,Y                               ;80B8B5|800402
                 BNE .skip                                      ;80B8B8|80B8C3
@@ -11270,8 +11276,8 @@ data_80BB3D:
 ; --------------------------------------------------------
 ;  input_80BB41   [30 ins, returns RTS]
 ;    callers: input_80B6EF
-;    writes:    refillTmp32, ram_0402, ram_043F, ram_0463, ram_0465, ram_0467 ...
-;    reads:     refillTmp32, inputAux1, ram_0402, ram_0432, ram_0463
+;    writes:    tmp32, ram_0402, ram_043F, ram_0463, ram_0465, ram_0467 ...
+;    reads:     tmp32, inputAux1, ram_0402, ram_0432, ram_0463
 ;    calls:     sub_8088E7
 ; --------------------------------------------------------
 input_80BB41:
@@ -11279,11 +11285,11 @@ input_80BB41:
                 STY.W ram_043F                                 ;80BB44|80043F
                 LDA.W ram_0432,Y                               ;80BB47|800432
                 ASL A                                          ;80BB4A|
-                STA.B refillTmp32                              ;80BB4B|000032
+                STA.B tmp32                              ;80BB4B|000032
                 TYA                                            ;80BB4D|
                 ASL A                                          ;80BB4E|
                 ASL A                                          ;80BB4F|
-                ADC.B refillTmp32                              ;80BB50|000032
+                ADC.B tmp32                              ;80BB50|000032
                 TAY                                            ;80BB52|
                 LDA.W ram_0402,Y                               ;80BB53|800402
                 BEQ .exit                                      ;80BB56|80BB85
@@ -11316,17 +11322,17 @@ data_80BB86:
 ; --------------------------------------------------------
 ;  sub_80BB99   [29 ins, returns RTS]
 ;    callers: sub_80B885
-;    writes:    refillTmp32, ram_0432
-;    reads:     refillTmp32, ram_0402, ram_0432, ram_043F
+;    writes:    tmp32, ram_0432
+;    reads:     tmp32, ram_0402, ram_0432, ram_043F
 ; --------------------------------------------------------
 sub_80BB99:
                 LDA.W ram_0432,Y                               ;80BB99|800432
                 ASL A                                          ;80BB9C|
-                STA.B refillTmp32                              ;80BB9D|000032
+                STA.B tmp32                              ;80BB9D|000032
                 TYA                                            ;80BB9F|
                 ASL A                                          ;80BBA0|
                 ASL A                                          ;80BBA1|
-                ADC.B refillTmp32                              ;80BBA2|000032
+                ADC.B tmp32                              ;80BBA2|000032
                 TAY                                            ;80BBA4|
                 LDX.W #$0004                                   ;80BBA5|
 
@@ -11336,10 +11342,10 @@ sub_80BB99:
                 INC A                                          ;80BBAE|
                 INC A                                          ;80BBAF|
                 AND.W #$0007                                   ;80BBB0|
-                STA.B refillTmp32                              ;80BBB3|000032
+                STA.B tmp32                              ;80BBB3|000032
                 TYA                                            ;80BBB5|
                 AND.W #$00F8                                   ;80BBB6|
-                ORA.B refillTmp32                              ;80BBB9|000032
+                ORA.B tmp32                              ;80BBB9|000032
                 TAY                                            ;80BBBB|
                 DEX                                            ;80BBBC|
                 BNE .loop                                      ;80BBBD|80BBA8
@@ -11404,8 +11410,8 @@ sub_80BBCC:
 ; --------------------------------------------------------
 ;  sub_80BBFF   [27 ins, returns RTS]
 ;    callers: sub_809CA6
-;    writes:    zp_2A, zp_2C, refillTmp32
-;    reads:     zp_2A, zp_2C, refillTmp32
+;    writes:    zp_2A, zp_2C, tmp32
+;    reads:     zp_2A, zp_2C, tmp32
 ;    calls:     sub_80BC34
 ; --------------------------------------------------------
 sub_80BBFF:
@@ -11418,7 +11424,7 @@ sub_80BBFF:
                 STX.B zp_2A                                    ;80BC0A|00002A
                 LDA.B [zp_2A]                                  ;80BC0C|00002A
                 AND.W #$00FF                                   ;80BC0E|
-                STA.B refillTmp32                              ;80BC11|000032
+                STA.B tmp32                              ;80BC11|000032
                 INC.B zp_2A                                    ;80BC13|00002A
                 BCC +                                          ;80BC15|80BC1E
                 LDX.W #$8000                                   ;80BC17|
@@ -11434,7 +11440,7 @@ sub_80BBFF:
 
              +: XBA                                            ;80BC2B|
                 AND.W #$FF00                                   ;80BC2C|
-                ORA.B refillTmp32                              ;80BC2F|000032
+                ORA.B tmp32                              ;80BC2F|000032
                 PLX                                            ;80BC31|
                 PLD                                            ;80BC32|
                 RTS                                            ;80BC33|
@@ -11443,8 +11449,8 @@ sub_80BBFF:
 ; --------------------------------------------------------
 ;  sub_80BC34   [86 ins, returns RTS]
 ;    callers: sub_80A160, sub_80B337, sub_80B370, sub_80B3DA, sub_80BBFF, sub_80BC34, +2 more
-;    writes:    zp_2A, zp_2B, zp_2C, zp_2E, zp_30, refillTmp32
-;    reads:     zp_2A, zp_2B, zp_2C, refillTmp32
+;    writes:    zp_2A, zp_2B, zp_2C, zp_2E, zp_30, tmp32
+;    reads:     zp_2A, zp_2B, zp_2C, tmp32
 ;    calls:     sub_80BC34, sub_80BCCA
 ; --------------------------------------------------------
 sub_80BC34:
@@ -11497,7 +11503,7 @@ sub_80BC34:
                 STX.B zp_2A                                    ;80BC79|00002A
                 LDA.B [zp_2A]                                  ;80BC7B|00002A
                 AND.W #$00FF                                   ;80BC7D|
-                STA.B refillTmp32                              ;80BC80|000032
+                STA.B tmp32                              ;80BC80|000032
                 INC.B zp_2A                                    ;80BC82|00002A
                 BCC +                                          ;80BC84|80BC8D
                 LDX.W #$8000                                   ;80BC86|
@@ -11513,7 +11519,7 @@ sub_80BC34:
 
              +: XBA                                            ;80BC9A|
                 AND.W #$FF00                                   ;80BC9B|
-                ORA.B refillTmp32                              ;80BC9E|000032
+                ORA.B tmp32                              ;80BC9E|000032
                 PHA                                            ;80BCA0|
                 TAX                                            ;80BCA1|
                 LDY.W #$0000                                   ;80BCA2|
@@ -11555,8 +11561,8 @@ sub_80BCCA:
 ; --------------------------------------------------------
 ;  sub_80BCCD   [38 ins, returns RTS]
 ;    callers: sub_809C5C, sub_809CA6, sub_80A115, sub_80A160, sub_80A1D5, sub_80B2C8
-;    writes:    refillTmp32
-;    reads:     refillTmp32
+;    writes:    tmp32
+;    reads:     tmp32
 ;    calls:     sub_80BC34, DecompressToWram
 ; --------------------------------------------------------
 sub_80BCCD:
@@ -11565,11 +11571,11 @@ sub_80BCCD:
                 PLD                                            ;80BCD1|
                 PHY                                            ;80BCD2|
                 PHX                                            ;80BCD3|
-                STX.B refillTmp32                              ;80BCD4|000032
+                STX.B tmp32                              ;80BCD4|000032
                 JSR.W sub_80BC34                               ;80BCD6|80BC34
                 PHA                                            ;80BCD9|
                 PHX                                            ;80BCDA|
-                LDA.B refillTmp32                              ;80BCDB|000032
+                LDA.B tmp32                              ;80BCDB|000032
                 PHA                                            ;80BCDD|
                 LDA.W #$2000                                   ;80BCDE|
                 PHA                                            ;80BCE1|
@@ -11578,10 +11584,10 @@ sub_80BCCD:
                 PLA                                            ;80BCE6|
                 PLA                                            ;80BCE7|
                 PLA                                            ;80BCE8|
-                STY.B refillTmp32                              ;80BCE9|000032
+                STY.B tmp32                              ;80BCE9|000032
                 PLA                                            ;80BCEB|
                 CLC                                            ;80BCEC|
-                ADC.B refillTmp32                              ;80BCED|000032
+                ADC.B tmp32                              ;80BCED|000032
                 BCS .skip                                      ;80BCEF|80BCF5
                 TAX                                            ;80BCF1|
                 PLY                                            ;80BCF2|
@@ -11589,14 +11595,14 @@ sub_80BCCD:
                 RTS                                            ;80BCF4|
 
 
-         .skip: STA.B refillTmp32                              ;80BCF5|000032
+         .skip: STA.B tmp32                              ;80BCF5|000032
                 PLY                                            ;80BCF7|
                 INY                                            ;80BCF8|
                 LDA.W data_80F437,Y                            ;80BCF9|80F437
                 XBA                                            ;80BCFC|
                 AND.W #$FF00                                   ;80BCFD|
                 CLC                                            ;80BD00|
-                ADC.B refillTmp32                              ;80BD01|000032
+                ADC.B tmp32                              ;80BD01|000032
                 TAX                                            ;80BD03|
                 PLD                                            ;80BD04|
                 RTS                                            ;80BD05|
@@ -11605,17 +11611,17 @@ sub_80BCCD:
 ; --------------------------------------------------------
 ;  DecompressGfxEntry   [22 ins, returns RTS]
 ;    callers: sub_809C5C, sub_809CA6, sub_809CEC, sub_80B2C8, sub_80BA1B
-;    writes:    refillTmp32
-;    reads:     refillTmp32
+;    writes:    tmp32
+;    reads:     tmp32
 ;    calls:     sub_80BC34, DecompressToVram
 ; --------------------------------------------------------
 DecompressGfxEntry:
                 PHX                                    ;80BD06|
-                STX.B refillTmp32                              ;80BD07|000032
+                STX.B tmp32                              ;80BD07|000032
                 JSR.W sub_80BC34                               ;80BD09|80BC34
                 PHA                                            ;80BD0C|
                 PHX                                            ;80BD0D|
-                LDA.B refillTmp32                              ;80BD0E|000032
+                LDA.B tmp32                              ;80BD0E|000032
                 PHA                                            ;80BD10|
                 LDA.W #$2000                                   ;80BD11|
                 PHA                                            ;80BD14|
@@ -11626,10 +11632,10 @@ DecompressGfxEntry:
                 PLA                                            ;80BD1B|
                 TYA                                            ;80BD1C|
                 LSR A                                          ;80BD1D|
-                STA.B refillTmp32                              ;80BD1E|000032
+                STA.B tmp32                              ;80BD1E|000032
                 PLA                                            ;80BD20|
                 CLC                                            ;80BD21|
-                ADC.B refillTmp32                              ;80BD22|000032
+                ADC.B tmp32                              ;80BD22|000032
                 TAX                                            ;80BD24|
                 RTS                                            ;80BD25|
 
@@ -11711,7 +11717,7 @@ DecompressToVram:
 ; --------------------------------------------------------
 ;  sub_80BD8C   [97 ins, returns RTS]
 ;    callers: sub_80BD8C
-;    writes:    zp_10, zp_1C, zp_24, zp_26, refillTmp32, zp_33
+;    writes:    zp_10, zp_1C, zp_24, zp_26, tmp32, zp_33
 ;    reads:     zp_03, zp_10, zp_12, zp_14, zp_1C, zp_20 ...
 ;    calls:     StreamByteToVram, sub_80BD8C
 ; --------------------------------------------------------
@@ -11768,7 +11774,7 @@ sub_80BD8C:
 
 
         .skip5: LDA.B [zp_10]                                  ;80BDE4|000010
-                STA.B refillTmp32                              ;80BDE6|000032
+                STA.B tmp32                              ;80BDE6|000032
                 INC.B zp_10                                    ;80BDE8|000010
                 BNE .skip6                                     ;80BDEA|80BDF9
                 INC.B zp_12                                    ;80BDEC|000012
@@ -11791,10 +11797,10 @@ sub_80BD8C:
                 AND.W #$FF00                                   ;80BE0D|
                 STA.B zp_10                                    ;80BE10|000010
 
-        .skip7: LDA.B refillTmp32                              ;80BE12|000032
+        .skip7: LDA.B tmp32                              ;80BE12|000032
                 AND.W #$0FFF                                   ;80BE14|
                 TAY                                            ;80BE17|
-                LDA.B refillTmp32                              ;80BE18|000032
+                LDA.B tmp32                              ;80BE18|000032
                 AND.W #$F000                                   ;80BE1A|
                 ASL A                                          ;80BE1D|
                 ROL A                                          ;80BE1E|
@@ -11962,7 +11968,7 @@ loc_80BED0:
 ; --------------------------------------------------------
 ;  sub_80BF04   [90 ins, returns RTS]
 ;    callers: sub_80BF04
-;    writes:    zp_10, zp_18, zp_1C, zp_26, refillTmp32, zp_33
+;    writes:    zp_10, zp_18, zp_1C, zp_26, tmp32, zp_33
 ;    reads:     zp_03, zp_10, zp_12, zp_14, zp_18, zp_1A ...
 ;    calls:     sub_80BF04, loc_80BED0
 ; --------------------------------------------------------
@@ -12003,7 +12009,7 @@ loc_80BF08:
 
 loc_80BF38:
                 LDA.B [zp_10]                                  ;80BF38|000010
-                STA.B refillTmp32                              ;80BF3A|000032
+                STA.B tmp32                              ;80BF3A|000032
                 INC.B zp_10                                    ;80BF3C|000010
                 BNE .skip                                      ;80BF3E|80BF4D
                 INC.B zp_12                                    ;80BF40|000012
@@ -12026,10 +12032,10 @@ loc_80BF38:
                 AND.W #$FF00                                   ;80BF61|
                 STA.B zp_10                                    ;80BF64|000010
 
-        .skip2: LDA.B refillTmp32                              ;80BF66|000032
+        .skip2: LDA.B tmp32                              ;80BF66|000032
                 AND.W #$0FFF                                   ;80BF68|
                 TAY                                            ;80BF6B|
-                LDA.B refillTmp32                              ;80BF6C|000032
+                LDA.B tmp32                              ;80BF6C|000032
                 AND.W #$F000                                   ;80BF6E|
                 ASL A                                          ;80BF71|
                 ROL A                                          ;80BF72|
@@ -12432,17 +12438,17 @@ sub_80C0D2:
 ; --------------------------------------------------------
 ;  sub_80C0FC   [19 ins, returns RTS]
 ;    callers: input_808515, sub_8085C2, sub_8085FC
-;    writes:    refillTmp32, playerCamX, ram_0356
-;    reads:     refillTmp32, playerCamX, ram_0398_clearedOnReinit, levelWrapFlags
+;    writes:    tmp32, playerCamX, ram_0356
+;    reads:     tmp32, playerCamX, ram_0398_clearedOnReinit, levelWrapFlags
 ;    calls:     sub_80C6FD
 ; --------------------------------------------------------
 sub_80C0FC:
                 LDA.W ram_0398_clearedOnReinit                 ;80C0FC|800398
                 BNE .exit                                      ;80C0FF|80C123
-                STX.B refillTmp32                              ;80C101|000032
+                STX.B tmp32                              ;80C101|000032
                 LDA.B playerCamX                               ;80C103|000044
                 SEC                                            ;80C105|
-                SBC.B refillTmp32                              ;80C106|000032
+                SBC.B tmp32                              ;80C106|000032
                 BCS .skip                                      ;80C108|80C114
                 LDA.W levelWrapFlags                           ;80C10A|8019F4
                 AND.W #$0001                                   ;80C10D|
@@ -12450,10 +12456,10 @@ sub_80C0FC:
                 LDX.B playerCamX                               ;80C112|000044
 
          .skip: STX.W ram_0356                                 ;80C114|800356
-                STX.B refillTmp32                              ;80C117|000032
+                STX.B tmp32                              ;80C117|000032
                 LDA.B playerCamX                               ;80C119|000044
                 SEC                                            ;80C11B|
-                SBC.B refillTmp32                              ;80C11C|000032
+                SBC.B tmp32                              ;80C11C|000032
                 STA.B playerCamX                               ;80C11E|000044
                 JSR.W sub_80C6FD                               ;80C120|80C6FD
 
@@ -12496,17 +12502,17 @@ sub_80C124:
 ; --------------------------------------------------------
 ;  sub_80C14E   [19 ins, returns RTS]
 ;    callers: input_808515, sub_8085C2, sub_8085FC
-;    writes:    refillTmp32, playerCamY, ram_0358
-;    reads:     refillTmp32, playerCamY, ram_039A, levelWrapFlags
+;    writes:    tmp32, playerCamY, ram_0358
+;    reads:     tmp32, playerCamY, ram_039A, levelWrapFlags
 ;    calls:     sub_80C78B
 ; --------------------------------------------------------
 sub_80C14E:
                 LDA.W ram_039A                                 ;80C14E|80039A
                 BNE .exit                                      ;80C151|80C175
-                STX.B refillTmp32                              ;80C153|000032
+                STX.B tmp32                              ;80C153|000032
                 LDA.B playerCamY                               ;80C155|000046
                 SEC                                            ;80C157|
-                SBC.B refillTmp32                              ;80C158|000032
+                SBC.B tmp32                              ;80C158|000032
                 BCS .skip                                      ;80C15A|80C166
                 LDA.W levelWrapFlags                           ;80C15C|8019F4
                 AND.W #$0001                                   ;80C15F|
@@ -12514,10 +12520,10 @@ sub_80C14E:
                 LDX.B playerCamY                               ;80C164|000046
 
          .skip: STX.W ram_0358                                 ;80C166|800358
-                STX.B refillTmp32                              ;80C169|000032
+                STX.B tmp32                              ;80C169|000032
                 LDA.B playerCamY                               ;80C16B|000046
                 SEC                                            ;80C16D|
-                SBC.B refillTmp32                              ;80C16E|000032
+                SBC.B tmp32                              ;80C16E|000032
                 STA.B playerCamY                               ;80C170|000046
                 JSR.W sub_80C78B                               ;80C172|80C78B
 
@@ -12527,8 +12533,8 @@ sub_80C14E:
 ; --------------------------------------------------------
 ;  RefillTilemapOnScroll   [29 ins, returns RTS]
 ;    callers: sub_80C080
-;    writes:    refillTmp32, refillLastCamX, refillLastCamY
-;    reads:     refillTmp32, playerCamX, playerCamY, refillLastCamX, refillLastCamY
+;    writes:    tmp32, refillLastCamX, refillLastCamY
+;    reads:     tmp32, playerCamX, playerCamY, refillLastCamX, refillLastCamY
 ;    calls:     RefillRowUp, RefillRowDown, RefillColumnLeft, RefillColumnRight
 ; --------------------------------------------------------
 
@@ -12564,12 +12570,12 @@ RefillTilemapOnScroll:
                 ;Vertical refill
                 LDA.W refillLastCamY                           ;80C176|8016AB   
                 AND.W #$FFF8                                   ;80C179|         
-                STA.B refillTmp32                              ;80C17C|000032   
+                STA.B tmp32                              ;80C17C|000032   
                 LDA.B playerCamY                               ;80C17E|000046   
                 AND.W #$FFF8                                   ;80C180|         
 
                 SEC                                            ;80C183|
-                SBC.B refillTmp32                              ;80C184|000032   ; A = new snapped camY - old snapped camY: 0 = same row, nonzero = crossed at least one row
+                SBC.B tmp32                              ;80C184|000032   ; A = new snapped camY - old snapped camY: 0 = same row, nonzero = crossed at least one row
                 BEQ .refillX                                   ;80C186|80C192   ; no vertical crossing -> skip straight to the horizontal check
                 BPL .goDown                                          ;80C188|80C18F   ; positive delta = camera moved DOWN -> refill the row revealed at the bottom
                 
@@ -12601,11 +12607,11 @@ RefillTilemapOnScroll:
                 ; modded logic:                                                 ; if it is, perform modded logic.
                 LDA.W refillLastCamX                           ;INSERT|         ; load the last camera X position
                 AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
-                STA.B refillTmp32                              ;INSERT|         ; store to tmp var for subtraction
+                STA.B tmp32                              ;INSERT|         ; store to tmp var for subtraction
                 LDA.B playerCamX                               ;INSERT|         ; load the current camera X position
                 AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
                 SEC                                            ;INSERT|         ; set carry for subtraction
-                SBC.B refillTmp32                              ;INSERT|         ; subtract the floored values: 
+                SBC.B tmp32                              ;INSERT|         ; subtract the floored values: 
 
                 BEQ .updateLastCam                             ;INSERT|         ; if the difference is zero, no horizontal movement occurred, so skip the refill logic
 
@@ -12621,11 +12627,11 @@ RefillTilemapOnScroll:
                 ; Original logic:                                               ; if the mod is not active, fall back to the original logic
     .originalX: LDA.W refillLastCamX                           ;80C192|8016A9   ; load the last camera X position
                 AND.W #$FFF0                                   ;80C195|         ; align to the metatile boundary
-                STA.B refillTmp32                              ;80C198|000032   ; store to tmp var for subtraction
+                STA.B tmp32                              ;80C198|000032   ; store to tmp var for subtraction
                 LDA.B playerCamX                               ;80C19A|000044   ; load the current camera X position
                 AND.W #$FFF0                                   ;80C19C|         ; align to the metatile boundary
                 SEC                                            ;80C19F|         ; set carry flag for subtraction
-                SBC.B refillTmp32                              ;80C1A0|000032   ; subract the floored values: 
+                SBC.B tmp32                              ;80C1A0|000032   ; subract the floored values: 
 
                 BEQ .updateLastCam                             ;80C1A2|80C1AE   ; if the difference is zero, no horizontal movement occurred, so skip the refill logic
                 
@@ -13054,8 +13060,8 @@ RefillRowUpMod:
 ; --------------------------------------------------------
 ;  BuildTilemapCol   [53 ins, returns RTS]
 ;    callers: FillTilemapFull, RefillColumnRight, RefillColumnLeft
-;    writes:    refillTmp32, refillStageIdx, colDmaVramDest0, colDmaLen0, colDmaVramDest1, colDmaLen1
-;    reads:     refillTmp32, refillStageIdx, refillColTileX, colDmaVramDest0, colDmaLen0, tilemapBaseHi ...
+;    writes:    tmp32, tmp34, colDmaVramDest0, colDmaLen0, colDmaVramDest1, colDmaLen1
+;    reads:     tmp32, tmp34, refillColTileX, colDmaVramDest0, colDmaLen0, tilemapBaseHi ...
 ;    calls:     FetchConvertMetatile
 ; --------------------------------------------------------
 
@@ -13096,7 +13102,7 @@ BuildTilemapCol:
                 TYA                                            ;80C2C7|         ; coordinate the caller passed getting converted into the coarser
                 ROR A                                          ;80C2C8|         ; metatile-grid coordinate that levelTileMapPtr is actually indexed by
                 TAY                                            ;80C2C9|         ; (see FetchConvertMetatile -- despite the "tileX/tileY" naming there,
-                STZ.B refillStageIdx                           ;80C2CA|000034   ; the level array itself is one word per 16x16 METATILE, not per 8x8 tile).
+                STZ.B tmp34                           ;80C2CA|000034   ; the level array itself is one word per 16x16 METATILE, not per 8x8 tile).
 
                 
                 ; Mod Check
@@ -13108,10 +13114,10 @@ BuildTilemapCol:
          .loop: JSR.W FetchConvertMetatile                     ;80C2CC|80C324   ; X (metatile-col, held constant all loop -- this builds ONE column) and
                                                                                         ; Y (metatile-row, incremented below) are FetchConvertMetatile's inputs
                 INY                                            ;80C2CF|         ; next metatile-row down
-                LDA.B refillStageIdx                           ;80C2D0|000034   ; refillStageIdx is this loop's counter AND the write offset into the
+                LDA.B tmp34                           ;80C2D0|000034   ; tmp34 is this loop's counter AND the write offset into the
                 CLC                                            ;80C2D2|         ; colStageBg1Even/Odd/Bl/Br staging arrays (4 bytes/metatile-row: see
                 ADC.W #$0004                                  ;80C2D3|         ; FetchConvertMetatile's writes)
-                STA.B refillStageIdx                           ;80C2D6|000034
+                STA.B tmp34                           ;80C2D6|000034
                 CMP.W #$0040                                   ;80C2D8|         ; column loop runs 16 metatile-rows ($34: 0,4,..,3C; ends at #$0040)
                 BCC .loop                                      ;80C2DB|80C2CC
                 LDY.W tilemapBaseLo                            ;80C2DD|8019EA   ; --- from here: figure out WHERE in VRAM this column lands ---
@@ -13128,10 +13134,10 @@ BuildTilemapCol:
                 ; Mod Loop
       .modloop: JSR.W FetchConvertMetatile                     ;INSERT|
                 INY                                            ;INSERT|
-                LDA.B refillStageIdx                           ;INSERT|
+                LDA.B tmp34                           ;INSERT|
                 CLC                                            ;INSERT|
                 ADC.W #$0004                                  ;INSERT|
-                STA.B refillStageIdx                           ;INSERT|
+                STA.B tmp34                           ;INSERT|
                 CMP.W #$0040                                   ;INSERT|
                 BCC .modloop                                   ;INSERT|
 
@@ -13148,15 +13154,15 @@ BuildTilemapCol:
 
 
 
-             +: STY.B refillTmp32                              ;80C2F3|000032   ; refillTmp32 = the chosen VRAM quadrant base (tilemapBaseLo or -Hi)
+             +: STY.B tmp32                              ;80C2F3|000032   ; tmp32 = the chosen VRAM quadrant base (tilemapBaseLo or -Hi)
                 CLC                                            ;80C2F5|
-                ADC.B refillTmp32                              ;80C2F6|000032   ; A = quadrant base + destWord (a first-pass VRAM word address, refined below)
+                ADC.B tmp32                              ;80C2F6|000032   ; A = quadrant base + destWord (a first-pass VRAM word address, refined below)
                 STA.W colDmaVramDest0                          ;80C2F8|8016CD   ; provisionally the SAME base for both possible DMA runs, corrected next
                 STA.W colDmaVramDest1                          ;80C2FB|8016D1
                 PLA                                            ;80C2FE|         ; restore the signed col offset again (second half of the earlier PHA/PHY pair)
                 AND.W #$001F                                   ;80C2FF|
                 ASL A                                          ;80C302|         ; *2 : word index -> byte index (each tilemap column entry is 2 bytes)
-                STA.B refillTmp32                              ;80C303|000032
+                STA.B tmp32                              ;80C303|000032
                 TAY                                            ;80C305|
                 LDA.W data_80F363,Y                            ;80C306|80F363   ; data_80F363[destWord<<1] = destWord*$20 = VRAM word offset of that tilemap column within the 32-wide map (LUT is 0,$20,$40,..; NOT a seam length)
                 CLC                                            ;80C309|
@@ -13164,7 +13170,7 @@ BuildTilemapCol:
                 STA.W colDmaVramDest0                          ;80C30D|8016CD
                 LDA.W #$0040                                   ;80C310|
                 SEC                                            ;80C313|
-                SBC.B refillTmp32                              ;80C314|000032
+                SBC.B tmp32                              ;80C314|000032
                 STA.W colDmaLen0                               ;80C316|8016CF   ; colDmaLen0 = $0040 - (destWord&$1F)*2 (bytes before the 32-col seam); colDmaLen1 = $0040 - colDmaLen0
                 LDA.W #$0040                                   ;80C319|
                 SEC                                            ;80C31C|
@@ -13176,8 +13182,8 @@ BuildTilemapCol:
 ; --------------------------------------------------------
 ;  FetchConvertMetatile   [83 ins, returns RTS]
 ;    callers: BuildTilemapCol
-;    writes:    refillTmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, colStageBg1Even ...
-;    reads:     refillTmp32, refillStageIdx, refillSaveX, refillSaveY, levelTileMapPtr, tileVisualPtr ...
+;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, colStageBg1Even ...
+;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, levelTileMapPtr, tileVisualPtr ...
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
 
@@ -13209,22 +13215,22 @@ FetchConvertMetatile:
              +: LDA.W levelWrapFlags                           ;80C332|8019F4   ; step 2: out of bounds -- how should this level handle it?
                 BIT.W #$0002                                   ;80C335|         ; levelWrapFlags bit1 set => coordinates wrap (AND with dim-1) instead of clamp
                 BEQ .skip                                      ;80C338|80C34E   ; bit1 clear -> not a wrapping level, go check the blank-fill flag instead
-                STX.B refillTmp32                              ;80C33A|000032   ; bit1 SET: wrap X -- requires levelWidthMetaTiles to be a power of 2
+                STX.B tmp32                              ;80C33A|000032   ; bit1 SET: wrap X -- requires levelWidthMetaTiles to be a power of 2
                 LDA.W levelWidthMetaTiles                      ;80C33C|8019F0   ; (dim-1 is used as an AND mask, which only wraps correctly for
                 DEC A                                          ;80C33F|         ; power-of-2 dimensions)
-                AND.B refillTmp32                              ;80C340|000032
+                AND.B tmp32                              ;80C340|000032
                 TAX                                            ;80C342|
-                STY.B refillTmp32                              ;80C343|000032   ; same wrap for Y against levelHeightMetaTiles
+                STY.B tmp32                              ;80C343|000032   ; same wrap for Y against levelHeightMetaTiles
                 LDA.W levelHeightMetaTiles                     ;80C345|8019F2
                 DEC A                                          ;80C348|
-                AND.B refillTmp32                              ;80C349|000032
+                AND.B tmp32                              ;80C349|000032
                 TAY                                            ;80C34B|
                 BRA .skip4                                     ;80C34C|80C38F   ; wrapped coordinates are now valid indices -> go do the main fetch
 
 
          .skip: BIT.W #$0008                                   ;80C34E|   ; levelWrapFlags bit3 set => off-map cells staged as blank fill ($1997) instead of clamped tile
                 BEQ .skip2                                     ;80C351|80C369   ; bit3 clear -> neither wrap nor blank-fill: fall into the CLAMP path below
-                LDX.B refillStageIdx                           ;80C353|000034   ; bit3 SET: don't fetch anything real for this off-map cell -- just
+                LDX.B tmp34                           ;80C353|000034   ; bit3 SET: don't fetch anything real for this off-map cell -- just
                 LDA.W tileAttrOr                               ;80C355|801997   ; write the "empty" attribute word (no tile index bits set, so tile 0)
                 STA.W colStageBg1Even,X                        ;80C358|8016F5   ; into all 4 of this metatile's staging slots (TL/TR/BL/BR) and
                 STA.W colStageBg1Odd,X                         ;80C35B|801735   ; return immediately -- this is what lets a level have "void" past its
@@ -13280,7 +13286,7 @@ FetchConvertMetatile:
                 TAY                                            ;80C3A6|
                 LDA.B [tileVisualPtr],Y                        ;80C3A7|000054   ; step 5: fetch the metatile's 4 BG character words (TL,TR,BL,BR, in that
                 ORA.W tileAttrOr                               ;80C3A9|801997   ; order) from the metatile->graphics lookup table, OR-ing in the current
-                LDX.B refillStageIdx                           ;80C3AC|000034   ; scene's shared attribute bits (palette/priority/flip -- tileAttrOr) into
+                LDX.B tmp34                           ;80C3AC|000034   ; scene's shared attribute bits (palette/priority/flip -- tileAttrOr) into
                 STA.W colStageBg1Even,X                        ;80C3AE|8016F5   ; each one, then write all 4 into this metatile's slot in the column
                 INY                                            ;80C3B1|         ; staging buffers, ready for BuildTilemapCol to DMA out to VRAM.
                 INY                                            ;80C3B2|
@@ -13305,8 +13311,8 @@ FetchConvertMetatile:
 ; --------------------------------------------------------
 ;  BuildTilemapRow   [71 ins, returns RTS]
 ;    callers: RefillRowDown, RefillRowUp
-;    writes:    refillTmp32, refillStageIdx, rowDmaVramDest0, rowDmaLen0, rowDmaVramDest1, rowDmaLen1 ...
-;    reads:     refillTmp32, refillStageIdx, refillRowTileY, rowDmaVramDest0, rowDmaLen0, rowDmaVramDest1 ...
+;    writes:    tmp32, tmp34, rowDmaVramDest0, rowDmaLen0, rowDmaVramDest1, rowDmaLen1 ...
+;    reads:     tmp32, tmp34, refillRowTileY, rowDmaVramDest0, rowDmaLen0, rowDmaVramDest1 ...
 ;    calls:     FetchConvertMetatileRow
 ; --------------------------------------------------------
 
@@ -13334,15 +13340,15 @@ BuildTilemapRow:
                 TYA                                            ;80C3DD|
                 ROR A                                          ;80C3DE|
                 TAY                                            ;80C3DF|
-                STZ.B refillStageIdx                           ;80C3E0|000034
+                STZ.B tmp34                           ;80C3E0|000034
 
          .loop: JSR.W FetchConvertMetatileRow                  ;80C3E2|80C469   ; Y (metatile-row, held constant all loop -- this builds ONE row) and
                                                                                         ; X (metatile-col, incremented below) are FetchConvertMetatileRow's inputs
                 INX                                            ;80C3E5|         ; next metatile-column over
-                LDA.B refillStageIdx                           ;80C3E6|000034   ; refillStageIdx here indexes the rowStagedMetaTile staging arrays
+                LDA.B tmp34                           ;80C3E6|000034   ; tmp34 here indexes the rowStagedMetaTile staging arrays
                 CLC                                            ;80C3E8|         ; (4 bytes/metatile: 2 BG words for the row's top tile-line, 2 for its
                 ADC.W #$0004                                   ;80C3E9|         ; bottom tile-line -- see FetchConvertMetatileRow)
-                STA.B refillStageIdx                           ;80C3EC|000034
+                STA.B tmp34                           ;80C3EC|000034
                 CMP.W #$0050                                   ;80C3EE|         ; row loop runs 16 metatile-cols ($34: 0,4,..,4C; ends at #$0050)
                 BCC .loop                                      ;80C3F1|80C3E2   ; NOTE: 0..$4C step 4 is actually 20 iterations, not 16 -- the header
                                                                                 ; comment above (and the original disassembly note) undercounts this;
@@ -13359,7 +13365,7 @@ BuildTilemapRow:
                 LDY.W tilemapBaseLo                            ;80C405|8019EA
                 AND.W #$001F                                   ;80C408|
 
-             +: STA.B refillTmp32                              ;80C40B|000032   ; refillTmp32 = destWord (post-wrap, within-quadrant column index)
+             +: STA.B tmp32                              ;80C40B|000032   ; tmp32 = destWord (post-wrap, within-quadrant column index)
                 STX.W rowDmaVramDest0                          ;80C40D|8016D5   ; dest0 and dest2 both start from the SAME quadrant base (X) -- dest0 is
                 STX.W rowDmaVramDest2                          ;80C410|8016DD   ; this row's TOP tile-line, dest2 its BOTTOM tile-line, and since both
                 STY.W rowDmaVramDest1                          ;80C413|8016D9   ; lines start in the same quadrant, they share a base; dest1 (the OTHER
@@ -13385,7 +13391,7 @@ BuildTilemapRow:
                 STA.W rowDmaVramDest2                          ;80C43C|8016DD
                 LDA.W #$0020                                   ;80C43F|
                 SEC                                            ;80C442|
-                SBC.B refillTmp32                              ;80C443|000032
+                SBC.B tmp32                              ;80C443|000032
                 ASL A                                          ;80C445|         ; rowDmaLen0 = (32 - destWord) * 2 bytes: how much of the TOP line fits
                 STA.W rowDmaLen0                               ;80C446|8016D7   ; before the 32-column map seam
                 LDA.W #$0050                                   ;80C449|         ; remaining length to cover, in metatile-columns*4: total staged
@@ -13408,8 +13414,8 @@ BuildTilemapRow:
 ; --------------------------------------------------------
 ;  FetchConvertMetatileRow   [82 ins, returns RTS]
 ;    callers: BuildTilemapRow
-;    writes:    refillTmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, rowStagedMetaTileLU ...
-;    reads:     refillTmp32, refillStageIdx, refillSaveX, refillSaveY, levelTileMapPtr, tileVisualPtr ...
+;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, rowStagedMetaTileLU ...
+;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, levelTileMapPtr, tileVisualPtr ...
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
 FetchConvertMetatileRow:
@@ -13423,22 +13429,22 @@ FetchConvertMetatileRow:
              +: LDA.W levelWrapFlags                           ;80C477|8019F4
                 BIT.W #$0002                                   ;80C47A|
                 BEQ .skip                                      ;80C47D|80C493
-                STX.B refillTmp32                              ;80C47F|000032
+                STX.B tmp32                              ;80C47F|000032
                 LDA.W levelWidthMetaTiles                      ;80C481|8019F0
                 DEC A                                          ;80C484|
-                AND.B refillTmp32                              ;80C485|000032
+                AND.B tmp32                              ;80C485|000032
                 TAX                                            ;80C487|
-                STY.B refillTmp32                              ;80C488|000032
+                STY.B tmp32                              ;80C488|000032
                 LDA.W levelHeightMetaTiles                     ;80C48A|8019F2
                 DEC A                                          ;80C48D|
-                AND.B refillTmp32                              ;80C48E|000032
+                AND.B tmp32                              ;80C48E|000032
                 TAY                                            ;80C490|
                 BRA .main                                      ;80C491|80C4D2
 
 
          .skip: BIT.W #$0008                                   ;80C493|
                 BEQ .skip2                                     ;80C496|80C4AC
-                LDX.B refillStageIdx                           ;80C498|000034
+                LDX.B tmp34                           ;80C498|000034
                 LDA.W tileAttrOr                               ;80C49A|801997
                 STA.W rowStagedMetaTileLU,X                    ;80C49D|801775
                 STA.W rowStagedMetaTileLD,X                    ;80C4A0|8017C5
@@ -13485,7 +13491,7 @@ FetchConvertMetatileRow:
                 ASL A                                          ;80C4E8|
                 TAY                                            ;80C4E9|
              +: LDA.B [tileVisualPtr],Y                        ;80C4EA|000054
-                LDX.B refillStageIdx                           ;80C4EC|000034
+                LDX.B tmp34                           ;80C4EC|000034
                 ORA.W tileAttrOr                               ;80C4EE|801997
                 STA.W rowStagedMetaTileLU,X                    ;80C4F1|801775
                 INY                                            ;80C4F4|
@@ -13529,30 +13535,30 @@ BuildTilemapRowMod:
                 ASL A
                 ASL A
                 STA.W refillStageStart
-                STA.B refillStageIdx                     
+                STA.B tmp34                     
 
 
          .loop: JSR.W FetchConvertMetatileRowMod            
                                                          
                 INX                                      
-                LDA.B refillStageIdx                     
+                LDA.B tmp34                     
                 CLC                                      
                 ADC.W #$0004                             
-                STA.B refillStageIdx                     
+                STA.B tmp34                     
                 CMP.W #$0040                             
                 BCC .loop                                
                 
                 
                 LDA.W refillStageStart
                 BEQ .skip
-                STZ.B refillStageIdx
+                STZ.B tmp34
                 
         .loop2: JSR.W FetchConvertMetatileRowMod
                 INX
-                LDA.B refillStageIdx
+                LDA.B tmp34
                 CLC
                 ADC.W #$0004
-                STA.B refillStageIdx
+                STA.B tmp34
                 CMP.W refillStageStart
                 BCC .loop2
                                                          
@@ -13580,22 +13586,22 @@ FetchConvertMetatileRowMod:
              +: LDA.W levelWrapFlags                           ;80C477|8019F4
                 BIT.W #$0002                                   ;80C47A|
                 BEQ .skip                                      ;80C47D|80C493
-                STX.B refillTmp32                              ;80C47F|000032
+                STX.B tmp32                              ;80C47F|000032
                 LDA.W levelWidthMetaTiles                      ;80C481|8019F0
                 DEC A                                          ;80C484|
-                AND.B refillTmp32                              ;80C485|000032
+                AND.B tmp32                              ;80C485|000032
                 TAX                                            ;80C487|
-                STY.B refillTmp32                              ;80C488|000032
+                STY.B tmp32                              ;80C488|000032
                 LDA.W levelHeightMetaTiles                     ;80C48A|8019F2
                 DEC A                                          ;80C48D|
-                AND.B refillTmp32                              ;80C48E|000032
+                AND.B tmp32                              ;80C48E|000032
                 TAY                                            ;80C490|
                 BRA .main                                      ;80C491|80C4D2
 
 
          .skip: BIT.W #$0008                                   ;80C493|
                 BEQ .skip2                                     ;80C496|80C4AC
-                LDX.B refillStageIdx                           ;80C498|000034
+                LDX.B tmp34                           ;80C498|000034
                 LDA.W tileAttrOr                               ;80C49A|801997
                 STA.W P1rowStagedMetaTileLU,X                  ;80C49D|801775
                 STA.W P1rowStagedMetaTileLD,X                  ;80C4A0|8017C5
@@ -13642,7 +13648,7 @@ FetchConvertMetatileRowMod:
                 ASL A                                          ;80C4E8|
                 TAY                                            ;80C4E9|
              +: LDA.B [tileVisualPtr],Y                        ;80C4EA|000054
-                LDX.B refillStageIdx                           ;80C4EC|000034
+                LDX.B tmp34                           ;80C4EC|000034
                 ORA.W tileAttrOr                               ;80C4EE|801997
                 STA.W P1rowStagedMetaTileLU,X                    ;80C4F1|801775
                 INY                                            ;80C4F4|
@@ -14025,8 +14031,8 @@ sub_80C6FD:
 ; --------------------------------------------------------
 ;  sub_80C70F   [27 ins, returns RTS]
 ;    callers: sub_808636
-;    writes:    refillTmp32, bg2CamXSrc, bg2CamXFrac
-;    reads:     refillTmp32, bg2CamXSrc, bg2CamXFrac, ram_19FF
+;    writes:    tmp32, bg2CamXSrc, bg2CamXFrac
+;    reads:     tmp32, bg2CamXSrc, bg2CamXFrac, ram_19FF
 ; --------------------------------------------------------
 sub_80C70F:
                 EOR.W #$FFFF                                   ;80C70F|
@@ -14042,10 +14048,10 @@ sub_80C70F:
 
              +: EOR.W #$FFFF                                   ;80C724|
                 INC A                                          ;80C727|
-                STA.B refillTmp32                              ;80C728|000032
+                STA.B tmp32                              ;80C728|000032
                 LDA.W bg2CamXSrc                               ;80C72A|8016A5
                 SEC                                            ;80C72D|
-                SBC.B refillTmp32                              ;80C72E|000032
+                SBC.B tmp32                              ;80C72E|000032
                 STA.W bg2CamXSrc                               ;80C730|8016A5
                 BCS .skip                                      ;80C733|80C743
                 LDA.W ram_19FF                                 ;80C735|8019FF
@@ -14129,8 +14135,8 @@ sub_80C78B:
 ; --------------------------------------------------------
 ;  sub_80C79D   [27 ins, returns RTS]
 ;    callers: sub_808636
-;    writes:    refillTmp32, bg2CamYSrc, bg2CamYFrac
-;    reads:     refillTmp32, bg2CamYSrc, bg2CamYFrac, ram_19FF
+;    writes:    tmp32, bg2CamYSrc, bg2CamYFrac
+;    reads:     tmp32, bg2CamYSrc, bg2CamYFrac, ram_19FF
 ; --------------------------------------------------------
 sub_80C79D:
                 EOR.W #$FFFF                                   ;80C79D|
@@ -14146,10 +14152,10 @@ sub_80C79D:
 
              +: EOR.W #$FFFF                                   ;80C7B2|
                 INC A                                          ;80C7B5|
-                STA.B refillTmp32                              ;80C7B6|000032
+                STA.B tmp32                              ;80C7B6|000032
                 LDA.W bg2CamYSrc                               ;80C7B8|8016A7
                 SEC                                            ;80C7BB|
-                SBC.B refillTmp32                              ;80C7BC|000032
+                SBC.B tmp32                              ;80C7BC|000032
                 STA.W bg2CamYSrc                               ;80C7BE|8016A7
                 BCS .skip                                      ;80C7C1|80C7D1
                 LDA.W ram_19FF                                 ;80C7C3|8019FF
@@ -14169,8 +14175,8 @@ loc_80C7D8:
 ; --------------------------------------------------------
 ;  sub_80C7D9   [31 ins, returns RTS]
 ;    callers: sub_80C080
-;    writes:    refillTmp32, ram_16AD, ram_16AF
-;    reads:     refillTmp32, bg2CamXSrc, bg2CamYSrc, ram_16AD, ram_16AF, ram_1A00
+;    writes:    tmp32, ram_16AD, ram_16AF
+;    reads:     tmp32, bg2CamXSrc, bg2CamYSrc, ram_16AD, ram_16AF, ram_1A00
 ;    calls:     sub_80C8CB, sub_80C870, sub_80C84C, sub_80C825
 ; --------------------------------------------------------
 sub_80C7D9:
@@ -14178,11 +14184,11 @@ sub_80C7D9:
                 BMI .exit                                      ;80C7DC|80C824
                 LDA.W ram_16AF                                 ;80C7DE|8016AF
                 AND.W #$FFF8                                   ;80C7E1|
-                STA.B refillTmp32                              ;80C7E4|000032
+                STA.B tmp32                              ;80C7E4|000032
                 LDA.W bg2CamYSrc                               ;80C7E6|8016A7
                 AND.W #$FFF8                                   ;80C7E9|
                 SEC                                            ;80C7EC|
-                SBC.B refillTmp32                              ;80C7ED|000032
+                SBC.B tmp32                              ;80C7ED|000032
                 BEQ .skip                                      ;80C7EF|80C7FB
                 BPL +                                          ;80C7F1|80C7F8
                 JSR.W sub_80C8CB                               ;80C7F3|80C8CB
@@ -14193,11 +14199,11 @@ sub_80C7D9:
 
          .skip: LDA.W ram_16AD                                 ;80C7FB|8016AD
                 AND.W #$FFF0                                   ;80C7FE|
-                STA.B refillTmp32                              ;80C801|000032
+                STA.B tmp32                              ;80C801|000032
                 LDA.W bg2CamXSrc                               ;80C803|8016A5
                 AND.W #$FFF0                                   ;80C806|
                 SEC                                            ;80C809|
-                SBC.B refillTmp32                              ;80C80A|000032
+                SBC.B tmp32                              ;80C80A|000032
                 BEQ .skip2                                     ;80C80C|80C818
                 BPL +                                          ;80C80E|80C815
                 JSR.W sub_80C84C                               ;80C810|80C84C
@@ -14374,8 +14380,8 @@ sub_80C8CB:
 ; --------------------------------------------------------
 ;  sub_80C91E   [53 ins, returns RTS]
 ;    callers: sub_80C655, sub_80C825, sub_80C84C
-;    writes:    refillTmp32, refillStageIdx, vramColDstAddrC, vramColLen0C, vramColDstAddrCWrap, vramColLen1C
-;    reads:     refillTmp32, refillStageIdx, ram_16C9, vramColDstAddrC, vramColLen0C, ram_199F ...
+;    writes:    tmp32, tmp34, vramColDstAddrC, vramColLen0C, vramColDstAddrCWrap, vramColLen1C
+;    reads:     tmp32, tmp34, ram_16C9, vramColDstAddrC, vramColLen0C, ram_199F ...
 ;    calls:     sub_80C984
 ; --------------------------------------------------------
 sub_80C91E:
@@ -14391,14 +14397,14 @@ sub_80C91E:
                 TYA                                            ;80C927|
                 ROR A                                          ;80C928|
                 TAY                                            ;80C929|
-                STZ.B refillStageIdx                           ;80C92A|000034
+                STZ.B tmp34                           ;80C92A|000034
 
          .loop: JSR.W sub_80C984                               ;80C92C|80C984
                 INY                                            ;80C92F|
-                LDA.B refillStageIdx                           ;80C930|000034
+                LDA.B tmp34                           ;80C930|000034
                 CLC                                            ;80C932|
                 ADC.W #$0004                                   ;80C933|
-                STA.B refillStageIdx                           ;80C936|000034
+                STA.B tmp34                           ;80C936|000034
                 CMP.W #$0040                                   ;80C938|
                 BCC .loop                                      ;80C93B|80C92C
                 LDY.W ram_19EC                                 ;80C93D|8019EC
@@ -14411,15 +14417,15 @@ sub_80C91E:
                 LDY.W ram_199F                                 ;80C94D|80199F
                 AND.W #$001F                                   ;80C950|
 
-             +: STY.B refillTmp32                              ;80C953|000032
+             +: STY.B tmp32                              ;80C953|000032
                 CLC                                            ;80C955|
-                ADC.B refillTmp32                              ;80C956|000032
+                ADC.B tmp32                              ;80C956|000032
                 STA.W vramColDstAddrC                          ;80C958|8016E1
                 STA.W vramColDstAddrCWrap                      ;80C95B|8016E5
                 PLA                                            ;80C95E|
                 AND.W #$001F                                   ;80C95F|
                 ASL A                                          ;80C962|
-                STA.B refillTmp32                              ;80C963|000032
+                STA.B tmp32                              ;80C963|000032
                 TAY                                            ;80C965|
                 LDA.W data_80F363,Y                            ;80C966|80F363
                 CLC                                            ;80C969|
@@ -14427,7 +14433,7 @@ sub_80C91E:
                 STA.W vramColDstAddrC                          ;80C96D|8016E1
                 LDA.W #$0040                                   ;80C970|
                 SEC                                            ;80C973|
-                SBC.B refillTmp32                              ;80C974|000032
+                SBC.B tmp32                              ;80C974|000032
                 STA.W vramColLen0C                             ;80C976|8016E3
                 LDA.W #$0040                                   ;80C979|
                 SEC                                            ;80C97C|
@@ -14439,8 +14445,8 @@ sub_80C91E:
 ; --------------------------------------------------------
 ;  sub_80C984   [82 ins, returns RTS]
 ;    callers: sub_80C91E
-;    writes:    refillTmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, ram_1815 ...
-;    reads:     refillTmp32, refillStageIdx, refillSaveX, refillSaveY, zp_58, zp_5C ...
+;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, ram_1815 ...
+;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, zp_58, zp_5C ...
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
 sub_80C984:
@@ -14454,22 +14460,22 @@ sub_80C984:
              +: LDA.W ram_19FF                                 ;80C992|8019FF
                 BIT.W #$0002                                   ;80C995|
                 BEQ .skip                                      ;80C998|80C9AE
-                STX.B refillTmp32                              ;80C99A|000032
+                STX.B tmp32                              ;80C99A|000032
                 LDA.W ram_19FB                                 ;80C99C|8019FB
                 DEC A                                          ;80C99F|
-                AND.B refillTmp32                              ;80C9A0|000032
+                AND.B tmp32                              ;80C9A0|000032
                 TAX                                            ;80C9A2|
-                STY.B refillTmp32                              ;80C9A3|000032
+                STY.B tmp32                              ;80C9A3|000032
                 LDA.W ram_19FD                                 ;80C9A5|8019FD
                 DEC A                                          ;80C9A8|
-                AND.B refillTmp32                              ;80C9A9|000032
+                AND.B tmp32                              ;80C9A9|000032
                 TAY                                            ;80C9AB|
                 BRA .skip4                                     ;80C9AC|80C9ED
 
 
          .skip: BIT.W #$0008                                   ;80C9AE|
                 BEQ .skip2                                     ;80C9B1|80C9C7
-                LDX.B refillStageIdx                           ;80C9B3|000034
+                LDX.B tmp34                           ;80C9B3|000034
                 LDA.W ram_1999                                 ;80C9B5|801999
                 STA.W ram_1815,X                               ;80C9B8|801815
                 STA.W ram_1855,X                               ;80C9BB|801855
@@ -14516,7 +14522,7 @@ sub_80C984:
                 ASL A                                          ;80CA03|
                 TAY                                            ;80CA04|
                 LDA.B [zp_5C],Y                                ;80CA05|00005C
-                LDX.B refillStageIdx                           ;80CA07|000034
+                LDX.B tmp34                           ;80CA07|000034
                 ORA.W ram_1999                                 ;80CA09|801999
                 STA.W ram_1815,X                               ;80CA0C|801815
                 INY                                            ;80CA0F|
@@ -14542,8 +14548,8 @@ sub_80C984:
 ; --------------------------------------------------------
 ;  sub_80CA32   [71 ins, returns RTS]
 ;    callers: sub_80C870, sub_80C8CB
-;    writes:    refillTmp32, refillStageIdx, vramColDstAddrD, vramColLen0D, vramColDstAddrD2, vramColLen1D ...
-;    reads:     refillTmp32, refillStageIdx, ram_16CB, vramColDstAddrD, vramColLen0D, vramColDstAddrD2 ...
+;    writes:    tmp32, tmp34, vramColDstAddrD, vramColLen0D, vramColDstAddrD2, vramColLen1D ...
+;    reads:     tmp32, tmp34, ram_16CB, vramColDstAddrD, vramColLen0D, vramColDstAddrD2 ...
 ;    calls:     sub_80CAC7
 ; --------------------------------------------------------
 sub_80CA32:
@@ -14559,14 +14565,14 @@ sub_80CA32:
                 TYA                                            ;80CA3B|
                 ROR A                                          ;80CA3C|
                 TAY                                            ;80CA3D|
-                STZ.B refillStageIdx                           ;80CA3E|000034
+                STZ.B tmp34                           ;80CA3E|000034
 
          .loop: JSR.W sub_80CAC7                               ;80CA40|80CAC7
                 INX                                            ;80CA43|
-                LDA.B refillStageIdx                           ;80CA44|000034
+                LDA.B tmp34                           ;80CA44|000034
                 CLC                                            ;80CA46|
                 ADC.W #$0004                                   ;80CA47|
-                STA.B refillStageIdx                           ;80CA4A|000034
+                STA.B tmp34                           ;80CA4A|000034
                 CMP.W #$0050                                   ;80CA4C|
                 BCC .loop                                      ;80CA4F|80CA40
                 LDX.W ram_19EC                                 ;80CA51|8019EC
@@ -14579,7 +14585,7 @@ sub_80CA32:
                 LDY.W ram_19EC                                 ;80CA63|8019EC
                 AND.W #$001F                                   ;80CA66|
 
-             +: STA.B refillTmp32                              ;80CA69|000032
+             +: STA.B tmp32                              ;80CA69|000032
                 STX.W vramColDstAddrD                          ;80CA6B|8016E9
                 STX.W vramColDstAddrDWrap                      ;80CA6E|8016F1
                 STY.W vramColDstAddrD2                         ;80CA71|8016ED
@@ -14604,7 +14610,7 @@ sub_80CA32:
                 STA.W vramColDstAddrDWrap                      ;80CA9A|8016F1
                 LDA.W #$0020                                   ;80CA9D|
                 SEC                                            ;80CAA0|
-                SBC.B refillTmp32                              ;80CAA1|000032
+                SBC.B tmp32                              ;80CAA1|000032
                 ASL A                                          ;80CAA3|
                 STA.W vramColLen0D                             ;80CAA4|8016EB
                 LDA.W #$0050                                   ;80CAA7|
@@ -14627,8 +14633,8 @@ sub_80CA32:
 ; --------------------------------------------------------
 ;  sub_80CAC7   [82 ins, returns RTS]
 ;    callers: sub_80CA32
-;    writes:    refillTmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, ram_1895 ...
-;    reads:     refillTmp32, refillStageIdx, refillSaveX, refillSaveY, zp_58, zp_5C ...
+;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, ram_1895 ...
+;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, zp_58, zp_5C ...
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
 sub_80CAC7:
@@ -14642,22 +14648,22 @@ sub_80CAC7:
              +: LDA.W ram_19FF                                 ;80CAD5|8019FF
                 BIT.W #$0002                                   ;80CAD8|
                 BEQ .skip                                      ;80CADB|80CAF1
-                STX.B refillTmp32                              ;80CADD|000032
+                STX.B tmp32                              ;80CADD|000032
                 LDA.W ram_19FB                                 ;80CADF|8019FB
                 DEC A                                          ;80CAE2|
-                AND.B refillTmp32                              ;80CAE3|000032
+                AND.B tmp32                              ;80CAE3|000032
                 TAX                                            ;80CAE5|
-                STY.B refillTmp32                              ;80CAE6|000032
+                STY.B tmp32                              ;80CAE6|000032
                 LDA.W ram_19FD                                 ;80CAE8|8019FD
                 DEC A                                          ;80CAEB|
-                AND.B refillTmp32                              ;80CAEC|000032
+                AND.B tmp32                              ;80CAEC|000032
                 TAY                                            ;80CAEE|
                 BRA .skip4                                     ;80CAEF|80CB30
 
 
          .skip: BIT.W #$0008                                   ;80CAF1|
                 BEQ .skip2                                     ;80CAF4|80CB0A
-                LDX.B refillStageIdx                           ;80CAF6|000034
+                LDX.B tmp34                           ;80CAF6|000034
                 LDA.W ram_1999                                 ;80CAF8|801999
                 STA.W ram_1895,X                               ;80CAFB|801895
                 STA.W ram_18E5,X                               ;80CAFE|8018E5
@@ -14704,7 +14710,7 @@ sub_80CAC7:
                 ASL A                                          ;80CB46|
                 TAY                                            ;80CB47|
                 LDA.B [zp_5C],Y                                ;80CB48|00005C
-                LDX.B refillStageIdx                           ;80CB4A|000034
+                LDX.B tmp34                           ;80CB4A|000034
                 ORA.W ram_1999                                 ;80CB4C|801999
                 STA.W ram_1895,X                               ;80CB4F|801895
                 INY                                            ;80CB52|
@@ -15652,8 +15658,8 @@ Op_SetBackdropRGB2:
 ; --------------------------------------------------------
 ;  Op_ClearBackdrop   [133 ins, returns RTS]
 ;    callers: GiveUpDialog_TriggerGate, vbwait_80B54E
-;    writes:    zp_00, refillTmp32, vmAcc, backdropColorR, backdropColorG, backdropColorB ...
-;    reads:     zp_00, refillTmp32, curObjIdx, scriptPC, vmAcc, oamSrcAttr ...
+;    writes:    zp_00, tmp32, vmAcc, backdropColorR, backdropColorG, backdropColorB ...
+;    reads:     zp_00, tmp32, curObjIdx, scriptPC, vmAcc, oamSrcAttr ...
 ;    calls:     hwmath_809011, VM_GetRandom, SetupCgramGpDma, Op_SubAcc_Fld
 ; --------------------------------------------------------
 ;--------------------------------------------------------------
@@ -15708,7 +15714,7 @@ Op_SetDeferredFarCall:
 Op_HideSprites:
                 LDX.B curObjIdx                                ;80CFB1|000042
                 LDA.W objOamEnd,X                               ;80CFB3|8014E9
-                STA.B refillTmp32                              ;80CFB6|000032
+                STA.B tmp32                              ;80CFB6|000032
                 LDA.W objOamFirst,X                               ;80CFB8|8014C1
                 TAX                                            ;80CFBB|
 
@@ -15716,7 +15722,7 @@ Op_HideSprites:
                 ORA.W #$0040                                   ;80CFBF|
                 STA.W oamSrcAttr,X                             ;80CFC2|800985
                 INX                                            ;80CFC5|
-                CPX.B refillTmp32                              ;80CFC6|000032
+                CPX.B tmp32                              ;80CFC6|000032
                 BCC .loop                                      ;80CFC8|80CFBC
                 RTS                                            ;80CFCA|
 
@@ -15729,7 +15735,7 @@ Op_HideSprites:
 Op_ShowSprites:
                 LDX.B curObjIdx                                ;80CFCB|000042
                 LDA.W objOamEnd,X                               ;80CFCD|8014E9
-                STA.B refillTmp32                              ;80CFD0|000032
+                STA.B tmp32                              ;80CFD0|000032
                 LDA.W objOamFirst,X                               ;80CFD2|8014C1
                 TAX                                            ;80CFD5|
 
@@ -15738,7 +15744,7 @@ Op_ShowSprites:
                 AND.W #$FFDF                                   ;80CFDC|
                 STA.W oamSrcAttr,X                             ;80CFDF|800985
                 INX                                            ;80CFE2|
-                CPX.B refillTmp32                              ;80CFE3|000032
+                CPX.B tmp32                              ;80CFE3|000032
                 BCC .loop                                      ;80CFE5|80CFD6
                 RTS                                            ;80CFE7|
 
@@ -16140,8 +16146,8 @@ Op_SubAcc_TFld_Facing:
 ;    callers: Op_AddAcc_Ram
 ;    reads HW:  RDMPYL
 ;    writes HW: WRMPYA, WRMPYB
-;    writes:    zp_00, refillTmp32, refillStageIdx, zp_36, refillSaveX, refillSaveY ...
-;    reads:     zp_00, refillTmp32, refillStageIdx, zp_36, refillSaveX, refillSaveY ...
+;    writes:    zp_00, tmp32, tmp34, tmp36, refillSaveX, refillSaveY ...
+;    reads:     zp_00, tmp32, tmp34, tmp36, refillSaveX, refillSaveY ...
 ;    calls:     VM_GetOperandImm, VM_GetOperandFld, VM_GetOperandRam, VM_GetOperandTFld, VM_GetRandom, VM_TestBit_Imm, +26 more
 ; --------------------------------------------------------
 ;--------------------------------------------------------------
@@ -16344,9 +16350,9 @@ Op_XorAcc_TFld:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEu_Imm:
                 JSR.W VM_GetOperandImm                               ;80D202|80DCE9
-                STA.B refillTmp32                              ;80D205|000032
+                STA.B tmp32                              ;80D205|000032
                 LDA.B vmAcc                                    ;80D207|00008E
-                CMP.B refillTmp32                              ;80D209|000032
+                CMP.B tmp32                              ;80D209|000032
                 BCC +                                          ;80D20B|80D210
                 JMP.W Op_Goto                               ;80D20D|80CD70
 
@@ -16363,9 +16369,9 @@ Op_JmpIfAccGEu_Imm:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEu_Fld:
                 JSR.W VM_GetOperandFld                               ;80D213|80DCEE
-                STA.B refillTmp32                              ;80D216|000032
+                STA.B tmp32                              ;80D216|000032
                 LDA.B vmAcc                                    ;80D218|00008E
-                CMP.B refillTmp32                              ;80D21A|000032
+                CMP.B tmp32                              ;80D21A|000032
                 BCC +                                          ;80D21C|80D221
                 JMP.W Op_Goto                               ;80D21E|80CD70
 
@@ -16382,9 +16388,9 @@ Op_JmpIfAccGEu_Fld:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEu_Ram:
                 JSR.W VM_GetOperandRam                               ;80D224|80DD00
-                STA.B refillTmp32                              ;80D227|000032
+                STA.B tmp32                              ;80D227|000032
                 LDA.B vmAcc                                    ;80D229|00008E
-                CMP.B refillTmp32                              ;80D22B|000032
+                CMP.B tmp32                              ;80D22B|000032
                 BCC +                                          ;80D22D|80D232
                 JMP.W Op_Goto                               ;80D22F|80CD70
 
@@ -16401,9 +16407,9 @@ Op_JmpIfAccGEu_Ram:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEu_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D235|80DD08
-                STA.B refillTmp32                              ;80D238|000032
+                STA.B tmp32                              ;80D238|000032
                 LDA.B vmAcc                                    ;80D23A|00008E
-                CMP.B refillTmp32                              ;80D23C|000032
+                CMP.B tmp32                              ;80D23C|000032
                 BCC +                                          ;80D23E|80D243
                 JMP.W Op_Goto                               ;80D240|80CD70
 
@@ -16420,9 +16426,9 @@ Op_JmpIfAccGEu_TFld:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEu_Rnd:
                 JSR.W VM_GetRandom                               ;80D246|8091ED
-                STA.B refillTmp32                              ;80D249|000032
+                STA.B tmp32                              ;80D249|000032
                 LDA.B vmAcc                                    ;80D24B|00008E
-                CMP.B refillTmp32                              ;80D24D|000032
+                CMP.B tmp32                              ;80D24D|000032
                 BCC +                                          ;80D24F|80D254
                 JMP.W Op_Goto                               ;80D251|80CD70
 
@@ -16439,9 +16445,9 @@ Op_JmpIfAccGEu_Rnd:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTu_Imm:
                 JSR.W VM_GetOperandImm                               ;80D257|80DCE9
-                STA.B refillTmp32                              ;80D25A|000032
+                STA.B tmp32                              ;80D25A|000032
                 LDA.B vmAcc                                    ;80D25C|00008E
-                CMP.B refillTmp32                              ;80D25E|000032
+                CMP.B tmp32                              ;80D25E|000032
                 BCS +                                          ;80D260|80D265
                 JMP.W Op_Goto                               ;80D262|80CD70
 
@@ -16458,9 +16464,9 @@ Op_JmpIfAccLTu_Imm:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTu_Fld:
                 JSR.W VM_GetOperandFld                               ;80D268|80DCEE
-                STA.B refillTmp32                              ;80D26B|000032
+                STA.B tmp32                              ;80D26B|000032
                 LDA.B vmAcc                                    ;80D26D|00008E
-                CMP.B refillTmp32                              ;80D26F|000032
+                CMP.B tmp32                              ;80D26F|000032
                 BCS +                                          ;80D271|80D276
                 JMP.W Op_Goto                               ;80D273|80CD70
 
@@ -16477,9 +16483,9 @@ Op_JmpIfAccLTu_Fld:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTu_Ram:
                 JSR.W VM_GetOperandRam                               ;80D279|80DD00
-                STA.B refillTmp32                              ;80D27C|000032
+                STA.B tmp32                              ;80D27C|000032
                 LDA.B vmAcc                                    ;80D27E|00008E
-                CMP.B refillTmp32                              ;80D280|000032
+                CMP.B tmp32                              ;80D280|000032
                 BCS +                                          ;80D282|80D287
                 JMP.W Op_Goto                               ;80D284|80CD70
 
@@ -16496,9 +16502,9 @@ Op_JmpIfAccLTu_Ram:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTu_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D28A|80DD08
-                STA.B refillTmp32                              ;80D28D|000032
+                STA.B tmp32                              ;80D28D|000032
                 LDA.B vmAcc                                    ;80D28F|00008E
-                CMP.B refillTmp32                              ;80D291|000032
+                CMP.B tmp32                              ;80D291|000032
                 BCS +                                          ;80D293|80D298
                 JMP.W Op_Goto                               ;80D295|80CD70
 
@@ -16515,9 +16521,9 @@ Op_JmpIfAccLTu_TFld:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTu_Rnd:
                 JSR.W VM_GetRandom                               ;80D29B|8091ED
-                STA.B refillTmp32                              ;80D29E|000032
+                STA.B tmp32                              ;80D29E|000032
                 LDA.B vmAcc                                    ;80D2A0|00008E
-                CMP.B refillTmp32                              ;80D2A2|000032
+                CMP.B tmp32                              ;80D2A2|000032
                 BCS +                                          ;80D2A4|80D2A9
                 JMP.W Op_Goto                               ;80D2A6|80CD70
 
@@ -16534,10 +16540,10 @@ Op_JmpIfAccLTu_Rnd:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEs_Imm:
                 JSR.W VM_GetOperandImm                               ;80D2AC|80DCE9
-                STA.B refillTmp32                              ;80D2AF|000032
+                STA.B tmp32                              ;80D2AF|000032
                 LDA.B vmAcc                                    ;80D2B1|00008E
                 SEC                                            ;80D2B3|
-                SBC.B refillTmp32                              ;80D2B4|000032
+                SBC.B tmp32                              ;80D2B4|000032
                 BVS +                                          ;80D2B6|80D2BC
                 BPL .skip                                      ;80D2B8|80D2BE
                 BRA .skip2                                     ;80D2BA|80D2C1
@@ -16560,10 +16566,10 @@ Op_JmpIfAccGEs_Imm:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEs_Fld:
                 JSR.W VM_GetOperandFld                               ;80D2C4|80DCEE
-                STA.B refillTmp32                              ;80D2C7|000032
+                STA.B tmp32                              ;80D2C7|000032
                 LDA.B vmAcc                                    ;80D2C9|00008E
                 SEC                                            ;80D2CB|
-                SBC.B refillTmp32                              ;80D2CC|000032
+                SBC.B tmp32                              ;80D2CC|000032
                 BVS +                                          ;80D2CE|80D2D4
                 BPL .skip                                      ;80D2D0|80D2D6
                 BRA .skip2                                     ;80D2D2|80D2D9
@@ -16586,10 +16592,10 @@ Op_JmpIfAccGEs_Fld:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEs_Ram:
                 JSR.W VM_GetOperandRam                               ;80D2DC|80DD00
-                STA.B refillTmp32                              ;80D2DF|000032
+                STA.B tmp32                              ;80D2DF|000032
                 LDA.B vmAcc                                    ;80D2E1|00008E
                 SEC                                            ;80D2E3|
-                SBC.B refillTmp32                              ;80D2E4|000032
+                SBC.B tmp32                              ;80D2E4|000032
                 BVS +                                          ;80D2E6|80D2EC
                 BPL .skip                                      ;80D2E8|80D2EE
                 BRA .skip2                                     ;80D2EA|80D2F1
@@ -16612,10 +16618,10 @@ Op_JmpIfAccGEs_Ram:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEs_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D2F4|80DD08
-                STA.B refillTmp32                              ;80D2F7|000032
+                STA.B tmp32                              ;80D2F7|000032
                 LDA.B vmAcc                                    ;80D2F9|00008E
                 SEC                                            ;80D2FB|
-                SBC.B refillTmp32                              ;80D2FC|000032
+                SBC.B tmp32                              ;80D2FC|000032
                 BVS +                                          ;80D2FE|80D304
                 BPL .skip                                      ;80D300|80D306
                 BRA .skip2                                     ;80D302|80D309
@@ -16638,10 +16644,10 @@ Op_JmpIfAccGEs_TFld:
 ;--------------------------------------------------------------
 Op_JmpIfAccGEs_Rnd:
                 JSR.W VM_GetRandom                               ;80D30C|8091ED
-                STA.B refillTmp32                              ;80D30F|000032
+                STA.B tmp32                              ;80D30F|000032
                 LDA.B vmAcc                                    ;80D311|00008E
                 SEC                                            ;80D313|
-                SBC.B refillTmp32                              ;80D314|000032
+                SBC.B tmp32                              ;80D314|000032
                 BVS +                                          ;80D316|80D31C
                 BPL .skip                                      ;80D318|80D31E
                 BRA .skip2                                     ;80D31A|80D321
@@ -16664,10 +16670,10 @@ Op_JmpIfAccGEs_Rnd:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTs_Imm:
                 JSR.W VM_GetOperandImm                               ;80D324|80DCE9
-                STA.B refillTmp32                              ;80D327|000032
+                STA.B tmp32                              ;80D327|000032
                 LDA.B vmAcc                                    ;80D329|00008E
                 SEC                                            ;80D32B|
-                SBC.B refillTmp32                              ;80D32C|000032
+                SBC.B tmp32                              ;80D32C|000032
                 BVS +                                          ;80D32E|80D334
                 BPL .skip                                      ;80D330|80D339
                 BRA .cont                                      ;80D332|80D336
@@ -16690,10 +16696,10 @@ Op_JmpIfAccLTs_Imm:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTs_Fld:
                 JSR.W VM_GetOperandFld                               ;80D33C|80DCEE
-                STA.B refillTmp32                              ;80D33F|000032
+                STA.B tmp32                              ;80D33F|000032
                 LDA.B vmAcc                                    ;80D341|00008E
                 SEC                                            ;80D343|
-                SBC.B refillTmp32                              ;80D344|000032
+                SBC.B tmp32                              ;80D344|000032
                 BVS +                                          ;80D346|80D34C
                 BPL .skip                                      ;80D348|80D351
                 BRA .cont                                      ;80D34A|80D34E
@@ -16716,10 +16722,10 @@ Op_JmpIfAccLTs_Fld:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTs_Ram:
                 JSR.W VM_GetOperandRam                               ;80D354|80DD00
-                STA.B refillTmp32                              ;80D357|000032
+                STA.B tmp32                              ;80D357|000032
                 LDA.B vmAcc                                    ;80D359|00008E
                 SEC                                            ;80D35B|
-                SBC.B refillTmp32                              ;80D35C|000032
+                SBC.B tmp32                              ;80D35C|000032
                 BVS +                                          ;80D35E|80D364
                 BPL .skip                                      ;80D360|80D369
                 BRA .cont                                      ;80D362|80D366
@@ -16742,10 +16748,10 @@ Op_JmpIfAccLTs_Ram:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTs_TFld:
                 JSR.W VM_GetOperandTFld                               ;80D36C|80DD08
-                STA.B refillTmp32                              ;80D36F|000032
+                STA.B tmp32                              ;80D36F|000032
                 LDA.B vmAcc                                    ;80D371|00008E
                 SEC                                            ;80D373|
-                SBC.B refillTmp32                              ;80D374|000032
+                SBC.B tmp32                              ;80D374|000032
                 BVS +                                          ;80D376|80D37C
                 BPL .skip                                      ;80D378|80D381
                 BRA .cont                                      ;80D37A|80D37E
@@ -16768,10 +16774,10 @@ Op_JmpIfAccLTs_TFld:
 ;--------------------------------------------------------------
 Op_JmpIfAccLTs_Rnd:
                 JSR.W VM_GetRandom                               ;80D384|8091ED
-                STA.B refillTmp32                              ;80D387|000032
+                STA.B tmp32                              ;80D387|000032
                 LDA.B vmAcc                                    ;80D389|00008E
                 SEC                                            ;80D38B|
-                SBC.B refillTmp32                              ;80D38C|000032
+                SBC.B tmp32                              ;80D38C|000032
                 BVS +                                          ;80D38E|80D394
                 BPL .skip                                      ;80D390|80D399
                 BRA .cont                                      ;80D392|80D396
@@ -17199,7 +17205,7 @@ Op_SetBitFromAcc_Fld:
                 STA.B vmAcc                                    ;80D4CF|00008E
 
              +: LDA.W data_80F417,X                            ;80D4D1|80F417
-                STA.B refillTmp32                              ;80D4D4|000032
+                STA.B tmp32                              ;80D4D4|000032
                 LDA.B [scriptPC],Y                             ;80D4D6|000070
                 INY                                            ;80D4D8|
                 AND.W #$00FF                                   ;80D4D9|
@@ -17209,7 +17215,7 @@ Op_SetBitFromAcc_Fld:
                 ADC.B curObjIdx                                ;80D4E1|000042
                 TAX                                            ;80D4E3|
                 LDA.W objBoxTop,X                          ;80D4E4|800F21
-                AND.B refillTmp32                              ;80D4E7|000032
+                AND.B tmp32                              ;80D4E7|000032
                 ORA.B vmAcc                                    ;80D4E9|00008E
                 STA.W objBoxTop,X                          ;80D4EB|800F21
                 RTS                                            ;80D4EE|
@@ -17231,13 +17237,13 @@ Op_SetBitFromAcc_Ram:
                 STA.B vmAcc                                    ;80D4FD|00008E
 
              +: LDA.W data_80F417,X                            ;80D4FF|80F417
-                STA.B refillTmp32                              ;80D502|000032
+                STA.B tmp32                              ;80D502|000032
                 LDA.B [scriptPC],Y                             ;80D504|000070
                 INY                                            ;80D506|
                 INY                                            ;80D507|
                 TAX                                            ;80D508|
                 LDA.B zp_00,X                                  ;80D509|000000
-                AND.B refillTmp32                              ;80D50B|000032
+                AND.B tmp32                              ;80D50B|000032
                 ORA.B vmAcc                                    ;80D50D|00008E
                 STA.B zp_00,X                                  ;80D50F|000000
                 RTS                                            ;80D511|
@@ -17259,7 +17265,7 @@ Op_SetBitFromAcc_TFld:
                 STA.B vmAcc                                    ;80D520|00008E
 
              +: LDA.W data_80F417,X                            ;80D522|80F417
-                STA.B refillTmp32                              ;80D525|000032
+                STA.B tmp32                              ;80D525|000032
                 LDA.B [scriptPC],Y                             ;80D527|000070
                 INY                                            ;80D529|
                 AND.W #$00FF                                   ;80D52A|
@@ -17270,7 +17276,7 @@ Op_SetBitFromAcc_TFld:
                 ADC.W objTarget,X                          ;80D534|8013D1
                 TAX                                            ;80D537|
                 LDA.W objBoxTop,X                          ;80D538|800F21
-                AND.B refillTmp32                              ;80D53B|000032
+                AND.B tmp32                              ;80D53B|000032
                 ORA.B vmAcc                                    ;80D53D|00008E
                 STA.W objBoxTop,X                          ;80D53F|800F21
                 RTS                                            ;80D542|
@@ -17986,11 +17992,11 @@ Op_SpawnObject:
                 PLA                                            ;80D81F|
                 JSR.W VM_GetOperandByType_Shr3                               ;80D820|80DCD4
                 AND.W #$0801                                   ;80D823|
-                STA.B refillTmp32                              ;80D826|000032
+                STA.B tmp32                              ;80D826|000032
                 LDX.B curObjIdx                                ;80D828|000042
                 LDA.W objFlags,X                          ;80D82A|800FC1
                 AND.W #$00FE                                   ;80D82D|
-                ORA.B refillTmp32                              ;80D830|000032
+                ORA.B tmp32                              ;80D830|000032
                 TAX                                            ;80D832|
                 LDA.B [scriptPC],Y                             ;80D833|000070
                 INY                                            ;80D835|
@@ -18131,12 +18137,12 @@ Op_SetTileCollisionXY:
                 ASL A                                          ;80D8DF|
                 ASL A                                          ;80D8E0|
                 AND.W #$FC00                                   ;80D8E1|
-                STA.B refillStageIdx                           ;80D8E4|000034
+                STA.B tmp34                           ;80D8E4|000034
                 PHY                                            ;80D8E6|
                 LDX.B zp_6C                                    ;80D8E7|00006C
                 LDY.B zp_6E                                    ;80D8E9|00006E
                 JSR.W sub_80A3AA                               ;80D8EB|80A3AA
-                ORA.B refillStageIdx                           ;80D8EE|000034
+                ORA.B tmp34                           ;80D8EE|000034
                 LDX.B zp_6C                                    ;80D8F0|00006C
                 LDY.B zp_6E                                    ;80D8F2|00006E
                 JSR.W sub_80A3D7                               ;80D8F4|80A3D7
@@ -18161,13 +18167,13 @@ Op_SetTileIndexXY:
                 LDA.B [scriptPC],Y                             ;80D908|000070
                 INY                                            ;80D90A|
                 JSR.W VM_GetOperandByType                               ;80D90B|80DCD7
-                STA.B refillStageIdx                           ;80D90E|000034
+                STA.B tmp34                           ;80D90E|000034
                 PHY                                            ;80D910|
                 LDX.B zp_6C                                    ;80D911|00006C
                 LDY.B zp_6E                                    ;80D913|00006E
                 JSR.W sub_80A3B1                               ;80D915|80A3B1
                 AND.W #$FC00                                   ;80D918|
-                ORA.B refillStageIdx                           ;80D91B|000034
+                ORA.B tmp34                           ;80D91B|000034
                 LDX.B zp_6C                                    ;80D91D|00006C
                 LDY.B zp_6E                                    ;80D91F|00006E
                 JSR.W sub_80A3D7                               ;80D921|80A3D7
@@ -18185,7 +18191,7 @@ Op_SetTileIndexXY:
 Op_GetNearestPlayerDelta:
                 PHY                                            ;80D929|
                 LDA.W #$FFFF                                   ;80D92A|
-                STA.B refillStageIdx                           ;80D92D|000034
+                STA.B tmp34                           ;80D92D|000034
                 LDY.B curObjIdx                                ;80D92F|000042
                 LDX.W #$0000                                   ;80D931|
 
@@ -18198,7 +18204,7 @@ Op_GetNearestPlayerDelta:
                 EOR.W #$FFFF                                   ;80D942|
                 INC A                                          ;80D945|
 
-             +: STA.B refillTmp32                              ;80D946|000032
+             +: STA.B tmp32                              ;80D946|000032
                 LDA.W objY,Y                          ;80D948|8011A1
                 SEC                                            ;80D94B|
                 SBC.W objY,X                          ;80D94C|8011A1
@@ -18207,17 +18213,17 @@ Op_GetNearestPlayerDelta:
                 INC A                                          ;80D954|
 
              +: CLC                                            ;80D955|
-                ADC.B refillTmp32                              ;80D956|000032
-                CMP.B refillStageIdx                           ;80D958|000034
+                ADC.B tmp32                              ;80D956|000032
+                CMP.B tmp34                           ;80D958|000034
                 BCS .skip                                      ;80D95A|80D960
-                STA.B refillStageIdx                           ;80D95C|000034
-                STX.B zp_36                                    ;80D95E|000036
+                STA.B tmp34                           ;80D95C|000034
+                STX.B tmp36                                    ;80D95E|000036
 
          .skip: INX                                            ;80D960|
                 INX                                            ;80D961|
                 CPX.W #$0006                                   ;80D962|
                 BCC .loop                                      ;80D965|80D934
-                LDX.B zp_36                                    ;80D967|000036
+                LDX.B tmp36                                    ;80D967|000036
                 STX.W vmLastOverlapObj                                 ;80D969|8003E8
                 BRA loc_80D97C                                 ;80D96C|80D97C
 
@@ -18295,12 +18301,12 @@ Op_PlaySfx:
                 LDA.B [scriptPC],Y                             ;80D9C0|000070
                 INY                                            ;80D9C2|
                 AND.W #$00FF                                   ;80D9C3|
-                STA.B refillTmp32                              ;80D9C6|000032
+                STA.B tmp32                              ;80D9C6|000032
                 LDA.B [scriptPC],Y                             ;80D9C8|000070
                 INY                                            ;80D9CA|
                 AND.W #$00FF                                   ;80D9CB|
                 TAX                                            ;80D9CE|
-                LDA.B refillTmp32                              ;80D9CF|000032
+                LDA.B tmp32                              ;80D9CF|000032
                 JMP.W sub_8088F8                               ;80D9D1|8088F8
 
 
@@ -18327,12 +18333,12 @@ Op_StopSfx_Ex:
                 LDA.B [scriptPC],Y                             ;80D9E0|000070
                 INY                                            ;80D9E2|
                 AND.W #$00FF                                   ;80D9E3|
-                STA.B refillTmp32                              ;80D9E6|000032
+                STA.B tmp32                              ;80D9E6|000032
                 LDA.B [scriptPC],Y                             ;80D9E8|000070
                 INY                                            ;80D9EA|
                 INY                                            ;80D9EB|
                 TAX                                            ;80D9EC|
-                LDA.B refillTmp32                              ;80D9ED|000032
+                LDA.B tmp32                              ;80D9ED|000032
                 JMP.W sub_80890C                               ;80D9EF|80890C
 
 
@@ -18829,7 +18835,7 @@ Op_SetVelocityToward:
                 STZ.B refillSaveY                              ;80DBC5|000040
                 LDA.B [scriptPC],Y                             ;80DBC7|000070
                 INY                                            ;80DBC9|
-                STA.B refillStageIdx                           ;80DBCA|000034
+                STA.B tmp34                           ;80DBCA|000034
                 JSR.W VM_GetOperandByType                               ;80DBCC|80DCD7
                 SEC                                            ;80DBCF|
                 LDX.B curObjIdx                                ;80DBD0|000042
@@ -18840,7 +18846,7 @@ Op_SetVelocityToward:
                 INC.B refillSaveX                              ;80DBDB|00003E
 
              +: STA.B zp_6C                                    ;80DBDD|00006C
-                LDA.B refillStageIdx                           ;80DBDF|000034
+                LDA.B tmp34                           ;80DBDF|000034
                 JSR.W VM_GetOperandByType_Shr3                               ;80DBE1|80DCD4
                 SEC                                            ;80DBE4|
                 LDX.B curObjIdx                                ;80DBE5|000042
@@ -18856,24 +18862,24 @@ Op_SetVelocityToward:
                 LDA.B zp_6C                                    ;80DBF8|00006C
 
              +: TAX                                            ;80DBFA|
-                STZ.B refillStageIdx                           ;80DBFB|000034
-                STZ.B zp_36                                    ;80DBFD|000036
+                STZ.B tmp34                           ;80DBFB|000034
+                STZ.B tmp36                                    ;80DBFD|000036
                 LDA.B [scriptPC],Y                             ;80DBFF|000070
                 INY                                            ;80DC01|
                 PHY                                            ;80DC02|
                 AND.W #$00FF                                   ;80DC03|
-                STA.B refillTmp32                              ;80DC06|000032
+                STA.B tmp32                              ;80DC06|000032
 
-         .loop: CPX.B refillTmp32                              ;80DC08|000032
+         .loop: CPX.B tmp32                              ;80DC08|000032
                 BCC .skip                                      ;80DC0A|80DC1B
                 BEQ .skip                                      ;80DC0C|80DC1B
                 TXA                                            ;80DC0E|
                 LSR A                                          ;80DC0F|
                 TAX                                            ;80DC10|
                 LSR.B zp_6C                                    ;80DC11|00006C
-                ROR.B refillStageIdx                           ;80DC13|000034
+                ROR.B tmp34                           ;80DC13|000034
                 LSR.B zp_6E                                    ;80DC15|00006E
-                ROR.B zp_36                                    ;80DC17|000036
+                ROR.B tmp36                                    ;80DC17|000036
                 BRA .loop                                      ;80DC19|80DC08
 
 
@@ -18891,7 +18897,7 @@ Op_SetVelocityToward:
                 EOR.W #$0001                                   ;80DC33|
                 STA.B refillSaveY                              ;80DC36|000040
 
-             +: LDA.B refillStageIdx                           ;80DC38|000034
+             +: LDA.B tmp34                           ;80DC38|000034
                 AND.W #$FF00                                   ;80DC3A|
                 ORA.B zp_6C                                    ;80DC3D|00006C
                 XBA                                            ;80DC3F|
@@ -18901,7 +18907,7 @@ Op_SetVelocityToward:
                 INC A                                          ;80DC47|
 
              +: STA.W objVelX,X                               ;80DC48|801089
-                LDA.B zp_36                                    ;80DC4B|000036
+                LDA.B tmp36                                    ;80DC4B|000036
                 AND.W #$FF00                                   ;80DC4D|
                 ORA.B zp_6E                                    ;80DC50|00006E
                 XBA                                            ;80DC52|
@@ -19695,8 +19701,8 @@ loc_80E03A:
 ; --------------------------------------------------------
 ;  UpdateObjectMotion_One   [51 ins, returns RTS]
 ;    callers: UpdateObjectMotion
-;    writes:    refillTmp32, refillStageIdx, zp_36, oamSrcX, oamSrcY
-;    reads:     refillTmp32, refillStageIdx, zp_36, oamSrcX, oamSrcY, objActive ...
+;    writes:    tmp32, tmp34, tmp36, oamSrcX, oamSrcY
+;    reads:     tmp32, tmp34, tmp36, oamSrcX, oamSrcY, objActive ...
 ;    calls:     ptrtbl_80E0B1
 ; --------------------------------------------------------
 UpdateObjectMotion_One:
@@ -19718,7 +19724,7 @@ UpdateObjectMotion_One:
                 EOR.W #$FFFF                                   ;80E066|
                 INC A                                          ;80E069|
 
-         .cont: STA.B refillStageIdx                           ;80E06A|000034
+         .cont: STA.B tmp34                           ;80E06A|000034
                 LDA.W objY,Y                          ;80E06C|8011A1
                 SEC                                            ;80E06F|
                 SBC.W objPrevY,Y                               ;80E070|800E09
@@ -19733,28 +19739,28 @@ UpdateObjectMotion_One:
                 EOR.W #$FFFF                                   ;80E081|
                 INC A                                          ;80E084|
 
-        .cont2: STA.B zp_36                                    ;80E085|000036
-                ORA.B refillStageIdx                           ;80E087|000034
+        .cont2: STA.B tmp36                                    ;80E085|000036
+                ORA.B tmp34                           ;80E087|000034
                 BEQ .exit                                      ;80E089|80E0B0
                 PHX                                            ;80E08B|
                 LDA.W objOamEnd,Y                               ;80E08C|8014E9
                 ASL A                                          ;80E08F|
-                STA.B refillTmp32                              ;80E090|000032
+                STA.B tmp32                              ;80E090|000032
                 LDA.W objOamFirst,Y                               ;80E092|8014C1
                 ASL A                                          ;80E095|
                 TAX                                            ;80E096|
 
          .loop: LDA.W oamSrcX,X                                ;80E097|800A61
                 CLC                                            ;80E09A|
-                ADC.B refillStageIdx                           ;80E09B|000034
+                ADC.B tmp34                           ;80E09B|000034
                 STA.W oamSrcX,X                                ;80E09D|800A61
                 LDA.W oamSrcY,X                                ;80E0A0|800B49
                 CLC                                            ;80E0A3|
-                ADC.B zp_36                                    ;80E0A4|000036
+                ADC.B tmp36                                    ;80E0A4|000036
                 STA.W oamSrcY,X                                ;80E0A6|800B49
                 INX                                            ;80E0A9|
                 INX                                            ;80E0AA|
-                CPX.B refillTmp32                              ;80E0AB|000032
+                CPX.B tmp32                              ;80E0AB|000032
                 BCC .loop                                      ;80E0AD|80E097
                 PLX                                            ;80E0AF|
 
@@ -19794,8 +19800,8 @@ BuildSpriteOam:
 ;  BuildSpriteOam_Loop   [94 ins, returns RTS]
 ;    callers: BuildSpriteOam_Loop
 ;    writes HW: A1B1, A1B4, A1TL1, A1TL4, BBAD1, BBAD4, DASL1, DASL4, DMAP1, DMAP4
-;    writes:    refillTmp32, oamBuildLo, ram_0573, oamBuildHi
-;    reads:     refillTmp32, playerCamX, playerCamY, splitYOffset, oamBuildHi, oamSrcPriority ...
+;    writes:    tmp32, oamBuildLo, ram_0573, oamBuildHi
+;    reads:     tmp32, playerCamX, playerCamY, splitYOffset, oamBuildHi, oamSrcPriority ...
 ;    calls:     BuildSpriteOam_Loop
 ; --------------------------------------------------------
 BuildSpriteOam_Loop:
@@ -19817,7 +19823,7 @@ BuildSpriteOam_Loop:
                 AND.W #$00FF                                   ;80E0DB|
 
              +: XBA                                            ;80E0DE|
-                STA.B refillTmp32                              ;80E0DF|000032
+                STA.B tmp32                              ;80E0DF|000032
                 TXA                                            ;80E0E1|
                 ASL A                                          ;80E0E2|
                 PHA                                            ;80E0E3|
@@ -19830,7 +19836,7 @@ BuildSpriteOam_Loop:
                 CMP.W #$FFC0                                   ;80E0F0|
                 BCC .skip                                      ;80E0F3|80E11B
                 AND.W #$00FF                                   ;80E0F5|
-                ORA.B refillTmp32                              ;80E0F8|000032
+                ORA.B tmp32                              ;80E0F8|000032
                 STA.W oamBuildLo,X                             ;80E0FA|800571
                 LDA.W oamSrcPriority,X                               ;80E0FD|800793
                 STA.W ram_0573,X                               ;80E100|800573
@@ -19862,7 +19868,7 @@ BuildSpriteOam_Loop:
                 BRA SetupOamGpDmaCh1Ch4                        ;80E131|80E15A
 
 
-        .skip2: ORA.B refillTmp32                              ;80E133|000032
+        .skip2: ORA.B tmp32                              ;80E133|000032
                 STA.W oamBuildLo,X                             ;80E135|800571
                 LDA.W oamSrcPriority,X                               ;80E138|800793
                 STA.W ram_0573,X                               ;80E13B|800573
@@ -19925,8 +19931,8 @@ OamDmaUpload:
 ; --------------------------------------------------------
 ;  SetOamHiBit   [23 ins, returns RTS]
 ;    callers: AnimVM_Run, InitSpawnOamMirrorBits
-;    writes:    refillTmp32, oamBuildHi
-;    reads:     refillTmp32, oamBuildHi
+;    writes:    tmp32, oamBuildHi
+;    reads:     tmp32, oamBuildHi
 ;    operands: A = 0 clear / nonzero set, Y = sprite index
 ;    Sets or clears one bit (selected by Y&3 via the data_80E9A8/AC masks) of this sprite's entry in
 ;    the OAM high table (oamBuildHi) -- used for the size bit and both flip bits.
@@ -19934,7 +19940,7 @@ OamDmaUpload:
 SetOamHiBit:
                 PHY                                            ;80E1A8|
                 PHX                                            ;80E1A9|
-                STA.B refillTmp32                              ;80E1AA|000032
+                STA.B tmp32                              ;80E1AA|000032
                 SEP #$30                                       ;80E1AC|
                 TYA                                            ;80E1AE|
                 AND.B #$03                                     ;80E1AF|
@@ -19943,7 +19949,7 @@ SetOamHiBit:
                 LSR A                                          ;80E1B3|
                 LSR A                                          ;80E1B4|
                 TAY                                            ;80E1B5|
-                LDA.B refillTmp32                              ;80E1B6|000032
+                LDA.B tmp32                              ;80E1B6|000032
                 BNE +                                          ;80E1B8|80E1C2
                 LDA.W oamBuildHi,Y                             ;80E1BA|800771
                 AND.W data_80E9A8,X                            ;80E1BD|80E9A8
@@ -20042,8 +20048,8 @@ AnimVM_TickObject:
 ; --------------------------------------------------------
 ;  AnimVM_Run   [526 ins, returns RTS]
 ;    callers: AnimVM_TickObject
-;    writes:    zp_2A, zp_2C, zp_2E, zp_30, refillTmp32, refillStageIdx ...
-;    reads:     zp_2C, refillTmp32, refillStageIdx, zp_3A, curObjIdx, animPC ...
+;    writes:    zp_2A, zp_2C, zp_2E, zp_30, tmp32, tmp34 ...
+;    reads:     zp_2C, tmp32, tmp34, zp_3A, curObjIdx, animPC ...
 ;    calls:     AnimVM_OpTable, MirrorSpritesX, MirrorSpritesY, SetOamHiBit, Mul8x16, sub_8088F8, +2 more
 ; --------------------------------------------------------
 AnimVM_Run:
@@ -20073,7 +20079,7 @@ AnimOp_AddTileDelta:
                 LDA.B [animPC]                                  ;80E247|000074
                 INC.B animPC                                    ;80E249|000074
                 AND.W #$00FF                                   ;80E24B|
-                STA.B refillStageIdx                           ;80E24E|000034
+                STA.B tmp34                           ;80E24E|000034
                 LDX.B animOamFirstX4                                    ;80E250|00007E
                 LDY.B animOamFirst                                    ;80E252|00007C
                 LDA.W animSpriteMask                                 ;80E254|80038E
@@ -20084,7 +20090,7 @@ AnimOp_AddTileDelta:
                 BEQ .skip                                      ;80E25F|80E26A
                 LDA.W oamSrcPriority,X                               ;80E261|800793
                 CLC                                            ;80E264|
-                ADC.B refillStageIdx                           ;80E265|000034
+                ADC.B tmp34                           ;80E265|000034
                 STA.W oamSrcPriority,X                               ;80E267|800793
 
          .skip: INX                                            ;80E26A|
@@ -20099,7 +20105,7 @@ AnimOp_AddTileDelta:
 
         .loop2: LDA.W oamSrcPriority,X                               ;80E274|800793
                 CLC                                            ;80E277|
-                ADC.B refillStageIdx                           ;80E278|000034
+                ADC.B tmp34                           ;80E278|000034
                 STA.W oamSrcPriority,X                               ;80E27A|800793
                 INX                                            ;80E27D|
                 INX                                            ;80E27E|
@@ -20137,10 +20143,10 @@ AnimOp_SetTiles:
                 STA.W oamSrcPriority,X                               ;80E2A9|800793
                 XBA                                            ;80E2AC|
                 AND.B #$01                                     ;80E2AD|
-                STA.B refillTmp32                              ;80E2AF|000032
+                STA.B tmp32                              ;80E2AF|000032
                 LDA.W oamSrcPalette,X                               ;80E2B1|800794
                 AND.B #$FE                                     ;80E2B4|
-                ORA.B refillTmp32                              ;80E2B6|000032
+                ORA.B tmp32                              ;80E2B6|000032
                 STA.W oamSrcPalette,X                               ;80E2B8|800794
                 REP #$20                                       ;80E2BB|
                 INC.B animPC                                    ;80E2BD|000074
@@ -20163,10 +20169,10 @@ AnimOp_SetTiles:
                 STA.W oamSrcPriority,X                               ;80E2D3|800793
                 XBA                                            ;80E2D6|
                 AND.B #$01                                     ;80E2D7|
-                STA.B refillTmp32                              ;80E2D9|000032
+                STA.B tmp32                              ;80E2D9|000032
                 LDA.W oamSrcPalette,X                               ;80E2DB|800794
                 AND.B #$FE                                     ;80E2DE|
-                ORA.B refillTmp32                              ;80E2E0|000032
+                ORA.B tmp32                              ;80E2E0|000032
                 STA.W oamSrcPalette,X                               ;80E2E2|800794
                 REP #$20                                       ;80E2E5|
                 INC.B animPC                                    ;80E2E7|000074
@@ -20235,7 +20241,7 @@ AnimOp_MoveX:
                 INC A                                          ;80E332|
                 TAX                                            ;80E333|
 
-         .skip: STX.B refillTmp32                              ;80E334|000032
+         .skip: STX.B tmp32                              ;80E334|000032
                 LDA.W animSpriteMask                                 ;80E336|80038E
                 BEQ .skip3                                     ;80E339|80E359
                 LDY.B animOamFirst                                    ;80E33B|00007C
@@ -20248,7 +20254,7 @@ AnimOp_MoveX:
                 BEQ .skip2                                     ;80E346|80E351
                 LDA.W oamSrcX,X                                ;80E348|800A61
                 CLC                                            ;80E34B|
-                ADC.B refillTmp32                              ;80E34C|000032
+                ADC.B tmp32                              ;80E34C|000032
                 STA.W oamSrcX,X                                ;80E34E|800A61
 
         .skip2: INX                                            ;80E351|
@@ -20259,7 +20265,7 @@ AnimOp_MoveX:
                 RTS                                            ;80E358|
 
 
-        .skip3: LDA.B refillTmp32                              ;80E359|000032
+        .skip3: LDA.B tmp32                              ;80E359|000032
                 AND.W #$00FF                                   ;80E35B|
                 XBA                                            ;80E35E|
                 CLC                                            ;80E35F|
@@ -20277,7 +20283,7 @@ AnimOp_MoveX:
 AnimOp_SetXPositions:
                 LDY.B curObjIdx                                ;80E367|000042
                 LDA.W objX,Y                          ;80E369|801179
-                STA.B refillTmp32                              ;80E36C|000032
+                STA.B tmp32                              ;80E36C|000032
                 LDA.B animOamFirst                                    ;80E36E|00007C
                 TAY                                            ;80E370|
                 ASL A                                          ;80E371|
@@ -20287,7 +20293,7 @@ AnimOp_SetXPositions:
                 INC.B animPC                                    ;80E375|000074
                 INC.B animPC                                    ;80E377|000074
                 CLC                                            ;80E379|
-                ADC.B refillTmp32                              ;80E37A|000032
+                ADC.B tmp32                              ;80E37A|000032
                 STA.W oamSrcX,X                                ;80E37C|800A61
                 INX                                            ;80E37F|
                 INX                                            ;80E380|
@@ -20326,7 +20332,7 @@ AnimOp_MoveY:
                 INC A                                          ;80E3B2|
                 TAX                                            ;80E3B3|
 
-         .skip: STX.B refillTmp32                              ;80E3B4|000032
+         .skip: STX.B tmp32                              ;80E3B4|000032
                 LDA.W animSpriteMask                                 ;80E3B6|80038E
                 BEQ .skip3                                     ;80E3B9|80E3D9
                 LDY.B animOamFirst                                    ;80E3BB|00007C
@@ -20339,7 +20345,7 @@ AnimOp_MoveY:
                 BEQ .skip2                                     ;80E3C6|80E3D1
                 LDA.W oamSrcY,X                                ;80E3C8|800B49
                 CLC                                            ;80E3CB|
-                ADC.B refillTmp32                              ;80E3CC|000032
+                ADC.B tmp32                              ;80E3CC|000032
                 STA.W oamSrcY,X                                ;80E3CE|800B49
 
         .skip2: INX                                            ;80E3D1|
@@ -20350,7 +20356,7 @@ AnimOp_MoveY:
                 RTS                                            ;80E3D8|
 
 
-        .skip3: LDA.B refillTmp32                              ;80E3D9|000032
+        .skip3: LDA.B tmp32                              ;80E3D9|000032
                 AND.W #$00FF                                   ;80E3DB|
                 XBA                                            ;80E3DE|
                 CLC                                            ;80E3DF|
@@ -20367,7 +20373,7 @@ AnimOp_MoveY:
 AnimOp_SetYPositions:
                 LDY.B curObjIdx                                ;80E3E7|000042
                 LDA.W objY,Y                          ;80E3E9|8011A1
-                STA.B refillTmp32                              ;80E3EC|000032
+                STA.B tmp32                              ;80E3EC|000032
                 LDA.B animOamFirst                                    ;80E3EE|00007C
                 TAY                                            ;80E3F0|
                 ASL A                                          ;80E3F1|
@@ -20377,7 +20383,7 @@ AnimOp_SetYPositions:
                 INC.B animPC                                    ;80E3F5|000074
                 INC.B animPC                                    ;80E3F7|000074
                 CLC                                            ;80E3F9|
-                ADC.B refillTmp32                              ;80E3FA|000032
+                ADC.B tmp32                              ;80E3FA|000032
                 STA.W oamSrcY,X                                ;80E3FC|800B49
                 INX                                            ;80E3FF|
                 INX                                            ;80E400|
@@ -20451,7 +20457,7 @@ AnimOp_SetSizeBit:
                 LDA.B [animPC]                                  ;80E459|000074
                 INC.B animPC                                    ;80E45B|000074
                 AND.W #$00FF                                   ;80E45D|
-                STA.B refillStageIdx                           ;80E460|000034
+                STA.B tmp34                           ;80E460|000034
                 LDY.B animOamFirst                                    ;80E462|00007C
                 LDA.W animSpriteMask                                 ;80E464|80038E
                 BEQ .loop2                                     ;80E467|80E47C
@@ -20459,7 +20465,7 @@ AnimOp_SetSizeBit:
          .loop: LDA.W spriteGroupFlags,Y                               ;80E469|8009F9
                 AND.W animSpriteMask                                 ;80E46C|80038E
                 BEQ +                                          ;80E46F|80E476
-                LDA.B refillStageIdx                           ;80E471|000034
+                LDA.B tmp34                           ;80E471|000034
                 JSR.W SetOamHiBit                               ;80E473|80E1A8
 
              +: INY                                            ;80E476|
@@ -20468,7 +20474,7 @@ AnimOp_SetSizeBit:
                 RTS                                            ;80E47B|
 
 
-        .loop2: LDA.B refillStageIdx                           ;80E47C|000034
+        .loop2: LDA.B tmp34                           ;80E47C|000034
                 JSR.W SetOamHiBit                               ;80E47E|80E1A8
                 INY                                            ;80E481|
                 CPY.B animOamEnd                                    ;80E482|000080
@@ -20555,7 +20561,7 @@ AnimOp_SetPriority:
                 ASL A                                          ;80E4EC|
                 ASL A                                          ;80E4ED|
                 ASL A                                          ;80E4EE|
-                STA.B refillTmp32                              ;80E4EF|000032
+                STA.B tmp32                              ;80E4EF|000032
                 LDX.B animOamFirstX4                                    ;80E4F1|00007E
                 LDY.B animOamFirst                                    ;80E4F3|00007C
                 LDA.W animSpriteMask                                 ;80E4F5|80038E
@@ -20567,7 +20573,7 @@ AnimOp_SetPriority:
                 SEP #$20                                       ;80E502|
                 LDA.W oamSrcPalette,X                               ;80E504|800794
                 AND.B #$CF                                     ;80E507|
-                ORA.B refillTmp32                              ;80E509|000032
+                ORA.B tmp32                              ;80E509|000032
                 STA.W oamSrcPalette,X                               ;80E50B|800794
                 REP #$20                                       ;80E50E|
 
@@ -20584,7 +20590,7 @@ AnimOp_SetPriority:
         .loop2: SEP #$20                                       ;80E51A|
                 LDA.W oamSrcPalette,X                               ;80E51C|800794
                 AND.B #$CF                                     ;80E51F|
-                ORA.B refillTmp32                              ;80E521|000032
+                ORA.B tmp32                              ;80E521|000032
                 STA.W oamSrcPalette,X                               ;80E523|800794
                 REP #$20                                       ;80E526|
                 INX                                            ;80E528|
@@ -20718,7 +20724,7 @@ AnimOp_ToggleFlipHV:
 ;    family ops.
 ;--------------------------------------------------------------
 AnimOp_SetPalette_Apply:
-                STA.B refillTmp32                              ;80E58F|000032
+                STA.B tmp32                              ;80E58F|000032
                 LDX.B animOamFirstX4                                    ;80E591|00007E
                 LDY.B animOamFirst                                    ;80E593|00007C
                 LDA.W animSpriteMask                                 ;80E595|80038E
@@ -20729,7 +20735,7 @@ AnimOp_SetPalette_Apply:
                 BEQ .skip                                      ;80E5A0|80E5AE
                 SEP #$20                                       ;80E5A2|
                 LDA.W oamSrcPalette,X                               ;80E5A4|800794
-                EOR.B refillTmp32                              ;80E5A7|000032
+                EOR.B tmp32                              ;80E5A7|000032
                 STA.W oamSrcPalette,X                               ;80E5A9|800794
                 REP #$20                                       ;80E5AC|
 
@@ -20745,7 +20751,7 @@ AnimOp_SetPalette_Apply:
 
         .loop2: SEP #$20                                       ;80E5B8|
                 LDA.W oamSrcPalette,X                               ;80E5BA|800794
-                EOR.B refillTmp32                              ;80E5BD|000032
+                EOR.B tmp32                              ;80E5BD|000032
                 STA.W oamSrcPalette,X                               ;80E5BF|800794
                 REP #$20                                       ;80E5C2|
                 INX                                            ;80E5C4|
@@ -20912,12 +20918,12 @@ DmaWramStagingUpload:
                 STA.W zp_2E,X                                  ;80E6C8|7E002E
                 LDA.W zp_30,Y                                  ;80E6CB|7E0030
                 STA.W zp_30,X                                  ;80E6CE|7E0030
-                LDA.W refillTmp32,Y                            ;80E6D1|7E0032
-                STA.W refillTmp32,X                            ;80E6D4|7E0032
-                LDA.W refillStageIdx,Y                         ;80E6D7|7E0034
-                STA.W refillStageIdx,X                         ;80E6DA|7E0034
-                LDA.W zp_36,Y                                  ;80E6DD|7E0036
-                STA.W zp_36,X                                  ;80E6E0|7E0036
+                LDA.W tmp32,Y                            ;80E6D1|7E0032
+                STA.W tmp32,X                            ;80E6D4|7E0032
+                LDA.W tmp34,Y                         ;80E6D7|7E0034
+                STA.W tmp34,X                         ;80E6DA|7E0034
+                LDA.W tmp36,Y                                  ;80E6DD|7E0036
+                STA.W tmp36,X                                  ;80E6E0|7E0036
                 LDA.W zp_38,Y                                  ;80E6E3|7E0038
                 STA.W zp_38,X                                  ;80E6E6|7E0038
                 LDA.W zp_3A,Y                                  ;80E6E9|7E003A
@@ -21127,8 +21133,8 @@ SetupVramGpDmaCh5_GfxSet:
 ;  SetupVramGpDmaCh5_Frame   [32 ins, returns RTS]
 ;    callers: vbwait_808081, MainLoop_PauseOrMenu, RunGameplayFrame_NoBlank
 ;    writes HW: A1B5, A1TL5, BBAD5, DASL5, DMAP5
-;    writes:    refillTmp32, objGfxSetIdx
-;    reads:     refillTmp32, curObjIdx, animPC, pendingMapFillFlag, gfxSetId
+;    writes:    tmp32, objGfxSetIdx
+;    reads:     tmp32, curObjIdx, animPC, pendingMapFillFlag, gfxSetId
 ;    Same channel, programmed instead to upload one animation frame's worth of data from WRAM $7E5000
 ;    -- the two share the DMA channel because only one upload happens per frame.
 ; --------------------------------------------------------
@@ -21161,12 +21167,12 @@ AnimOp_SelectGfxSet:
                 LDA.B [animPC]                                  ;80E8AA|000074
                 INC.B animPC                                    ;80E8AC|000074
             INC.B animPC                                        ;80E8AE|000074
-                STA.B refillTmp32                               ;80E8B0|000032
+                STA.B tmp32                               ;80E8B0|000032
                 LDX.W #$0000                                    ;80E8B2|
                 TXY                                             ;80E8B5|
 
          .loop: LDA.W gfxSetId,Y                               ;80E8B6|800C49
-                CMP.B refillTmp32                              ;80E8B9|000032
+                CMP.B tmp32                              ;80E8B9|000032
                 BEQ .skip                                      ;80E8BB|80E8C2
                 INY                                            ;80E8BD|
                 INY                                            ;80E8BE|
@@ -21383,8 +21389,8 @@ Op_ToggleFlipH:
 ; --------------------------------------------------------
 ;  MirrorObjectX   [66 ins, returns RTS]
 ;    callers: ApplyAllObjectFollows_One, UnmirrorNewObject
-;    writes:    refillTmp32, zp_36, zp_38, zp_3A, oamSrcPalette, oamSrcX ...
-;    reads:     refillTmp32, zp_36, zp_38, zp_3A, camShakeOffsetX, camShakeOffsetY ...
+;    writes:    tmp32, tmp36, zp_38, zp_3A, oamSrcPalette, oamSrcX ...
+;    reads:     tmp32, tmp36, zp_38, zp_3A, camShakeOffsetX, camShakeOffsetY ...
 ;    calls:     GetOamHiBit
 ;    operands: X = object slot
 ;    Toggles objFlags bit 6 (facing left) and mirrors the object's hitbox around objX plus its
@@ -21415,23 +21421,23 @@ MirrorObjectX:
                 LDA.W objX,X                          ;80EA82|801179
                 CLC                                            ;80EA85|
                 ADC.W objX,X                          ;80EA86|801179
-                STA.B refillTmp32                              ;80EA89|000032
+                STA.B tmp32                              ;80EA89|000032
                 LDA.W objOamEnd,X                               ;80EA8B|8014E9
                 ASL A                                          ;80EA8E|
                 ASL A                                          ;80EA8F|
                 STA.B zp_3A                                    ;80EA90|00003A
                 LDA.W objOamFirst,X                               ;80EA92|8014C1
-                STA.B zp_36                                    ;80EA95|000036
+                STA.B tmp36                                    ;80EA95|000036
                 ASL A                                          ;80EA97|
                 TAY                                            ;80EA98|
                 ASL A                                          ;80EA99|
                 STA.B zp_38                                    ;80EA9A|000038
 
-         .loop: LDX.B zp_36                                    ;80EA9C|000036
+         .loop: LDX.B tmp36                                    ;80EA9C|000036
                 JSR.W GetOamHiBit                               ;80EA9E|80E1D0
                 CMP.W #$0000                                   ;80EAA1|
                 BNE .skip                                      ;80EAA4|80EAB4
-                LDA.B refillTmp32                              ;80EAA6|000032
+                LDA.B tmp32                              ;80EAA6|000032
                 SEC                                            ;80EAA8|
                 SBC.W oamSrcX,Y                                ;80EAA9|800A61
                 SBC.W camShakeOffsetX                                 ;80EAAC|8003B0
@@ -21439,7 +21445,7 @@ MirrorObjectX:
                 BRA .cont                                      ;80EAB2|80EAC0
 
 
-         .skip: LDA.B refillTmp32                              ;80EAB4|000032
+         .skip: LDA.B tmp32                              ;80EAB4|000032
                 SEC                                            ;80EAB6|
                 SBC.W oamSrcX,Y                                ;80EAB7|800A61
                 SBC.W camShakeOffsetY                                 ;80EABA|8003B2
@@ -21449,7 +21455,7 @@ MirrorObjectX:
                 LDA.W oamSrcPalette,X                               ;80EAC2|800794
                 EOR.W #$0040                                   ;80EAC5|
                 STA.W oamSrcPalette,X                               ;80EAC8|800794
-                INC.B zp_36                                    ;80EACB|000036
+                INC.B tmp36                                    ;80EACB|000036
                 INY                                            ;80EACD|
                 INY                                            ;80EACE|
                 LDA.B zp_38                                    ;80EACF|000038
@@ -21467,8 +21473,8 @@ MirrorObjectX:
 ; --------------------------------------------------------
 ;  MirrorSpritesX   [58 ins, returns RTS]
 ;    callers: AnimVM_Run
-;    writes:    refillTmp32, zp_36, zp_38, zp_3A, oamSrcPalette, oamSrcX
-;    reads:     refillTmp32, zp_36, zp_38, zp_3A, curObjIdx, camShakeOffsetX ...
+;    writes:    tmp32, tmp36, zp_38, zp_3A, oamSrcPalette, oamSrcX
+;    reads:     tmp32, tmp36, zp_38, zp_3A, curObjIdx, camShakeOffsetX ...
 ;    calls:     GetOamHiBit
 ;    operands: Y = object slot
 ;    Mirrors every sprite this object owns around its own centre (recomputes oamSrcX from the
@@ -21482,23 +21488,23 @@ MirrorSpritesX:
                 LDA.W objX,X                          ;80EAE4|801179
                 CLC                                            ;80EAE7|
                 ADC.W objX,X                          ;80EAE8|801179
-                STA.B refillTmp32                              ;80EAEB|000032
+                STA.B tmp32                              ;80EAEB|000032
                 LDA.W objOamEnd,X                               ;80EAED|8014E9
                 ASL A                                          ;80EAF0|
                 ASL A                                          ;80EAF1|
                 STA.B zp_3A                                    ;80EAF2|00003A
                 LDA.W objOamFirst,X                               ;80EAF4|8014C1
-                STA.B zp_36                                    ;80EAF7|000036
+                STA.B tmp36                                    ;80EAF7|000036
                 ASL A                                          ;80EAF9|
                 TAY                                            ;80EAFA|
                 ASL A                                          ;80EAFB|
                 STA.B zp_38                                    ;80EAFC|000038
 
-         .loop: LDX.B zp_36                                    ;80EAFE|000036
+         .loop: LDX.B tmp36                                    ;80EAFE|000036
                 JSR.W GetOamHiBit                               ;80EB00|80E1D0
                 CMP.W #$0000                                   ;80EB03|
                 BNE .skip                                      ;80EB06|80EB16
-                LDA.B refillTmp32                              ;80EB08|000032
+                LDA.B tmp32                              ;80EB08|000032
                 SEC                                            ;80EB0A|
                 SBC.W oamSrcX,Y                                ;80EB0B|800A61
                 SBC.W camShakeOffsetX                                 ;80EB0E|8003B0
@@ -21506,7 +21512,7 @@ MirrorSpritesX:
                 BRA .cont                                      ;80EB14|80EB22
 
 
-         .skip: LDA.B refillTmp32                              ;80EB16|000032
+         .skip: LDA.B tmp32                              ;80EB16|000032
                 SEC                                            ;80EB18|
                 SBC.W oamSrcX,Y                                ;80EB19|800A61
                 SBC.W camShakeOffsetY                                 ;80EB1C|8003B2
@@ -21516,7 +21522,7 @@ MirrorSpritesX:
                 LDA.W oamSrcPalette,X                               ;80EB24|800794
                 ORA.W #$0040                                   ;80EB27|
                 STA.W oamSrcPalette,X                               ;80EB2A|800794
-                INC.B zp_36                                    ;80EB2D|000036
+                INC.B tmp36                                    ;80EB2D|000036
                 INY                                            ;80EB2F|
                 INY                                            ;80EB30|
                 LDA.B zp_38                                    ;80EB31|000038
@@ -21567,8 +21573,8 @@ Op_ToggleFlipV:
 ; --------------------------------------------------------
 ;  MirrorObjectY   [66 ins, returns RTS]
 ;    callers: ApplyAllObjectFollows_One, UnmirrorNewObject
-;    writes:    refillTmp32, zp_36, zp_38, zp_3A, oamSrcPalette, oamSrcY ...
-;    reads:     refillTmp32, zp_36, zp_38, zp_3A, camShakeOffsetX, camShakeOffsetY ...
+;    writes:    tmp32, tmp36, zp_38, zp_3A, oamSrcPalette, oamSrcY ...
+;    reads:     tmp32, tmp36, zp_38, zp_3A, camShakeOffsetX, camShakeOffsetY ...
 ;    calls:     GetOamHiBit
 ;    operands: X = object slot
 ;    Y-axis counterpart of MirrorObjectX, for objFlags bit 7 (vertical flip).
@@ -21598,23 +21604,23 @@ MirrorObjectY:
                 LDA.W objY,X                          ;80EB85|8011A1
                 CLC                                            ;80EB88|
                 ADC.W objY,X                          ;80EB89|8011A1
-                STA.B refillTmp32                              ;80EB8C|000032
+                STA.B tmp32                              ;80EB8C|000032
                 LDA.W objOamEnd,X                               ;80EB8E|8014E9
                 ASL A                                          ;80EB91|
                 ASL A                                          ;80EB92|
                 STA.B zp_3A                                    ;80EB93|00003A
                 LDA.W objOamFirst,X                               ;80EB95|8014C1
-                STA.B zp_36                                    ;80EB98|000036
+                STA.B tmp36                                    ;80EB98|000036
                 ASL A                                          ;80EB9A|
                 TAY                                            ;80EB9B|
                 ASL A                                          ;80EB9C|
                 STA.B zp_38                                    ;80EB9D|000038
 
-         .loop: LDX.B zp_36                                    ;80EB9F|000036
+         .loop: LDX.B tmp36                                    ;80EB9F|000036
                 JSR.W GetOamHiBit                               ;80EBA1|80E1D0
                 CMP.W #$0000                                   ;80EBA4|
                 BNE .skip                                      ;80EBA7|80EBB7
-                LDA.B refillTmp32                              ;80EBA9|000032
+                LDA.B tmp32                              ;80EBA9|000032
                 SEC                                            ;80EBAB|
                 SBC.W oamSrcY,Y                                ;80EBAC|800B49
                 SBC.W camShakeOffsetX                                 ;80EBAF|8003B0
@@ -21622,7 +21628,7 @@ MirrorObjectY:
                 BRA .cont                                      ;80EBB5|80EBC3
 
 
-         .skip: LDA.B refillTmp32                              ;80EBB7|000032
+         .skip: LDA.B tmp32                              ;80EBB7|000032
                 SEC                                            ;80EBB9|
                 SBC.W oamSrcY,Y                                ;80EBBA|800B49
                 SBC.W camShakeOffsetY                                 ;80EBBD|8003B2
@@ -21632,7 +21638,7 @@ MirrorObjectY:
                 LDA.W oamSrcPalette,X                               ;80EBC5|800794
                 EOR.W #$0080                                   ;80EBC8|
                 STA.W oamSrcPalette,X                               ;80EBCB|800794
-                INC.B zp_36                                    ;80EBCE|000036
+                INC.B tmp36                                    ;80EBCE|000036
                 INY                                            ;80EBD0|
                 INY                                            ;80EBD1|
                 LDA.B zp_38                                    ;80EBD2|000038
@@ -21650,8 +21656,8 @@ MirrorObjectY:
 ; --------------------------------------------------------
 ;  MirrorSpritesY   [47 ins, returns RTS]
 ;    callers: AnimVM_Run
-;    writes:    refillTmp32, zp_36, zp_38, zp_3A, oamSrcPalette, oamSrcY
-;    reads:     refillTmp32, zp_36, zp_38, zp_3A, camShakeOffsetX, camShakeOffsetY ...
+;    writes:    tmp32, tmp36, zp_38, zp_3A, oamSrcPalette, oamSrcY
+;    reads:     tmp32, tmp36, zp_38, zp_3A, camShakeOffsetX, camShakeOffsetY ...
 ;    calls:     GetOamHiBit
 ;    operands: Y = object slot
 ;    Y-axis counterpart of MirrorSpritesX.
@@ -21663,23 +21669,23 @@ MirrorSpritesY:
                 LDA.W objY,X                          ;80EBE7|8011A1
                 CLC                                            ;80EBEA|
                 ADC.W objY,X                          ;80EBEB|8011A1
-                STA.B refillTmp32                              ;80EBEE|000032
+                STA.B tmp32                              ;80EBEE|000032
                 LDA.W objOamEnd,X                               ;80EBF0|8014E9
                 ASL A                                          ;80EBF3|
                 ASL A                                          ;80EBF4|
                 STA.B zp_3A                                    ;80EBF5|00003A
                 LDA.W objOamFirst,X                               ;80EBF7|8014C1
-                STA.B zp_36                                    ;80EBFA|000036
+                STA.B tmp36                                    ;80EBFA|000036
                 ASL A                                          ;80EBFC|
                 TAY                                            ;80EBFD|
                 ASL A                                          ;80EBFE|
                 STA.B zp_38                                    ;80EBFF|000038
 
-         .loop: LDX.B zp_36                                    ;80EC01|000036
+         .loop: LDX.B tmp36                                    ;80EC01|000036
                 JSR.W GetOamHiBit                               ;80EC03|80E1D0
                 CMP.W #$0000                                   ;80EC06|
                 BNE .skip                                      ;80EC09|80EC19
-                LDA.B refillTmp32                              ;80EC0B|000032
+                LDA.B tmp32                              ;80EC0B|000032
                 SEC                                            ;80EC0D|
                 SBC.W oamSrcY,Y                                ;80EC0E|800B49
                 SBC.W camShakeOffsetX                                 ;80EC11|8003B0
@@ -21687,7 +21693,7 @@ MirrorSpritesY:
                 BRA .cont                                      ;80EC17|80EC25
 
 
-         .skip: LDA.B refillTmp32                              ;80EC19|000032
+         .skip: LDA.B tmp32                              ;80EC19|000032
                 SEC                                            ;80EC1B|
                 SBC.W oamSrcY,Y                                ;80EC1C|800B49
                 SBC.W camShakeOffsetY                                 ;80EC1F|8003B2
@@ -21697,7 +21703,7 @@ MirrorSpritesY:
                 LDA.W oamSrcPalette,X                               ;80EC27|800794
                 ORA.W #$0080                                   ;80EC2A|
                 STA.W oamSrcPalette,X                               ;80EC2D|800794
-                INC.B zp_36                                    ;80EC30|000036
+                INC.B tmp36                                    ;80EC30|000036
                 INY                                            ;80EC32|
                 INY                                            ;80EC33|
                 LDA.B zp_38                                    ;80EC34|000038
@@ -21734,19 +21740,19 @@ ClearObjectTable:
 ; --------------------------------------------------------
 ;  SpawnObject   [38 ins, returns RTS]
 ;    callers: SpawnPlayers, SpawnPlayers_SplitScreenEntry, SpawnScreenModeSprites, Op_SubAcc_TFld, TrySpawnPlacementIfInBox, TrySpawnAlwaysActivePlacement
-;    writes:    refillStageIdx, zp_36, zp_38, objTableEnd, objActive, objOamFirst ...
-;    reads:     refillStageIdx, zp_38, zp_3A, objTableEnd, objOamCount
+;    writes:    tmp34, tmp36, zp_38, objTableEnd, objActive, objOamFirst ...
+;    reads:     tmp34, zp_38, zp_3A, objTableEnd, objOamCount
 ;    calls:     CanSpawnPlacement, HasFreeObjectSlot, GetSpawnRecPtr, InitObjectFromSpawnRec, FindFreeObjectSlotInPool, InitSpawnOamAttrs, +3 more
 ; --------------------------------------------------------
 SpawnObject:
-                STA.B refillStageIdx                           ;80EC56|000034
-                STY.B zp_36                                    ;80EC58|000036
+                STA.B tmp34                           ;80EC56|000034
+                STY.B tmp36                                    ;80EC58|000036
                 STX.B zp_38                                    ;80EC5A|000038
                 JSR.W CanSpawnPlacement                               ;80EC5C|80F135
                 BCS .skip4                                     ;80EC5F|80ECA4
                 JSR.W HasFreeObjectSlot                               ;80EC61|80F158
                 BCS .skip4                                     ;80EC64|80ECA4
-                LDA.B refillStageIdx                           ;80EC66|000034
+                LDA.B tmp34                           ;80EC66|000034
                 JSR.W GetSpawnRecPtr                               ;80EC68|80F11F
                 JSR.W InitObjectFromSpawnRec                               ;80EC6B|80F249
                 BCS .skip3                                     ;80EC6E|80EC9F
@@ -22104,7 +22110,7 @@ SpawnPlacementsInInitialView:
 ; --------------------------------------------------------
 ;  ComputeInitialViewBox   [17 ins, returns RTS]
 ;    callers: SpawnPlacementsInInitialView, DestroyObject
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A
+;    writes:    tmp34, tmp36, zp_38, zp_3A
 ;    reads:     playerCamX, playerCamY, splitYOffset
 ;    Builds the on-screen test box used at scene load: X = camX-16..camX-16+$120, Y =
 ;    camY-16..camY-16+$100-splitYOffset (roughly one screen plus a small margin on every side). Falls
@@ -22114,10 +22120,10 @@ ComputeInitialViewBox:
                 LDA.B playerCamX                               ;80EE80|000044
                 SEC                                            ;80EE82|
                 SBC.W #$0010                                   ;80EE83|
-                STA.B refillStageIdx                           ;80EE86|000034
+                STA.B tmp34                           ;80EE86|000034
                 CLC                                            ;80EE88|
                 ADC.W #$0120                                   ;80EE89|
-                STA.B zp_36                                    ;80EE8C|000036
+                STA.B tmp36                                    ;80EE8C|000036
                 LDA.B playerCamY                               ;80EE8E|000046
                 SEC                                            ;80EE90|
                 SBC.W #$0010                                   ;80EE91|
@@ -22133,34 +22139,34 @@ ComputeInitialViewBox:
 ; --------------------------------------------------------
 ;  loc_80EEA1   [8 ins, returns ?]
 ;    callers: RefillColumnLeft
-;    writes:    refillStageIdx, zp_36
+;    writes:    tmp34, tmp36
 ;    reads:     playerCamX
 ; --------------------------------------------------------
 loc_80EEA1:
-                LDA.B playerCamX                               ;80EEA1|000044
+                LDA.B playerCamX                               ;80EEA1|000044 ;load camX
                 SEC                                            ;80EEA3|
-                SBC.W #$0010                                   ;80EEA4|
-                STA.B refillStageIdx                           ;80EEA7|000034
+                SBC.W #$0010                                   ;80EEA4|        ;subtract 0x10 (one metatile)
+                STA.B tmp34                           ;80EEA7|000034  ;store
                 CLC                                            ;80EEA9|
-                ADC.W #$0020                                   ;80EEAA|
-                STA.B zp_36                                    ;80EEAD|000036
-                BRA loc_80EEBF                                 ;80EEAF|80EEBF
+                ADC.W #$0020                                   ;80EEAA|        ;add 0x20 (two metatiles)
+                STA.B tmp36                                    ;80EEAD|000036  ;store
+                BRA loc_80EEBF                                 ;80EEAF|80EEBF  ;
 
 
 ; --------------------------------------------------------
 ;  loc_80EEB1   [17 ins, returns ?]
 ;    callers: RefillColumnRight
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A
+;    writes:    tmp34, tmp36, zp_38, zp_3A
 ;    reads:     playerCamX, playerCamY, splitYOffset
 ; --------------------------------------------------------
 loc_80EEB1:
-                LDA.B playerCamX                               ;80EEB1|000044
+                LDA.B playerCamX                               ;80EEB1|000044 ;load camX
                 CLC                                            ;80EEB3|
-                ADC.W #$0110                                   ;80EEB4|
-                STA.B zp_36                                    ;80EEB7|000036
+                ADC.W #$0110                                   ;80EEB4|         ;add 0x110 (17 metatiles, aka the newest right edge of the screen)
+                STA.B tmp36                                    ;80EEB7|000036   
                 SEC                                            ;80EEB9|
-                SBC.W #$0020                                   ;80EEBA|
-                STA.B refillStageIdx                           ;80EEBD|000034
+                SBC.W #$0020                                   ;80EEBA|        ;subtract 0x20 (two metatiles)
+                STA.B tmp34                           ;80EEBD|000034
 
 loc_80EEBF:
                 LDA.B playerCamY                               ;80EEBF|000046
@@ -22197,7 +22203,7 @@ loc_80EED3:
 ; --------------------------------------------------------
 ;  loc_80EEE7   [14 ins, returns ?]
 ;    callers: RefillRowUp
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A
+;    writes:    tmp34, tmp36, zp_38, zp_3A
 ;    reads:     playerCamX, playerCamY
 ; --------------------------------------------------------
 loc_80EEE7:
@@ -22213,30 +22219,30 @@ loc_80EEF5:
                 LDA.B playerCamX                               ;80EEF5|000044
                 SEC                                            ;80EEF7|
                 SBC.W #$0010                                   ;80EEF8|
-                STA.B refillStageIdx                           ;80EEFB|000034
+                STA.B tmp34                           ;80EEFB|000034
                 CLC                                            ;80EEFD|
                 ADC.W #$0120                                   ;80EEFE|
-                STA.B zp_36                                    ;80EF01|000036
+                STA.B tmp36                                    ;80EF01|000036
 
 ; --------------------------------------------------------
 ;  ScanAllPlacementsInBox   [25 ins, returns RTS]
 ;    callers: SpawnPlacementsInInitialView
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, curObjIdx
-;    reads:     refillStageIdx, zp_36, zp_38, zp_3A
+;    writes:    tmp34, tmp36, zp_38, zp_3A, curObjIdx
+;    reads:     tmp34, tmp36, zp_38, zp_3A
 ;    calls:     TrySpawnPlacementIfInBox
-;    operands: X/Y entry = box edges already in refillStageIdx/zp_36/zp_38/zp_3A
+;    operands: X/Y entry = box edges already in tmp34/tmp36/zp_38/zp_3A
 ;    Walks the WHOLE placement table once, calling TrySpawnPlacementIfInBox on each entry. Used by
 ;    every placement-spawn trigger: scene load, each of the four scroll-refill directions, and object
 ;    despawn's placement re-check.
 ; --------------------------------------------------------
 ScanAllPlacementsInBox:
-                LDA.B refillStageIdx                           ;80EF03|000034
+                LDA.B tmp34                           ;80EF03|000034
                 BPL +                                          ;80EF05|80EF09
-                STZ.B refillStageIdx                           ;80EF07|000034
+                STZ.B tmp34                           ;80EF07|000034
 
-             +: LDA.B zp_36                                    ;80EF09|000036
+             +: LDA.B tmp36                                    ;80EF09|000036
                 BPL +                                          ;80EF0B|80EF0F
-                STZ.B zp_36                                    ;80EF0D|000036
+                STZ.B tmp36                                    ;80EF0D|000036
 
              +: LDA.B zp_38                                    ;80EF0F|000038
                 BPL +                                          ;80EF11|80EF15
@@ -22267,8 +22273,8 @@ ScanAllPlacementsInBox:
 ; --------------------------------------------------------
 ;  TrySpawnPlacementIfInBox   [63 ins, returns RTS]
 ;    callers: ScanAllPlacementsInBox, DestroyObject
-;    writes:    refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, zp_6C ...
-;    reads:     refillTmp32, refillStageIdx, zp_36, zp_38, zp_3A, objScanStartSlot ...
+;    writes:    tmp32, tmp34, tmp36, zp_38, zp_3A, zp_6C ...
+;    reads:     tmp32, tmp34, tmp36, zp_38, zp_3A, objScanStartSlot ...
 ;    calls:     SpawnObject
 ;    Per-placement test: does this placement's box overlap the caller's box? If so, is it already
 ;    alive (scanned via objPlacementIdx, starting at objScanStartSlot)? If neither blocks it, spawns
@@ -22279,12 +22285,12 @@ TrySpawnPlacementIfInBox:
                 LDA.W placeX,Y                                 ;80EF35|801A0A
                 CMP.W #$FFFF                                   ;80EF38|
                 BEQ .skip3                                     ;80EF3B|80EFBB
-                JSR.W Mod_PlacementX_PlusHalfW                 ;INSERT|  was: ADC.W placeHalfW,Y  (placeX + halfW, now + modShift)                SBC.B refillStageIdx                           ;80EF40|000034
-                SBC.B refillStageIdx                           ;80EF40|000034
+                JSR.W Mod_PlacementX_PlusHalfW                 ;INSERT|  was: ADC.W placeHalfW,Y  (placeX + halfW, now + modShift)                SBC.B tmp34                           ;80EF40|000034
+                SBC.B tmp34                           ;80EF40|000034
                 BMI .skip2                                     ;80EF42|80EFB9
                 JSR.W Mod_PlacementX_Shifted                   ;INSERT|  was: LDA.W placeX,Y  (placeX, now + modShift)
                 SBC.W placeHalfW,Y                               ;80EF47|801A0E
-                SBC.B zp_36                                    ;80EF4A|000036
+                SBC.B tmp36                                    ;80EF4A|000036
                 BPL .skip2                                     ;80EF4C|80EFB9
                 LDA.W placeY,Y                               ;80EF4E|801A0C
                 ADC.W placeHalfH,Y                               ;80EF51|801A10
@@ -22295,13 +22301,13 @@ TrySpawnPlacementIfInBox:
                 SBC.B zp_3A                                    ;80EF5E|00003A
                 BPL .skip2                                     ;80EF60|80EFB9
                 PHX                                            ;80EF62|
-                STX.B refillTmp32                              ;80EF63|000032
+                STX.B tmp32                              ;80EF63|000032
                 LDX.W objScanStartSlot                                 ;80EF65|80033E
 
          .loop: LDA.W objActive,X                              ;80EF68|800D91
                 BEQ +                                          ;80EF6B|80EF74
                 LDA.W objPlacementIdx,X                               ;80EF6D|801101
-                CMP.B refillTmp32                              ;80EF70|000032
+                CMP.B tmp32                              ;80EF70|000032
                 BEQ .skip                                      ;80EF72|80EFB8
 
              +: INX                                            ;80EF74|
@@ -22325,16 +22331,16 @@ TrySpawnPlacementIfInBox:
                 STA.W spawnOamPool                                 ;80EF9D|800382
                 LDA.W placeType,Y                               ;80EFA0|801A12
                 LDX.W placeFlags,Y                               ;80EFA3|801A14
-                LDY.B refillTmp32                              ;80EFA6|000032
+                LDY.B tmp32                              ;80EFA6|000032
                 JSR.W SpawnObject                               ;80EFA8|80EC56
                 PLA                                            ;80EFAB|
                 STA.B zp_3A                                    ;80EFAC|00003A
                 PLA                                            ;80EFAE|
                 STA.B zp_38                                    ;80EFAF|000038
                 PLA                                            ;80EFB1|
-                STA.B zp_36                                    ;80EFB2|000036
+                STA.B tmp36                                    ;80EFB2|000036
                 PLA                                            ;80EFB4|
-                STA.B refillStageIdx                           ;80EFB5|000034
+                STA.B tmp34                           ;80EFB5|000034
                 PLY                                            ;80EFB7|
 
          .skip: PLX                                            ;80EFB8|
@@ -22377,8 +22383,8 @@ SpawnAlwaysActivePlacements:
 ; --------------------------------------------------------
 ;  TrySpawnAlwaysActivePlacement   [29 ins, returns RTS]
 ;    callers: SpawnAlwaysActivePlacements
-;    writes:    refillTmp32, zp_6C, zp_6E, spawnOamPool, spawnHalfW, spawnHalfH
-;    reads:     refillTmp32, placeX, placeY, placeHalfW, placeHalfH, placeType ...
+;    writes:    tmp32, zp_6C, zp_6E, spawnOamPool, spawnHalfW, spawnHalfH
+;    reads:     tmp32, placeX, placeY, placeHalfW, placeHalfH, placeType ...
 ;    calls:     SpawnObject
 ;    Per-placement body for SpawnAlwaysActivePlacements.
 ; --------------------------------------------------------
@@ -22391,7 +22397,7 @@ TrySpawnAlwaysActivePlacement:
                 BEQ .skip                                      ;80EFE5|80F014
                 PHY                                            ;80EFE7|
                 PHX                                            ;80EFE8|
-                STX.B refillTmp32                              ;80EFE9|000032
+                STX.B tmp32                              ;80EFE9|000032
                 LDA.W placeX,Y                               ;80EFEB|801A0A
                 STA.B zp_6C                                    ;80EFEE|00006C
                 LDA.W placeY,Y                               ;80EFF0|801A0C
@@ -22404,7 +22410,7 @@ TrySpawnAlwaysActivePlacement:
                 STA.W spawnOamPool                                 ;80F004|800382
                 LDA.W placeType,Y                               ;80F007|801A12
                 LDX.W placeFlags,Y                               ;80F00A|801A14
-                LDY.B refillTmp32                              ;80F00D|000032
+                LDY.B tmp32                              ;80F00D|000032
                 JSR.W SpawnObject                               ;80F00F|80EC56
                 PLX                                            ;80F012|
                 PLY                                            ;80F013|
@@ -22420,8 +22426,8 @@ TrySpawnAlwaysActivePlacement:
 ; --------------------------------------------------------
 ;  FlagOffscreenObjects   [60 ins, returns RTS]
 ;    callers: vbwait_808081, RunGameplayFrame_NoBlank
-;    writes:    refillStageIdx, zp_36, zp_38, zp_3A, objFlags
-;    reads:     refillStageIdx, zp_36, zp_38, zp_3A, playerCamX, playerCamY ...
+;    writes:    tmp34, tmp36, zp_38, zp_3A, objFlags
+;    reads:     tmp34, tmp36, zp_38, zp_3A, playerCamX, playerCamY ...
 ;    Sets objFlags bit $0200 (off-screen) on any active object whose box, offset by
 ;    objCullHalfW/objCullHalfH, falls entirely outside a window around the camera. Scripts read this
 ;    bit (it's exposed as part of objFlags) to decide whether to self-destruct when off-screen.
@@ -22434,10 +22440,10 @@ FlagOffscreenObjects:
                 BPL +                                          ;80F01F|80F024
                 LDY.W #$0000                                   ;80F021|
 
-             +: STY.B refillStageIdx                           ;80F024|000034
+             +: STY.B tmp34                           ;80F024|000034
                 CLC                                            ;80F026|
                 ADC.W #$0120                                   ;80F027|
-                STA.B zp_36                                    ;80F02A|000036
+                STA.B tmp36                                    ;80F02A|000036
                 LDA.B playerCamY                               ;80F02C|000046
                 SEC                                            ;80F02E|
                 SBC.W #$0010                                   ;80F02F|
@@ -22462,13 +22468,13 @@ FlagOffscreenObjects:
                 CLC                                            ;80F057|
                 ADC.W objCullHalfW,X                               ;80F058|800EF9
                 SEC                                            ;80F05B|
-                SBC.B refillStageIdx                           ;80F05C|000034
+                SBC.B tmp34                           ;80F05C|000034
                 BMI .skip                                      ;80F05E|80F084
                 LDA.W objX,X                          ;80F060|801179
                 SEC                                            ;80F063|
                 SBC.W objCullHalfW,X                               ;80F064|800EF9
                 SEC                                            ;80F067|
-                SBC.B zp_36                                    ;80F068|000036
+                SBC.B tmp36                                    ;80F068|000036
                 BPL .skip                                      ;80F06A|80F084
                 LDA.W objY,X                          ;80F06C|8011A1
                 CLC                                            ;80F06F|
@@ -22497,21 +22503,21 @@ FlagOffscreenObjects:
 ; --------------------------------------------------------
 ;  DestroyObject   [62 ins, returns RTS]
 ;    callers: Op_Goto
-;    writes:    refillTmp32, curObjIdx, mulMultiplicand, mulMultiplierLo, objTableEnd, oamSrcAttr ...
-;    reads:     refillTmp32, curObjIdx, objTableEnd, objActive, objFlags, objPlacementIdx ...
+;    writes:    tmp32, curObjIdx, mulMultiplicand, mulMultiplierLo, objTableEnd, oamSrcAttr ...
+;    reads:     tmp32, curObjIdx, objTableEnd, objActive, objFlags, objPlacementIdx ...
 ;    calls:     ClearSoundCueIfDespawning, ComputeInitialViewBox, Mul8x16, TrySpawnPlacementIfInBox
 ; --------------------------------------------------------
 DestroyObject:
                 LDA.W objOamCount,Y                               ;80F095|801511
                 BEQ .skip                                      ;80F098|80F0B1
                 LDA.W objOamEnd,Y                               ;80F09A|8014E9
-                STA.B refillTmp32                              ;80F09D|000032
+                STA.B tmp32                              ;80F09D|000032
                 LDX.W objOamFirst,Y                               ;80F09F|8014C1
                 SEP #$20                                       ;80F0A2|
 
          .loop: STZ.W oamSrcAttr,X                             ;80F0A4|800985
                 INX                                            ;80F0A7|
-                CPX.B refillTmp32                              ;80F0A8|000032
+                CPX.B tmp32                              ;80F0A8|000032
                 BCC .loop                                      ;80F0AA|80F0A4
                 REP #$20                                       ;80F0AC|
                 JSR.W ClearSoundCueIfDespawning                               ;80F0AE|80DFD1
@@ -22657,8 +22663,8 @@ HasFreeObjectSlot:
 ; --------------------------------------------------------
 ;  FindFreeObjectSlotInPool   [39 ins, returns RTS]
 ;    callers: SpawnObject
-;    writes:    refillTmp32, zp_38, zp_3A
-;    reads:     refillTmp32, zp_38, spawnOamPool, oamSrcAttr, objOamCount
+;    writes:    tmp32, zp_38, zp_3A
+;    reads:     tmp32, zp_38, spawnOamPool, oamSrcAttr, objOamCount
 ;    operands: X = new object's objOamPool
 ;    Gate #3: within the chosen OAM pool's reserved sprite range, finds enough free (unused) OAM
 ;    source entries for the new object's sprite count; fails if the pool doesn't have room.
@@ -22670,25 +22676,25 @@ FindFreeObjectSlotInPool:
                 BEQ .skip                                      ;80F173|80F17F
                 LDY.W #$000C                                   ;80F175|
                 LDA.W #$0018                                   ;80F178|
-                STA.B refillTmp32                              ;80F17B|000032
+                STA.B tmp32                              ;80F17B|000032
                 BRA .loop                                      ;80F17D|80F191
 
 
          .skip: LDY.W #$0018                                   ;80F17F|
                 LDA.W #$0024                                   ;80F182|
-                STA.B refillTmp32                              ;80F185|000032
+                STA.B tmp32                              ;80F185|000032
                 BRA .loop                                      ;80F187|80F191
 
 
         .skip2: LDY.W #$0024                                   ;80F189|
                 LDA.W #$0080                                   ;80F18C|
-                STA.B refillTmp32                              ;80F18F|000032
+                STA.B tmp32                              ;80F18F|000032
 
          .loop: LDA.W oamSrcAttr,Y                             ;80F191|800985
                 AND.W #$00FF                                   ;80F194|
                 BEQ .skip3                                     ;80F197|80F1A0
                 INY                                            ;80F199|
-                CPY.B refillTmp32                              ;80F19A|000032
+                CPY.B tmp32                              ;80F19A|000032
                 BCC .loop                                      ;80F19C|80F191
 
         .loop2: SEC                                            ;80F19E|
@@ -22704,7 +22710,7 @@ FindFreeObjectSlotInPool:
         .loop3: INY                                            ;80F1A9|
                 CPY.B zp_38                                    ;80F1AA|000038
                 BEQ .skip4                                     ;80F1AC|80F1BC
-                CPY.B refillTmp32                              ;80F1AE|000032
+                CPY.B tmp32                              ;80F1AE|000032
                 BEQ .loop2                                     ;80F1B0|80F19E
                 LDA.W oamSrcAttr,Y                             ;80F1B2|800985
                 AND.W #$00FF                                   ;80F1B5|
@@ -22719,8 +22725,8 @@ FindFreeObjectSlotInPool:
 ; --------------------------------------------------------
 ;  InitSpawnOamAttrs   [26 ins, returns RTS]
 ;    callers: SpawnObject
-;    writes:    refillTmp32, zp_38, oamSrcPalette, oamSrcAttr
-;    reads:     refillTmp32, zp_38, objFlags, objOamFirst, objOamEnd
+;    writes:    tmp32, zp_38, oamSrcPalette, oamSrcAttr
+;    reads:     tmp32, zp_38, objFlags, objOamFirst, objOamEnd
 ;    Initialises the new object's OAM source attribute bytes (oamSrcAttr) and the palette/priority
 ;    bits (oamSrcPalette, field offset from objFlags bits 1-5) for every sprite it owns.
 ; --------------------------------------------------------
@@ -22728,7 +22734,7 @@ InitSpawnOamAttrs:
                 PHX                                            ;80F1BE|
                 LDA.W objFlags,X                          ;80F1BF|800FC1
                 AND.W #$003E                                   ;80F1C2|
-                STA.B refillTmp32                              ;80F1C5|000032
+                STA.B tmp32                              ;80F1C5|000032
                 LDA.W objOamEnd,X                               ;80F1C7|8014E9
                 STA.B zp_38                                    ;80F1CA|000038
                 LDA.W objOamFirst,X                               ;80F1CC|8014C1
@@ -22740,7 +22746,7 @@ InitSpawnOamAttrs:
 
          .loop: LDA.B #$80                                     ;80F1D5|
                 STA.W oamSrcAttr,Y                             ;80F1D7|800985
-                LDA.B refillTmp32                              ;80F1DA|000032
+                LDA.B tmp32                              ;80F1DA|000032
                 STA.W oamSrcPalette,X                               ;80F1DC|800794
                 INX                                            ;80F1DF|
                 INX                                            ;80F1E0|
@@ -22757,8 +22763,8 @@ InitSpawnOamAttrs:
 ; --------------------------------------------------------
 ;  InitSpawnOamMirrorBits   [12 ins, returns RTS]
 ;    callers: SpawnObject
-;    writes:    refillStageIdx, zp_38
-;    reads:     refillStageIdx, zp_38, objFlags, objOamFirst, objOamEnd
+;    writes:    tmp34, zp_38
+;    reads:     tmp34, zp_38, objFlags, objOamFirst, objOamEnd
 ;    calls:     SetOamHiBit
 ;    Applies SetOamHiBit across the new object's sprites for the OAM size bit, based on objFlags bit
 ;    0.
@@ -22766,12 +22772,12 @@ InitSpawnOamAttrs:
 InitSpawnOamMirrorBits:
                 LDA.W objFlags,X                          ;80F1EC|800FC1
                 AND.W #$0001                                   ;80F1EF|
-                STA.B refillStageIdx                           ;80F1F2|000034
+                STA.B tmp34                           ;80F1F2|000034
                 LDA.W objOamEnd,X                               ;80F1F4|8014E9
                 STA.B zp_38                                    ;80F1F7|000038
                 LDY.W objOamFirst,X                               ;80F1F9|8014C1
 
-         .loop: LDA.B refillStageIdx                           ;80F1FC|000034
+         .loop: LDA.B tmp34                           ;80F1FC|000034
                 JSR.W SetOamHiBit                               ;80F1FE|80E1A8
                 INY                                            ;80F201|
                 CPY.B zp_38                                    ;80F202|000038
@@ -22782,8 +22788,8 @@ InitSpawnOamMirrorBits:
 ; --------------------------------------------------------
 ;  InitSpawnOamXOffscreen   [16 ins, returns RTS]
 ;    callers: SpawnObject
-;    writes:    refillTmp32, oamSrcX
-;    reads:     refillTmp32, playerCamX, objOamFirst, objOamEnd, objOamCount
+;    writes:    tmp32, oamSrcX
+;    reads:     tmp32, playerCamX, objOamFirst, objOamEnd, objOamCount
 ;    Parks the new object's sprites far off-screen (X = camX+$200) until the first real
 ;    BuildSpriteOam/AnimVM_Run pass positions them, so a freshly spawned object never flashes at
 ;    (0,0) for a frame.
@@ -22793,7 +22799,7 @@ InitSpawnOamXOffscreen:
                 BEQ .exit                                      ;80F20A|80F225
                 LDA.W objOamEnd,X                               ;80F20C|8014E9
                 ASL A                                          ;80F20F|
-                STA.B refillTmp32                              ;80F210|000032
+                STA.B tmp32                              ;80F210|000032
                 LDA.W objOamFirst,X                               ;80F212|8014C1
                 ASL A                                          ;80F215|
                 TAY                                            ;80F216|
@@ -22803,7 +22809,7 @@ InitSpawnOamXOffscreen:
          .loop: STA.W oamSrcX,Y                                ;80F21C|800A61
                 INY                                            ;80F21F|
                 INY                                            ;80F220|
-                CPY.B refillTmp32                              ;80F221|000032
+                CPY.B tmp32                              ;80F221|000032
                 BNE .loop                                      ;80F223|80F21C
 
          .exit: RTS                                            ;80F225|
@@ -22839,14 +22845,14 @@ UnmirrorNewObject:
 ; --------------------------------------------------------
 ;  InitObjectFromSpawnRec   [123 ins, returns RTS]
 ;    callers: SpawnObject
-;    writes:    refillTmp32, spawnOamPool, spawnHalfH, objScriptPtr, objActive, objPrevX ...
-;    reads:     zp_2A, refillTmp32, refillStageIdx, zp_36, zp_38, curObjIdx ...
+;    writes:    tmp32, spawnOamPool, spawnHalfH, objScriptPtr, objActive, objPrevX ...
+;    reads:     zp_2A, tmp32, tmp34, tmp36, zp_38, curObjIdx ...
 ;    calls:     GetGfxSetSrcOrAllocCue
 ; --------------------------------------------------------
 InitObjectFromSpawnRec:
-                LDA.B refillStageIdx                           ;80F249|000034
+                LDA.B tmp34                           ;80F249|000034
                 STA.W objTypeId,X                               ;80F24B|801129
-                LDA.B zp_36                                    ;80F24E|000036
+                LDA.B tmp36                                    ;80F24E|000036
                 STA.W objPlacementIdx,X                               ;80F250|801101
                 LDA.B zp_38                                    ;80F253|000038
                 STA.W objFlags,X                          ;80F255|800FC1
@@ -22945,10 +22951,10 @@ InitObjectFromSpawnRec:
                 STA.W objParent,X                               ;80F317|800E59
                 LDA.W objWidth,X                               ;80F31A|800E81
                 LSR A                                          ;80F31D|
-                STA.B refillTmp32                              ;80F31E|000032
+                STA.B tmp32                              ;80F31E|000032
                 LDA.W objX,X                          ;80F320|801179
                 SEC                                            ;80F323|
-                SBC.B refillTmp32                              ;80F324|000032
+                SBC.B tmp32                              ;80F324|000032
                 STA.W objBoxLeft,X                          ;80F326|800F71
                 CLC                                            ;80F329|
                 ADC.W objWidth,X                               ;80F32A|800E81
@@ -22956,10 +22962,10 @@ InitObjectFromSpawnRec:
                 STA.W objBoxRight,X                          ;80F32E|800F99
                 LDA.W objHeight,X                               ;80F331|800EA9
                 LSR A                                          ;80F334|
-                STA.B refillTmp32                              ;80F335|000032
+                STA.B tmp32                              ;80F335|000032
                 LDA.W objY,X                          ;80F337|8011A1
                 SEC                                            ;80F33A|
-                SBC.B refillTmp32                              ;80F33B|000032
+                SBC.B tmp32                              ;80F33B|000032
                 STA.W objBoxTop,X                          ;80F33D|800F21
                 CLC                                            ;80F340|
                 ADC.W objHeight,X                               ;80F341|800EA9

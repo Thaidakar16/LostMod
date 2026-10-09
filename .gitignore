@@ -1,0 +1,28 @@
+# Emulator working dir
+/mesen/
+/Mesen/
+
+# Large analysis captures — kept on disk, regenerable from Mesen-S.
+# (Trace logs + usage maps; too big to track. See traces/README.md.)
+/traces/*.log
+/traces/*.txt
+/traces/*.bin
+!/traces/README.md
+
+# Build output (assembled ROMs / generated artifacts go here)
+/build/
+*.sfc.bak
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+
+#lets not publish copyrighted files
+/annotated/
+/disasm/
+
+/tools/
+/rom/
+
+

@@ -1,12 +1,54 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 <html>
     <head>
-        <meta charset="utf-8">
-        <title>LostMod</title>
+        <title>The Lost Mod</title>
     </head>
     <body>
-        <h1>LostMod</h1>
-        <p>Hello, this is my page.</p>
+        <h1>The Lost Mod</h1>
+        <p>Hey! Due to copyright restrictions, I cannot upload my copy of The Lost Vikings to the internet. I can only provide you with the patches. However, if you upload a copy of the SNES ROM "The Lost Vikings", I can patch it here!</p>
+        <p>Note: I am NOT done with this mod. I am not even sure if I will be able to finish it by the end of the event. However, Terra wants me to ship anyways, so I will post my progress weekly!</p>
+        <input type="file" id="rom" accept=".sfc,.smc,.bin">
+        <select id="ship"></select>
+        <p id="info">No file chosen yet.</p>
+        <script>
+            const romInput = document.getElementById("rom");
+            const info = document.getElementById("info");
+            const EXPECTED_SHA256 = "9f7782a92fda789f9d119b1f0a2f7da0f35606357556a48eca9487797ee1a888";
+
+            async function sha256Hex(bytes) {
+                const digest = await crypto.subtle.digest("SHA-256", bytes);
+                return Array.from(new Uint8Array(digest))
+                  .map(b => b.toString(16).padStart(2, "0"))
+                  .join("");
+            }
+            romInput.onchange = async () => {
+                const file = romInput.files[0];
+                if (!file) {
+                    info.textContent = "No file Selected."
+                    return;
+                }
+
+                let bytes = new Uint8Array(await file.arrayBuffer());
+                
+                if (bytes.length % 1024 === 512) {
+                    bytes = bytes.slice(512);
+                }
+                const titleBytes = bytes.slice(0x7FC0, 0x7FC0 + 21);
+                const title = new TextDecoder("ascii").decode(titleBytes).trim();
+                const hash = await sha256Hex(bytes);
+
+                if (hash === EXPECTED_SHA256){
+                    info.textContent = "Correct ROM!" ;
+                } else if (title === "THE LOST VIKINGS"){
+                    info.textContent = "The uploaded ROM is The Lost Vikings, but not the version I built my mod against. "
+                } else {
+                    info.textContent = "The uploaded ROM does not seem to be The Lost Vikings." ;
+                }
+            };
+        </script>
+
     </body>
 </html>
 
+ 

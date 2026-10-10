@@ -1,0 +1,279 @@
+SnesPrgRom:4D5A:Op_Yield:objVM op $00
+SnesPrgRom:4D64:Op_Nop:objVM op $01
+SnesPrgRom:59C0:Op_PlaySfx:objVM op $02
+SnesPrgRom:4D70:Op_Goto:objVM op $03
+SnesPrgRom:59D4:Op_StopSfx:objVM op $04
+SnesPrgRom:4D65:Op_Call:objVM op $05
+SnesPrgRom:4D78:Op_Return:objVM op $06
+SnesPrgRom:6A47:Op_FaceLeft:objVM op $07
+SnesPrgRom:6A3C:Op_FaceRight:objVM op $08
+SnesPrgRom:6B4A:Op_SetFlipV:objVM op $09
+SnesPrgRom:6B3F:Op_ClearFlipV:objVM op $0A
+SnesPrgRom:6A52:Op_ToggleFlipH:objVM op $0B
+SnesPrgRom:6B55:Op_ToggleFlipV:objVM op $0C
+SnesPrgRom:4D83:Op_AllowRespawn:objVM op $0D
+SnesPrgRom:4DA4:Op_BlockRespawn:objVM op $0E
+SnesPrgRom:4DC5:Op_RequestReinit:objVM op $0F
+SnesPrgRom:4DCF:Op_DestroySelf:objVM op $10
+SnesPrgRom:4DD8:Op_DamageSelfFromTarget:objVM op $11
+SnesPrgRom:4DE3:Op_DamageTarget:objVM op $12
+SnesPrgRom:4DEE:Op_CallFar:objVM op $13
+SnesPrgRom:5806:Op_SpawnObject:objVM op $14
+SnesPrgRom:596E:Op_GetDeltaToSelPlayer:objVM op $15
+SnesPrgRom:5976:Op_GetDeltaToTarget:objVM op $16
+SnesPrgRom:4E13:Op_AttachSelfToObj0:objVM op $17
+SnesPrgRom:4E24:Op_AttachSelfToTarget:objVM op $18
+SnesPrgRom:4E4F:Op_SetAnimScript:objVM op $19
+SnesPrgRom:24A2:Op_CallIfPlayerTouchType:objVM op $1A
+SnesPrgRom:4E1A:Op_AttachObj0ToSelf:objVM op $1B
+SnesPrgRom:4E5F:Op_JmpIfAnimIdle:objVM op $1C
+SnesPrgRom:2564:Op_CallIfPlayerHitMask:objVM op $1D
+SnesPrgRom:4E6C:Op_JmpIfBlockedAbove:objVM op $1E
+SnesPrgRom:4E86:Op_JmpIfBlockedBelow:objVM op $1F
+SnesPrgRom:4EC4:Op_JmpIfBlockedBehind:objVM op $20
+SnesPrgRom:4EA0:Op_JmpIfBlockedAhead:objVM op $21
+SnesPrgRom:4E71:Op_JmpIfNotBlockedAbove:objVM op $22
+SnesPrgRom:4E8B:Op_JmpIfNotBlockedBelow:objVM op $23
+SnesPrgRom:4EC9:Op_JmpIfNotBlockedBehind:objVM op $24
+SnesPrgRom:4EA5:Op_JmpIfNotBlockedAhead:objVM op $25
+SnesPrgRom:579A:Op_PixelsToTileXY:objVM op $26
+SnesPrgRom:57C0:Op_GetTileCollisionAt:objVM op $27
+SnesPrgRom:57DC:Op_SnapToTileCenterXY:objVM op $28
+SnesPrgRom:58A7:Op_SetMetatileXY:objVM op $29
+SnesPrgRom:58F9:Op_SetTileIndexXY:objVM op $2A
+SnesPrgRom:58C9:Op_SetTileCollisionXY:objVM op $2B
+SnesPrgRom:2D8E:Op_ScanPlayerAbove_SetTarget:objVM op $2C
+SnesPrgRom:2D87:Op_ScanNextPlayerAbove:objVM op $2D
+SnesPrgRom:5AF3:Op_SetShakeX:objVM op $2E
+SnesPrgRom:61E7:Op_AnimTick:objVM op $2F
+SnesPrgRom:4EE8:Op_JmpIfSolidAheadBelow:objVM op $30
+SnesPrgRom:4EED:Op_JmpIfNoSolidAheadBelow:objVM op $31
+SnesPrgRom:2626:Op_CallIfCollideX:objVM op $32
+SnesPrgRom:2680:Op_CallIfCollideY:objVM op $33
+SnesPrgRom:5929:Op_GetNearestPlayerDelta:objVM op $34
+SnesPrgRom:2CFF:Op_ScanObjAbove_SetTarget:objVM op $35
+SnesPrgRom:2CF8:Op_ScanNextObjAbove:objVM op $36
+SnesPrgRom:24C3:Op_CallIfTouchType:objVM op $37
+SnesPrgRom:2585:Op_CallIfTouchMask:objVM op $38
+SnesPrgRom:4FA0:Op_SetDeferredFarCall:objVM op $39
+SnesPrgRom:5B08:Op_SetShakeY:objVM op $3B
+SnesPrgRom:26DA:Op_CallIfCollideY_Slope:objVM op $3C
+SnesPrgRom:4F40:Op_SetBackdropRGB:objVM op $3D
+SnesPrgRom:4F82:Op_ClearBackdrop:objVM op $3E
+SnesPrgRom:4FB1:Op_HideSprites:objVM op $3F
+SnesPrgRom:4FCB:Op_ShowSprites:objVM op $40
+SnesPrgRom:145A:Op_ShowDialogAtObj:objVM op $41
+SnesPrgRom:163F:Op_ClearDialog:objVM op $42
+SnesPrgRom:1688:Op_WaitKey:objVM op $43
+SnesPrgRom:147E:Op_ShowDialogAtPos:objVM op $44
+SnesPrgRom:15FC:Op_PrintText:objVM op $45
+SnesPrgRom:16C7:Op_SetDialogColor:objVM op $46
+SnesPrgRom:16A1:Op_DialogCmd06:objVM op $47
+SnesPrgRom:5883:Op_MoveToXY:objVM op $48
+SnesPrgRom:585E:Op_JmpIfTileClassAtXY:objVM op $49
+SnesPrgRom:5863:Op_JmpIfNotTileClassAtXY:objVM op $4A
+SnesPrgRom:3042:Op_RequestGroundSnap:objVM op $4B
+SnesPrgRom:4F61:Op_SetBackdropRGB2:objVM op $4C
+SnesPrgRom:4F91:Op_ClearBackdrop2:objVM op $4D
+SnesPrgRom:4F20:Op_JmpIfEdgeAhead:objVM op $4E
+SnesPrgRom:4F25:Op_JmpIfNotEdgeAhead:objVM op $4F
+SnesPrgRom:16FD:Op_TextPutChar:objVM op $50
+SnesPrgRom:4FE8:Op_LoadAcc_Imm:objVM op $51
+SnesPrgRom:4FEF:Op_LoadAcc_Fld:objVM op $52
+SnesPrgRom:5003:Op_LoadAcc_Ram:objVM op $53
+SnesPrgRom:500D:Op_LoadAcc_TFld:objVM op $54
+SnesPrgRom:5024:Op_LoadAcc_Rnd:objVM op $55
+SnesPrgRom:503A:Op_StoreAcc_Fld:objVM op $56
+SnesPrgRom:5056:Op_StoreAcc_Ram:objVM op $57
+SnesPrgRom:5068:Op_StoreAcc_TFld:objVM op $58
+SnesPrgRom:508C:Op_AddAcc_Fld:objVM op $59
+SnesPrgRom:50B0:Op_AddAcc_Ram:objVM op $5A
+SnesPrgRom:50CA:Op_AddAcc_TFld:objVM op $5B
+SnesPrgRom:50F1:Op_SubAcc_Fld:objVM op $5C
+SnesPrgRom:5116:Op_SubAcc_Ram:objVM op $5D
+SnesPrgRom:5130:Op_SubAcc_TFld:objVM op $5E
+SnesPrgRom:514B:Op_AndAcc_Fld:objVM op $5F
+SnesPrgRom:5162:Op_AndAcc_Ram:objVM op $60
+SnesPrgRom:516E:Op_AndAcc_TFld:objVM op $61
+SnesPrgRom:5188:Op_OrAcc_Fld:objVM op $62
+SnesPrgRom:519F:Op_OrAcc_Ram:objVM op $63
+SnesPrgRom:51AB:Op_OrAcc_TFld:objVM op $64
+SnesPrgRom:51C5:Op_XorAcc_Fld:objVM op $65
+SnesPrgRom:51DC:Op_XorAcc_Ram:objVM op $66
+SnesPrgRom:51E8:Op_XorAcc_TFld:objVM op $67
+SnesPrgRom:5202:Op_JmpIfAccGEu_Imm:objVM op $68
+SnesPrgRom:5213:Op_JmpIfAccGEu_Fld:objVM op $69
+SnesPrgRom:5224:Op_JmpIfAccGEu_Ram:objVM op $6A
+SnesPrgRom:5235:Op_JmpIfAccGEu_TFld:objVM op $6B
+SnesPrgRom:5246:Op_JmpIfAccGEu_Rnd:objVM op $6C
+SnesPrgRom:5257:Op_JmpIfAccLTu_Imm:objVM op $6D
+SnesPrgRom:5268:Op_JmpIfAccLTu_Fld:objVM op $6E
+SnesPrgRom:5279:Op_JmpIfAccLTu_Ram:objVM op $6F
+SnesPrgRom:528A:Op_JmpIfAccLTu_TFld:objVM op $70
+SnesPrgRom:529B:Op_JmpIfAccLTu_Rnd:objVM op $71
+SnesPrgRom:539C:Op_JmpIfAccEq_Imm:objVM op $72
+SnesPrgRom:53A9:Op_JmpIfAccEq_Fld:objVM op $73
+SnesPrgRom:53B6:Op_JmpIfAccEq_Ram:objVM op $74
+SnesPrgRom:53C3:Op_JmpIfAccEq_TFld:objVM op $75
+SnesPrgRom:53D0:Op_JmpIfAccEq_Rnd:objVM op $76
+SnesPrgRom:53DD:Op_JmpIfAccNe_Imm:objVM op $77
+SnesPrgRom:53EA:Op_JmpIfAccNe_Fld:objVM op $78
+SnesPrgRom:53F7:Op_JmpIfAccNe_Ram:objVM op $79
+SnesPrgRom:5404:Op_JmpIfAccNe_TFld:objVM op $7A
+SnesPrgRom:5411:Op_JmpIfAccNe_Rnd:objVM op $7B
+SnesPrgRom:52AC:Op_JmpIfAccGEs_Imm:objVM op $7C
+SnesPrgRom:52C4:Op_JmpIfAccGEs_Fld:objVM op $7D
+SnesPrgRom:52DC:Op_JmpIfAccGEs_Ram:objVM op $7E
+SnesPrgRom:52F4:Op_JmpIfAccGEs_TFld:objVM op $7F
+SnesPrgRom:530C:Op_JmpIfAccGEs_Rnd:objVM op $80
+SnesPrgRom:5324:Op_JmpIfAccLTs_Imm:objVM op $81
+SnesPrgRom:533C:Op_JmpIfAccLTs_Fld:objVM op $82
+SnesPrgRom:5354:Op_JmpIfAccLTs_Ram:objVM op $83
+SnesPrgRom:536C:Op_JmpIfAccLTs_TFld:objVM op $84
+SnesPrgRom:5384:Op_JmpIfAccLTs_Rnd:objVM op $85
+SnesPrgRom:541E:Op_CallIfAccEq_Imm:objVM op $86
+SnesPrgRom:542B:Op_CallIfAccEq_Fld:objVM op $87
+SnesPrgRom:5438:Op_CallIfAccEq_Ram:objVM op $88
+SnesPrgRom:5445:Op_CallIfAccEq_TFld:objVM op $89
+SnesPrgRom:5452:Op_CallIfAccEq_Rnd:objVM op $8A
+SnesPrgRom:545F:Op_CallIfAccNe_Imm:objVM op $8B
+SnesPrgRom:546C:Op_CallIfAccNe_Fld:objVM op $8C
+SnesPrgRom:5479:Op_CallIfAccNe_Ram:objVM op $8D
+SnesPrgRom:5486:Op_CallIfAccNe_TFld:objVM op $8E
+SnesPrgRom:5493:Op_CallIfAccNe_Rnd:objVM op $8F
+SnesPrgRom:507F:Op_AddAcc_Fld_Facing:objVM op $90
+SnesPrgRom:50A3:Op_AddAcc_Ram_Facing:objVM op $91
+SnesPrgRom:50BD:Op_AddAcc_TFld_Facing:objVM op $92
+SnesPrgRom:50E4:Op_SubAcc_Fld_Facing:objVM op $93
+SnesPrgRom:5109:Op_SubAcc_Ram_Facing:objVM op $94
+SnesPrgRom:5123:Op_SubAcc_TFld_Facing:objVM op $95
+SnesPrgRom:502A:Op_SetTargetFromAcc:objVM op $96
+SnesPrgRom:54A0:Op_LoadAccBit_Imm:objVM op $97
+SnesPrgRom:54A6:Op_LoadAccBit_Fld:objVM op $98
+SnesPrgRom:54AC:Op_LoadAccBit_Ram:objVM op $99
+SnesPrgRom:54B2:Op_LoadAccBit_TFld:objVM op $9A
+SnesPrgRom:54B8:Op_LoadAccBit_Rnd:objVM op $9B
+SnesPrgRom:54C1:Op_SetBitFromAcc_Fld:objVM op $9C
+SnesPrgRom:54EF:Op_SetBitFromAcc_Ram:objVM op $9D
+SnesPrgRom:5512:Op_SetBitFromAcc_TFld:objVM op $9E
+SnesPrgRom:5543:Op_AndBitAcc_Fld:objVM op $9F
+SnesPrgRom:556A:Op_AndBitAcc_Ram:objVM op $A0
+SnesPrgRom:5586:Op_AndBitAcc_TFld:objVM op $A1
+SnesPrgRom:561D:Op_OrBitAcc_Fld:objVM op $A2
+SnesPrgRom:5644:Op_OrBitAcc_Ram:objVM op $A3
+SnesPrgRom:5660:Op_OrBitAcc_TFld:objVM op $A4
+SnesPrgRom:55B0:Op_XorBitAcc_Fld:objVM op $A5
+SnesPrgRom:55D7:Op_XorBitAcc_Ram:objVM op $A6
+SnesPrgRom:55F3:Op_XorBitAcc_TFld:objVM op $A7
+SnesPrgRom:568A:Op_JmpIfBitEqAcc_Imm:objVM op $A8
+SnesPrgRom:5697:Op_JmpIfBitEqAcc_Fld:objVM op $A9
+SnesPrgRom:56A4:Op_JmpIfBitEqAcc_Ram:objVM op $AA
+SnesPrgRom:56B1:Op_JmpIfBitEqAcc_TFld:objVM op $AB
+SnesPrgRom:56BE:Op_JmpIfBitEqAcc_Rnd:objVM op $AC
+SnesPrgRom:56CE:Op_JmpIfBitNeAcc_Imm:objVM op $AD
+SnesPrgRom:56DB:Op_JmpIfBitNeAcc_Fld:objVM op $AE
+SnesPrgRom:56E8:Op_JmpIfBitNeAcc_Ram:objVM op $AF
+SnesPrgRom:56F5:Op_JmpIfBitNeAcc_TFld:objVM op $B0
+SnesPrgRom:5702:Op_JmpIfBitNeAcc_Rnd:objVM op $B1
+SnesPrgRom:5712:Op_CallIfBitEqAcc_Imm:objVM op $B2
+SnesPrgRom:571F:Op_CallIfBitEqAcc_Fld:objVM op $B3
+SnesPrgRom:572C:Op_CallIfBitEqAcc_Ram:objVM op $B4
+SnesPrgRom:5739:Op_CallIfBitEqAcc_TFld:objVM op $B5
+SnesPrgRom:5746:Op_CallIfBitEqAcc_Rnd:objVM op $B6
+SnesPrgRom:5756:Op_CallIfBitNeAcc_Imm:objVM op $B7
+SnesPrgRom:5763:Op_CallIfBitNeAcc_Fld:objVM op $B8
+SnesPrgRom:5770:Op_CallIfBitNeAcc_Ram:objVM op $B9
+SnesPrgRom:577D:Op_CallIfBitNeAcc_TFld:objVM op $BA
+SnesPrgRom:578A:Op_CallIfBitNeAcc_Rnd:objVM op $BB
+SnesPrgRom:5032:Op_StoreAccHi_Fld:objVM op $BC
+SnesPrgRom:504E:Op_StoreAccHi_Ram:objVM op $BD
+SnesPrgRom:5060:Op_StoreAccHi_TFld:objVM op $BE
+SnesPrgRom:5A27:Op_JmpIfPlayerAbove:objVM op $BF
+SnesPrgRom:5A55:Op_JmpIfPlayerBelow:objVM op $C0
+SnesPrgRom:5ABB:Op_JmpIfPlayerBehind:objVM op $C1
+SnesPrgRom:5A83:Op_JmpIfPlayerAhead:objVM op $C2
+SnesPrgRom:5A2C:Op_JmpIfNotPlayerAbove:objVM op $C3
+SnesPrgRom:5A5A:Op_JmpIfNotPlayerBelow:objVM op $C4
+SnesPrgRom:5AC0:Op_JmpIfNotPlayerBehind:objVM op $C5
+SnesPrgRom:5A88:Op_JmpIfNotPlayerAhead:objVM op $C6
+SnesPrgRom:5B1E:Op_SetSpawnRecX:objVM op $C7
+SnesPrgRom:5B2B:Op_SetSpawnRecY:objVM op $C8
+SnesPrgRom:5B4D:Op_SetSpawnRecFlags:objVM op $C9
+SnesPrgRom:5B61:Op_SetSpawnRecParam:objVM op $CA
+SnesPrgRom:1677:Op_WaitKeyPlayer:objVM op $CB
+SnesPrgRom:5B85:Op_JmpIfOnScreen:objVM op $CC
+SnesPrgRom:5B73:Op_JmpIfTargetOnScreen:objVM op $CD
+SnesPrgRom:5B7E:Op_JmpIfOffScreen:objVM op $CE
+SnesPrgRom:5B6E:Op_JmpIfTargetOffScreen:objVM op $CF
+SnesPrgRom:2CED:Op_ScanObjBelow_SetTarget:objVM op $D0
+SnesPrgRom:2D7C:Op_ScanPlayerBelow_SetTarget:objVM op $D1
+SnesPrgRom:1A0D:Op_LoadLevelPassword:objVM op $D2
+SnesPrgRom:19C4:Op_CheckPassword:objVM op $D3
+SnesPrgRom:5BC3:Op_SetVelocityToward:objVM op $D4
+SnesPrgRom:59F2:Op_PlayMusic:objVM op $D5
+SnesPrgRom:5A0E:Op_StopMusic:objVM op $D6
+SnesPrgRom:59E0:Op_StopSfx_Ex:objVM op $D7
+SnesPrgRom:6247:AnimOp_AddTileDelta:animVM op $00
+SnesPrgRom:6287:AnimOp_SetTiles:animVM op $01
+SnesPrgRom:62F3:AnimOp_PlaySfx:animVM op $02
+SnesPrgRom:65D4:AnimOp_Goto:animVM op $03
+SnesPrgRom:6307:AnimOp_StopSfx:animVM op $04
+SnesPrgRom:65CE:AnimOp_Call:animVM op $05
+SnesPrgRom:65D9:AnimOp_Return:animVM op $06
+SnesPrgRom:6314:AnimOp_MoveX:animVM op $07
+SnesPrgRom:6367:AnimOp_SetXPositions:animVM op $08
+SnesPrgRom:6394:AnimOp_MoveY:animVM op $09
+SnesPrgRom:63E7:AnimOp_SetYPositions:animVM op $0A
+SnesPrgRom:6414:AnimOp_SetPalette:animVM op $0C
+SnesPrgRom:6563:AnimOp_SetSpriteMask:animVM op $0D
+SnesPrgRom:656E:AnimOp_Yield:animVM op $0E
+SnesPrgRom:6577:AnimOp_Wait:animVM op $0F
+SnesPrgRom:6582:AnimOp_ToggleFlipH:animVM op $10
+SnesPrgRom:6587:AnimOp_ToggleFlipV:animVM op $11
+SnesPrgRom:658C:AnimOp_ToggleFlipHV:animVM op $12
+SnesPrgRom:6532:AnimOp_SetSpriteFlags:animVM op $13
+SnesPrgRom:6459:AnimOp_SetSizeBit:animVM op $15
+SnesPrgRom:64E4:AnimOp_SetPriority:animVM op $16
+SnesPrgRom:68AA:AnimOp_SelectGfxSet:animVM op $17
+SnesPrgRom:6487:AnimOp_HideSprites:animVM op $18
+SnesPrgRom:64B4:AnimOp_ShowSprites:animVM op $19
+SnesPrgRom:6570:AnimOp_End:animVM op $1A
+SnesPrgRom:5D85:ObjVM_OpTable
+SnesPrgRom:696E:AnimVM_OpTable
+SnesPrgRom:4F02:VM_CondBranchTable
+SnesPrgRom:5CDF:VM_GetOperandTable
+SnesPrgRom:5D29:VM_SetOperandTable
+SnesPrgRom:5BBB:VM_OnScreenTable
+SnesPrgRom:5BBF:VM_OffScreenTable
+SnesPrgRom:5CD7:VM_GetOperandByType
+SnesPrgRom:5CD4:VM_GetOperandByType_Shr3
+SnesPrgRom:5CE9:VM_GetOperandImm
+SnesPrgRom:5CEE:VM_GetOperandFld
+SnesPrgRom:5D00:VM_GetOperandRam
+SnesPrgRom:5D08:VM_GetOperandTFld
+SnesPrgRom:5D20:VM_SetOperandByType
+SnesPrgRom:5D1D:VM_SetOperandByType_Shr3
+SnesPrgRom:11ED:VM_GetRandom
+SnesPrgRom:5C60:VM_TestBit_Imm
+SnesPrgRom:5C75:VM_TestBit_Fld
+SnesPrgRom:5C97:VM_TestBit_Ram
+SnesPrgRom:5CAF:VM_TestBit_TFld
+SnesPrgRom:61F0:AnimVM_TickObject
+SnesPrgRom:6230:AnimVM_Run
+SnesPrgRom:6C56:SpawnObject
+SnesPrgRom:7249:InitObjectFromSpawnRec
+SnesPrgRom:711F:GetSpawnRecPtr
+SnesPrgRom:7095:DestroyObject
+SnesPrgRom:24D6:TouchType_Check
+SnesPrgRom:2598:TouchMask_Check
+SnesPrgRom:2639:CollideX_Resolve
+SnesPrgRom:2693:CollideY_Resolve
+SnesPrgRom:26ED:CollideY_Slope_Resolve
+SnesPrgRom:5D65:DamageObject
+SnesWorkRam:8E:vmAcc
+SnesWorkRam:70:scriptPC
+SnesWorkRam:72:scriptBank_objActive
+SnesWorkRam:42:curObjIdx
+SnesWorkRam:74:animPC
+SnesWorkRam:78:animWait
+SnesWorkRam:7A:animRet

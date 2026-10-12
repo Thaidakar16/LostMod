@@ -4,6 +4,11 @@
     "week": "Prep 2",
     "version": 1,
     "notes": "Initial Ship: modified (and slightly broken) screen update system",
-    "media" : "media/prep2-1.mp4"
+    "media" : [
+        {
+            "mod": "media/prep2-1.mp4",
+            "caption": "Compact-scrolling"
+        }
+    ]
   }
 ]

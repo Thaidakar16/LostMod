@@ -137,10 +137,17 @@ fi
 id=$(python3 - "$DOCS/ships.json" "$week" "$(week_label "$week")" "$notes" <<'PY'
 import json, os, sys
 path, key, label, notes = sys.argv[1:5]
-ships = json.load(open(path)) if os.path.exists(path) else []
+ships = []
+if os.path.exists(path):
+    text = open(path).read().strip()
+    if text:
+        try:
+            ships = json.loads(text)
+        except json.JSONDecodeError as e:
+            sys.exit(f"{path} isn't valid JSON ({e}). Fix it or empty it, then try again.")
 version = 1 + sum(1 for s in ships if s.get("id", "").startswith(key + "-"))
 sid = f"{key}-{version}"
-ships.append({"id": sid, "week": label, "version": version, "notes": notes})
+ships.append({"id": sid, "week": label, "version": version, "notes": notes, "details": f"details/{sid}.txt"})
 with open(path, "w") as f:
     json.dump(ships, f, indent=2)
     f.write("\n")
@@ -148,8 +155,11 @@ print(sid)
 PY
 )
 cp "$LIVE" "$DOCS/patches/$id.bps"
+mkdir -p "$DOCS/details"
+touch "$DOCS/details/$id.txt"
 
 echo
 echo "Published $id ($(week_label "$week"), $notes)"
-echo "Next: add screenshots to $DOCS/media and a \"media\" list to its entry in ships.json,"
+echo "Next: write the longer description in $DOCS/details/$id.txt (blank line = new paragraph),"
+echo "      add screenshots to $DOCS/media and a \"media\" list to its entry in ships.json,"
 echo "      then commit and push the docs repo."

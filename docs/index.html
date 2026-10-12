@@ -44,7 +44,8 @@
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin: 0 0 1rem; }
   .pair.single { grid-template-columns: 1fr; }
   figure { margin: 0; }
-  figure img { display: block; width: 100%; height: auto; image-rendering: pixelated; border: 2px solid var(--line); background: #000; }
+  figure img, figure video { display: block; width: 100%; height: auto; image-rendering: pixelated; border: 2px solid var(--line); background: #000; }
+  #details p { white-space: pre-line; }
   figcaption { color: var(--muted); font-size: .9rem; margin-top: .25rem; }
   #info.error { color: var(--blood); }
   #game { width: 100%; max-width: 960px; aspect-ratio: 4 / 3; margin-top: 1rem; }
@@ -66,6 +67,7 @@
 
     <div id="detail" hidden>
       <p id="notes"></p>
+      <div id="details"></div>
       <p><a id="download" hidden>Download this patch (.bps)</a></p>
       <div id="mediaBlock">
         <h2>What changed</h2>
@@ -207,11 +209,20 @@ async function loadShips() {
 
 function figure(src, label) {
   const f = document.createElement("figure");
-  const img = document.createElement("img");
-  img.src = src; img.alt = label; img.loading = "lazy";
+  let media;
+  if (/\.(mp4|webm)$/i.test(src)) {
+    media = document.createElement("video");
+    media.src = src;
+    media.controls = true; media.loop = true; media.muted = true;
+    media.playsInline = true; media.preload = "metadata";
+    media.setAttribute("aria-label", label);
+  } else {
+    media = document.createElement("img");
+    media.src = src; media.alt = label; media.loading = "lazy";
+  }
   const cap = document.createElement("figcaption");
   cap.textContent = label;
-  f.append(img, cap);
+  f.append(media, cap);
   return f;
 }
 
@@ -229,6 +240,26 @@ function renderMedia(ship) {
   }
 }
 
+// Longer write-up: a plain text file named in the ship's "details" field.
+// Paragraphs are separated by a blank line.
+async function renderDetails(ship) {
+  const box = $("details");
+  box.replaceChildren();
+  if (!ship || !ship.details) return;
+  try {
+    const response = await fetch(ship.details, { cache: "no-store" });
+    if (!response.ok) return;
+    const text = (await response.text()).trim();
+    if (shipSelect.value !== ship.id) return;      // they picked something else meanwhile
+    for (const para of text.split(/\n\s*\n/)) {
+      if (!para.trim()) continue;
+      const p = document.createElement("p");
+      p.textContent = para.trim();
+      box.append(p);
+    }
+  } catch (e) { console.error(e); }
+}
+
 function updatePlayButton() {
   playBtn.disabled = !(baseRom && shipSelect.value);
 }
@@ -244,6 +275,7 @@ shipSelect.onchange = () => {
     : ship.notes;
   $("mediaBlock").hidden = !ship;
   if (ship) renderMedia(ship);
+  renderDetails(ship);
   const link = $("download");
   link.hidden = isOriginal;
   if (!isOriginal) {

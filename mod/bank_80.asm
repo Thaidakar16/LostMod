@@ -943,50 +943,50 @@ MainLoop_Reinit:
 ;    calls:     input_80B529, farsub_8182B2, sub_8086E1, RunCircleIrisHdma, UpdateAllObjects, SnapshotAllObjectPositions, +27 more
 ; --------------------------------------------------------
 vbwait_808081:
-                JSR.W input_80B529                             ;808081|80B529
-                JSL.L farsub_8182B2                            ;808084|8182B2
-                JSR.W sub_8086E1                               ;808088|8086E1
-                JSL.L RunCircleIrisHdma                        ;80808B|818368
-                JSR.W UpdateAllObjects                         ;80808F|80CCB3
-                JSR.W SnapshotAllObjectPositions                               ;808092|80ECA9
-                JSR.W sub_80B04E                               ;808095|80B04E
-                JSR.W RunObjectScriptsPass                     ;808098|80A45D
-                JSR.W ApplyAllObjectFollows                               ;80809B|80ED80
+                JSR.W input_80B529                              ;808081|80B529
+                JSL.L farsub_8182B2                             ;808084|8182B2
+                JSR.W sub_8086E1                                ;808088|8086E1
+                JSL.L RunCircleIrisHdma                         ;80808B|818368
+                JSR.W UpdateAllObjects                          ;80808F|80CCB3
+                JSR.W SnapshotAllObjectPositions                ;808092|80ECA9
+                JSR.W sub_80B04E                                ;808095|80B04E
+                JSR.W RunObjectScriptsPass                      ;808098|80A45D
+                JSR.W ApplyAllObjectFollows                     ;80809B|80ED80
 
-         .loop: LDA.W vblankCmd                                ;80809E|800333   ; poll vblankCmd (wait for NMI to consume)
-                BNE .loop                                      ;8080A1|80809E
-                JSR.W input_808515                             ;8080A3|808515
-                JSR.W sub_80E02D                               ;8080A6|80E02D
-                JSR.W BuildSpriteOam                           ;8080A9|80E0B7
-                JSR.W SetupVramGpDmaCh5_GfxSet                               ;8080AC|80E860
-                JSR.W SnapshotCameras                          ;8080AF|80BFBB
-                LDA.W #$0002                                   ;8080B2|
-                JSR.W WaitVBlankCmd                            ;8080B5|808145
-                JSL.L input_81822C                             ;8080B8|81822C
-                JSR.W sub_80A449                               ;8080BC|80A449
-                JSR.W sub_8085C2                               ;8080BF|8085C2
-                JSR.W sub_80E032                               ;8080C2|80E032
-                JSR.W BuildSpriteOam                           ;8080C5|80E0B7
-                JSR.W SetupVramGpDmaCh5_Frame                               ;8080C8|80E885
-                JSL.L farsub_81815B                            ;8080CB|81815B
-                JSR.W SnapshotCameras                          ;8080CF|80BFBB
-                LDA.W #$0004                                   ;8080D2|
-                STA.W vblankCmd                                ;8080D5|800333   ; issue VBlank command to NMI
-                JSR.W sub_8085FC                               ;8080D8|8085FC
-                JSR.W FlagOffscreenObjects                               ;8080DB|80F018
-                JSR.W sub_80C080                               ;8080DE|80C080
-                JSR.W UpdateObjectMotion                       ;8080E1|80E037
-                JSR.W sub_80B285                               ;8080E4|80B285
-                JSR.W sub_808219                               ;8080E7|808219
+         .loop: LDA.W vblankCmd                                 ;80809E|800333   ; poll vblankCmd (wait for NMI to consume)
+                BNE .loop                                       ;8080A1|80809E
+                JSR.W input_808515                              ;8080A3|808515
+                JSR.W sub_80E02D                                ;8080A6|80E02D
+                JSR.W BuildSpriteOam                            ;8080A9|80E0B7
+                JSR.W SetupVramGpDmaCh5_GfxSet                  ;8080AC|80E860
+                JSR.W SnapshotCameras                           ;8080AF|80BFBB
+                LDA.W #$0002                                    ;8080B2|
+                JSR.W WaitVBlankCmd                             ;8080B5|808145
+                JSL.L input_81822C                              ;8080B8|81822C
+                JSR.W sub_80A449                                ;8080BC|80A449
+                JSR.W sub_8085C2                                ;8080BF|8085C2
+                JSR.W sub_80E032                                ;8080C2|80E032
+                JSR.W BuildSpriteOam                            ;8080C5|80E0B7
+                JSR.W SetupVramGpDmaCh5_Frame                   ;8080C8|80E885
+                JSL.L farsub_81815B                             ;8080CB|81815B
+                JSR.W SnapshotCameras                           ;8080CF|80BFBB
+                LDA.W #$0004                                    ;8080D2|
+                STA.W vblankCmd                                 ;8080D5|800333   ; issue VBlank command to NMI
+                JSR.W sub_8085FC                                ;8080D8|8085FC
+                JSR.W FlagOffscreenObjects                      ;8080DB|80F018
+                JSR.W sub_80C080                                ;8080DE|80C080
+                JSR.W UpdateObjectMotion                        ;8080E1|80E037
+                JSR.W sub_80B285                                ;8080E4|80B285
+                JSR.W sub_808219                                ;8080E7|808219
 
-        .loop2: LDA.W vblankCmd                                ;8080EA|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd (frame sync)
-                BNE .loop2                                     ;8080ED|8080EA
-                JSR.W SetupCgramGpDma                          ;8080EF|808667
-                JSR.W BuildSpriteOam                           ;8080F2|80E0B7
-                JSR.W SnapshotCameras                          ;8080F5|80BFBB
-                LDA.W #$0006                                   ;8080F8|
-                STA.W vblankCmd                                ;8080FB|800333   ; issue VBlank command to NMI
-                JMP.W MainLoop_Reinit                          ;8080FE|808063
+        .loop2: LDA.W vblankCmd                                 ;8080EA|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd (frame sync)
+                BNE .loop2                                      ;8080ED|8080EA
+                JSR.W SetupCgramGpDma                           ;8080EF|808667
+                JSR.W BuildSpriteOam                            ;8080F2|80E0B7
+                JSR.W SnapshotCameras                           ;8080F5|80BFBB
+                LDA.W #$0006                                    ;8080F8|
+                STA.W vblankCmd                                 ;8080FB|800333   ; issue VBlank command to NMI
+                JMP.W MainLoop_Reinit                           ;8080FE|808063
 
 
 loc_808101:
@@ -997,7 +997,7 @@ loc_808101:
                 JSR.W input_80814E                             ;80810D|80814E
                 LDA.W gameModeFlags                            ;808110|8019E3
                 BIT.W #$0008                                   ;808113|
-                BNE timedoor_Transition                       ;808116|80811B
+                BNE timedoor_Transition                        ;808116|80811B
                 JMP.W vbwait_808081                            ;808118|808081
 
 
@@ -1019,7 +1019,7 @@ timedoor_Transition:
                 LDA.W #$0010                                   ;80812C|
                 STA.W vblankCmd                                ;80812F|800333   ; issue VBlank command to NMI
                 JSR.W sub_8099A1                               ;808132|8099A1
-                JSR.W SetupVramGpDmaCh5_Frame                               ;808135|80E885
+                JSR.W SetupVramGpDmaCh5_Frame                  ;808135|80E885
 
         .loop2: LDA.W vblankCmd                                ;808138|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd
                 BNE .loop2                                     ;80813B|808138
@@ -1098,7 +1098,7 @@ input_80814E:
                 JSR.W hdma_808E7E                              ;80817A|808E7E
                 JSR.W irqcfg_809210                            ;80817D|809210
                 JSR.W irqcfg_808834                            ;808180|808834
-                INC.W spawnGateFrame                                 ;808183|800331
+                INC.W spawnGateFrame                           ;808183|800331
                 JSR.W UpdateAllObjects                         ;808186|80CCB3
                 JSR.W ScreenReinitHdmaOff                      ;808189|809ACC
                 LDA.W gameModeFlags                            ;80818C|8019E3
@@ -1233,20 +1233,20 @@ sub_808249:
                 STA.B zp_30                                    ;808251|000030
                 LDA.W ram_1977,X                               ;808253|801977
                 ASL A                                          ;808256|
-                STA.B tmp32                              ;808257|000032
+                STA.B tmp32                                    ;808257|000032
                 LDA.W ram_1967,X                               ;808259|801967
                 ASL A                                          ;80825C|
                 TAY                                            ;80825D|
 
          .loop: LDA.B [zp_2E],Y                                ;80825E|00002E
                 STA.B tmp36                                    ;808260|000036
-                LDA.B tmp34                           ;808262|000034
+                LDA.B tmp34                                    ;808262|000034
                 STA.B [zp_2E],Y                                ;808264|00002E
                 LDA.B tmp36                                    ;808266|000036
-                STA.B tmp34                           ;808268|000034
+                STA.B tmp34                                    ;808268|000034
                 INY                                            ;80826A|
                 INY                                            ;80826B|
-                CPY.B tmp32                              ;80826C|000032
+                CPY.B tmp32                                    ;80826C|000032
                 BCC .loop                                      ;80826E|80825E
                 BEQ .loop                                      ;808270|80825E
                 LDA.W ram_1987,X                               ;808272|801987
@@ -1257,10 +1257,10 @@ sub_808249:
                 CMP.W #$FFFF                                   ;80827C|
                 BEQ .skip                                      ;80827F|80828F
                 STA.B tmp36                                    ;808281|000036
-                LDA.B tmp34                           ;808283|000034
+                LDA.B tmp34                                    ;808283|000034
                 STA.B (zp_2A),Y                                ;808285|00002A
                 LDA.B tmp36                                    ;808287|000036
-                STA.B tmp34                           ;808289|000034
+                STA.B tmp34                                    ;808289|000034
                 INY                                            ;80828B|
                 INY                                            ;80828C|
                 BRA .loop2                                     ;80828D|80827A
@@ -1269,7 +1269,7 @@ sub_808249:
          .skip: LDA.W ram_1967,X                               ;80828F|801967
                 ASL A                                          ;808292|
                 TAY                                            ;808293|
-                LDA.B tmp34                           ;808294|000034
+                LDA.B tmp34                                    ;808294|000034
                 STA.B [zp_2E],Y                                ;808296|00002E
                 RTS                                            ;808298|
 
@@ -1287,12 +1287,12 @@ sub_808299:
                 STA.B zp_30                                    ;8082A1|000030
                 LDA.W ram_1967,X                               ;8082A3|801967
                 ASL A                                          ;8082A6|
-                STA.B tmp32                              ;8082A7|000032
+                STA.B tmp32                                    ;8082A7|000032
                 LDA.W ram_1977,X                               ;8082A9|801977
                 ASL A                                          ;8082AC|
                 TAY                                            ;8082AD|
                 LDA.B [zp_2E],Y                                ;8082AE|00002E
-                STA.B tmp34                           ;8082B0|000034
+                STA.B tmp34                                    ;8082B0|000034
                 STA.B tmp36                                    ;8082B2|000036
 
          .loop: INY                                            ;8082B4|
@@ -1303,7 +1303,7 @@ sub_808299:
                 STA.B [zp_2E],Y                                ;8082BA|00002E
                 INY                                            ;8082BC|
                 INY                                            ;8082BD|
-                CPY.B tmp32                              ;8082BE|000032
+                CPY.B tmp32                                    ;8082BE|000032
                 BCC .loop                                      ;8082C0|8082B4
                 LDA.W ram_1987,X                               ;8082C2|801987
                 STA.B zp_2A                                    ;8082C5|00002A
@@ -1329,7 +1329,7 @@ sub_808299:
 
          .skip: DEY                                            ;8082E6|
                 DEY                                            ;8082E7|
-                LDA.B tmp34                           ;8082E8|000034
+                LDA.B tmp34                                    ;8082E8|000034
                 STA.B (zp_2A),Y                                ;8082EA|00002A
 
         .skip2: LDA.W ram_1967,X                               ;8082EC|801967
@@ -1456,7 +1456,7 @@ data_8083AA:
 ;    trace #1 and #2 (idle-in-level, press Start -> this fires).
 ; --------------------------------------------------------
 GiveUpDialog_TriggerGate:
-                LDA.W dialogArmedFlag                           ;8083B6|8019CE
+                LDA.W dialogArmedFlag                          ;8083B6|8019CE
                 AND.W #$00FF                                   ;8083B9|
                 BEQ .exit                                      ;8083BC|808401
                 LDA.W ram_03EA                                 ;8083BE|8003EA
@@ -1476,15 +1476,15 @@ GiveUpDialog_TriggerGate:
                 ORA.W backdropColorG                           ;8083E4|800346
                 ORA.W backdropColorB                           ;8083E7|800348
                 BEQ +                                          ;8083EA|8083EF
-                JMP.W GiveUpDialog_Run                            ;8083EC|808402
+                JMP.W GiveUpDialog_Run                         ;8083EC|808402
 
 
              +: LDA.W #$0004                                   ;8083EF|
                 LDX.W #$0004                                   ;8083F2|
                 LDY.W #$0004                                   ;8083F5|
                 JSR.W color_80CF31                             ;8083F8|80CF31
-                JSR.W GiveUpDialog_Run                            ;8083FB|808402
-                JSR.W Op_ClearBackdrop                             ;8083FE|80CF82
+                JSR.W GiveUpDialog_Run                         ;8083FB|808402
+                JSR.W Op_ClearBackdrop                         ;8083FE|80CF82
 
          .exit: RTS                                            ;808401|
 
@@ -1515,7 +1515,7 @@ GiveUpDialog_TriggerGate:
 ; --------------------------------------------------------
 GiveUpDialog_Run:
                 LDA.W vblankCmd                                ;808402|800333   ; poll vblankCmd (wait for NMI to consume)
-                BNE GiveUpDialog_Run                              ;808405|808402
+                BNE GiveUpDialog_Run                           ;808405|808402
                 JSR.W sub_80891D                               ;808407|80891D
                 LDA.W #$00E7                                   ;80840A|
                 JSR.W sub_8088E7                               ;80840D|8088E7
@@ -1546,7 +1546,7 @@ GiveUpDialog_Run:
 
 
          .skip: PHA                                            ;808454|
-                JSR.W Op_ClearDialog                             ;808455|80963F
+                JSR.W Op_ClearDialog                           ;808455|80963F
 
         .loop2: JSR.W SetupCgramGpDma                          ;808458|808667
                 LDA.W #$000A                                   ;80845B|
@@ -1563,7 +1563,7 @@ GiveUpDialog_Run:
                 RTS                                            ;808478|
 
 
-        .skip2: JSR.W DeclineDialog_StopCues                               ;808479|808956
+        .skip2: JSR.W DeclineDialog_StopCues                   ;808479|808956
                 RTS                                            ;80847C|
 
 

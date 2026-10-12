@@ -5967,8 +5967,29 @@ ExpandLevelTilemap:
 
 
 ShiftObjPlacementBoxes:
-                LDX.W #$0000                                   ;INSERT| ;set index to zero and we will count up
-                INC.W placeX,X
+                ;IDK which of these are nessesary, but at least one of them is:
+                PHA
+                PHX
+                PHY
+
+                LDY.W #$0000                                   ;INSERT| ;set index to zero and we will count up by 000E bc the layout is weird idk
+         .loop: 
+                LDA.W placeX,Y                                 ;load X pos
+                CMP #$FFFF                                     ;check for exit flag
+                BEQ .exit                                      ;if exit flag, exit
+                CLC 
+                ADC #$0020                                     ;add 32 to X pos ;no, im not going to safeguard it... i dont think any levels are long enough for it to be a problem                                           
+                STA.W placeX,Y                                 ;store new X pos
+                TYA                                            
+                CLC                                            
+                ADC.W #$000E                                   
+                TAY                                            
+                BRA .loop                                      ;loop back to the top
+         
+         .exit: PLY
+                PLX
+                PLA
+                RTS
 
 
 ; --------------------------------------------------------
@@ -22260,8 +22281,8 @@ ScanAllPlacementsInBox:
                 STZ.B tmp3A                                    ;80EF19|00003A
 
              +: LDA.W #$FFFF                                   ;80EF1B|         
-                STA.B curObjIdx                                ;80EF1E|000042   ;start at maximum index (will decrement to 0)
-                LDX.W #$0000                                   ;80EF20|         ;
+                STA.B curObjIdx                                ;80EF1E|000042   
+                LDX.W #$0000                                   ;80EF20|         ;X= spawnIndex
                 LDY.W #$0000                                   ;80EF23|
 
          .loop: JSR.W TrySpawnPlacementIfInBox                               ;80EF26|80EF35
@@ -22289,39 +22310,41 @@ ScanAllPlacementsInBox:
 ;    (Mod_PlacementX_Shifted / Mod_PlacementX_PlusHalfW hooks live here).
 ; --------------------------------------------------------
 TrySpawnPlacementIfInBox:
-                LDA.W placeX,Y                                 ;80EF35|801A0A
-                CMP.W #$FFFF                                   ;80EF38|
-                BEQ .skip3                                     ;80EF3B|80EFBB
+                LDA.W placeX,Y                                 ;80EF35|801A0A   ;if the x placement for the object is exactly $ffff, then return with carry set, which exits the check loop.
+                CMP.W #$FFFF                                   ;80EF38|         ;Aka, this is a used as a flag. If it is loaded, we have gone through all of the objects and we can exit the loop.
+                BEQ .exitLoop                                  ;80EF3B|80EFBB
+                
                 ;mod used to jump to a routine in order to add 2 when doing x pos checks. this breaks things when the table is actually right
-                ADC.W placeHalfW,Y                              ;80EF3D|801A10
-                SBC.B tmp34                                     ;80EF40|000034
-                BMI .skip2                                      ;80EF42|80EFB9
-                LDA.W placeX,Y                                  ;80EF44|801A0A
+                
+                ADC.W placeHalfW,Y                              ;80EF3D|801A10  ;add the half of the width of the object's spawn box to placeX (the center of the object)
+                SBC.B tmp34                                     ;80EF40|000034  ;the result is negative when the right edge of the spawn box is to the left of the left edge of the caller's box
+                BMI .skipObj                                    ;80EF42|80EFB9  ;bc these are all rectangles, if this ever happens, we know that the spawn box is not in the caller's box, so we can skip this object.
+                LDA.W placeX,Y                                  ;80EF44|801A0A  ;run simmilar checks through the other 3 edges of the spawn box
                 SBC.W placeHalfW,Y                              ;80EF47|801A0E
                 SBC.B tmp36                                     ;80EF4A|000036
-                BPL .skip2                                      ;80EF4C|80EFB9
+                BPL .skipObj                                    ;80EF4C|80EFB9
                 LDA.W placeY,Y                                  ;80EF4E|801A0C
                 ADC.W placeHalfH,Y                              ;80EF51|801A10
                 SBC.B tmp38                                     ;80EF54|000038
-                BMI .skip2                                      ;80EF56|80EFB9
+                BMI .skipObj                                    ;80EF56|80EFB9
                 LDA.W placeY,Y                                  ;80EF58|801A0C
                 SBC.W placeHalfH,Y                              ;80EF5B|801A10
                 SBC.B tmp3A                                     ;80EF5E|00003A
-                BPL .skip2                                      ;80EF60|80EFB9
-                PHX                                             ;80EF62|  
-                STX.B tmp32                              ;80EF63|000032
-                LDX.W objScanStartSlot                                 ;80EF65|80033E
+                BPL .skipObj                                    ;80EF60|80EFB9
+                PHX                                             ;80EF62|        ;if it passes all checks, the object is at least partially in the caller's box, so save this index (I dont think it directly represents the objIndex, i think it is offset, which would be corrected later)
+                STX.B tmp32                                     ;80EF63|000032
+                LDX.W objScanStartSlot                          ;80EF65|80033E  ;I think this is the next open slot in the object 
 
          .loop: LDA.W objActive,X                              ;80EF68|800D91
-                BEQ +                                          ;80EF6B|80EF74
-                LDA.W objPlacementIdx,X                               ;80EF6D|801101
-                CMP.B tmp32                              ;80EF70|000032
+                BEQ +                                          ;80EF6B|80EF74   ;if the object is inactive, skip next check. 
+                LDA.W objPlacementIdx,X                        ;80EF6D|801101   
+                CMP.B tmp32                                    ;80EF70|000032   
                 BEQ .skip                                      ;80EF72|80EFB8
 
              +: INX                                            ;80EF74|
                 INX                                            ;80EF75|
-                CPX.W objTableEnd                              ;80EF76|800380
-                BCC .loop                                      ;80EF79|80EF68
+                CPX.W objTableEnd                              ;80EF76|800380   
+                BCC .loop                                      ;80EF79|80EF68   
                 PHY                                            ;80EF7B|         
                 PEI.B ($34)                                    ;80EF7C|000034   
                 PEI.B ($36)                                    ;80EF7E|000036   
@@ -22353,11 +22376,11 @@ TrySpawnPlacementIfInBox:
 
          .skip: PLX                                            ;80EFB8|        
 
-        .skip2: CLC                                            ;80EFB9|
+      .skipObj: CLC                                            ;80EFB9|
                 RTS                                            ;80EFBA|
 
 
-        .skip3: SEC                                            ;80EFBB|
+     .exitLoop: SEC                                            ;80EFBB|
                 RTS                                            ;80EFBC|
 
 

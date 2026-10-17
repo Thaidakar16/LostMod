@@ -248,7 +248,7 @@ zp_33                  = $0033  ; refs=2 (r0/w2) [STA:2], 2 site(s)
 
 ; IMPORTANT!!!! I am renaming wram 0034 to tmp34, because I think that it is used as a temporary variable. 
 ;The name it has had up till now was "refillStageIdx", but I think it will make more sense to me if it is just tmp
-tmp34         = $0034  ; refs=120 (r62/w58) [STA:34,LDA:25,STX:16,LDX:15], 53 site(s); indexed (,X/,Y) -> array/table
+tmp34                  = $0034  ; refs=120 (r62/w58) [STA:34,LDA:25,STX:16,LDX:15], 53 site(s); indexed (,X/,Y) -> array/table
 tmp36                  = $0036  ; refs=74 (r38/w36) [STA:24,LDA:18,LDX:8,STX:8], 36 site(s); indexed (,X/,Y) -> array/table
 tmp38                  = $0038  ; refs=81 (r43/w38) [STA:29,LDA:13,LDX:12,STX:6], 35 site(s); indexed (,X/,Y) -> array/table
 tmp3A                  = $003A  ; refs=58 (r30/w28) [STA:18,LDX:11,LDA:7,STX:7], 30 site(s); indexed (,X/,Y) -> array/table
@@ -314,7 +314,7 @@ zp_B3                  = $00B3  ; refs=8 (r5/w3) [ADC:3,STA:3,LDA:2], 3 site(s)
 zp_B4                  = $00B4  ; refs=3 (r1/w2) [ROL:1,STZ:1,STA:1], 3 site(s)
 zp_B5                  = $00B5  ; refs=2 (r2/w0) [INC:2], 1 site(s)
 ram_0300               = $0300  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s)
-sfxEnabled               = $0302  ; refs=5 (r4/w1) [LDA:2,LDX:2,STA:1], 4 site(s)  Nonzero when sound effects are enabled in options; Op_PlaySfx/Op_StopSfx and their animation-VM equivalents no-op when this is 0.
+sfxEnabled             = $0302  ; refs=5 (r4/w1) [LDA:2,LDX:2,STA:1], 4 site(s)  Nonzero when sound effects are enabled in options; Op_PlaySfx/Op_StopSfx and their animation-VM equivalents no-op when this is 0.
 ram_0304               = $0304  ; refs=5 (r4/w1) [LDY:2,LDA:2,STA:1], 5 site(s); member of a 0x28-stride table (likely per-object field)
 ram_0306               = $0306  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s)
 numPlayers             = $0308  ; 1 => single player (controller 2 input is forced to 0)
@@ -334,13 +334,13 @@ ram_0328               = $0328  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_032A               = $032A  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_032C               = $032C  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s); member of a 0x28-stride table (likely per-object field)
 inidispShadow          = $0330  ; shadow of INIDISP (brightness/forced-blank); copied to $2100 each NMI
-spawnGateFrame               = $0331  ; refs=4 (r3/w1) [LDA:2,INC:1,STZ:1], 4 site(s)  Nonzero for one frame right after a scene reinit; CanSpawnPlacement refuses every spawn while it's set, so the level-load spawn passes (which run their own, separate logic) don't race with anything else.
+spawnGateFrame         = $0331  ; refs=4 (r3/w1) [LDA:2,INC:1,STZ:1], 4 site(s)  Nonzero for one frame right after a scene reinit; CanSpawnPlacement refuses every spawn while it's set, so the level-load spawn passes (which run their own, separate logic) don't race with anything else.
 vblankCmd              = $0333  ; VBlank task selector; main loop sets it, NMI runs vblankCmdTable[x] then clears
 rasterIrqActive        = $0335  ; nonzero => the scanline IRQ raster effect is armed
 ppuUpdateFlags         = $0336  ; bitfield of pending PPU updates requested by the main thread
 frameCounter           = $0338  ; incremented once per NMI (free-running frame timer)
 ram_033C               = $033C  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s)
-objScanStartSlot               = $033E  ; refs=6 (r3/w3) [LDX:3,STA:2,STZ:1], 5 site(s)  First object-table slot that spawn/respawn dedup scans are allowed to match against (lets reserved low slots -- the vikings -- be skipped in some contexts). Set to $0002 or $0006 depending on game mode by the scene-setup code.
+objScanStartSlot       = $033E  ; refs=6 (r3/w3) [LDX:3,STA:2,STZ:1], 5 site(s)  First object-table slot that spawn/respawn dedup scans are allowed to match against (lets reserved low slots -- the vikings -- be skipped in some contexts). Set to $0002 or $0006 depending on game mode by the scene-setup code.
 splitYOffset           = $0340  ; refs=15 (r13/w2) [SBC:8,ADC:5,STZ:1,STA:1], 11 site(s)
 ram_0342               = $0342  ; refs=4 (r2/w2) [STA:2,CMP:1,LDA:1], 2 site(s)
 backdropColorR         = $0344  ; red plane of fixed/backdrop colour -> COLDATA |$20
@@ -355,9 +355,9 @@ ram_0354               = $0354  ; refs=2 (r1/w1) [LDY:1,STZ:1], 2 site(s); membe
 ram_0356               = $0356  ; refs=5 (r0/w5) [STX:2,STA:2,STZ:1], 5 site(s)
 ram_0358               = $0358  ; refs=5 (r0/w5) [STX:2,STA:2,STZ:1], 5 site(s)
 ram_035A               = $035A  ; refs=5 (r2/w3) [STA:2,LDA:1,EOR:1,STX:1], 2 site(s)
-vmFarCallSaveY               = $035C  ; refs=2 (r1/w1) [STY:1,LDY:1], 1 site(s)  Saves the VM's Y (script instruction pointer) across an Op_FarCall's PHK/RTL dance so it can be restored once the native routine returns.
+vmFarCallSaveY         = $035C  ; refs=2 (r1/w1) [STY:1,LDY:1], 1 site(s)  Saves the VM's Y (script instruction pointer) across an Op_FarCall's PHK/RTL dance so it can be restored once the native routine returns.
 ram_035E               = $035E  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s); member of a 0x28-stride table (likely per-object field)
-placementConsumedBits               = $0360  ; refs=6 (r3/w3) [LDA:3,STA:2,STZ:1], 3 site(s); indexed (,X/,Y) -> array/table  ; 16-byte bitmap, 1 bit per placement ordinal. Set by Op_BlockRespawn / cleared by Op_AllowRespawn; TrySpawnPlacementIfInBox refuses to spawn a placement whose bit is set. This is what makes a one-shot pickup stay gone after it's collected.
+placementConsumedBits  = $0360  ; refs=6 (r3/w3) [LDA:3,STA:2,STZ:1], 3 site(s); indexed (,X/,Y) -> array/table  ; 16-byte bitmap, 1 bit per placement ordinal. Set by Op_BlockRespawn / cleared by Op_AllowRespawn; TrySpawnPlacementIfInBox refuses to spawn a placement whose bit is set. This is what makes a one-shot pickup stay gone after it's collected.
 ram_0370               = $0370  ; refs=4 (r1/w3) [STA:2,STZ:1,LDA:1], 3 site(s); indexed (,X/,Y) -> array/table; member of a 0x28-stride table (likely per-object field)
 vramDmaPendA           = $037C  ; refs=5 (r2/w3) [LDA:2,STZ:2,STA:1], 4 site(s); member of a 0x28-stride table (likely per-object field)
 pendingMapFillFlag     = $037E  ; refs=5 (r2/w3) [LDA:2,STZ:2,STA:1], 4 site(s)
@@ -382,12 +382,12 @@ ram_03A8               = $03A8  ; refs=4 (r2/w2) [STZ:1,STA:1,LDA:1,DEC:1], 3 si
 deferredFarCallAddr    = $03AA  ; refs=6 (r2/w4) [STZ:3,LDA:2,STA:1], 3 site(s)
 deferredFarCallBank    = $03AC  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s)
 tilemapUploadMask      = $03AE  ; refs=8 (r5/w3) [LDA:4,STZ:2,ORA:1,STA:1], 3 site(s); member of a 0x28-stride table (likely per-object field)
-camShakeOffsetX               = $03B0  ; refs=5 (r4/w1) [SBC:4,STA:1], 5 site(s)  This frame's screen-shake X offset, added into the scroll latch. Driven by Op_SetShakeX's amplitude/period pair.
-camShakeOffsetY               = $03B2  ; refs=5 (r4/w1) [SBC:4,STA:1], 5 site(s)  Y counterpart, driven by Op_SetShakeY.
-vmScanType               = $03B4  ; refs=4 (r2/w2) [STA:2,LDY:2], 1 site(s)  The touch-type operand for the current Op_Scan*Above/Below_SetTarget loop, stashed here so the loop-continuation opcode (Op_ScanNext*) can keep filtering by it.
-vmScanTarget               = $03B6  ; refs=4 (r2/w2) [STA:2,LDA:2], 1 site(s)  The CALL target address for the current scan loop, stashed the same way.
-vmScanRow               = $03B8  ; refs=6 (r2/w4) [STA:4,LDA:2], 1 site(s)  The row Y-coordinate (objBoxTop-1 or objBoxBottom+1) the current scan loop is testing against.
-vmScanLastHit               = $03BA  ; refs=4 (r2/w2) [LDX:2,STA:2], 1 site(s)  Slot of the last object the scan loop matched; Op_ScanNext* resumes searching from here.
+camShakeOffsetX        = $03B0  ; refs=5 (r4/w1) [SBC:4,STA:1], 5 site(s)  This frame's screen-shake X offset, added into the scroll latch. Driven by Op_SetShakeX's amplitude/period pair.
+camShakeOffsetY        = $03B2  ; refs=5 (r4/w1) [SBC:4,STA:1], 5 site(s)  Y counterpart, driven by Op_SetShakeY.
+vmScanType             = $03B4  ; refs=4 (r2/w2) [STA:2,LDY:2], 1 site(s)  The touch-type operand for the current Op_Scan*Above/Below_SetTarget loop, stashed here so the loop-continuation opcode (Op_ScanNext*) can keep filtering by it.
+vmScanTarget           = $03B6  ; refs=4 (r2/w2) [STA:2,LDA:2], 1 site(s)  The CALL target address for the current scan loop, stashed the same way.
+vmScanRow              = $03B8  ; refs=6 (r2/w4) [STA:4,LDA:2], 1 site(s)  The row Y-coordinate (objBoxTop-1 or objBoxBottom+1) the current scan loop is testing against.
+vmScanLastHit          = $03BA  ; refs=4 (r2/w2) [LDX:2,STA:2], 1 site(s)  Slot of the last object the scan loop matched; Op_ScanNext* resumes searching from here.
 hitClass               = $03BC  ; refs=6 (r0/w6) [STA:6], 6 site(s)
 hitObj                 = $03BE  ; refs=14 (r0/w14) [STA:10,STX:4], 11 site(s)
 inputHeldSel           = $03C0  ; selected player's held buttons (copied from joy1/2Held)
@@ -399,15 +399,15 @@ joy2Pressed            = $03CA  ; controller 2 buttons newly pressed this frame 
 joy1Prev               = $03CC  ; controller 1 buttons held last frame (for edge detect)
 joy2Prev               = $03CE  ; controller 2 buttons held last frame (for edge detect)
 ram_03D2               = $03D2  ; refs=5 (r2/w3) [STA:3,LDA:2], 2 site(s); indexed (,X/,Y) -> array/table
-inputAuxSel            = $03D6  ; selected player's aux input word (from inputAux1/2)
-inputAux1              = $03D8  ; controller 1 aux/edge word; also used as an object index (inferred)
-inputAux2              = $03DA  ; controller 2 aux/edge word; also used as an object index (inferred)
+inputAuxSel            = $03D6  ; selected player's aux input word (from p1vikingIdx/2)
+p1vikingIdx              = $03D8  ; controller 1 aux/edge word; also used as an object index (inferred)
+p2vikingIdx              = $03DA  ; controller 2 aux/edge word; also used as an object index (inferred)
 ram_03DC               = $03DC  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
 ram_03DE               = $03DE  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_03E0               = $03E0  ; refs=4 (r2/w2) [STA:2,LDA:1,DEC:1], 1 site(s); indexed (,X/,Y) -> array/table
 ram_03E4               = $03E4  ; refs=10 (r5/w5) [STZ:3,LDX:2,CPX:1,LDA:1], 7 site(s)
 ram_03E6               = $03E6  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s)
-vmLastOverlapObj               = $03E8  ; refs=1 (r0/w1) [STX:1], 1 site(s); member of a 0x28-stride table (likely per-object field)  ; Scratch 'last overlapping object' slot used by a couple of the class-scan helpers; not read back by any opcode directly.
+vmLastOverlapObj       = $03E8  ; refs=1 (r0/w1) [STX:1], 1 site(s); member of a 0x28-stride table (likely per-object field)  ; Scratch 'last overlapping object' slot used by a couple of the class-scan helpers; not read back by any opcode directly.
 ram_03EA               = $03EA  ; refs=13 (r7/w6) [LDA:7,STA:4,STZ:2], 6 site(s)
 ram_03EC               = $03EC  ; refs=10 (r5/w5) [STA:4,LDA:3,STZ:1,INC:1], 2 site(s)
 ram_03EE               = $03EE  ; refs=8 (r3/w5) [STA:4,LDA:2,STZ:1,CMP:1], 2 site(s)
@@ -502,10 +502,10 @@ ram_059F               = $059F  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 oamBuildHi             = $0771  ; refs=12 (r6/w6) [LDA:4,STZ:3,STA:3,ORA:1], 6 site(s); indexed (,X/,Y) -> array/table
 ram_0772               = $0772  ; refs=2 (r1/w1) [LDA:1,STZ:1], 2 site(s)
 ram_0773               = $0773  ; refs=3 (r1/w2) [STZ:2,LDA:1], 3 site(s)
-oamSrcPriority               = $0793  ; refs=9 (r5/w4) [LDA:5,STA:4], 2 site(s); indexed (,X/,Y) -> array/table  ; Per-sprite OAM priority/misc source byte, one entry per OAM source slot (parallel array to oamSrcAttr).
-oamSrcPalette               = $0794  ; refs=25 (r12/w13) [STA:13,LDA:12], 6 site(s); indexed (,X/,Y) -> array/table  ; Per-sprite OAM palette/priority attribute byte, written at spawn time from objFlags bits 1-5 and updated by AnimOp_SetPalette.
+oamSrcPriority         = $0793  ; refs=9 (r5/w4) [LDA:5,STA:4], 2 site(s); indexed (,X/,Y) -> array/table  ; Per-sprite OAM priority/misc source byte, one entry per OAM source slot (parallel array to oamSrcAttr).
+oamSrcPalette          = $0794  ; refs=25 (r12/w13) [STA:13,LDA:12], 6 site(s); indexed (,X/,Y) -> array/table  ; Per-sprite OAM palette/priority attribute byte, written at spawn time from objFlags bits 1-5 and updated by AnimOp_SetPalette.
 oamSrcAttr             = $0985  ; refs=24 (r12/w12) [LDA:12,STA:10,STZ:2], 8 site(s); indexed (,X/,Y) -> array/table
-spriteGroupFlags               = $09F9  ; refs=13 (r11/w2) [LDA:11,STA:2], 1 site(s); indexed (,X/,Y) -> array/table  ; Per-sprite group-membership flags, tested against animSpriteMask so an AnimOp can target a subset of an object's sprites instead of all of them.
+spriteGroupFlags       = $09F9  ; refs=13 (r11/w2) [LDA:11,STA:2], 1 site(s); indexed (,X/,Y) -> array/table  ; Per-sprite group-membership flags, tested against animSpriteMask so an AnimOp can target a subset of an object's sprites instead of all of them.
 oamSrcX                = $0A61  ; refs=15 (r7/w8) [STA:8,SBC:4,LDA:3], 6 site(s); indexed (,X/,Y) -> array/table
 oamSrcY                = $0B49  ; refs=14 (r7/w7) [STA:7,SBC:4,LDA:3], 5 site(s); indexed (,X/,Y) -> array/table
 gfxSetId               = $0C49  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
@@ -670,7 +670,7 @@ ram_19C9               = $19C9  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 ram_19CB               = $19CB  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 ram_19CC               = $19CC  ; refs=3 (r3/w0) [LDA:3], 1 site(s)
 ram_19CD               = $19CD  ; refs=2 (r2/w0) [LDA:2], 2 site(s)
-dialogArmedFlag               = $19CE  ; refs=8 (r8/w0) [LDA:8], 8 site(s)  Nonzero while a modal Yes/No dialog (give-up confirm, etc.) is allowed to open this frame; gates GiveUpDialog_TriggerGate and is also read by a couple of per-frame input routines to suppress normal movement while a dialog could appear.
+dialogArmedFlag        = $19CE  ; refs=8 (r8/w0) [LDA:8], 8 site(s)  Nonzero while a modal Yes/No dialog (give-up confirm, etc.) is allowed to open this frame; gates GiveUpDialog_TriggerGate and is also read by a couple of per-frame input routines to suppress normal movement while a dialog could appear.
 ram_19CF               = $19CF  ; refs=6 (r6/w0) [LDA:6], 2 site(s)
 ram_19D1               = $19D1  ; refs=4 (r4/w0) [LDA:2,ADC:2], 2 site(s)
 ram_19D3               = $19D3  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
@@ -706,6 +706,8 @@ ram_1A02               = $1A02  ; refs=2 (r2/w0) [LDA:2], 1 site(s)
 ram_1A04               = $1A04  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 parallaxScaleX         = $1A06  ; refs=7 (r6/w1) [LDA:6,STA:1], 5 site(s)
 parallaxScaleY         = $1A08  ; refs=7 (r6/w1) [LDA:6,STA:1], 5 site(s)
+
+
 placeX                 = $1A0A  ; refs=6 (r5/w1) [LDA:5,STA:1], 3 site(s); indexed (,X/,Y) -> array/table
 placeY                 = $1A0C  ; refs=4 (r4/w0) [LDA:4], 2 site(s); indexed (,X/,Y) -> array/table
 placeHalfW             = $1A0E  ; refs=4 (r4/w0) [LDA:2,ADC:1,SBC:1], 2 site(s); indexed (,X/,Y) -> array/table
@@ -713,6 +715,8 @@ placeHalfH             = $1A10  ; refs=4 (r4/w0) [LDA:2,ADC:1,SBC:1], 2 site(s);
 placeType              = $1A12  ; refs=2 (r2/w0) [LDA:2], 2 site(s); indexed (,X/,Y) -> array/table
 placeFlags             = $1A14  ; refs=3 (r3/w0) [LDX:2,LDA:1], 2 site(s); indexed (,X/,Y) -> array/table
 placeOamPool           = $1A16  ; refs=2 (r2/w0) [LDA:2], 2 site(s); indexed (,X/,Y) -> array/table
+
+
 ram_7000               = $7000  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_70E1               = $70E1  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_71C2               = $71C2  ; refs=1 (r0/w1) [STZ:1], 1 site(s)
@@ -892,6 +896,7 @@ Boot_ClearWram:
 ;                INY                                             ;INSERT|
 ;                CPY.W #modFlags+2                               ;INSERT|         ;I only have one var rn...
 ;                BCC .myloop                                     ;INSERT|INSERT
+                ;STZ.W modFlags                                  ;INSERT|
 
                 LDY.W #$032E                                    ;808046|
         .loop3: STA.W zp_00,Y                                   ;808049|800000
@@ -1343,7 +1348,7 @@ sub_808299:
 ; --------------------------------------------------------
 ;  input_8082F6   [64 ins, returns RTS]
 ;    callers: MainLoop_Reinit, vbwait_808081
-;    writes:    zp_8A, numPlayers, ppuUpdateFlags, inputAux1, inputAux2, ram_03E4 ...
+;    writes:    zp_8A, numPlayers, ppuUpdateFlags, p1vikingIdx, p2vikingIdx, ram_03E4 ...
 ;    reads:     zp_8A, ppuUpdateFlags, joy1Held, joy1Pressed, ram_03E6, ram_03EA ...
 ; --------------------------------------------------------
 input_8082F6:
@@ -1394,9 +1399,9 @@ input_8082F6:
                 LDA.W #$0000                                   ;808352|
                 STA.W ram_19DD                                 ;808355|8019DD
 
-        .skip4: STZ.W inputAux1                                ;808358|8003D8
+        .skip4: STZ.W p1vikingIdx                                ;808358|8003D8
                 LDA.W #$0002                                   ;80835B|
-                STA.W inputAux2                                ;80835E|8003DA
+                STA.W p2vikingIdx                                ;80835E|8003DA
                 STZ.W ram_03E4                                 ;808361|8003E4
                 BRA .cont2                                     ;808364|808384
 
@@ -1663,7 +1668,7 @@ GiveUpDialog_NavConfirm:
 ;  input_808515   [74 ins, returns RTS]
 ;    callers: vbwait_808081, RunGameplayFrame_NoBlank
 ;    writes:    ram_0356, ram_0358, ram_03F6, ram_03F8, ram_03FA, ram_03FC
-;    reads:     playerCamX, playerCamY, splitYOffset, inputAux1, ram_03E4, objX ...
+;    reads:     playerCamX, playerCamY, splitYOffset, p1vikingIdx, ram_03E4, objX ...
 ;    calls:     sub_808636, sub_80C0FC, sub_80C0D2, sub_80C124, sub_80C14E
 ; --------------------------------------------------------
 input_808515:
@@ -1675,7 +1680,7 @@ input_808515:
                 STZ.W ram_03FA                                 ;808524|8003FA
                 JSR.W sub_808636                               ;808527|808636
                 LDX.W ram_03E4                                 ;80852A|8003E4
-                LDY.W inputAux1,X                              ;80852D|8003D8
+                LDY.W p1vikingIdx,X                              ;80852D|8003D8
                 LDA.B playerCamX                               ;808530|000044
                 CLC                                            ;808532|
                 ADC.W #$0070                                   ;808533|
@@ -1712,7 +1717,7 @@ input_808515:
                 JSR.W sub_80C0D2                               ;808570|80C0D2
 
         .skip2: LDX.W ram_03E4                                 ;808573|8003E4
-                LDY.W inputAux1,X                              ;808576|8003D8
+                LDY.W p1vikingIdx,X                              ;808576|8003D8
                 LDA.B playerCamY                               ;808579|000046
                 CLC                                            ;80857B|
                 ADC.W #$0080                                   ;80857C|
@@ -1898,11 +1903,11 @@ SetupCgramGpDma:
 ;  input_808685   [37 ins, returns RTS]
 ;    callers: input_8086F6
 ;    writes:    ram_03DC, ram_03E0, oamSrcAttr
-;    reads:     inputAux1, ram_03DC, ram_03E0, oamSrcAttr, objTypeId, objOamFirst
+;    reads:     p1vikingIdx, ram_03DC, ram_03E0, oamSrcAttr, objTypeId, objOamFirst
 ; --------------------------------------------------------
 input_808685:
                 LDA.W ram_03DC,X                               ;808685|8003DC
-                CMP.W inputAux1,X                              ;808688|8003D8
+                CMP.W p1vikingIdx,X                              ;808688|8003D8
                 BEQ .skip2                                     ;80868B|8086B1
                 CMP.W #$0006                                   ;80868D|
                 BCS .skip                                      ;808690|8086A5
@@ -1915,14 +1920,14 @@ input_808685:
                 AND.W #$FFDF                                   ;80869F|
                 STA.W oamSrcAttr,Y                             ;8086A2|800985
 
-         .skip: LDA.W inputAux1,X                              ;8086A5|8003D8
+         .skip: LDA.W p1vikingIdx,X                              ;8086A5|8003D8
                 STA.W ram_03DC,X                               ;8086A8|8003DC
                 LDA.W #$0015                                   ;8086AB|
                 STA.W ram_03E0,X                               ;8086AE|8003E0
 
         .skip2: LDA.W ram_03E0,X                               ;8086B1|8003E0
                 BEQ .exit                                      ;8086B4|8086E0
-                LDY.W inputAux1,X                              ;8086B6|8003D8
+                LDY.W p1vikingIdx,X                              ;8086B6|8003D8
                 DEC A                                          ;8086B9|
                 STA.W ram_03E0,X                               ;8086BA|8003E0
                 BIT.W #$0002                                   ;8086BD|
@@ -1967,11 +1972,11 @@ sub_8086E1:
 ;  input_8086F6   [35 ins, returns RTS]
 ;    callers: sub_8086E1
 ;    writes:    joy1Held, joy1Pressed
-;    reads:     playerCamX, playerCamY, inputAux1, ram_03E4, objX, objY
+;    reads:     playerCamX, playerCamY, p1vikingIdx, ram_03E4, objX, objY
 ;    calls:     input_808685
 ; --------------------------------------------------------
 input_8086F6:
-                LDY.W inputAux1,X                              ;8086F6|8003D8
+                LDY.W p1vikingIdx,X                              ;8086F6|8003D8
                 CPY.W #$0006                                   ;8086F9|
                 BCS .skip2                                     ;8086FC|80873A
                 LDA.W objX,Y                          ;8086FE|801179
@@ -3579,12 +3584,12 @@ ppucfg_808F57:
 ;    callers: sub_80A115
 ;    writes HW: VMADDL, VMDATAL
 ;    writes:    zp_2A, zp_2C, zp_2E, tmp32, zp_6C, zp_6E
-;    reads:     zp_03, zp_05, zp_07, zp_09, zp_0B, zp_2A ...
+;    reads:     zp_03, zp_07, zp_09, zp_0B, zp_2A ...
 ; --------------------------------------------------------
 vramwr_808F7B:
                 STX.B zp_6C                                    ;808F7B|00006C
                 STY.B zp_6E                                    ;808F7D|00006E
-                LDA.B zp_0B,S                                  ;808F7F|00000B
+                LDA.B $0B,S                                    ;808F7F|S+000B
                 ASL A                                          ;808F81|
                 ASL A                                          ;808F82|
                 ASL A                                          ;808F83|
@@ -3593,19 +3598,19 @@ vramwr_808F7B:
                 ADC.W vramDmaVmaddAB                           ;808F86|8019E8
                 STA.B zp_2E                                    ;808F89|00002E
                 STA.W VMADDL                                   ;808F8B|802116   ; set VRAM addr (low) for upcoming write
-                LDA.B zp_09,S                                  ;808F8E|000009
+                LDA.B $09,S                                    ;808F8E|S+0009
                 ASL A                                          ;808F90|
                 ASL A                                          ;808F91|
                 ASL A                                          ;808F92|
                 ASL A                                          ;808F93|
                 ASL A                                          ;808F94|
                 STA.B tmp32                              ;808F95|000032
-                LDA.B zp_07,S                                  ;808F97|000007
+                LDA.B $07,S                                    ;808F97|S+0007
                 TAX                                            ;808F99|
-                LDA.B zp_05,S                                  ;808F9A|000005
+                LDA.B $05,S                                    ;808F9A|S+0005
                 STA.B zp_2A                                    ;808F9C|00002A
 
-         .skip: LDA.B zp_03,S                                  ;808F9E|000003
+         .skip: LDA.B $03,S                                    ;808F9E|S+0003
                 STA.B zp_2C                                    ;808FA0|00002C
 
          .loop: LDY.W #$0000                                   ;808FA2|
@@ -3636,25 +3641,25 @@ vramwr_808F7B:
 ;  sub_808FCA   [42 ins, returns RTS]
 ;    callers: sub_80B337, sub_80B370, sub_80B3DA
 ;    writes:    zp_2A, zp_2B, zp_2C, zp_2E, zp_30, tmp32
-;    reads:     zp_03, zp_05, zp_07, zp_09, zp_0B, zp_0D ...
+;    reads:     zp_03, zp_07, zp_09, zp_0B, zp_0D ...
 ; --------------------------------------------------------
 sub_808FCA:
-                LDA.B zp_0D,S                                  ;808FCA|00000D
+                LDA.B $0D,S                                    ;808FCA|S+000D
                 STA.B zp_2A                                    ;808FCC|00002A
-                LDA.B zp_0F,S                                  ;808FCE|00000F
+                LDA.B $0F,S                                    ;808FCE|S+000F
                 STA.B zp_2C                                    ;808FD0|00002C
-                LDA.B zp_09,S                                  ;808FD2|000009
+                LDA.B $09,S                                    ;808FD2|S+0009
                 STA.B zp_2E                                    ;808FD4|00002E
-                LDA.B zp_0B,S                                  ;808FD6|00000B
+                LDA.B $0B,S                                    ;808FD6|S+000B
                 STA.B zp_30                                    ;808FD8|000030
-                LDA.B zp_07,S                                  ;808FDA|000007
+                LDA.B $07,S                                    ;808FDA|S+0007
                 ASL A                                          ;808FDC|
                 ASL A                                          ;808FDD|
                 ASL A                                          ;808FDE|
                 ASL A                                          ;808FDF|
                 ASL A                                          ;808FE0|
                 STA.B tmp32                              ;808FE1|000032
-                LDA.B zp_05,S                                  ;808FE3|000005
+                LDA.B $05,S                                    ;808FE3|S+0005
                 TAX                                            ;808FE5|
 
          .loop: PHX                                            ;808FE6|
@@ -3677,7 +3682,7 @@ sub_808FCA:
                 BNE .loop2                                     ;809001|808FED
                 REP #$30                                       ;809003|
                 PLX                                            ;809005|
-                LDA.B zp_03,S                                  ;809006|000003
+                LDA.B $03,S                                    ;809006|S+0003
                 CLC                                            ;809008|
                 ADC.B zp_2E                                    ;809009|00002E
                 STA.B zp_2E                                    ;80900B|00002E
@@ -4082,7 +4087,7 @@ input_80921D:
                 STA.W inputHeldSel                             ;809220|8003C0
                 LDA.W joy1Pressed                              ;809223|8003C8
                 STA.W inputPressedSel                          ;809226|8003C6
-                LDA.W inputAux1                                ;809229|8003D8
+                LDA.W p1vikingIdx                                ;809229|8003D8
                 STA.W inputAuxSel                              ;80922C|8003D6
                 RTS                                            ;80922F|
 
@@ -4091,14 +4096,14 @@ input_80921D:
 ;  SelectP2Input   [7 ins, returns RTS]
 ;    callers: UpdateOneObject
 ;    writes:    inputHeldSel, inputPressedSel, inputAuxSel
-;    reads:     joy2Held, joy2Pressed, inputAux2
+;    reads:     joy2Held, joy2Pressed, p2vikingIdx
 ; --------------------------------------------------------
 SelectP2Input:
                 LDA.W joy2Held                                 ;809230|8003C4   ; route joy2 held/pressed into the 'selected' input slots
                 STA.W inputHeldSel                             ;809233|8003C0
                 LDA.W joy2Pressed                              ;809236|8003CA
                 STA.W inputPressedSel                          ;809239|8003C6
-                LDA.W inputAux2                                ;80923C|8003DA
+                LDA.W p2vikingIdx                                ;80923C|8003DA
                 STA.W inputAuxSel                              ;80923F|8003D6
                 RTS                                            ;809242|
 
@@ -4882,7 +4887,7 @@ sub_80961A:
 ;  Op_ClearDialog   [75 ins, returns RTS]
 ;    callers: GiveUpDialog_Run
 ;    writes:    zp_2E, zp_30, tmp34, ram_19B9
-;    reads:     tmp34, scriptPC, vmAcc, inputAux2, ram_19B9, gameModeFlags
+;    reads:     tmp34, scriptPC, vmAcc, p2vikingIdx, ram_19B9, gameModeFlags
 ;    calls:     sub_809404
 ; --------------------------------------------------------
 ;--------------------------------------------------------------
@@ -4922,12 +4927,12 @@ Op_ClearDialog:
 ;--------------------------------------------------------------
 ;  Op_WaitKeyPlayer   (object VM op $CB)
 ;    operands: -
-;    Wait for a button press by player vmAcc: token $8008 if vmAcc == inputAux2 (ppuUpdateFlags $10,
+;    Wait for a button press by player vmAcc: token $8008 if vmAcc == p2vikingIdx (ppuUpdateFlags $10,
 ;    controller 2 only) else $8009 ($20, controller 1).
 ;--------------------------------------------------------------
 Op_WaitKeyPlayer:
                 LDA.B vmAcc                                    ;809677|00008E
-                CMP.W inputAux2                                ;809679|8003DA
+                CMP.W p2vikingIdx                                ;809679|8003DA
                 BEQ +                                          ;80967C|809683
                 LDA.W #$8009                                   ;80967E|
                 BRA loc_80968B                                 ;809681|80968B
@@ -4969,7 +4974,7 @@ Op_DialogCmd06:
                 LDA.B [scriptPC],Y                             ;8096A1|000070
                 INY                                            ;8096A3|
                 AND.W #$00FF                                   ;8096A4|
-                STA.B tmp34                           ;8096A7|000034
+                STA.B tmp34                                    ;8096A7|000034
                 PHY                                            ;8096A9|
                 LDA.W #$007E                                   ;8096AA|
                 STA.B zp_30                                    ;8096AD|000030
@@ -4978,7 +4983,7 @@ Op_DialogCmd06:
                 LDY.W ram_19B9                                 ;8096B4|8019B9
                 LDA.W #$8006                                   ;8096B7|
                 JSR.W sub_809404                               ;8096BA|809404
-                LDA.B tmp34                           ;8096BD|000034
+                LDA.B tmp34                                    ;8096BD|000034
                 JSR.W sub_809404                               ;8096BF|809404
                 STY.W ram_19B9                                 ;8096C2|8019B9
                 PLY                                            ;8096C5|
@@ -4994,7 +4999,7 @@ Op_SetDialogColor:
                 LDA.B [scriptPC],Y                             ;8096C7|000070
                 INY                                            ;8096C9|
                 INY                                            ;8096CA|
-                STA.B tmp34                           ;8096CB|000034
+                STA.B tmp34                                    ;8096CB|000034
                 PHY                                            ;8096CD|
                 LDA.W #$007E                                   ;8096CE|
                 STA.B zp_30                                    ;8096D1|000030
@@ -5003,7 +5008,7 @@ Op_SetDialogColor:
                 LDY.W ram_19B9                                 ;8096D8|8019B9
                 LDA.W #$8005                                   ;8096DB|
                 JSR.W sub_809404                               ;8096DE|809404
-                LDA.B tmp34                           ;8096E1|000034
+                LDA.B tmp34                                    ;8096E1|000034
                 JSR.W sub_809404                               ;8096E3|809404
                 STY.W ram_19B9                                 ;8096E6|8019B9
                 PLY                                            ;8096E9|
@@ -5341,7 +5346,7 @@ hwmath_8098BC:
 ;    >> channels (1,2,4,5) for a BG-scroll HDMA, or gate on BGMODE.
 ; ===============================================================
 SetupMode7MatrixHdma:
-                SEP #$20                              ;8098F9|
+                SEP #$20                                       ;8098F9|
                 STZ.W BG1SC                                    ;8098FB|802107
                 LDA.B #$07                                     ;8098FE|
                 STA.W BGMODE                                   ;809900|802105
@@ -5561,7 +5566,7 @@ ScreenReinitHdmaOff:
                 STZ.W deferredFarCallAddr                      ;809AD3|8003AA
                 STZ.W tilemapUploadMask                        ;809AD6|8003AE
                 STZ.W vramWordWriteCount                       ;809AD9|80046F
-                STZ.W spawnGateFrame                                 ;809ADC|800331
+                STZ.W spawnGateFrame                           ;809ADC|800331
                 STZ.W ram_0398_clearedOnReinit                 ;809ADF|800398
                 STZ.W ram_039A                                 ;809AE2|80039A
                 STZ.W objTableEnd                              ;809AE5|800380
@@ -5600,9 +5605,9 @@ ScreenReinitHdmaOff:
                 JSR.W sub_80A160                               ;809B48|80A160
                 JSR.W sub_809DC4                               ;809B4B|809DC4
                 JSR.W ppucfg_809DDA                            ;809B4E|809DDA
-                JSR.W ClearObjectTable                               ;809B51|80EC42
+                JSR.W ClearObjectTable                         ;809B51|80EC42
                 JSR.W sub_80DFFC                               ;809B54|80DFFC
-             +: JSR.W SpawnPlayers                               ;809B57|809F07
+             +: JSR.W SpawnPlayers                             ;809B57|809F07
                 JSR.W sub_80B2C8                               ;809B5A|80B2C8
                 JSR.W ComputeCameraBounds                      ;809B5D|809E0D
                 JSR.W ComputeCameras                           ;809B60|809E60
@@ -5787,7 +5792,7 @@ sub_809C5C:
                 BIT.W #$0001                                   ;INSERT|
                 BEQ +                                          ;INSERT|
                 JSR.W ExpandLevelTilemap                       ;INSERT| ; X updated to new data end
-                JSR.W ShiftObjPlacementBoxes
+                JSR.W ShiftObjPlacementBoxes                   ;INSERT|
              +: STX.B tileVisualPtr                            ;809C78|000054
                 LDY.W #$007F                                   ;809C7A|
                 LDA.W ram_19F9                                 ;809C7D|8019F9
@@ -5822,28 +5827,28 @@ sub_809C5C:
 ;  Loops the full object table (stride $28, 0 to objTableEnd).
 ;  Skips slots where objActive == 0.
 ; --------------------------------------------------------
-ShiftObjectsForHud:
-                REP #$30                                       ;INSERT| ; 16-bit A/X
+; ShiftObjectsForHud:
+;                 REP #$30                                       ;INSERT| ; 16-bit A/X
 
-                LDX.W #$0000                                   ;INSERT|
-.loop:          CPX.W objTableEnd                              ;INSERT| ; past last slot?
-                BCS .done                                      ;INSERT|
+;                 LDX.W #$0000                                   ;INSERT|
+; .loop:          CPX.W objTableEnd                              ;INSERT| ; past last slot?
+;                 BCS .done                                      ;INSERT|
 
-                LDA.W objActive,X                              ;INSERT| ; is this slot live?
-                BEQ .skip                                      ;INSERT|
+;                 LDA.W objActive,X                              ;INSERT| ; is this slot live?
+;                 BEQ .skip                                      ;INSERT|
 
-                LDA.W objX,X                          ;INSERT| ; object X (pixels)
-                CLC                                            ;INSERT|
-                ADC.W #$0020                                   ;INSERT| ; +32px = 2 metatiles × 16px
-                STA.W objX,X                          ;INSERT|
+;                 LDA.W objX,X                          ;INSERT| ; object X (pixels)
+;                 CLC                                            ;INSERT|
+;                 ADC.W #$0020                                   ;INSERT| ; +32px = 2 metatiles × 16px
+;                 STA.W objX,X                          ;INSERT|
 
-.skip:          TXA                                            ;INSERT|
-                CLC                                            ;INSERT|
-                ADC.W #$0028                                   ;INSERT| ; next object slot
-                TAX                                            ;INSERT|
-                BRA .loop                                      ;INSERT|
+; .skip:          TXA                                            ;INSERT|
+;                 CLC                                            ;INSERT|
+;                 ADC.W #$0028                                   ;INSERT| ; next object slot
+;                 TAX                                            ;INSERT|
+;                 BRA .loop                                      ;INSERT|
 
-.done:          RTS                                            ;INSERT|
+; .done:          RTS                                            ;INSERT|
 
 ; --------------------------------------------------------
 ;  ExpandLevelTilemap   [INSERT]
@@ -5972,7 +5977,7 @@ ShiftObjPlacementBoxes:
                 PHX
                 PHY
 
-                LDY.W #$0000                                   ;INSERT| ;set index to zero and we will count up by 000E bc the layout is weird idk
+                LDY.W #$002A                                   ;INSERT| ;set index to zero and we will count up by 000E bc the layout is weird idk
          .loop: 
                 LDA.W placeX,Y                                 ;load X pos
                 CMP #$FFFF                                     ;check for exit flag
@@ -6328,10 +6333,10 @@ ComputeCameras:
                 LDA.W dialogArmedFlag                                 ;809E63|8019CE
                 AND.W #$00FF                                   ;809E66|
                 BEQ .skip                                      ;809E69|809E76
-                LDX.W inputAux1                                ;809E6B|8003D8
+                LDX.W p1vikingIdx                                ;809E6B|8003D8
                 LDA.W ram_03E4                                 ;809E6E|8003E4
                 BEQ .skip                                      ;809E71|809E76
-                LDX.W inputAux2                                ;809E73|8003DA
+                LDX.W p2vikingIdx                                ;809E73|8003DA
 
          .skip: LDA.W objX,X                          ;809E76|801179
                 SEC                                            ;809E79|
@@ -6418,7 +6423,7 @@ ppucfg_809EE2:
 ;    callers: ScreenReinitHdmaOff
 ;    writes:    curObjIdx, zp_6C, zp_6E, objScanStartSlot, spawnOamPool
 ;    reads:     dialogArmedFlag, ram_19CF, ram_19D1, ram_19D3, ram_19D5, ram_19D7
-;    calls:     SpawnObject, SpawnScreenModeSprites, SpawnPlayers_SplitScreenEntry, sub_809FF3
+;    calls:     SpawnObject, SpawnScreenModeSprites, spawnPlayers_sub_809F71, sub_809FF3
 ;    Spawns the three vikings (or the split-screen HUD entities) at scene load, from the level
 ;    header's starting position fields, via SpawnObject -> InitObjectFromSpawnRec (which applies the
 ;    mod's X shift when modFlags is set, since this position is raw/unshifted level data like the
@@ -6437,7 +6442,7 @@ SpawnPlayers:
                 BEQ .skip4                                     ;809F1F|809F60
                 CMP.W #$0010                                   ;809F21|
                 BEQ .skip5                                     ;809F24|809F69
-                JMP.W SpawnPlayers_SplitScreenEntry                               ;809F26|809F71
+                JMP.W spawnPlayers_sub_809F71                               ;809F26|809F71
 
 
          .skip: LDA.W ram_19D7                                 ;809F29|8019D7
@@ -6471,21 +6476,19 @@ SpawnPlayers:
                 JMP.W sub_809FF3                               ;809F66|809FF3
 
 
-        .skip5: PEA.W Emulation_ABORT__ignored                 ;809F69|80FFF8
-                PEA.W Emulation_Reserved1__ignored             ;809F6C|80FFF0
+        .skip5: PEA.W $FFF8                                    ;809F69|80FFF8
+                PEA.W $FFF0                                    ;809F6C|80FFF0
                 BRA loc_809F77                                 ;809F6F|809F77
 
 
 ; --------------------------------------------------------
-;  SpawnPlayers_SplitScreenEntry   [53 ins, returns ?]
+;  spawnPlayers_sub_809F71   [53 ins, returns ?]
 ;    callers: SpawnPlayers
 ;    writes:    curObjIdx, zp_6C, zp_6E, spawnOamPool
 ;    reads:     ram_19CF, ram_19D1, ram_19D5, ram_19D7
 ;    calls:     SpawnObject
-;    Split-screen variant of SpawnPlayers: spawns a second camera's worth of player-tracking
-;    entities, offset left/right of the main spawn point by a fixed amount.
 ; --------------------------------------------------------
-SpawnPlayers_SplitScreenEntry:
+spawnPlayers_sub_809F71:
                 PEA.W $0000                                    ;809F71|
                 PEA.W $0000                                    ;809F74|
 
@@ -6907,42 +6910,42 @@ sub_80A1D5:
 ; --------------------------------------------------------
 ;  input_80A28E   [22 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    inputAux1, inputAux2
-;    reads:     numPlayers, inputAux1, inputAux2
+;    writes:    p1vikingIdx, p2vikingIdx
+;    reads:     numPlayers, p1vikingIdx, p2vikingIdx
 ; --------------------------------------------------------
 input_80A28E:
                 LDA.W numPlayers                               ;80A28E|800308
                 CMP.W #$0001                                   ;80A291|
                 BNE .2players                                  ;80A294|80A2A0
-                STZ.W inputAux1                                ;80A296|8003D8
+                STZ.W p1vikingIdx                                ;80A296|8003D8
                 LDA.W #$FFFF                                   ;80A299|
-                STA.W inputAux2                                ;80A29C|8003DA
+                STA.W p2vikingIdx                                ;80A29C|8003DA
 
                 STZ.W modFlags                                 ;INSERT|
 
                 RTS                                            ;80A29F|
 
 
-               .2players: LDA.W #$0001                                   ;INSERT|
+     .2players: LDA.W #$0001                                   ;INSERT|
                 STA.W modFlags                                 ;INSERT|800500
 
-                LDA.W inputAux1                                ;80A2A0|8003D8
+                LDA.W p1vikingIdx                                ;80A2A0|8003D8
                 BPL .skip2                                     ;80A2A3|80A2B3
                 LDX.W #$0000                                   ;80A2A5|
-                CPX.W inputAux2                                ;80A2A8|8003DA
+                CPX.W p2vikingIdx                                ;80A2A8|8003DA
                 BNE +                                          ;80A2AB|80A2B0
                 LDX.W #$0002                                   ;80A2AD|
 
-             +: STX.W inputAux1                                ;80A2B0|8003D8
+             +: STX.W p1vikingIdx                                ;80A2B0|8003D8
 
-        .skip2: LDA.W inputAux2                                ;80A2B3|8003DA
+        .skip2: LDA.W p2vikingIdx                                ;80A2B3|8003DA
                 BPL .exit                                      ;80A2B6|80A2C6
                 LDX.W #$0000                                   ;80A2B8|
-                CPX.W inputAux1                                ;80A2BB|8003D8
+                CPX.W p1vikingIdx                                ;80A2BB|8003D8
                 BNE +                                          ;80A2BE|80A2C3
                 LDX.W #$0002                                   ;80A2C0|
 
-             +: STX.W inputAux2                                ;80A2C3|8003DA
+             +: STX.W p2vikingIdx                                ;80A2C3|8003DA
 
          .exit: RTS                                            ;80A2C6|
 
@@ -10443,11 +10446,11 @@ input_80B529:
 ;  vbwait_80B54E   [39 ins, returns RTS]
 ;    callers: input_80B529
 ;    writes:    curObjIdx, ram_0467, ram_0469
-;    reads:     curObjIdx, vblankCmd, backdropColorR, backdropColorG, backdropColorB, inputAux1
+;    reads:     curObjIdx, vblankCmd, backdropColorR, backdropColorG, backdropColorB, p1vikingIdx
 ;    calls:     sub_80891D, color_80CF31, sub_8088E7, input_80B834, ComputeButtonEdges, RunCircleIrisHdma, +7 more
 ; --------------------------------------------------------
 vbwait_80B54E:
-                LDA.W inputAux1,X                              ;80B54E|8003D8
+                LDA.W p1vikingIdx,X                              ;80B54E|8003D8
                 BMI .exit                                      ;80B551|80B5B2
 
          .loop: LDA.W vblankCmd                                ;80B553|800333   ; poll vblankCmd (wait for NMI to consume)
@@ -10496,7 +10499,7 @@ vbwait_80B54E:
 ;  input_80B5B3   [62 ins, returns RTS]
 ;    callers: vbwait_80B54E
 ;    writes:    ram_0572, ram_0576, ram_057A, ram_057E
-;    reads:     curObjIdx, inputAux1, ram_0432, oamDirtyFlag, ram_0463, ram_0465 ...
+;    reads:     curObjIdx, p1vikingIdx, ram_0432, oamDirtyFlag, ram_0463, ram_0465 ...
 ;    calls:     sub_80B370
 ; --------------------------------------------------------
 input_80B5B3:
@@ -10533,7 +10536,7 @@ input_80B5B3:
                 AND.W #$0010                                   ;80B5EF|
                 BNE .skip3                                     ;80B5F2|80B613
                 LDX.B curObjIdx                                ;80B5F4|000042
-                LDA.W inputAux1,X                              ;80B5F6|8003D8
+                LDA.W p1vikingIdx,X                              ;80B5F6|8003D8
                 ASL A                                          ;80B5F9|
                 ASL A                                          ;80B5FA|
                 ASL A                                          ;80B5FB|
@@ -10550,7 +10553,7 @@ input_80B5B3:
 
 
         .skip3: LDX.B curObjIdx                                ;80B613|000042
-                LDA.W inputAux1,X                              ;80B615|8003D8
+                LDA.W p1vikingIdx,X                              ;80B615|8003D8
                 TAX                                            ;80B618|
                 ASL A                                          ;80B619|
                 ASL A                                          ;80B61A|
@@ -10689,8 +10692,8 @@ sub_80B6ED:
 ; --------------------------------------------------------
 ;  input_80B6EF   [121 ins, returns RTS]
 ;    callers: input_80B63B
-;    writes:    inputAux1, ram_0432, ram_0467
-;    reads:     curObjIdx, joy1Pressed, inputAux1, inputAux2, ram_0432, objArgHp
+;    writes:    p1vikingIdx, ram_0432, ram_0467
+;    reads:     curObjIdx, joy1Pressed, p1vikingIdx, p2vikingIdx, ram_0432, objArgHp
 ;    calls:     sub_80BA65, input_80B834, sub_8088E7, input_80BB41, sub_80B832
 ; --------------------------------------------------------
 input_80B6EF:
@@ -10703,7 +10706,7 @@ input_80B6EF:
              +: LDA.W joy1Pressed,X                            ;80B6F9|8003C8
                 BIT.W #$0020                                   ;80B6FC|
                 BEQ .skip                                      ;80B6FF|80B735
-                LDY.W inputAux1,X                              ;80B701|8003D8
+                LDY.W p1vikingIdx,X                              ;80B701|8003D8
 
          .loop: DEY                                            ;80B704|
                 DEY                                            ;80B705|
@@ -10713,13 +10716,13 @@ input_80B6EF:
              +: LDA.W objArgHp,Y                               ;80B70B|800FE9
                 BEQ .loop                                      ;80B70E|80B704
                 TYA                                            ;80B710|
-                CMP.W inputAux1,X                              ;80B711|8003D8
+                CMP.W p1vikingIdx,X                              ;80B711|8003D8
                 BEQ .skip                                      ;80B714|80B735
-                CMP.W inputAux1                                ;80B716|8003D8
+                CMP.W p1vikingIdx                                ;80B716|8003D8
                 BEQ .loop                                      ;80B719|80B704
-                CMP.W inputAux2                                ;80B71B|8003DA
+                CMP.W p2vikingIdx                                ;80B71B|8003DA
                 BEQ .loop                                      ;80B71E|80B704
-                STA.W inputAux1,X                              ;80B720|8003D8
+                STA.W p1vikingIdx,X                              ;80B720|8003D8
                 JSR.W sub_80BA65                               ;80B723|80BA65
                 LDA.W #$0011                                   ;80B726|
                 STA.W ram_0467                                 ;80B729|800467
@@ -10730,7 +10733,7 @@ input_80B6EF:
          .skip: LDA.W joy1Pressed,X                            ;80B735|8003C8
                 BIT.W #$0010                                   ;80B738|
                 BEQ .skip2                                     ;80B73B|80B774
-                LDY.W inputAux1,X                              ;80B73D|8003D8
+                LDY.W p1vikingIdx,X                              ;80B73D|8003D8
 
         .loop2: INY                                            ;80B740|
                 INY                                            ;80B741|
@@ -10741,13 +10744,13 @@ input_80B6EF:
              +: LDA.W objArgHp,Y                               ;80B74A|800FE9
                 BEQ .loop2                                     ;80B74D|80B740
                 TYA                                            ;80B74F|
-                CMP.W inputAux1,X                              ;80B750|8003D8
+                CMP.W p1vikingIdx,X                              ;80B750|8003D8
                 BEQ .skip2                                     ;80B753|80B774
-                CMP.W inputAux1                                ;80B755|8003D8
+                CMP.W p1vikingIdx                                ;80B755|8003D8
                 BEQ .loop2                                     ;80B758|80B740
-                CMP.W inputAux2                                ;80B75A|8003DA
+                CMP.W p2vikingIdx                                ;80B75A|8003DA
                 BEQ .loop2                                     ;80B75D|80B740
-                STA.W inputAux1,X                              ;80B75F|8003D8
+                STA.W p1vikingIdx,X                              ;80B75F|8003D8
                 JSR.W sub_80BA65                               ;80B762|80BA65
                 LDA.W #$0011                                   ;80B765|
                 STA.W ram_0467                                 ;80B768|800467
@@ -10758,7 +10761,7 @@ input_80B6EF:
         .skip2: LDA.W joy1Pressed,X                            ;80B774|8003C8
                 BIT.W #$0200                                   ;80B777|
                 BEQ .skip3                                     ;80B77A|80B79C
-                LDY.W inputAux1,X                              ;80B77C|8003D8
+                LDY.W p1vikingIdx,X                              ;80B77C|8003D8
                 LDA.W ram_0432,Y                               ;80B77F|800432
                 BIT.W #$0001                                   ;80B782|
                 BEQ .skip3                                     ;80B785|80B79C
@@ -10773,7 +10776,7 @@ input_80B6EF:
         .skip3: LDA.W joy1Pressed,X                            ;80B79C|8003C8
                 BIT.W #$0100                                   ;80B79F|
                 BEQ .skip4                                     ;80B7A2|80B7C4
-                LDY.W inputAux1,X                              ;80B7A4|8003D8
+                LDY.W p1vikingIdx,X                              ;80B7A4|8003D8
                 LDA.W ram_0432,Y                               ;80B7A7|800432
                 BIT.W #$0001                                   ;80B7AA|
                 BNE .skip4                                     ;80B7AD|80B7C4
@@ -10788,7 +10791,7 @@ input_80B6EF:
         .skip4: LDA.W joy1Pressed,X                            ;80B7C4|8003C8
                 BIT.W #$0800                                   ;80B7C7|
                 BEQ .skip5                                     ;80B7CA|80B7EC
-                LDY.W inputAux1,X                              ;80B7CC|8003D8
+                LDY.W p1vikingIdx,X                              ;80B7CC|8003D8
                 LDA.W ram_0432,Y                               ;80B7CF|800432
                 BIT.W #$0002                                   ;80B7D2|
                 BEQ .skip5                                     ;80B7D5|80B7EC
@@ -10803,7 +10806,7 @@ input_80B6EF:
         .skip5: LDA.W joy1Pressed,X                            ;80B7EC|8003C8
                 BIT.W #$0400                                   ;80B7EF|
                 BEQ .skip6                                     ;80B7F2|80B814
-                LDY.W inputAux1,X                              ;80B7F4|8003D8
+                LDY.W p1vikingIdx,X                              ;80B7F4|8003D8
                 LDA.W ram_0432,Y                               ;80B7F7|800432
                 BIT.W #$0002                                   ;80B7FA|
                 BNE .skip6                                     ;80B7FD|80B814
@@ -10843,7 +10846,7 @@ sub_80B832:
 ;  input_80B834   [40 ins, returns RTS]
 ;    callers: vbwait_80B54E, input_80B6EF
 ;    writes:    tmp32, ram_046B, ram_046D
-;    reads:     tmp32, inputAux1, objArgHp, objX, objY
+;    reads:     tmp32, p1vikingIdx, objArgHp, objX, objY
 ; --------------------------------------------------------
 input_80B834:
                 PHX                                            ;80B834|
@@ -10851,7 +10854,7 @@ input_80B834:
                 STA.W ram_046B                                 ;80B838|80046B
                 LDA.W #$00FF                                   ;80B83B|
                 STA.W ram_046D                                 ;80B83E|80046D
-                LDY.W inputAux1,X                              ;80B841|8003D8
+                LDY.W p1vikingIdx,X                              ;80B841|8003D8
                 LDX.W #$0000                                   ;80B844|
 
          .loop: LDA.W objArgHp,X                               ;80B847|800FE9
@@ -10949,7 +10952,7 @@ sub_80B885:
 ;  input_80B8DC   [22 ins, returns ?]
 ;    callers: sub_80B2C8
 ;    writes:    ram_0457, ram_0459, ram_045B, ram_045D, ram_045F, ram_0461
-;    reads:     inputAux1, inputAux2, ram_0457, ram_0459, ram_045B
+;    reads:     p1vikingIdx, p2vikingIdx, ram_0457, ram_0459, ram_045B
 ;    calls:     sub_80B337
 ; --------------------------------------------------------
 input_80B8DC:
@@ -10958,9 +10961,9 @@ input_80B8DC:
                 STA.W ram_0459                                 ;80B8E2|800459
                 STA.W ram_045B                                 ;80B8E5|80045B
                 LDA.W #$0000                                   ;80B8E8|
-                LDY.W inputAux1                                ;80B8EB|8003D8
+                LDY.W p1vikingIdx                                ;80B8EB|8003D8
                 STA.W ram_0457,Y                               ;80B8EE|800457
-                LDY.W inputAux2                                ;80B8F1|8003DA
+                LDY.W p2vikingIdx                                ;80B8F1|8003DA
                 BMI +                                          ;80B8F4|80B8F9
                 STA.W ram_0457,Y                               ;80B8F6|800457
 
@@ -11041,7 +11044,7 @@ sub_80B949:
 ;  input_80B965   [59 ins, returns RTS]
 ;    callers: sub_80B285
 ;    writes:    ram_0457, ram_0459, ram_045B, ram_045D, ram_045F, ram_0461
-;    reads:     inputAux1, inputAux2, ram_0457, ram_0459, ram_045B, ram_045D ...
+;    reads:     p1vikingIdx, p2vikingIdx, ram_0457, ram_0459, ram_045B, ram_045D ...
 ;    calls:     sub_80B337
 ; --------------------------------------------------------
 input_80B965:
@@ -11053,9 +11056,9 @@ input_80B965:
                 BRA .cont                                      ;80B973|80B987
 
 
-             +: LDX.W inputAux1                                ;80B975|8003D8
+             +: LDX.W p1vikingIdx                                ;80B975|8003D8
                 BEQ .skip                                      ;80B978|80B984
-                LDX.W inputAux2                                ;80B97A|8003DA
+                LDX.W p2vikingIdx                                ;80B97A|8003DA
                 BEQ .skip                                      ;80B97D|80B984
                 LDA.W #$0001                                   ;80B97F|
                 BRA .cont                                      ;80B982|80B987
@@ -11077,10 +11080,10 @@ input_80B965:
                 BRA .cont2                                     ;80B9A3|80B9BD
 
 
-             +: LDX.W inputAux1                                ;80B9A5|8003D8
+             +: LDX.W p1vikingIdx                                ;80B9A5|8003D8
                 CPX.W #$0002                                   ;80B9A8|
                 BEQ .skip2                                     ;80B9AB|80B9BA
-                LDX.W inputAux2                                ;80B9AD|8003DA
+                LDX.W p2vikingIdx                                ;80B9AD|8003DA
                 CPX.W #$0002                                   ;80B9B0|
                 BEQ .skip2                                     ;80B9B3|80B9BA
                 LDA.W #$0001                                   ;80B9B5|
@@ -11103,10 +11106,10 @@ input_80B965:
                 BRA .cont3                                     ;80B9D9|80B9F3
 
 
-             +: LDX.W inputAux1                                ;80B9DB|8003D8
+             +: LDX.W p1vikingIdx                                ;80B9DB|8003D8
                 CPX.W #$0004                                   ;80B9DE|
                 BEQ .skip3                                     ;80B9E1|80B9F0
-                LDX.W inputAux2                                ;80B9E3|8003DA
+                LDX.W p2vikingIdx                                ;80B9E3|8003DA
                 CPX.W #$0004                                   ;80B9E6|
                 BEQ .skip3                                     ;80B9E9|80B9F0
                 LDA.W #$0001                                   ;80B9EB|
@@ -11302,11 +11305,11 @@ data_80BB3D:
 ;  input_80BB41   [30 ins, returns RTS]
 ;    callers: input_80B6EF
 ;    writes:    tmp32, ram_0402, ram_043F, ram_0463, ram_0465, ram_0467 ...
-;    reads:     tmp32, inputAux1, ram_0402, ram_0432, ram_0463
+;    reads:     tmp32, p1vikingIdx, ram_0402, ram_0432, ram_0463
 ;    calls:     sub_8088E7
 ; --------------------------------------------------------
 input_80BB41:
-                LDY.W inputAux1,X                              ;80BB41|8003D8
+                LDY.W p1vikingIdx,X                              ;80BB41|8003D8
                 STY.W ram_043F                                 ;80BB44|80043F
                 LDA.W ram_0432,Y                               ;80BB47|800432
                 ASL A                                          ;80BB4A|
@@ -11670,7 +11673,7 @@ DecompressGfxEntry:
 ;    callers: DecompressGfxEntry
 ;    writes HW: VMADDL
 ;    writes:    zp_10, zp_12, zp_14, zp_15, zp_1C, zp_1E ...
-;    reads:     zp_03, zp_05, zp_07, zp_09, zp_10, zp_12 ...
+;    reads:     zp_09, zp_10, zp_12 ...
 ; --------------------------------------------------------
 
 ;== hdr 80BD26 ==
@@ -11687,13 +11690,13 @@ DecompressGfxEntry:
 ;    80BDxx/80BExx/80BFxx inner loops dominate load-time CPU.
 ; ------------------------------------------------------------
 DecompressToVram:
-                LDA.B zp_07,S                            ;80BD26|000007
+                LDA.B $07,S                                    ;80BD26|S+0007
                 STA.B zp_10                                    ;80BD28|000010
-                LDA.B zp_09,S                                  ;80BD2A|000009
+                LDA.B $09,S                                    ;80BD2A|S+0009
                 STA.B zp_12                                    ;80BD2C|000012
-                LDA.B zp_05,S                                  ;80BD2E|000005
+                LDA.B $05,S                                    ;80BD2E|S+0005
                 STA.W VMADDL                                   ;80BD30|802116   ; set VRAM addr (low) for upcoming write
-                LDA.B zp_03,S                                  ;80BD33|000003
+                LDA.B $03,S                                    ;80BD33|S+0003
                 STA.B zp_20                                    ;80BD35|000020
                 STA.B zp_1C                                    ;80BD37|00001C
                 LDA.W #$007E                                   ;80BD39|
@@ -11888,17 +11891,17 @@ StreamByteToVram:
 ;  DecompressToWram   [49 ins, returns ?]
 ;    callers: sub_80BCCD
 ;    writes:    zp_10, zp_12, zp_14, zp_15, zp_18, zp_1A ...
-;    reads:     zp_03, zp_05, zp_07, zp_09, zp_10, zp_12 ...
+;    reads:     zp_10, zp_12 
 ; --------------------------------------------------------
 DecompressToWram:
-                LDA.B zp_07,S                            ;80BE69|000007
+                LDA.B $07,S                                    ;80BE69|S+0007
                 STA.B zp_10                                    ;80BE6B|000010
-                LDA.B zp_09,S                                  ;80BE6D|000009
+                LDA.B $09,S                                    ;80BE6D|S+0009
                 STA.B zp_12                                    ;80BE6F|000012
-                LDA.B zp_05,S                                  ;80BE71|000005
+                LDA.B $05,S                                    ;80BE71|S+0005
                 STA.B zp_18                                    ;80BE73|000018
                 STY.B zp_1A                                    ;80BE75|00001A
-                LDA.B zp_03,S                                  ;80BE77|000003
+                LDA.B $03,S                                    ;80BE77|S+0003
                 STA.B zp_20                                    ;80BE79|000020
                 STA.B zp_1C                                    ;80BE7B|00001C
                 LDA.W #$007E                                   ;80BE7D|
@@ -12361,9 +12364,7 @@ FillTilemapFull:
                 LSR A                                          ;80C08C|
                 LSR A                                          ;80C08D|
                 AND.W #$FFFE                                   ;80C08E|
-                       ; Suggested edit (bug-1 style): if odd tile positions should be valid,
-                       ; remove the AND.W #$FFFE here and the matching one for refillRowTileY
-                       ; below so refillColTileX can keep odd values instead of being snapped even.
+          
                 STA.W refillColTileX                           ;80C091|8016C5
                 TAX                                            ;80C094|
                 LDA.B playerCamY                               ;80C095|000046
@@ -12372,9 +12373,7 @@ FillTilemapFull:
                 LSR A                                          ;80C09B|
                 LSR A                                          ;80C09C|
                 AND.W #$FFFE                                   ;80C09D|
-                       ; Suggested edit (same bug-1 idea): this is the paired odd-tile guard
-                       ; for refillRowTileY; removing it keeps the row tracker aligned with the
-                       ; new stepping logic instead of forcing even values.
+             
                 STA.W refillRowTileY                           ;80C0A0|8016C7
                 TAY                                            ;80C0A3|
                 LDA.W gameModeFlags                            ;80C0A4|8019E3
@@ -12391,16 +12390,7 @@ FillTilemapFull:
                 DEY                                            ;80C0B8|
 
              +: LDA.W #$FFFC                                   ;80C0B9|
-                       ; Suggested edit (inline replacement for the old newFunc1/newFunc_init idea):
-                       ;   ASL
-                       ;   ASL
-                       ;   ASL
-                       ;   STA.W $0564
-                       ;   LDA.W $0560
-                       ;   AND.W #$0001
-                       ;   ASL
-                       ;   ADC.W $0564
-                       ; Put that logic here instead of suggesting a jump stub.
+
 
          .loop: PHX                                            ;80C0BC|
                 PHY                                            ;80C0BD|
@@ -12410,17 +12400,12 @@ FillTilemapFull:
                 PLA                                            ;80C0C5|
                 PLY                                            ;80C0C6|
                 PLX                                            ;80C0C7|
-                       ; Suggested edit (inline replacement for the old newFunc4 idea):
-                       ;   STX.W $0560
-                       ;   INC
-                       ; If you want the loop to feed parity/state directly, place that logic here.
+           
                 INX                                            ;80C0C8|
                 INX                                            ;80C0C9|
                 INC A                                          ;80C0CA|
                 INC A                                          ;80C0CB|
-                       ; Suggested edit (loop-count bug): if the new stepping logic only advances
-                       ; by 1 tile per iteration, raise this compare from #$0024 to #$004C to cover
-                       ; roughly twice as many columns before the loop exits.
+  
                 CMP.W #$0024                                   ;80C0CC|
                 BNE .loop                                      ;80C0CF|80C0BC
 
@@ -12976,7 +12961,7 @@ RefillColumnLeftMod:
                 JSR.W BuildTilemapCol                          ;INSERT|
                 LDA.W #$0001                                   ;INSERT|
                 JSR.W SetPpuUpdateBits                         ;INSERT|
-                JMP.W scanBoxPrepHorizontal_left                               ;INSERT|
+                JMP.W scanBoxPrepHorizontal_left               ;INSERT|
 
 
          .exit: RTS                                            ;INSERT|
@@ -14960,7 +14945,7 @@ UpdateAllObjects:
 ;  UpdateOneObject   [53 ins, returns RTS]
 ;    callers: UpdateAllObjects
 ;    writes:    curObjIdx, scriptPC, scriptPCBank, vmQuerySlot2, objScriptPtr
-;    reads:     zp_2A, curObjIdx, scriptPC, spawnGateFrame, inputAux1, inputAux2 ...
+;    reads:     zp_2A, curObjIdx, scriptPC, spawnGateFrame, p1vikingIdx, p2vikingIdx ...
 ;    calls:     input_80921D, SelectP2Input, GetSpawnRecPtr, ObjVM_OpTable
 ; --------------------------------------------------------
 UpdateOneObject:
@@ -14971,13 +14956,13 @@ UpdateOneObject:
                 BEQ .skip                                      ;80CCF4|80CD0D
                 CPX.W #$0006                                   ;80CCF6|
                 BCS .skip                                      ;80CCF9|80CD0D
-                CPX.W inputAux1                                ;80CCFB|8003D8
+                CPX.W p1vikingIdx                                ;80CCFB|8003D8
                 BNE +                                          ;80CCFE|80CD05
                 JSR.W input_80921D                             ;80CD00|80921D
                 BRA .skip                                      ;80CD03|80CD0D
 
 
-             +: CPX.W inputAux2                                ;80CD05|8003DA
+             +: CPX.W p2vikingIdx                                ;80CD05|8003DA
                 BNE .skip                                      ;80CD08|80CD0D
                 JSR.W SelectP2Input                            ;80CD0A|809230
 
@@ -15147,7 +15132,7 @@ Op_BlockRespawn:
                 LSR A                                          ;80CDB6|
                 TAX                                            ;80CDB7|
                 LDA.W placementConsumedBits,X                               ;80CDB8|800360
-                ORA.W data_80F3E7,Y                            ;80CDBB|80F3E7
+                ORA.W data_X_to_Mask,Y                            ;80CDBB|80F3E7
                 STA.W placementConsumedBits,X                               ;80CDBE|800360
                 REP #$30                                       ;80CDC1|
                 PLY                                            ;80CDC3|
@@ -21754,7 +21739,7 @@ ClearObjectTable:
 
          .loop: STZ.W objActive,X                              ;80EC45|800D91
                 LDA.W #$FFFF                                   ;80EC48|
-                STA.W objAnimPtr,X                               ;80EC4B|801449
+                STA.W objAnimPtr,X                             ;80EC4B|801449
                 INX                                            ;80EC4E|
                 INX                                            ;80EC4F|
                 CPX.W #$0028                                   ;80EC50|
@@ -21764,20 +21749,20 @@ ClearObjectTable:
 
 ; --------------------------------------------------------
 ;  SpawnObject   [38 ins, returns RTS]
-;    callers: SpawnPlayers, SpawnPlayers_SplitScreenEntry, SpawnScreenModeSprites, Op_SubAcc_TFld, TrySpawnPlacementIfInBox, TrySpawnAlwaysActivePlacement
+;    callers: SpawnPlayers, spawnPlayers_sub_809F71, SpawnScreenModeSprites, Op_SubAcc_TFld, TrySpawnPlacementIfInBox, TrySpawnAlwaysActivePlacement
 ;    writes:    tmp34, tmp36, tmp38, objTableEnd, objActive, objOamFirst ...
 ;    reads:     tmp34, tmp38, tmp3A, objTableEnd, objOamCount
 ;    calls:     CanSpawnPlacement, HasFreeObjectSlot, GetSpawnRecPtr, InitObjectFromSpawnRec, FindFreeObjectSlotInPool, InitSpawnOamAttrs, +3 more
 ; --------------------------------------------------------
 SpawnObject:
-                STA.B tmp34                           ;80EC56|000034
-                STY.B tmp36                                    ;80EC58|000036
-                STX.B tmp38                                    ;80EC5A|000038
-                JSR.W CanSpawnPlacement                               ;80EC5C|80F135
-                BCS .skip4                                     ;80EC5F|80ECA4
-                JSR.W HasFreeObjectSlot                               ;80EC61|80F158
-                BCS .skip4                                     ;80EC64|80ECA4
-                LDA.B tmp34                           ;80EC66|000034
+                STA.B tmp34                                     ;80EC56|000034
+                STY.B tmp36                                     ;80EC58|000036
+                STX.B tmp38                                     ;80EC5A|000038
+                JSR.W CanSpawnPlacement                         ;80EC5C|80F135
+                BCS .skip4                                      ;80EC5F|80ECA4
+                JSR.W HasFreeObjectSlot                         ;80EC61|80F158
+                BCS .skip4                                      ;80EC64|80ECA4
+                LDA.B tmp34                                     ;80EC66|000034
                 JSR.W GetSpawnRecPtr                               ;80EC68|80F11F
                 JSR.W InitObjectFromSpawnRec                               ;80EC6B|80F249
                 BCS .skip3                                     ;80EC6E|80EC9F
@@ -22285,7 +22270,7 @@ ScanAllPlacementsInBox:
                 LDX.W #$0000                                   ;80EF20|         ;X= spawnIndex
                 LDY.W #$0000                                   ;80EF23|
 
-         .loop: JSR.W TrySpawnPlacementIfInBox                               ;80EF26|80EF35
+         .loop: JSR.W TrySpawnPlacementIfInBox                 ;80EF26|80EF35
                 BCS .exit                                      ;80EF29|80EF34
                 INX                                            ;80EF2B|
                 TYA                                            ;80EF2C|
@@ -22335,22 +22320,22 @@ TrySpawnPlacementIfInBox:
                 STX.B tmp32                                     ;80EF63|000032
                 LDX.W objScanStartSlot                          ;80EF65|80033E  ;I think this is the next open slot in the object 
 
-         .loop: LDA.W objActive,X                              ;80EF68|800D91
+         .loop: LDA.W objActive,X                              ;80EF68|800D91   ;go through the objects and compare thier placement indexes to the current placement index
                 BEQ +                                          ;80EF6B|80EF74   ;if the object is inactive, skip next check. 
-                LDA.W objPlacementIdx,X                        ;80EF6D|801101   
+                LDA.W objPlacementIdx,X                        ;80EF6D|801101   ;this likely is to check to see if the object is already spawned, and if it is, we dont want to spawn it again.
                 CMP.B tmp32                                    ;80EF70|000032   
-                BEQ .skip                                      ;80EF72|80EFB8
+                BEQ .skip                                      ;80EF72|80EFB8   ;if object is already spawned, skip to the end of the function and return.
 
              +: INX                                            ;80EF74|
                 INX                                            ;80EF75|
-                CPX.W objTableEnd                              ;80EF76|800380   
+                CPX.W objTableEnd                              ;80EF76|800380   ;other exit case: we checked all the objects and none of them matched the placement index, so we can spawn it.
                 BCC .loop                                      ;80EF79|80EF68   
                 PHY                                            ;80EF7B|         
                 PEI.B ($34)                                    ;80EF7C|000034   
                 PEI.B ($36)                                    ;80EF7E|000036   
                 PEI.B ($38)                                    ;80EF80|000038   
                 PEI.B ($3A)                                    ;80EF82|00003A   
-                LDA.W placeX,Y                               ;80EF84|801A0A
+                LDA.W placeX,Y                                 ;80EF84|801A0A
                 STA.B zp_6C                                    ;80EF87|00006C
                 LDA.W placeY,Y                               ;80EF89|801A0C
                 STA.B zp_6E                                    ;80EF8C|00006E
@@ -22641,29 +22626,29 @@ GetSpawnRecPtr:
 ;    Op_BlockRespawn).
 ; --------------------------------------------------------
 CanSpawnPlacement:
-                LDA.W spawnGateFrame                                 ;80F135|800331
-                BNE .skip2                                     ;80F138|80F156
+                LDA.W spawnGateFrame                           ;80F135|800331
+                BNE .exitNoSpawn                               ;80F138|80F156
                 CPY.W #$FFFF                                   ;80F13A|
-                BEQ .skip                                      ;80F13D|80F154
+                BEQ .exit                                      ;80F13D|80F154
                 SEP #$30                                       ;80F13F|
-                TYA                                            ;80F141|
-                AND.B #$07                                     ;80F142|
-                TAX                                            ;80F144|
-                TYA                                            ;80F145|
-                LSR A                                          ;80F146|
+                TYA                                            ;80F141|         ;take object index,
+                AND.B #$07                                     ;80F142|         ;we only care about its value modulo to 8 
+                TAX                                            ;80F144|         ;use that as the bit indicator
+                TYA                                            ;80F145|         ;take object index,
+                LSR A                                          ;80F146|         ;devide by 8 to get the correct byte
                 LSR A                                          ;80F147|
                 LSR A                                          ;80F148|
                 TAY                                            ;80F149|
-                LDA.W placementConsumedBits,Y                               ;80F14A|800360
-                AND.W data_80F3E7,X                            ;80F14D|80F3E7
+                LDA.W placementConsumedBits,Y                  ;80F14A|800360
+                AND.B data_X_to_Mask,X                         ;80F14D|80F3E7
                 REP #$30                                       ;80F150|
-                BNE .skip2                                     ;80F152|80F156
+                BNE .exitNoSpawn                               ;80F152|80F156
 
-         .skip: CLC                                            ;80F154|
+         .exit: CLC                                            ;80F154|
                 RTS                                            ;80F155|
 
 
-        .skip2: SEC                                            ;80F156|
+  .exitNoSpawn: SEC                                            ;80F156|
                 RTS                                            ;80F157|
 
 
@@ -22701,13 +22686,13 @@ HasFreeObjectSlot:
 ;    source entries for the new object's sprite count; fails if the pool doesn't have room.
 ; --------------------------------------------------------
 FindFreeObjectSlotInPool:
-                LDA.W spawnOamPool                                 ;80F16B|800382
+                LDA.W spawnOamPool                             ;80F16B|800382
                 BEQ .skip2                                     ;80F16E|80F189
                 CMP.W #$0001                                   ;80F170|
                 BEQ .skip                                      ;80F173|80F17F
                 LDY.W #$000C                                   ;80F175|
                 LDA.W #$0018                                   ;80F178|
-                STA.B tmp32                              ;80F17B|000032
+                STA.B tmp32                                    ;80F17B|000032
                 BRA .loop                                      ;80F17D|80F191
 
 
@@ -22948,14 +22933,15 @@ InitObjectFromSpawnRec:
                 INY                                            ;80F2CC|
                 LDA.B [zp_2A],Y                                ;80F2CD|00002A
                 STA.W objMaxVelY,X                               ;80F2CF|8011F1
-                LDA.W modFlags                                 ;INSERT|
-                AND.W #$0001                                   ;INSERT| ; is mod active?
-                BEQ .noShift                                   ;INSERT|
-                LDA.B zp_6C                                    ;INSERT|
-                CLC                                            ;INSERT|
-                ADC.W #$0020                                   ;INSERT| ; +32px
-                BRA .store                                     ;INSERT|
-    .noShift:   LDA.B zp_6C                                    ;INSERT|
+    ;             LDA.W modFlags                                 ;INSERT|
+    ;             AND.W #$0001                                   ;INSERT| ; is mod active?
+    ;             BEQ .noShift                                   ;INSERT|
+    ;             LDA.B zp_6C                                    ;INSERT|
+    ;             CLC                                            ;INSERT|
+    ;             ADC.W #$0020                                   ;INSERT| ; +32px
+    ;             BRA .store                                     ;INSERT|
+    ; .noShift:   LDA.B zp_6C                                    ;INSERT|
+                LDA.B zp_6C                                 
        .store:  STA.W objX,X                          ;80F2D4|801179
                 STA.W objPrevX,X                               ;80F2D7|800DE1
                 LDA.B zp_6E                                    ;80F2DA|00006E
@@ -23038,8 +23024,8 @@ data_80F3A3:
                 dw $0460,$0488,$04B0,$04D8                     ;80F3DB|
                 dw $0500,$0528                                 ;80F3E3|
 
-data_80F3E7:
-                dw $0201,$0804,$2010,$8040                     ;80F3E7|
+data_X_to_Mask: ;
+                db $01,$02,$04,$08,$10,$20,$40,$80             ;80F3E7|
 
 data_80F3EF:
                 dw $FDFE,$F7FB,$DFEF,$7FBF                     ;80F3EF|

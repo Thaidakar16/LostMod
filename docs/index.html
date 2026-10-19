@@ -83,6 +83,7 @@
     <p id="info" role="status"></p>
     <div class="row">
       <button id="play" class="primary" disabled>Play</button>
+      <button id="downloadROM" hidden>Download modded ROM</button>
       <button id="reload" hidden>Switch version</button>
       <button id="forget" hidden>Forget my saved ROM</button>
     </div>
@@ -262,6 +263,8 @@ async function renderDetails(ship) {
 
 function updatePlayButton() {
   playBtn.disabled = !(baseRom && shipSelect.value);
+  // I know this isn't a play button function, but Im lazy and this probably will work
+$("downloadROM").hidden = !baseRom || !shipSelect.value || shipSelect.value === "original";
 }
 
 shipSelect.onchange = () => {
@@ -271,7 +274,7 @@ shipSelect.onchange = () => {
   $("detail").hidden = false;
   $("playSection").hidden = false;
   $("notes").textContent = isOriginal ? "The unmodified game, for comparison."
-    : isLive ? "My latest build, straight from my machine. It may be unfinished or broken."
+    : isLive ? "My latest build, *straight from my machine. It may be unfinished or broken. *(changes only when I sync to github)"
     : ship.notes;
   $("mediaBlock").hidden = !ship;
   if (ship) renderMedia(ship);
@@ -306,6 +309,7 @@ romInput.onchange = async () => {
       await saveRom(bytes);
       info.textContent = "Correct ROM! It's saved in this browser, so you won't need to pick it again.";
       $("forget").hidden = false;
+      $("downloadROM").hidden = false;
     } catch (e) {
       console.error(e);
       info.textContent = "Correct ROM! (This browser wouldn't let me save it, so you'll need to pick it again next time.)";
@@ -374,6 +378,42 @@ $("forget").onclick = async () => {
   updatePlayButton();
 };
 
+$("downloadROM").onclick = async ()=>{
+    if (!baseRom || !shipSelect.value) return;
+    info.className = "";
+    info.textContent = "Preparing patched ROM for downloads...";
+
+    try{
+        let rom = baseRom;
+        let fileName = "The_Lost_Vikings.sfc";
+
+        if (shipSelect.value !== "original") {
+            const response = await fetch("patches/" + shipSelect.value + ".bps", { cache: "no-store"});
+            if (!response.ok) throw new Error("Couldn't download the patch (error " + response.status + ").");
+            rom = applyBPS(baseRom, new Uint8Array(await response.arrayBuffer()));
+            fileName = "The_Lost_Vikings_" + shipSelect.value + ".sfc";
+        }
+
+        // Create a temporary link element to trigger the file download
+        const blob = new Blob([rom], { type: "application/octet-stream"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        info.textContent = "Download started!";
+    } catch(e) {
+        info.textContent = e.message;
+        info.className = "error";
+    }
+};
+
 // on load: pick up the ROM saved by an earlier visit (checked again, in case it got damaged)
 async function restoreRom() {
   try {
@@ -382,6 +422,7 @@ async function restoreRom() {
       baseRom = saved;
       info.textContent = "Using the ROM saved in this browser.";
       $("forget").hidden = false;
+      $("downloadROM").hidden = false;
       updatePlayButton();
     }
   } catch (e) { console.error(e); }

@@ -4,12 +4,25 @@
     "week": "Prep 2",
     "version": 1,
     "notes": "Initial Ship: modified (and slightly broken) screen update system",
-    "details":"details/prep2-1.txt",
-    "media" : [
-        {
-            "mod": "media/prep2-1.mp4",
-            "caption": "Compact-scrolling"
-        }
+    "details": "details/prep2-1.txt",
+    "media": [
+      {
+        "mod": "media/prep2-1.mp4",
+        "caption": "Compact scrolling"
+      }
+    ]
+  },
+  {
+    "id": "prep3-1",
+    "week": "Prep 3",
+    "version": 1,
+    "notes": "Fixed Sprite Loading",
+    "details": "details/prep3-1.txt",
+    "media": [
+      {
+        "mod": "media/prep3-1.mp4",
+        "caption": "Sprite fix"
+      }
     ]
   }
 ]

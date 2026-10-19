@@ -5977,7 +5977,11 @@ ShiftObjPlacementBoxes:
                 PHX
                 PHY
 
-                LDY.W #$002A                                   ;INSERT| ;set index to zero and we will count up by 000E bc the layout is weird idk
+                LDA.W ram_19CF                                  ;shift the vikings over (the other 2 vikings work on an offset of the first, hence only one edit)
+                ADC.W #$0020
+                STA.W ram_19CF
+
+                LDY.W #$0000                                   ;INSERT| ;set index to zero and we will count up by 000E bc the layout is weird idk
          .loop: 
                 LDA.W placeX,Y                                 ;load X pos
                 CMP #$FFFF                                     ;check for exit flag

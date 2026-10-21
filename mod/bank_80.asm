@@ -765,7 +765,7 @@ wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 ;  k=16 $11A1  objY             world Y position (DOS y)
 ;  k=17 $11C9  objMaxVelX       clamp for |objMoveX| (sub_80ECAE / IntegrateVelocityClamped)
 ;  k=18 $11F1  objMaxVelY       clamp for |objMoveY|
-;  k=19 $1219  objSolidClass    collision class; looked up in the class lists at data_80F537 by every terrain/object probe
+;  k=19 $1219  objSolidClass    collision class; looked up in the class lists at terrainCheckTable by every terrain/object probe
 ;  k=20 $1241  objSpawnerIdx    slot that spawned this object ($FFFF none); unlinked on destroy
 ;  k=21 $1269  objChildIdx      slot of the object this one spawned ($FFFF none)
 ;  k=22 $1291  objGfxBase       VRAM tile base / staging slot for this object's sprite graphics (added to tile numbers by AnimOp_SetTiles)
@@ -1202,7 +1202,7 @@ sub_808219:
                 LDX.W #$001E                                   ;80821E|
 
          .loop: LDA.W ram_1935                                 ;808221|801935
-                AND.W data_80F3F7,X                            ;808224|80F3F7
+                AND.W data_X_to_Mask_16,X                            ;808224|80F3F7
                 BEQ .skip                                      ;808227|808244
                 DEC.W ram_1957,X                               ;808229|801957
                 BNE .skip                                      ;80822C|808244
@@ -7359,8 +7359,8 @@ loc_80A4A1:
 ;    stores the hit in objTouchSlots; the normal pass tests that bit, sets objTarget and calls.
 ;--------------------------------------------------------------
 Op_CallIfPlayerTouchType:
-                LDA.W objTableEnd                              ;80A4A2|800380
-                PHA                                            ;80A4A5|
+                LDA.W objTableEnd                              ;80A4A2|800380 ;teporarily pretend that the vikings are the only objects 
+                PHA                                            ;80A4A5|       ;(so other objects dont set off the flag)
                 LDA.W #$0006                                   ;80A4A6|
                 STA.W objTableEnd                              ;80A4A9|800380
                 JSR.W TouchType_Check                               ;80A4AC|80A4D6
@@ -7448,7 +7448,7 @@ TouchType_Check:
                 BCC .skip                                      ;80A529|80A53F
                 PHX                                            ;80A52B|
                 LDX.W vmQuerySlot2                                 ;80A52C|800390
-                LDA.W data_80F3F7,X                            ;80A52F|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A52F|80F3F7
                 ORA.W objTouchMask,Y                               ;80A532|800E31
                 STA.W objTouchMask,Y                               ;80A535|800E31
                 PLX                                            ;80A538|
@@ -7477,7 +7477,7 @@ TouchType_Check:
                 PHY                                            ;80A54D|
                 LDY.B curObjIdx                                ;80A54E|000042
                 LDX.W vmQuerySlot2                                 ;80A550|800390
-                LDA.W data_80F3F7,X                            ;80A553|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A553|80F3F7
                 AND.W objTouchMask,Y                               ;80A556|800E31
                 BEQ .loop2                                     ;80A559|80A546
                 JSR.W sub_80B02B                               ;80A55B|80B02B
@@ -7582,7 +7582,7 @@ TouchMask_Check:
                 BCC .skip                                      ;80A5E9|80A5FF
                 PHX                                            ;80A5EB|
                 LDX.W vmQuerySlot2                                 ;80A5EC|800390
-                LDA.W data_80F3F7,X                            ;80A5EF|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A5EF|80F3F7
                 ORA.W objTouchMask,Y                               ;80A5F2|800E31
                 STA.W objTouchMask,Y                               ;80A5F5|800E31
                 PLX                                            ;80A5F8|
@@ -7613,7 +7613,7 @@ TouchMask_Check:
                 PHY                                            ;80A60F|
                 LDY.B curObjIdx                                ;80A610|000042
                 LDX.W vmQuerySlot2                                 ;80A612|800390
-                LDA.W data_80F3F7,X                            ;80A615|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A615|80F3F7
                 AND.W objTouchMask,Y                               ;80A618|800E31
                 BEQ .loop2                                     ;80A61B|80A606
                 JSR.W sub_80B02B                               ;80A61D|80B02B
@@ -7673,7 +7673,7 @@ CollideX_Resolve:
                 JSR.W SnapX_ResolveOverlap2                               ;80A659|80ABB8
 
          .cont: LDX.W vmQuerySlot2                                 ;80A65C|800390
-                LDA.W data_80F3F7,X                            ;80A65F|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A65F|80F3F7
                 ORA.W objTouchMask,Y                               ;80A662|800E31
                 STA.W objTouchMask,Y                               ;80A665|800E31
 
@@ -7691,7 +7691,7 @@ CollideX_Resolve:
                 PHY                                            ;80A66F|
                 LDY.B curObjIdx                                ;80A670|000042
                 LDX.W vmQuerySlot2                                 ;80A672|800390
-                LDA.W data_80F3F7,X                            ;80A675|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A675|80F3F7
                 AND.W objTouchMask,Y                               ;80A678|800E31
                 BEQ .loop                                      ;80A67B|80A668
                 PLY                                            ;80A67D|
@@ -7747,7 +7747,7 @@ CollideY_Resolve:
                 JSR.W SnapY_ResolveOverlap2                               ;80A6B3|80AC15
 
          .cont: LDX.W vmQuerySlot2                                 ;80A6B6|800390
-                LDA.W data_80F3F7,X                            ;80A6B9|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A6B9|80F3F7
                 ORA.W objTouchMask,Y                               ;80A6BC|800E31
                 STA.W objTouchMask,Y                               ;80A6BF|800E31
 
@@ -7765,7 +7765,7 @@ CollideY_Resolve:
                 PHY                                            ;80A6C9|
                 LDY.B curObjIdx                                ;80A6CA|000042
                 LDX.W vmQuerySlot2                                 ;80A6CC|800390
-                LDA.W data_80F3F7,X                            ;80A6CF|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A6CF|80F3F7
                 AND.W objTouchMask,Y                               ;80A6D2|800E31
                 BEQ .loop                                      ;80A6D5|80A6C2
                 PLY                                            ;80A6D7|
@@ -7822,7 +7822,7 @@ CollideY_Slope_Resolve:
                 JSR.W SnapY_ResolveOverlap2                               ;80A70D|80AC15
 
          .cont: LDX.W vmQuerySlot2                                 ;80A710|800390
-                LDA.W data_80F3F7,X                            ;80A713|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A713|80F3F7
                 ORA.W objTouchMask,Y                               ;80A716|800E31
                 STA.W objTouchMask,Y                               ;80A719|800E31
 
@@ -7840,7 +7840,7 @@ CollideY_Slope_Resolve:
                 PHY                                            ;80A723|
                 LDY.B curObjIdx                                ;80A724|000042
                 LDX.W vmQuerySlot2                                 ;80A726|800390
-                LDA.W data_80F3F7,X                            ;80A729|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80A729|80F3F7
                 AND.W objTouchMask,Y                               ;80A72C|800E31
                 BEQ .loop                                      ;80A72F|80A71C
                 PLY                                            ;80A731|
@@ -8184,7 +8184,7 @@ ProbeColAtBoxRightPlus1:
 ;    calls:     GetTerrainClassAtPixel, ProbeClass_NoHit
 ;    operands: X = this object's objX (pixel), Y = the other object
 ;    The 'rightward' arm of CollideX_PickDirection: builds a one-metatile-tall probe column at the
-;    object's own box-right edge and scans it (via GetTerrainClassAtPixel + the data_80F537 class
+;    object's own box-right edge and scans it (via GetTerrainClassAtPixel + the terrainCheckTable class
 ;    list) for a terrain hit; if none, calls ProbeRowForObjects to also check solid objects. This is
 ;    the function that actually walks the class list, not just a setup stub -- the X/Y-only setup
 ;    variants above (ProbeColAtBoxLeft etc.) are its siblings for the other three edges.
@@ -8227,7 +8227,7 @@ loc_80A8B8:
                 SEP #$20                                       ;80A8EB|
                 LDX.B tmp34                           ;80A8ED|000034
 
-        .loop2: CMP.W data_80F537,X                            ;80A8EF|80F537
+        .loop2: CMP.W terrainCheckTable,X                            ;80A8EF|80F537
                 BCC +                                          ;80A8F2|80A8F9
                 BEQ .skip                                      ;80A8F4|80A90D
                 INX                                            ;80A8F6|
@@ -8351,7 +8351,7 @@ loc_80A941:
 ;    calls:     GetTerrainClassAtPixel
 ;    operands: X = probe row (pixel), Y/tmp34/tmp36 = probe X-range
 ;    Walks the probe row one metatile at a time across [tmp34..tmp36], testing each against
-;    the data_80F537 class list via GetTerrainClassAtPixel. On a hit, stores the class in hitClass
+;    the terrainCheckTable class list via GetTerrainClassAtPixel. On a hit, stores the class in hitClass
 ;    and returns with carry set. This is the shared terrain-class scanner behind the whole
 ;    Above/Below/Behind/Ahead probe family; GetTerrainClassAtPixel does the single-point lookup, this
 ;    does the sweep.
@@ -8362,7 +8362,7 @@ ProbeRowAndScanClass:
                 SEP #$20                                       ;80A950|
                 LDY.B tmp34                           ;80A952|000034
 
-         .loop: CMP.W data_80F537,Y                            ;80A954|80F537
+         .loop: CMP.W terrainCheckTable,Y                            ;80A954|80F537
                 BCC +                                          ;80A957|80A95E
                 BEQ .skip                                      ;80A959|80A972
                 INY                                            ;80A95B|
@@ -8484,7 +8484,7 @@ CollideY_Slope_Resolve_Flat:
 ;--------------------------------------------------------------
 ;  CollideY_Slope_Resolve_Step
 ;    operands: X = this object, Y = the other object
-;    The real slope-stepping body: walks the data_80F537 class list looking for a slope-type terrain
+;    The real slope-stepping body: walks the terrainCheckTable class list looking for a slope-type terrain
 ;    class under the object's new bottom edge, and if found, uses SlopeHeightLookup (sub_80B177) to
 ;    compute how far to raise/lower the object so it rides the slope's surface instead of just
 ;    stopping flat against it. (name/behaviour of the slope-height math itself is a best guess -- see
@@ -8494,7 +8494,7 @@ CollideY_Slope_Resolve_Step:
                 STX.B zp_6C                                    ;80A9BF|00006C
                 STY.B zp_6E                                    ;80A9C1|00006E
 
-         .loop: LDA.W data_80F537,X                            ;80A9C3|80F537
+         .loop: LDA.W terrainCheckTable,X                            ;80A9C3|80F537
                 AND.W #$00FF                                   ;80A9C6|
                 CMP.W #$00FF                                   ;80A9C9|
                 BEQ .skip3                                     ;80A9CC|80AA45
@@ -8590,7 +8590,7 @@ CollideY_Slope_Resolve_Step:
                 SEP #$20                                       ;80AA7D|
                 LDY.B zp_6C                                    ;80AA7F|00006C
 
-        .loop3: CMP.W data_80F537,Y                            ;80AA81|80F537
+        .loop3: CMP.W terrainCheckTable,Y                            ;80AA81|80F537
                 BCC .skip4                                     ;80AA84|80AA8B
                 BEQ .skip5                                     ;80AA86|80AA9F
                 INY                                            ;80AA88|
@@ -8638,7 +8638,7 @@ CollideY_Slope_Resolve_Step:
 ;  Object collision-query family
 ;  (80AAB2/80AB01/80AE0B/80AE15/80AE7E)
 ;    Each scans the whole object table for an ACTIVE object
-;    (skip self via curObjIdx $42) whose class (data_80F537
+;    (skip self via curObjIdx $42) whose class (terrainCheckTable
 ;    keyed by $1219) and bounding box (X:$0F21/$0F49,
 ;    Y:$0F71/$0F99) overlap a probe; the Overlap pair also
 ;    use $1381/$13A9 coords. Edge variants return
@@ -8659,7 +8659,7 @@ FindObjectOverlapX:
                 SEP #$20                                       ;80AAC5|
                 LDX.B tmp3A                                    ;80AAC7|00003A
 
-        .loop2: CMP.W data_80F537,X                            ;80AAC9|80F537
+        .loop2: CMP.W terrainCheckTable,X                            ;80AAC9|80F537
                 BCC .skip2                                     ;80AACC|80AAF4
                 BEQ +                                          ;80AACE|80AAD3
                 INX                                            ;80AAD0|
@@ -8716,7 +8716,7 @@ FindObjectOverlapX2:
                 SEP #$20                                       ;80AB14|
                 LDX.B tmp3A                                    ;80AB16|00003A
 
-        .loop2: CMP.W data_80F537,X                            ;80AB18|80F537
+        .loop2: CMP.W terrainCheckTable,X                            ;80AB18|80F537
                 BCC .skip2                                     ;80AB1B|80AB43
                 BEQ +                                          ;80AB1D|80AB22
                 INX                                            ;80AB1F|
@@ -9007,7 +9007,7 @@ ProbeRowForObjects:
 ;--------------------------------------------------------------
 ;  ProbeRowForObjects_Entry
 ;    operands: X = probe row, tmp36 = probe X-range end, tmp34 = probe X-range start
-;    Scans every active object (skipping self) for one whose objSolidClass is in the data_80F537
+;    Scans every active object (skipping self) for one whose objSolidClass is in the terrainCheckTable
 ;    class list AND whose box overlaps the probe row/X-range AND whose projected Y-range (offset by
 ;    objMoveY) overlaps the caller's box-bottom. On a hit, stores the class in hitClass and the slot
 ;    in hitObj. This is the 'what solid object is directly below/ahead of me' half of the
@@ -9027,7 +9027,7 @@ ProbeRowForObjects_Entry:
                 SEP #$20                                       ;80AC97|
                 LDX.B tmp34                           ;80AC99|000034
 
-        .loop2: CMP.W data_80F537,X                            ;80AC9B|80F537
+        .loop2: CMP.W terrainCheckTable,X                            ;80AC9B|80F537
                 BCC .skip                                      ;80AC9E|80ACDE
                 BEQ +                                          ;80ACA0|80ACA5
                 INX                                            ;80ACA2|
@@ -9139,7 +9139,7 @@ loc_80AD1C:
                 SEP #$20                                       ;80AD28|
                 LDY.W vmScanType                                 ;80AD2A|8003B4
 
-         .loop: CMP.W data_80F537,Y                            ;80AD2D|80F537
+         .loop: CMP.W terrainCheckTable,Y                            ;80AD2D|80F537
                 BCC loc_80AD70                                 ;80AD30|80AD70
                 BEQ +                                          ;80AD32|80AD37
                 INY                                            ;80AD34|
@@ -9247,7 +9247,7 @@ loc_80ADAB:
                 SEP #$20                                       ;80ADB7|
                 LDY.W vmScanType                                 ;80ADB9|8003B4
 
-         .loop: CMP.W data_80F537,Y                            ;80ADBC|80F537
+         .loop: CMP.W terrainCheckTable,Y                            ;80ADBC|80F537
                 BCC loc_80ADFF                                 ;80ADBF|80ADFF
                 BEQ +                                          ;80ADC1|80ADC6
                 INY                                            ;80ADC3|
@@ -9333,7 +9333,7 @@ loc_80AE1D:
                 SEP #$20                                       ;80AE30|
                 LDX.B tmp34                           ;80AE32|000034
 
-        .loop2: CMP.W data_80F537,X                            ;80AE34|80F537
+        .loop2: CMP.W terrainCheckTable,X                            ;80AE34|80F537
                 BCC .skip                                      ;80AE37|80AE6F
                 BEQ +                                          ;80AE39|80AE3E
                 INX                                            ;80AE3B|
@@ -9415,7 +9415,7 @@ FindObjectAtEdgeY:
                 SEP #$20                                       ;80AEAD|
                 LDX.B tmp34                           ;80AEAF|000034
 
-        .loop2: CMP.W data_80F537,X                            ;80AEB1|80F537
+        .loop2: CMP.W terrainCheckTable,X                            ;80AEB1|80F537
                 BCC .skip                                      ;80AEB4|80AEE6
                 BEQ +                                          ;80AEB6|80AEBB
                 INX                                            ;80AEB8|
@@ -9483,7 +9483,7 @@ sub_80AEF5:
                 SEP #$20                                       ;80AF12|
                 LDX.B tmp34                           ;80AF14|000034
 
-        .loop2: CMP.W data_80F537,X                            ;80AF16|80F537
+        .loop2: CMP.W terrainCheckTable,X                            ;80AF16|80F537
                 BCC .skip                                      ;80AF19|80AF4B
                 BEQ +                                          ;80AF1B|80AF20
                 INX                                            ;80AF1D|
@@ -9546,7 +9546,7 @@ sub_80AF5A:
                 SEP #$20                                       ;80AF6D|
                 LDX.B tmp3A                                    ;80AF6F|00003A
 
-        .loop2: CMP.W data_80F537,X                            ;80AF71|80F537
+        .loop2: CMP.W terrainCheckTable,X                            ;80AF71|80F537
                 BCC .skip                                      ;80AF74|80AF93
                 BEQ +                                          ;80AF76|80AF7B
                 INX                                            ;80AF78|
@@ -15136,7 +15136,7 @@ Op_BlockRespawn:
                 LSR A                                          ;80CDB6|
                 TAX                                            ;80CDB7|
                 LDA.W placementConsumedBits,X                               ;80CDB8|800360
-                ORA.W data_X_to_Mask,Y                            ;80CDBB|80F3E7
+                ORA.W data_X_to_Mask_8,Y                            ;80CDBB|80F3E7
                 STA.W placementConsumedBits,X                               ;80CDBE|800360
                 REP #$30                                       ;80CDC1|
                 PLY                                            ;80CDC3|
@@ -15336,7 +15336,7 @@ Op_JmpIfAnimIdle:
 ;  Op_JmpIfBlockedAbove   (object VM op $1E)
 ;    operands: u8 classSet, u16 target
 ;    Jump if the row just above the object (objBoxTop-1) is blocked: terrain whose tile collision
-;    type is in the list at data_80F537+classSet, or an object whose objSolidClass is in it. (names
+;    type is in the list at terrainCheckTable+classSet, or an object whose objSolidClass is in it. (names
 ;    of the underlying FindObjectAtEdgeX helpers are swapped: X = above/below.)
 ;    (name/behaviour is a best guess)
 ;--------------------------------------------------------------
@@ -15786,7 +15786,7 @@ Op_LoadAcc_Fld:
                 INY                                            ;80CFF1|
                 AND.W #$00FF                                   ;80CFF2|
                 TAX                                            ;80CFF5|
-                LDA.W data_80F3A3,X                            ;80CFF6|80F3A3
+                LDA.W data_Xtimes28,X                            ;80CFF6|80F3A3
                 CLC                                            ;80CFF9|
                 ADC.B curObjIdx                                ;80CFFA|000042
                 TAX                                            ;80CFFC|
@@ -15820,7 +15820,7 @@ Op_LoadAcc_TFld:
                 INY                                            ;80D00F|
                 AND.W #$00FF                                   ;80D010|
                 TAX                                            ;80D013|
-                LDA.W data_80F3A3,X                            ;80D014|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D014|80F3A3
                 CLC                                            ;80D017|
                 LDX.B curObjIdx                                ;80D018|000042
                 ADC.W objTarget,X                          ;80D01A|8013D1
@@ -15875,7 +15875,7 @@ Op_StoreAcc_Fld:
                 INY                                            ;80D03C|
                 AND.W #$00FF                                   ;80D03D|
                 TAX                                            ;80D040|
-                LDA.W data_80F3A3,X                            ;80D041|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D041|80F3A3
                 CLC                                            ;80D044|
                 ADC.B curObjIdx                                ;80D045|000042
                 TAX                                            ;80D047|
@@ -15933,7 +15933,7 @@ Op_StoreAcc_TFld:
                 INY                                            ;80D06A|
                 AND.W #$00FF                                   ;80D06B|
                 TAX                                            ;80D06E|
-                LDA.W data_80F3A3,X                            ;80D06F|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D06F|80F3A3
                 CLC                                            ;80D072|
                 LDX.B curObjIdx                                ;80D073|000042
                 ADC.W objTarget,X                          ;80D075|8013D1
@@ -15974,7 +15974,7 @@ Op_AddAcc_Fld:
                 INY                                            ;80D08E|
                 AND.W #$00FF                                   ;80D08F|
                 TAX                                            ;80D092|
-                LDA.W data_80F3A3,X                            ;80D093|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D093|80F3A3
                 CLC                                            ;80D096|
                 ADC.B curObjIdx                                ;80D097|000042
                 TAX                                            ;80D099|
@@ -16053,7 +16053,7 @@ Op_AddAcc_TFld:
                 INY                                            ;80D0CC|
                 AND.W #$00FF                                   ;80D0CD|
                 TAX                                            ;80D0D0|
-                LDA.W data_80F3A3,X                            ;80D0D1|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D0D1|80F3A3
                 CLC                                            ;80D0D4|
                 LDX.B curObjIdx                                ;80D0D5|000042
                 ADC.W objTarget,X                          ;80D0D7|8013D1
@@ -16094,7 +16094,7 @@ Op_SubAcc_Fld:
                 INY                                            ;80D0F3|
                 AND.W #$00FF                                   ;80D0F4|
                 TAX                                            ;80D0F7|
-                LDA.W data_80F3A3,X                            ;80D0F8|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D0F8|80F3A3
                 CLC                                            ;80D0FB|
                 ADC.B curObjIdx                                ;80D0FC|000042
                 TAX                                            ;80D0FE|
@@ -16174,7 +16174,7 @@ Op_SubAcc_TFld:
                 INY                                            ;80D132|
                 AND.W #$00FF                                   ;80D133|
                 TAX                                            ;80D136|
-                LDA.W data_80F3A3,X                            ;80D137|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D137|80F3A3
                 CLC                                            ;80D13A|
                 LDX.B curObjIdx                                ;80D13B|000042
                 ADC.W objTarget,X                          ;80D13D|8013D1
@@ -16196,7 +16196,7 @@ Op_AndAcc_Fld:
                 INY                                            ;80D14D|
                 AND.W #$00FF                                   ;80D14E|
                 TAX                                            ;80D151|
-                LDA.W data_80F3A3,X                            ;80D152|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D152|80F3A3
                 CLC                                            ;80D155|
                 ADC.B curObjIdx                                ;80D156|000042
                 TAX                                            ;80D158|
@@ -16232,7 +16232,7 @@ Op_AndAcc_TFld:
                 INY                                            ;80D170|
                 AND.W #$00FF                                   ;80D171|
                 TAX                                            ;80D174|
-                LDA.W data_80F3A3,X                            ;80D175|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D175|80F3A3
                 CLC                                            ;80D178|
                 LDX.B curObjIdx                                ;80D179|000042
                 ADC.W objTarget,X                          ;80D17B|8013D1
@@ -16253,7 +16253,7 @@ Op_OrAcc_Fld:
                 INY                                            ;80D18A|
                 AND.W #$00FF                                   ;80D18B|
                 TAX                                            ;80D18E|
-                LDA.W data_80F3A3,X                            ;80D18F|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D18F|80F3A3
                 CLC                                            ;80D192|
                 ADC.B curObjIdx                                ;80D193|000042
                 TAX                                            ;80D195|
@@ -16289,7 +16289,7 @@ Op_OrAcc_TFld:
                 INY                                            ;80D1AD|
                 AND.W #$00FF                                   ;80D1AE|
                 TAX                                            ;80D1B1|
-                LDA.W data_80F3A3,X                            ;80D1B2|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D1B2|80F3A3
                 CLC                                            ;80D1B5|
                 LDX.B curObjIdx                                ;80D1B6|000042
                 ADC.W objTarget,X                          ;80D1B8|8013D1
@@ -16310,7 +16310,7 @@ Op_XorAcc_Fld:
                 INY                                            ;80D1C7|
                 AND.W #$00FF                                   ;80D1C8|
                 TAX                                            ;80D1CB|
-                LDA.W data_80F3A3,X                            ;80D1CC|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D1CC|80F3A3
                 CLC                                            ;80D1CF|
                 ADC.B curObjIdx                                ;80D1D0|000042
                 TAX                                            ;80D1D2|
@@ -16346,7 +16346,7 @@ Op_XorAcc_TFld:
                 INY                                            ;80D1EA|
                 AND.W #$00FF                                   ;80D1EB|
                 TAX                                            ;80D1EE|
-                LDA.W data_80F3A3,X                            ;80D1EF|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D1EF|80F3A3
                 CLC                                            ;80D1F2|
                 LDX.B curObjIdx                                ;80D1F3|000042
                 ADC.W objTarget,X                          ;80D1F5|8013D1
@@ -17215,7 +17215,7 @@ Op_SetBitFromAcc_Fld:
                 TAX                                            ;80D4C7|
                 LDA.B vmAcc                                    ;80D4C8|00008E
                 BEQ +                                          ;80D4CA|80D4D1
-                LDA.W data_80F3F7,X                            ;80D4CC|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D4CC|80F3F7
                 STA.B vmAcc                                    ;80D4CF|00008E
 
              +: LDA.W data_80F417,X                            ;80D4D1|80F417
@@ -17224,7 +17224,7 @@ Op_SetBitFromAcc_Fld:
                 INY                                            ;80D4D8|
                 AND.W #$00FF                                   ;80D4D9|
                 TAX                                            ;80D4DC|
-                LDA.W data_80F3A3,X                            ;80D4DD|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D4DD|80F3A3
                 CLC                                            ;80D4E0|
                 ADC.B curObjIdx                                ;80D4E1|000042
                 TAX                                            ;80D4E3|
@@ -17247,7 +17247,7 @@ Op_SetBitFromAcc_Ram:
                 TAX                                            ;80D4F5|
                 LDA.B vmAcc                                    ;80D4F6|00008E
                 BEQ +                                          ;80D4F8|80D4FF
-                LDA.W data_80F3F7,X                            ;80D4FA|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D4FA|80F3F7
                 STA.B vmAcc                                    ;80D4FD|00008E
 
              +: LDA.W data_80F417,X                            ;80D4FF|80F417
@@ -17275,7 +17275,7 @@ Op_SetBitFromAcc_TFld:
                 TAX                                            ;80D518|
                 LDA.B vmAcc                                    ;80D519|00008E
                 BEQ +                                          ;80D51B|80D522
-                LDA.W data_80F3F7,X                            ;80D51D|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D51D|80F3F7
                 STA.B vmAcc                                    ;80D520|00008E
 
              +: LDA.W data_80F417,X                            ;80D522|80F417
@@ -17284,7 +17284,7 @@ Op_SetBitFromAcc_TFld:
                 INY                                            ;80D529|
                 AND.W #$00FF                                   ;80D52A|
                 TAX                                            ;80D52D|
-                LDA.W data_80F3A3,X                            ;80D52E|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D52E|80F3A3
                 CLC                                            ;80D531|
                 LDX.B curObjIdx                                ;80D532|000042
                 ADC.W objTarget,X                          ;80D534|8013D1
@@ -17309,14 +17309,14 @@ Op_AndBitAcc_Fld:
                 TAX                                            ;80D549|
                 LDA.B vmAcc                                    ;80D54A|00008E
                 BEQ +                                          ;80D54C|80D553
-                LDA.W data_80F3F7,X                            ;80D54E|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D54E|80F3F7
                 STA.B vmAcc                                    ;80D551|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D553|000070
                 INY                                            ;80D555|
                 AND.W #$00FF                                   ;80D556|
                 TAX                                            ;80D559|
-                LDA.W data_80F3A3,X                            ;80D55A|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D55A|80F3A3
                 CLC                                            ;80D55D|
                 ADC.B curObjIdx                                ;80D55E|000042
                 TAX                                            ;80D560|
@@ -17339,7 +17339,7 @@ Op_AndBitAcc_Ram:
                 TAX                                            ;80D570|
                 LDA.B vmAcc                                    ;80D571|00008E
                 BEQ +                                          ;80D573|80D57A
-                LDA.W data_80F3F7,X                            ;80D575|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D575|80F3F7
                 STA.B vmAcc                                    ;80D578|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D57A|000070
@@ -17365,14 +17365,14 @@ Op_AndBitAcc_TFld:
                 TAX                                            ;80D58C|
                 LDA.B vmAcc                                    ;80D58D|00008E
                 BEQ +                                          ;80D58F|80D596
-                LDA.W data_80F3F7,X                            ;80D591|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D591|80F3F7
                 STA.B vmAcc                                    ;80D594|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D596|000070
                 INY                                            ;80D598|
                 AND.W #$00FF                                   ;80D599|
                 TAX                                            ;80D59C|
-                LDA.W data_80F3A3,X                            ;80D59D|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D59D|80F3A3
                 CLC                                            ;80D5A0|
                 LDX.B curObjIdx                                ;80D5A1|000042
                 ADC.W objTarget,X                          ;80D5A3|8013D1
@@ -17395,14 +17395,14 @@ Op_XorBitAcc_Fld:
                 TAX                                            ;80D5B6|
                 LDA.B vmAcc                                    ;80D5B7|00008E
                 BEQ +                                          ;80D5B9|80D5C0
-                LDA.W data_80F3F7,X                            ;80D5BB|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D5BB|80F3F7
                 STA.B vmAcc                                    ;80D5BE|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D5C0|000070
                 INY                                            ;80D5C2|
                 AND.W #$00FF                                   ;80D5C3|
                 TAX                                            ;80D5C6|
-                LDA.W data_80F3A3,X                            ;80D5C7|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D5C7|80F3A3
                 CLC                                            ;80D5CA|
                 ADC.B curObjIdx                                ;80D5CB|000042
                 TAX                                            ;80D5CD|
@@ -17424,7 +17424,7 @@ Op_XorBitAcc_Ram:
                 TAX                                            ;80D5DD|
                 LDA.B vmAcc                                    ;80D5DE|00008E
                 BEQ +                                          ;80D5E0|80D5E7
-                LDA.W data_80F3F7,X                            ;80D5E2|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D5E2|80F3F7
                 STA.B vmAcc                                    ;80D5E5|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D5E7|000070
@@ -17449,14 +17449,14 @@ Op_XorBitAcc_TFld:
                 TAX                                            ;80D5F9|
                 LDA.B vmAcc                                    ;80D5FA|00008E
                 BEQ +                                          ;80D5FC|80D603
-                LDA.W data_80F3F7,X                            ;80D5FE|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D5FE|80F3F7
                 STA.B vmAcc                                    ;80D601|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D603|000070
                 INY                                            ;80D605|
                 AND.W #$00FF                                   ;80D606|
                 TAX                                            ;80D609|
-                LDA.W data_80F3A3,X                            ;80D60A|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D60A|80F3A3
                 CLC                                            ;80D60D|
                 LDX.B curObjIdx                                ;80D60E|000042
                 ADC.W objTarget,X                          ;80D610|8013D1
@@ -17479,14 +17479,14 @@ Op_OrBitAcc_Fld:
                 TAX                                            ;80D623|
                 LDA.B vmAcc                                    ;80D624|00008E
                 BEQ +                                          ;80D626|80D62D
-                LDA.W data_80F3F7,X                            ;80D628|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D628|80F3F7
                 STA.B vmAcc                                    ;80D62B|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D62D|000070
                 INY                                            ;80D62F|
                 AND.W #$00FF                                   ;80D630|
                 TAX                                            ;80D633|
-                LDA.W data_80F3A3,X                            ;80D634|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D634|80F3A3
                 CLC                                            ;80D637|
                 ADC.B curObjIdx                                ;80D638|000042
                 TAX                                            ;80D63A|
@@ -17508,7 +17508,7 @@ Op_OrBitAcc_Ram:
                 TAX                                            ;80D64A|
                 LDA.B vmAcc                                    ;80D64B|00008E
                 BEQ +                                          ;80D64D|80D654
-                LDA.W data_80F3F7,X                            ;80D64F|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D64F|80F3F7
                 STA.B vmAcc                                    ;80D652|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D654|000070
@@ -17533,14 +17533,14 @@ Op_OrBitAcc_TFld:
                 TAX                                            ;80D666|
                 LDA.B vmAcc                                    ;80D667|00008E
                 BEQ +                                          ;80D669|80D670
-                LDA.W data_80F3F7,X                            ;80D66B|80F3F7
+                LDA.W data_X_to_Mask_16,X                            ;80D66B|80F3F7
                 STA.B vmAcc                                    ;80D66E|00008E
 
              +: LDA.B [scriptPC],Y                             ;80D670|000070
                 INY                                            ;80D672|
                 AND.W #$00FF                                   ;80D673|
                 TAX                                            ;80D676|
-                LDA.W data_80F3A3,X                            ;80D677|80F3A3
+                LDA.W data_Xtimes28,X                            ;80D677|80F3A3
                 CLC                                            ;80D67A|
                 LDX.B curObjIdx                                ;80D67B|000042
                 ADC.W objTarget,X                          ;80D67D|8013D1
@@ -18949,7 +18949,7 @@ VM_TestBit_Imm:
                 INY                                            ;80DC69|
                 INY                                            ;80DC6A|
                 PLX                                            ;80DC6B|
-                AND.W data_80F3F7,X                            ;80DC6C|80F3F7
+                AND.W data_X_to_Mask_16,X                            ;80DC6C|80F3F7
                 BEQ .exit                                      ;80DC6F|80DC74
                 LDA.W #$0001                                   ;80DC71|
 
@@ -18970,13 +18970,13 @@ VM_TestBit_Fld:
                 INY                                            ;80DC7E|
                 AND.W #$00FF                                   ;80DC7F|
                 TAX                                            ;80DC82|
-                LDA.W data_80F3A3,X                            ;80DC83|80F3A3
+                LDA.W data_Xtimes28,X                            ;80DC83|80F3A3
                 CLC                                            ;80DC86|
                 ADC.B curObjIdx                                ;80DC87|000042
                 TAX                                            ;80DC89|
                 LDA.W objBoxTop,X                          ;80DC8A|800F21
                 PLX                                            ;80DC8D|
-                AND.W data_80F3F7,X                            ;80DC8E|80F3F7
+                AND.W data_X_to_Mask_16,X                            ;80DC8E|80F3F7
                 BEQ .exit                                      ;80DC91|80DC96
                 LDA.W #$0001                                   ;80DC93|
 
@@ -18999,7 +18999,7 @@ VM_TestBit_Ram:
                 TAX                                            ;80DCA2|
                 LDA.B zp_00,X                                  ;80DCA3|000000
                 PLX                                            ;80DCA5|
-                AND.W data_80F3F7,X                            ;80DCA6|80F3F7
+                AND.W data_X_to_Mask_16,X                            ;80DCA6|80F3F7
                 BEQ .exit                                      ;80DCA9|80DCAE
                 LDA.W #$0001                                   ;80DCAB|
 
@@ -19020,14 +19020,14 @@ VM_TestBit_TFld:
                 INY                                            ;80DCB8|
                 AND.W #$00FF                                   ;80DCB9|
                 TAX                                            ;80DCBC|
-                LDA.W data_80F3A3,X                            ;80DCBD|80F3A3
+                LDA.W data_Xtimes28,X                            ;80DCBD|80F3A3
                 CLC                                            ;80DCC0|
                 LDX.B curObjIdx                                ;80DCC1|000042
                 ADC.W objTarget,X                          ;80DCC3|8013D1
                 TAX                                            ;80DCC6|
                 LDA.W objBoxTop,X                          ;80DCC7|800F21
                 PLX                                            ;80DCCA|
-                AND.W data_80F3F7,X                            ;80DCCB|80F3F7
+                AND.W data_X_to_Mask_16,X                            ;80DCCB|80F3F7
                 BEQ .exit                                      ;80DCCE|80DCD3
                 LDA.W #$0001                                   ;80DCD0|
 
@@ -19083,7 +19083,7 @@ VM_GetOperandFld:
                 INY                                            ;80DCF0|
                 AND.W #$00FF                                   ;80DCF1|
                 TAX                                            ;80DCF4|
-                LDA.W data_80F3A3,X                            ;80DCF5|80F3A3
+                LDA.W data_Xtimes28,X                            ;80DCF5|80F3A3
                 CLC                                            ;80DCF8|
                 ADC.B curObjIdx                                ;80DCF9|000042
                 TAX                                            ;80DCFB|
@@ -19115,7 +19115,7 @@ VM_GetOperandTFld:
                 INY                                            ;80DD0A|
                 AND.W #$00FF                                   ;80DD0B|
                 TAX                                            ;80DD0E|
-                LDA.W data_80F3A3,X                            ;80DD0F|80F3A3
+                LDA.W data_Xtimes28,X                            ;80DD0F|80F3A3
                 CLC                                            ;80DD12|
                 LDX.B curObjIdx                                ;80DD13|000042
                 ADC.W objTarget,X                          ;80DD15|8013D1
@@ -19158,7 +19158,7 @@ VM_SetOperandTable:
                 INY                                            ;80DD35|
                 AND.W #$00FF                                   ;80DD36|
                 TAX                                            ;80DD39|
-                LDA.W data_80F3A3,X                            ;80DD3A|80F3A3
+                LDA.W data_Xtimes28,X                            ;80DD3A|80F3A3
                 CLC                                            ;80DD3D|
                 ADC.B curObjIdx                                ;80DD3E|000042
                 TAX                                            ;80DD40|
@@ -19180,7 +19180,7 @@ VM_SetOperandTable:
                 INY                                            ;80DD51|
                 AND.W #$00FF                                   ;80DD52|
                 TAX                                            ;80DD55|
-                LDA.W data_80F3A3,X                            ;80DD56|80F3A3
+                LDA.W data_Xtimes28,X                            ;80DD56|80F3A3
                 CLC                                            ;80DD59|
                 LDX.B curObjIdx                                ;80DD5A|000042
                 ADC.W objTarget,X                          ;80DD5C|8013D1
@@ -21775,9 +21775,9 @@ SpawnObject:
                 JSR.W FindFreeObjectSlotInPool                               ;80EC75|80F16B
                 BCS .skip3                                     ;80EC78|80EC9F
                 LDA.B tmp3A                                    ;80EC7A|00003A
-                STA.W objOamFirst,X                               ;80EC7C|8014C1
-                LDA.B tmp38                                    ;80EC7F|000038
-                STA.W objOamEnd,X                               ;80EC81|8014E9
+                STA.W objOamFirst,X                               ;80EC7C|8014C1 ;store the index of the first oam tile of the object
+                LDA.B tmp38                                    ;80EC7F|000038    
+                STA.W objOamEnd,X                               ;80EC81|8014E9   ;store the index of the last oam tile of the object
                 JSR.W InitSpawnOamAttrs                               ;80EC84|80F1BE
                 JSR.W InitSpawnOamMirrorBits                               ;80EC87|80F1EC
 
@@ -22322,17 +22322,17 @@ TrySpawnPlacementIfInBox:
                 BPL .skipObj                                    ;80EF60|80EFB9
                 PHX                                             ;80EF62|        ;if it passes all checks, the object is at least partially in the caller's box, so save this index (I dont think it directly represents the objIndex, i think it is offset, which would be corrected later)
                 STX.B tmp32                                     ;80EF63|000032
-                LDX.W objScanStartSlot                          ;80EF65|80033E  ;I think this is the next open slot in the object 
+                LDX.W objScanStartSlot                          ;80EF65|80033E  ;I think this is to protect a number of objects (i.e. dont check if the viking spots are available)
 
          .loop: LDA.W objActive,X                              ;80EF68|800D91   ;go through the objects and compare thier placement indexes to the current placement index
                 BEQ +                                          ;80EF6B|80EF74   ;if the object is inactive, skip next check. 
                 LDA.W objPlacementIdx,X                        ;80EF6D|801101   ;this likely is to check to see if the object is already spawned, and if it is, we dont want to spawn it again.
                 CMP.B tmp32                                    ;80EF70|000032   
-                BEQ .skip                                      ;80EF72|80EFB8   ;if object is already spawned, skip to the end of the function and return.
+                BEQ .skip                                      ;80EF72|80EFB8   ;if object is already active, skip to the end of the function and return.
 
              +: INX                                            ;80EF74|
                 INX                                            ;80EF75|
-                CPX.W objTableEnd                              ;80EF76|800380   ;other exit case: we checked all the objects and none of them matched the placement index, so we can spawn it.
+                CPX.W objTableEnd                              ;80EF76|800380   ;other exit case: we checked all the ACTIVE objects and none of them matched the placement index, so we can spawn it.
                 BCC .loop                                      ;80EF79|80EF68   
                 PHY                                            ;80EF7B|         
                 PEI.B ($34)                                    ;80EF7C|000034   
@@ -22529,13 +22529,14 @@ FlagOffscreenObjects:
 ; --------------------------------------------------------
 DestroyObject:
                 LDA.W objOamCount,Y                               ;80F095|801511
-                BEQ .skip                                      ;80F098|80F0B1
+                BEQ .skip                                      ;80F098|80F0B1   ;If the OamCount is zero, skip setting the sources to zero..
+                
                 LDA.W objOamEnd,Y                               ;80F09A|8014E9
                 STA.B tmp32                              ;80F09D|000032
                 LDX.W objOamFirst,Y                               ;80F09F|8014C1
                 SEP #$20                                       ;80F0A2|
 
-         .loop: STZ.W oamSrcAttr,X                             ;80F0A4|800985
+         .loop: STZ.W oamSrcAttr,X                             ;80F0A4|800985   ;Clear all oamSrcAttrs
                 INX                                            ;80F0A7|
                 CPX.B tmp32                              ;80F0A8|000032
                 BCC .loop                                      ;80F0AA|80F0A4
@@ -22643,10 +22644,10 @@ CanSpawnPlacement:
                 LSR A                                          ;80F147|
                 LSR A                                          ;80F148|
                 TAY                                            ;80F149|
-                LDA.W placementConsumedBits,Y                  ;80F14A|800360
-                AND.B data_X_to_Mask,X                         ;80F14D|80F3E7
+                LDA.W placementConsumedBits,Y                  ;80F14A|800360   ;load the byte
+                AND.W data_X_to_Mask_8,X                         ;80F14D|80F3E7 ;mask to just the correct bit
                 REP #$30                                       ;80F150|
-                BNE .exitNoSpawn                               ;80F152|80F156
+                BNE .exitNoSpawn                               ;80F152|80F156   ;if the bit is set, no spawn
 
          .exit: CLC                                            ;80F154|
                 RTS                                            ;80F155|
@@ -23017,7 +23018,7 @@ data_80F363:
                 dw $0300,$0320,$0340,$0360                     ;80F393|
                 dw $0380,$03A0,$03C0,$03E0                     ;80F39B|
 
-data_80F3A3:
+data_Xtimes28:
                 dw $0000,$0028,$0050,$0078                     ;80F3A3|
                 dw $00A0,$00C8,$00F0,$0118                     ;80F3AB|
                 dw $0140,$0168,$0190,$01B8                     ;80F3B3|
@@ -23028,13 +23029,13 @@ data_80F3A3:
                 dw $0460,$0488,$04B0,$04D8                     ;80F3DB|
                 dw $0500,$0528                                 ;80F3E3|
 
-data_X_to_Mask: ;
+data_X_to_Mask_8: 
                 db $01,$02,$04,$08,$10,$20,$40,$80             ;80F3E7|
 
 data_80F3EF:
-                dw $FDFE,$F7FB,$DFEF,$7FBF                     ;80F3EF|
+                db $FE,$FD,$FB,$F7,$EF,$DF,$BF,$7F             ;80F3EF|
 
-data_80F3F7:
+data_X_to_Mask_16:
                 dw $0001,$0002,$0004,$0008                     ;80F3F7|
                 dw $0010,$0020,$0040,$0080                     ;80F3FF|
                 dw $0100,$0200,$0400,$0800                     ;80F407|
@@ -23080,26 +23081,26 @@ data_80F437:
                 dw $8080,$8080,$8080,$8080                     ;80F527|
                 dw $8080,$8080,$8080,$8080                     ;80F52F|
 
-data_80F537:
-                dw $FF00,$FF01,$2002,$2221                     ;80F537|
-                dw $01FF,$2002,$01FF,$2002                     ;80F53F|
-                dw $3130,$3332,$3534,$01FF                     ;80F547|
-                dw $0402,$0605,$3020,$3231                     ;80F54F|
-                dw $3433,$FF35,$0201,$2004                     ;80F557|
-                dw $03FF,$0D04,$04FF,$01FF                     ;80F55F|
-                dw $0502,$FF20,$0100,$0A05                     ;80F567|
-                dw $FF0C,$0100,$3005,$3231                     ;80F56F|
-                dw $3433,$FF35,$0201,$0504                     ;80F577|
-                dw $3020,$3231,$3433,$FF35                     ;80F57F|
-                dw $0201,$2006,$01FF,$FF0A                     ;80F587|
-                dw $0A01,$FF14,$1110,$1312                     ;80F58F|
-                dw $1514,$1716,$10FF,$11FF                     ;80F597|
-                dw $12FF,$13FF,$14FF,$15FF                     ;80F59F|
-                dw $16FF,$17FF,$29FF,$2EFF                     ;80F5A7|
-                dw $2FFF,$06FF,$07FF,$01FF                     ;80F5AF|
-                dw $0C02,$200D,$2CFF,$2AFF                     ;80F5B7|
-                dw $01FF,$0605,$01FF,$0502                     ;80F5BF|
-                dw $0A06,$FF20                                 ;80F5C7|
+terrainCheckTable:
+                db $00,$FF,$01,$FF,$02,$20,$21,$22             ;80F537|
+                db $FF,$01,$02,$20,$FF,$01,$02,$20             ;80F53F|
+                db $30,$31,$32,$33,$34,$35,$FF,$01             ;80F547|
+                db $02,$04,$05,$06,$20,$30,$31,$32             ;80F54F|
+                db $33,$34,$35,$FF,$01,$02,$04,$20             ;80F557|
+                db $FF,$03,$04,$0D,$FF,$04,$FF,$01             ;80F55F|
+                db $02,$05,$20,$FF,$00,$01,$05,$0A             ;80F567|
+                db $0C,$FF,$00,$01,$05,$30,$31,$32             ;80F56F|
+                db $33,$34,$35,$FF,$01,$02,$04,$05             ;80F577|
+                db $20,$30,$31,$32,$33,$34,$35,$FF             ;80F57F|
+                db $01,$02,$06,$20,$FF,$01,$0A,$FF             ;80F587|
+                db $01,$0A,$14,$FF,$10,$11,$12,$13             ;80F58F|
+                db $14,$15,$16,$17,$FF,$10,$FF,$11             ;80F597|
+                db $FF,$12,$FF,$13,$FF,$14,$FF,$15             ;80F59F|
+                db $FF,$16,$FF,$17,$FF,$29,$FF,$2E             ;80F5A7|
+                db $FF,$2F,$FF,$06,$FF,$07,$FF,$01             ;80F5AF|
+                db $02,$0C,$0D,$20,$FF,$2C,$FF,$2A             ;80F5B7|
+                db $FF,$01,$05,$06,$FF,$01,$02,$05             ;80F5BF|
+                db $06,$0A,$20,$FF                             ;80F5C7|
 
 data_80F5CB:
                 dw $006F,$0071,$0073,$0075                     ;80F5CB|

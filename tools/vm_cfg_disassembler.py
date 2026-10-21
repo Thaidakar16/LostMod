@@ -119,17 +119,17 @@ OBJ_INC = [
     # $30-$3F
     0, 0, 2, 2, 0, 0, 0, 2, 2, 3, 0, 2, 2, 3, 0, 0,
     # $40-$4F
-    2, 0, 0, 0, 0, 0, 2, 1, 1, 0, 0, 0, 3, 0, 0, 0,
+    2, 0, 0, 0, 0, 0, 2, 1, 1, 4, 4, 0, 3, 0, 0, 0,
     # $50-$5F
     2, 2, 1, 2, 1, 0, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1,
     # $60-$6F
     2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2,
     # $70-$7F
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     # $80-$8F
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     # $90-$9F
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 2, 2,
+    0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 2, 3, 2, 2,
     # $A0-$AF
     3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     # $B0-$BF
@@ -174,7 +174,7 @@ ANIM_RETURN = {0x06}
 # Conditional jump/call families.  For these, OBJ_INC is the amount consumed
 # before the 16-bit target.  The target itself is always two bytes and is read
 # without advancing scriptPC/Y when the branch/call is taken.
-OBJ_COND_JUMPS = set(range(0x68, 0x86)) | set(range(0xA8, 0xB2))
+OBJ_COND_JUMPS = set(range(0x68, 0x86)) | set(range(0xA8, 0xB2)) | {0x49, 0x4A}
 OBJ_COND_CALLS = set(range(0x86, 0x90)) | set(range(0xB2, 0xBC))
 
 # Other conditional jumps/calls in the low/mid object opcode range.  The
@@ -183,11 +183,11 @@ OBJ_COND_ONEBYTE = {
     *range(0x1E, 0x26),
     0x30, 0x31,
     0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6,
-    0xCC, 0xCD, 0xCE, 0xCF,
+    0xCC, 0xCD, 0xCE, 0xCF, 0x82, 0x84, 0x73
 }
 
 OBJ_COND_ZERO_PREFIX = {0x1C, 0x32, 0x33, 0x37, 0x38, 0x3C, 0x4E, 0x4F}
-OBJ_COND_TYPED = {0x49, 0x4A}
+OBJ_COND_TYPED = set()
 OBJ_COND_CALL_ONEBYTE = {0x1A, 0x1D}
 
 # Animation instructions whose payload size is frame/OAM-count dependent.

@@ -662,7 +662,7 @@ dialogueBoxColorHi     = $19BC  ; colour for CGRAM index 3, high byte
 ram_19BD               = $19BD  ; refs=4 (r3/w1) [LDA:3,STA:1], 4 site(s)
 ram_19BE               = $19BE  ; refs=4 (r3/w1) [LDA:3,STA:1], 4 site(s)
 ram_19BF               = $19BF  ; refs=2 (r0/w2) [STA:2], 2 site(s)
-ram_19C1               = $19C1  ; refs=7 (r6/w1) [LDA:6,STA:1], 4 site(s)
+levelIndex             = $19C1  ; refs=7 (r6/w1) [LDA:6,STA:1], 4 site(s)
 ram_19C3               = $19C3  ; refs=3 (r1/w2) [STA:2,CMP:1], 2 site(s)
 ram_19C5               = $19C5  ; refs=4 (r2/w2) [STZ:1,ORA:1,STA:1,AND:1], 3 site(s)
 ram_19C7               = $19C7  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
@@ -676,7 +676,7 @@ ram_19D1               = $19D1  ; refs=4 (r4/w0) [LDA:2,ADC:2], 2 site(s)
 ram_19D3               = $19D3  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 ram_19D5               = $19D5  ; refs=9 (r9/w0) [LDX:4,ORA:3,LDA:2], 3 site(s)
 ram_19D7               = $19D7  ; refs=2 (r2/w0) [LDA:2], 2 site(s)
-ram_19DD               = $19DD  ; refs=10 (r3/w7) [STA:6,LDA:3,STX:1], 6 site(s)
+targetLevelIndex       = $19DD  ; refs=10 (r3/w7) [STA:6,LDA:3,STX:1], 6 site(s)
 ram_19DF               = $19DF  ; refs=2 (r2/w0) [LDA:1,LDY:1], 2 site(s)
 ram_19E2               = $19E2  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 gameModeFlags          = $19E3  ; global mode bitfield (bit0=alt video layout, bit3=in-game vs menu, ...)
@@ -894,13 +894,8 @@ Boot_ClearWram:
                 CPY.W #$0300                                    ;808041|
                 BCC .loop2                                      ;808044|80803C
 
-;       .myloop: LDY.W #modFlags                                 ;INSERT|         ;clear all wram vars that I have added
-;                STA.W zp_00,Y                                   ;INSERT|800000
-;                INY                                             ;INSERT|
-;                INY                                             ;INSERT|
-;                CPY.W #modFlags+2                               ;INSERT|         ;I only have one var rn...
-;                BCC .myloop                                     ;INSERT|INSERT
-                ;STZ.W modFlags                                  ;INSERT|
+                STZ.W modFlags                                  ;INSERT|
+
 
                 LDY.W #$032E                                    ;808046|
         .loop3: STA.W zp_00,Y                                   ;808049|800000
@@ -1100,7 +1095,7 @@ input_80814E:
 
 
              +: LDA.W #$0025                                   ;80816E|
-                STA.W ram_19DD                                 ;808171|8019DD
+                STA.W targetLevelIndex                         ;808171|8019DD
 
          .skip: STZ.W ppuUpdateFlags                           ;808174|800336
                 JSR.W sub_8087B7                               ;808177|8087B7
@@ -1379,17 +1374,17 @@ input_8082F6:
                 LDA.W #$8002                                   ;80831F|
                 STA.W ram_03EA                                 ;808322|8003EA
 
-        .skip2: LDA.W ram_19C1                                 ;808325|8019C1
-                STA.W ram_19DD                                 ;808328|8019DD
+        .skip2: LDA.W levelIndex                               ;808325|8019C1
+                STA.W targetLevelIndex                         ;808328|8019DD
                 BRA .cont3                                     ;80832B|808392
 
 
-        .skip3: LDA.W ram_19C1                                 ;80832D|8019C1
+        .skip3: LDA.W levelIndex                               ;80832D|8019C1
                 CMP.W #$0029                                   ;808330|
                 BEQ .exit                                      ;808333|8082FB
                 LDA.W ram_03E6                                 ;808335|8003E6
                 STA.W numPlayers                               ;808338|800308
-                LDA.W ram_19C1                                 ;80833B|8019C1
+                LDA.W levelIndex                               ;80833B|8019C1
                 CMP.W #$002B                                   ;80833E|
                 BEQ +                                          ;808341|80834A
                 CMP.W #$002C                                   ;808343|
@@ -1401,7 +1396,7 @@ input_8082F6:
                 CMP.W #$FFFF                                   ;80834D|
                 BNE .skip5                                     ;808350|80838C
                 LDA.W #$0000                                   ;808352|
-                STA.W ram_19DD                                 ;808355|8019DD
+                STA.W targetLevelIndex                         ;808355|8019DD
 
         .skip4: STZ.W p1vikingIdx                                ;808358|8003D8
                 LDA.W #$0002                                   ;80835B|
@@ -1423,7 +1418,7 @@ input_8082F6:
                 BNE +                                          ;80837C|808381
                 LDX.W #$0027                                   ;80837E|
 
-             +: STX.W ram_19DD                                 ;808381|8019DD
+             +: STX.W targetLevelIndex                         ;808381|8019DD
 
         .cont2: LDA.W #$0000                                   ;808384|
                 STA.W ram_03EA                                 ;808387|8003EA
@@ -2502,14 +2497,14 @@ data_80899E:
 ; --------------------------------------------------------
 ;  input_8089CF   [6 ins, returns RTS]
 ;    callers: Boot_ClearWram
-;    writes:    inputAuxSel, ram_19BF, ram_19DD
+;    writes:    inputAuxSel, ram_19BF, targetLevelIndex
 ;    calls:     farsub_81812B
 ; --------------------------------------------------------
 input_8089CF:
                 JSL.L farsub_81812B                            ;8089CF|81812B
                 LDA.W #$0027                                   ;8089D3|
                 STA.W ram_19BF                                 ;8089D6|8019BF
-                STA.W ram_19DD                                 ;8089D9|8019DD
+                STA.W targetLevelIndex                         ;8089D9|8019DD
                 STZ.W inputAuxSel                              ;8089DC|8003D6
                 RTS                                            ;8089DF|
 
@@ -5503,7 +5498,7 @@ Op_CheckPassword:
         .skip2: TXA                                            ;809A03|
                 LSR A                                          ;809A04|
                 LSR A                                          ;809A05|
-                STA.W ram_19DD                                 ;809A06|8019DD
+                STA.W targetLevelIndex                         ;809A06|8019DD
                 STZ.W ram_030A                                 ;809A09|80030A
                 RTS                                            ;809A0C|
 
@@ -5514,7 +5509,7 @@ Op_CheckPassword:
 ;    Copy the 4 password characters of the current scene (data_809A38 + scene*4) into $0312-$0318.
 ;--------------------------------------------------------------
 Op_LoadLevelPassword:
-                LDA.W ram_19C1                                 ;809A0D|8019C1
+                LDA.W levelIndex                               ;809A0D|8019C1
                 ASL A                                          ;809A10|
                 ASL A                                          ;809A11|
                 TAX                                            ;809A12|
@@ -5568,7 +5563,7 @@ data_809A3B:
 ;    callers: Boot_ClearWram, input_80814E
 ;    writes HW: HDMAEN, VTIMEL
 ;    writes:    spawnGateFrame, objTableEnd, ram_0396, ram_0398_clearedOnReinit, ram_039A, ram_039C ...
-;    reads:     ram_19C1, ram_19DD
+;    reads:     levelIndex, targetLevelIndex
 ;    calls:     sub_80A1D5, input_80A28E, InitOAM, sub_809B7B, sub_80DF6F, sub_809B89, +25 more
 ; --------------------------------------------------------
 
@@ -5610,10 +5605,11 @@ ScreenReinitHdmaOff:
                 JSR.W InitOAM                                  ;809B15|808E0C
                 JSR.W sub_809B7B                               ;809B18|809B7B
                 JSR.W sub_80DF6F                               ;809B1B|80DF6F
-                LDA.W ram_19C1                                 ;809B1E|8019C1
+                LDA.W levelIndex                               ;809B1E|8019C1
                 STA.W ram_19BF                                 ;809B21|8019BF
-                LDA.W ram_19DD                                 ;809B24|8019DD
-                STA.W ram_19C1                                 ;809B27|8019C1
+                LDA.W targetLevelIndex                         ;809B24|8019DD
+                STA.W levelIndex                               ;809B27|8019C1
+                JSR.W modFlagSet                               ;INSERT|
                 JSR.W sub_809B89                               ;809B2A|809B89
                 JSR.W oam_809BC3                               ;809B2D|809BC3
                 LDX.W #$0000                                   ;809B30|
@@ -5629,7 +5625,7 @@ ScreenReinitHdmaOff:
                 JSR.W ppucfg_809DDA                            ;809B4E|809DDA
                 JSR.W ClearObjectTable                         ;809B51|80EC42
                 JSR.W sub_80DFFC                               ;809B54|80DFFC
-             +: JSR.W SpawnPlayers                             ;809B57|809F07
+                JSR.W SpawnPlayers                             ;809B57|809F07
                 JSR.W sub_80B2C8                               ;809B5A|80B2C8
                 JSR.W ComputeCameraBounds                      ;809B5D|809E0D
                 JSR.W ComputeCameras                           ;809B60|809E60
@@ -5642,6 +5638,32 @@ ScreenReinitHdmaOff:
                 JSR.W RunGameplayFrame_NoBlank                               ;809B75|80A0A3
                 JMP.W ClearInputState                          ;809B78|809243
 
+
+;There is most definitely a better place to put this subroutine, referring both to the place in the file, and where it is executed in reint
+;But I can't be bothered.
+modFlagSet:
+                ;some of these pushes are probably not necessary, but again, I don't care.
+                PHA
+                PHX
+                PHY
+
+                STZ.W modFlags
+
+                LDA.W numPlayers  
+                CMP.W #$0001 
+                BEQ .exit       ;do not enable in single player mode
+
+                LDA.W levelIndex
+                CMP.W #$0025
+                BCS .exit       ;do not enable if in level index is 0x25 or higher
+
+                LDA.W #$0001
+                STA.W modFlags
+
+         .exit: PLY
+                PLX
+                PLA
+                RTS
 
 ; --------------------------------------------------------
 ;  sub_809B7B   [7 ins, returns RTS]
@@ -6855,7 +6877,7 @@ sub_80A160:
 ;  sub_80A1D5   [72 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
 ;    writes:    zp_8A, zp_8C, numPlayers, ram_035A, ram_039C, ram_03E6 ...
-;    reads:     numPlayers, frameCounter, ram_03EA, ram_03F2, ram_19DD
+;    reads:     numPlayers, frameCounter, ram_03EA, ram_03F2, targetLevelIndex
 ;    calls:     sub_80BCCD, farsub_81812B
 ; --------------------------------------------------------
 sub_80A1D5:
@@ -6875,7 +6897,7 @@ sub_80A1D5:
                 STZ.W ram_03EC                                 ;80A1F3|8003EC
                 STZ.W ram_03EE                                 ;80A1F6|8003EE
                 STZ.W ram_03F0                                 ;80A1F9|8003F0
-                LDA.W ram_19DD                                 ;80A1FC|8019DD
+                LDA.W targetLevelIndex                         ;80A1FC|8019DD
                 CMP.W #$002D                                   ;80A1FF|
                 BEQ .skip2                                     ;80A202|80A234
                 CMP.W #$002E                                   ;80A204|
@@ -6911,7 +6933,7 @@ sub_80A1D5:
                 STA.W ram_039C                                 ;80A240|80039C
                 LDA.W #$8000                                   ;80A243|
                 STA.W ram_03EA                                 ;80A246|8003EA
-                LDA.W ram_19DD                                 ;80A249|8019DD
+                LDA.W targetLevelIndex                         ;80A249|8019DD
                 CMP.W #$002B                                   ;80A24C|
                 BEQ .skip3                                     ;80A24F|80A278
                 CMP.W #$002C                                   ;80A251|
@@ -6926,7 +6948,7 @@ sub_80A1D5:
                 BEQ .skip4                                     ;80A268|80A27D
                 LDX.W ram_03F2                                 ;80A26A|8003F2
                 LDA.W data_80839C,X                            ;80A26D|80839C
-                STA.W ram_19DD                                 ;80A270|8019DD
+                STA.W targetLevelIndex                         ;80A270|8019DD
                 LDA.W data_8083AA,X                            ;80A273|8083AA
                 BRA .cont                                      ;80A276|80A280
 
@@ -6958,15 +6980,10 @@ input_80A28E:
                 STZ.W p1vikingIdx                                ;80A296|8003D8
                 LDA.W #$FFFF                                   ;80A299|
                 STA.W p2vikingIdx                                ;80A29C|8003DA
-
-                STZ.W modFlags                                 ;INSERT|
-
                 RTS                                            ;80A29F|
 
 
      .2players: LDA.W #$0001                                   ;INSERT|
-                STA.W modFlags                                 ;INSERT|800500
-
                 LDA.W p1vikingIdx                                ;80A2A0|8003D8
                 BPL .skip2                                     ;80A2A3|80A2B3
                 LDX.W #$0000                                   ;80A2A5|

@@ -341,7 +341,7 @@ ppuUpdateFlags         = $0336  ; bitfield of pending PPU updates requested by t
 frameCounter           = $0338  ; incremented once per NMI (free-running frame timer)
 ram_033C               = $033C  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s)
 objScanStartSlot       = $033E  ; refs=6 (r3/w3) [LDX:3,STA:2,STZ:1], 5 site(s)  First object-table slot that spawn/respawn dedup scans are allowed to match against (lets reserved low slots -- the vikings -- be skipped in some contexts). Set to $0002 or $0006 depending on game mode by the scene-setup code.
-splitYOffset           = $0340  ; refs=15 (r13/w2) [SBC:8,ADC:5,STZ:1,STA:1], 11 site(s)
+hudYOffset             = $0340  ; refs=15 (r13/w2) [SBC:8,ADC:5,STZ:1,STA:1], 11 site(s)
 ram_0342               = $0342  ; refs=4 (r2/w2) [STA:2,CMP:1,LDA:1], 2 site(s)
 backdropColorR         = $0344  ; red plane of fixed/backdrop colour -> COLDATA |$20
 backdropColorG         = $0346  ; green plane of fixed/backdrop colour -> COLDATA |$40
@@ -802,7 +802,11 @@ wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 		modFlags = $0310                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
 ;RefillFlags = $0560                ; bit 0 = left half of metatile, bit 1 = right half of metatile, bit 2 = top half of metatile, bit 3 = bottom half of metatile
 refillStageStart = $0560
-P1rowDmaDest = $0562 ; hopefully this is free....         
+tempVertHigh = $0562
+tempVertLo = $0564
+P1rowDmaDest = $0566 ; hopefully this is free....         
+
+
 ; jsl label defines (far calls into other banks):
 
 InitPpuRegisters       = $818000
@@ -1668,7 +1672,7 @@ GiveUpDialog_NavConfirm:
 ;  input_808515   [74 ins, returns RTS]
 ;    callers: vbwait_808081, RunGameplayFrame_NoBlank
 ;    writes:    ram_0356, ram_0358, ram_03F6, ram_03F8, ram_03FA, ram_03FC
-;    reads:     playerCamX, playerCamY, splitYOffset, p1vikingIdx, ram_03E4, objX ...
+;    reads:     playerCamX, playerCamY, hudYOffset  , p1vikingIdx, ram_03E4, objX ...
 ;    calls:     sub_808636, sub_80C0FC, sub_80C0D2, sub_80C124, sub_80C14E
 ; --------------------------------------------------------
 input_808515:
@@ -1679,7 +1683,25 @@ input_808515:
                 STZ.W ram_03FC                                 ;808521|8003FC
                 STZ.W ram_03FA                                 ;808524|8003FA
                 JSR.W sub_808636                               ;808527|808636
-                LDX.W ram_03E4                                 ;80852A|8003E4
+                
+                LDA.W modFlags
+                BIT.W #$0001
+                BNE .mod_thresholds
+
+                ;default thresholds
+                LDA.W #$0080
+                STA.W tempVertHigh
+                LDA.W #$0090
+                STA.W tempVertLo
+                BRA .proceed
+
+        .mod_thresholds:
+                LDA.W #$0040
+                STA.W tempVertHigh
+                LDA.W #$0050
+                STA.W tempVertLo
+
+      .proceed: LDX.W ram_03E4                                 ;80852A|8003E4
                 LDY.W p1vikingIdx,X                              ;80852D|8003D8
                 LDA.B playerCamX                               ;808530|000044
                 CLC                                            ;808532|
@@ -1703,7 +1725,7 @@ input_808515:
          .skip: LDA.W objX,Y                          ;808553|801179
                 SEC                                            ;808556|
                 SBC.B playerCamX                               ;808557|000044
-                SBC.W #$0090                                   ;808559|
+                SBC.W #$0080                                     ;808559|
                 BMI .skip2                                     ;80855C|808573
                 BEQ .skip2                                     ;80855E|808573
                 CMP.W #$0010                                   ;808560|
@@ -1720,9 +1742,9 @@ input_808515:
                 LDY.W p1vikingIdx,X                              ;808576|8003D8
                 LDA.B playerCamY                               ;808579|000046
                 CLC                                            ;80857B|
-                ADC.W #$0080                                   ;80857C|
+                ADC.W tempVertHigh                                   ;80857C|
                 SEC                                            ;80857F|
-                SBC.W splitYOffset                             ;808580|800340
+                SBC.W hudYOffset                               ;808580|800340
                 SBC.W objY,Y                          ;808583|8011A1
                 BMI .skip3                                     ;808586|80859D
                 BEQ .skip3                                     ;808588|80859D
@@ -1739,10 +1761,10 @@ input_808515:
 
         .skip3: LDA.W objY,Y                          ;80859D|8011A1
                 CLC                                            ;8085A0|
-                ADC.W splitYOffset                             ;8085A1|800340
+                ADC.W hudYOffset                               ;8085A1|800340
                 SEC                                            ;8085A4|
                 SBC.B playerCamY                               ;8085A5|000046
-                SBC.W #$0090                                   ;8085A7|
+                SBC.W tempVertLo                                     ;8085A7|
                 BMI .exit                                      ;8085AA|8085C1
                 BEQ .exit                                      ;8085AC|8085C1
                 CMP.W #$0010                                   ;8085AE|
@@ -4758,7 +4780,7 @@ sub_809577:
                 LDX.B curObjIdx                                ;8095A2|000042
                 CLC                                            ;8095A4|
                 ADC.W objY,X                          ;8095A5|8011A1
-                ADC.W splitYOffset                             ;8095A8|800340
+                ADC.W hudYOffset                               ;8095A8|800340
                 SEC                                            ;8095AB|
                 SBC.B playerCamY                               ;8095AC|000046
                 BMI .skip3                                     ;8095AE|8095BD
@@ -6254,7 +6276,7 @@ ppucfg_809DDA:
 ;  ComputeCameraBounds   [43 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
 ;    writes:    camMaxX, camMaxY, ram_19A7, ram_19A9, levelRowStride, ram_19AD ...
-;    reads:     splitYOffset, levelWidthMetaTiles, levelHeightMetaTiles, ram_19FB, ram_19FD
+;    reads:     hudYOffset  , levelWidthMetaTiles, levelHeightMetaTiles, ram_19FB, ram_19FD
 ; --------------------------------------------------------
 ComputeCameraBounds:
                 LDA.W levelWidthMetaTiles             ;809E0D|8019F0
@@ -6276,7 +6298,7 @@ ComputeCameraBounds:
                 SEC                                            ;809E2B|
                 SBC.W #$00E0                                   ;809E2C|
                 CLC                                            ;809E2F|
-                ADC.W splitYOffset                             ;809E30|800340
+                ADC.W hudYOffset                               ;809E30|800340
                 STA.W camMaxY                                  ;809E33|8019A5
                 LDA.W ram_19FB                                 ;809E36|8019FB
                 ASL A                                          ;809E39|
@@ -6297,7 +6319,7 @@ ComputeCameraBounds:
                 SEC                                            ;809E54|
                 SBC.W #$00E0                                   ;809E55|
                 CLC                                            ;809E58|
-                ADC.W splitYOffset                             ;809E59|800340
+                ADC.W hudYOffset                               ;809E59|800340
                 STA.W ram_19AF                                 ;809E5C|8019AF
                 RTS                                            ;809E5F|
 
@@ -6306,7 +6328,7 @@ ComputeCameraBounds:
 ;  ComputeCameras   [54 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
 ;    writes:    tmp32, playerCamX, playerCamY, mulMultiplicand, mulMultiplierLo, bg2CamXSrc ...
-;    reads:     tmp32, playerCamX, playerCamY, mulResult, zp_B3, splitYOffset ...
+;    reads:     tmp32, playerCamX, playerCamY, mulResult, zp_B3, hudYOffset   ...
 ;    calls:     Mul16x16
 ; --------------------------------------------------------
 
@@ -6316,7 +6338,7 @@ ComputeCameraBounds:
 ;   THE camera-compute routine.  Picks the followed object
 ;   (active viking: X=0, or $03D8/$03DA selected by $19CE/$03E4),
 ;   reads its world pos $1179,X / $11A1,X, subtracts a half-
-;   screen ($80 for X; (224-splitYOffset)/2 for Y) so the
+;   screen ($80 for X; (224-hudYOffset  )/2 for Y) so the
 ;   object is centred, clamps to [0, camMaxX/Y] ($19A3/$19A5),
 ;   and stores the player camera in playerCamX/playerCamY.
 ;   It then derives the BG2 (parallax) camera by hardware-
@@ -6338,26 +6360,38 @@ ComputeCameras:
                 AND.W #$00FF                                   ;809E66|
                 BEQ .skip                                      ;809E69|809E76
                 LDX.W p1vikingIdx                                ;809E6B|8003D8
-                LDA.W ram_03E4                                 ;809E6E|8003E4
+                LDA.W ram_03E4                                 ;809E6E|8003E4 ;if the "active player" is p1, then keep current idx
                 BEQ .skip                                      ;809E71|809E76
-                LDX.W p2vikingIdx                                ;809E73|8003DA
+                LDX.W p2vikingIdx                                ;809E73|8003DA ;else, load p2 viking idx
 
-         .skip: LDA.W objX,X                          ;809E76|801179
+         .skip: LDA.W objX,X                          ;809E76|801179    ;load X pos
                 SEC                                            ;809E79|
-                SBC.W #$0080                                   ;809E7A|
-                BMI +                                          ;809E7D|809E81
+                SBC.W #$0080                                   ;809E7A|        ;subtract 0x80 to center the viking
+                BMI +                                          ;809E7D|809E81   ;and if negative, set to zero.
                 BCS .skip2                                     ;809E7F|809E84
 
              +: LDA.W #$0000                                   ;809E81|
 
-        .skip2: CMP.W camMaxX                                  ;809E84|8019A3
+        .skip2: CMP.W camMaxX                                  ;809E84|8019A3   ;if too far, set to max.
                 BCC +                                          ;809E87|809E8C
                 LDA.W camMaxX                                  ;809E89|8019A3
 
              +: STA.B playerCamX                               ;809E8C|000044   ; playerCamX = clamp(followObjX-128, 0, camMaxX)
-                LDA.W #$00E0                                   ;809E8E|
+                
+                LDA.W modFlags
+                BIT.W #$0001
+                BEQ .original
+
+                LDA.W objY,X                                    ;INSERT|
+                SEC
+                SBC.W #$0070
+                BMI +
+                BCS .skip3
+                BRA +
+
+     .original: LDA.W #$00E0                                   ;809E8E|         ;vertical screen len
                 SEC                                            ;809E91|
-                SBC.W splitYOffset                             ;809E92|800340
+                SBC.W hudYOffset                               ;809E92|800340
                 LSR A                                          ;809E95|
                 STA.B tmp32                              ;809E96|000032
                 LDA.W objY,X                          ;809E98|8011A1
@@ -6372,7 +6406,7 @@ ComputeCameras:
                 BCC +                                          ;809EA8|809EAD
                 LDA.W camMaxY                                  ;809EAA|8019A5
 
-             +: STA.B playerCamY                               ;809EAD|000046   ; playerCamY = clamp(followObjY-(224-splitYOffset)/2, 0, camMaxY)
+             +: STA.B playerCamY                               ;809EAD|000046   ; playerCamY = clamp(followObjY-(224-hudYOffset)/2, 0, camMaxY)
                 LDA.W parallaxScaleX                           ;809EAF|801A06
                 STA.B mulMultiplicand                          ;809EB2|0000AC
                 LDA.B playerCamX                               ;809EB4|000044
@@ -10061,12 +10095,12 @@ SetupVramGpDmaCh6:
 ; --------------------------------------------------------
 ;  sub_80B2C8   [29 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    splitYOffset, ram_0342, vramDmaPendC, ram_0455
+;    writes:    hudYOffset  , ram_0342, vramDmaPendC, ram_0455
 ;    reads:     gameModeFlags, vramDmaVmaddC, tilemapVramAddr
 ;    calls:     DecompressGfxEntry, sub_80BCCD, input_80B8DC, sub_80B91D, sub_80B931, sub_80BA1B, +2 more
 ; --------------------------------------------------------
 sub_80B2C8:
-                STZ.W splitYOffset                             ;80B2C8|800340
+                STZ.W hudYOffset                               ;80B2C8|800340
                 STZ.W ram_0455                                 ;80B2CB|800455
                 STZ.W vramDmaPendC                             ;80B2CE|800453
                 LDA.W #$0002                                   ;80B2D1|
@@ -10075,7 +10109,7 @@ sub_80B2C8:
                 BIT.W #$0001                                   ;80B2DA|
                 BEQ .exit                                      ;80B2DD|80B31B
                 LDA.W #$0030                                   ;80B2DF|
-                STA.W splitYOffset                             ;80B2E2|800340   ; splitYOffset=$30 (48px) because split layout (gameModeFlags bit0) active
+                STA.W hudYOffset                               ;80B2E2|800340   ; hudYOffset  =$30 (48px) because hud layout (gameModeFlags bit0) active
                 LDA.W #$0007                                   ;80B2E5|
                 STA.W ram_0342                                 ;80B2E8|800342
                 LDX.W vramDmaVmaddC                            ;80B2EB|8019E6
@@ -12119,7 +12153,7 @@ loc_80BF38:
 ;  SnapshotCameras   [15 ins, returns RTS]
 ;    callers: vbwait_808081, RunGameplayFrame_NoBlank
 ;    writes:    scrollDirty, bg1CamX, bg1CamY, bg2CamX, bg2CamY
-;    reads:     playerCamX, playerCamY, splitYOffset, bg2CamXSrc, bg2CamYSrc
+;    reads:     playerCamX, playerCamY, hudYOffset  , bg2CamXSrc, bg2CamYSrc
 ; --------------------------------------------------------
 
 ;== hdr 80BFBB ==
@@ -12130,12 +12164,12 @@ loc_80BF38:
 ;   scrollDirty so the latch recomputes the scroll shadows.
 ;
 ;     bg1CamX ($16B5) <- playerCamX (playerCamX)
-;     bg1CamY ($16B7) <- playerCamY (playerCamY) - splitYOffset ($0340)
+;     bg1CamY ($16B7) <- playerCamY (playerCamY) - hudYOffset   ($0340)
 ;     bg2CamX ($16B9) <- bg2CamXSrc ($16A5)   [parallax-scaled]
-;     bg2CamY ($16BB) <- bg2CamYSrc ($16A7) - splitYOffset
+;     bg2CamY ($16BB) <- bg2CamYSrc ($16A7) - hudYOffset  
 ;     scrollDirty ($16A3) <- 1
 ;
-;   splitYOffset is $30 (48px) in split layout, else 0 -- so in
+;   hudYOffset   is $30 (48px) in split layout, else 0 -- so in
 ;   the split mode both BGs are pushed down by 48 px here.
 ;   NOTE: this routine is NOT exercised in slice_scroll.txt;
 ;   its stores are confirmed only in the full trace.
@@ -12147,13 +12181,13 @@ SnapshotCameras:
                 STA.W bg1CamX                                  ;80BFBD|8016B5
                 LDA.B playerCamY                               ;80BFC0|000046
                 SEC                                            ;80BFC2|
-                SBC.W splitYOffset                             ;80BFC3|800340   ; - splitYOffset $0340 ($30 in split layout, else 0): shift bg1CamY down
+                SBC.W hudYOffset                               ;80BFC3|800340   ; - hudYOffset   $0340 ($30 in split layout, else 0): shift bg1CamY down
                 STA.W bg1CamY                                  ;80BFC6|8016B7
                 LDA.W bg2CamXSrc                               ;80BFC9|8016A5
                 STA.W bg2CamX                                  ;80BFCC|8016B9
                 LDA.W bg2CamYSrc                               ;80BFCF|8016A7
                 SEC                                            ;80BFD2|
-                SBC.W splitYOffset                             ;80BFD3|800340   ; - splitYOffset: shift bg2CamY down by same amount
+                SBC.W hudYOffset                               ;80BFD3|800340   ; - hudYOffset  : shift bg2CamY down by same amount
                 STA.W bg2CamY                                  ;80BFD6|8016BB
                 LDA.W #$0001                                   ;80BFD9|
                 STA.W scrollDirty                              ;80BFDC|8016A3   ; scrollDirty=1 -> LatchBgScroll will recompute scroll shadows
@@ -12189,13 +12223,13 @@ SnapshotCameras:
 ; --------------------------------------------------------
 LatchBgScroll:
                 LDA.W scrollDirty                              ;80BFE0|8016A3   ; scrollDirty: did the camera move?   ; latch BG1 scroll shadow $16BD -> BG1HOFS $210D
-                BEQ loc_80C008                                 ;80BFE3|80C008   ; no -> skip recompute, just re-push shadows
+                BEQ .skip                                      ;80BFE3|80C008   ; no -> skip recompute, just re-push shadows
                 STZ.W scrollDirty                              ;80BFE5|8016A3   ; consume the dirty flag
                 LDA.W bg1CamX                                  ;80BFE8|8016B5   ; bg1CamX (world camera X for BG1)
                 CLC                                            ;80BFEB|
                 ADC.W scrollAdjustX                            ;80BFEC|8003A2   ; + scrollAdjustX (per-frame nudge)   ; bg1ScrollX = bg1CamX + scrollAdjustX (BG1 only; BG2 gets no adjust)
 
-loc_80BFEF:
+    .unusedJmpLoc:
                 STA.W bg1ScrollXLo                             ;80BFEF|8016BD   ; -> BG1 scroll X shadow
                 LDA.W bg1CamY                                  ;80BFF2|8016B7   ; bg1CamY
                 CLC                                            ;80BFF5|
@@ -12206,8 +12240,7 @@ loc_80BFEF:
                 LDA.W bg2CamY                                  ;80C002|8016BB   ; bg2CamY
                 STA.W bg2ScrollYLo                             ;80C005|8016C3   ; -> BG2 scroll Y shadow
 
-loc_80C008:
-                SEP #$30                                       ;80C008|
+         .skip: SEP #$30                                       ;80C008|
                 LDA.W gameModeFlags                            ;80C00A|8019E3
                 BIT.B #$01                                     ;80C00D|         ; split-layout bit set?   ; split-layout bit: if set, skip BG1 scroll latch (raster/HDMA owns BG1)
 
@@ -19815,7 +19848,7 @@ BuildSpriteOam:
 ;    callers: BuildSpriteOam_Loop
 ;    writes HW: A1B1, A1B4, A1TL1, A1TL4, BBAD1, BBAD4, DASL1, DASL4, DMAP1, DMAP4
 ;    writes:    tmp32, oamBuildLo, ram_0573, oamBuildHi
-;    reads:     tmp32, playerCamX, playerCamY, splitYOffset, oamBuildHi, oamSrcPriority ...
+;    reads:     tmp32, playerCamX, playerCamY, hudYOffset  , oamBuildHi, oamSrcPriority ...
 ;    calls:     BuildSpriteOam_Loop
 ; --------------------------------------------------------
 BuildSpriteOam_Loop:
@@ -19827,7 +19860,7 @@ BuildSpriteOam_Loop:
                 ASL A                                          ;80E0C6|
                 TAX                                            ;80E0C7|
                 LDA.W oamSrcY,X                                ;80E0C8|800B49   ; screenY = oamSrcY + $0340 - camScrollY; cull if outside window
-                ADC.W splitYOffset                             ;80E0CB|800340
+                ADC.W hudYOffset                               ;80E0CB|800340
                 CLC                                            ;80E0CE|
                 SBC.B playerCamY                               ;80E0CF|000046
                 CMP.W #$00E0                                   ;80E0D1|
@@ -21333,7 +21366,7 @@ AnimVM_OpTable:
                 dw AnimOp_ShowSprites                               ;80E9A0|80E4B4   ; anim op $19
                 dw AnimOp_End                                       ;80E9A2|80E570   ; anim op $1A
                 dw EMPTY_80FFBE                                     ;80E9A4|80FFBE   ; anim op $1B  UNUSED: points at $80FFBE (two $00 bytes = BRK)
-                dw loc_80BFEF                                       ;80E9A6|80BFEF   ; anim op $1C  UNUSED/suspect: lands in the middle of LatchBgScroll ($80BFEF)
+                dw LatchBgScroll_unusedJmpLoc                       ;80E9A6|80BFEF   ; anim op $1C  UNUSED/suspect: lands in the middle of LatchBgScroll ($80BFEF)
 
 data_80E9A8:
                        db $FD,$F7,$DF,$7F                             ;80E9A8|
@@ -22125,9 +22158,9 @@ SpawnPlacementsInInitialView:
 ;  ComputeInitialViewBox   [17 ins, returns RTS]
 ;    callers: SpawnPlacementsInInitialView, DestroyObject
 ;    writes:    tmp34, tmp36, tmp38, tmp3A
-;    reads:     playerCamX, playerCamY, splitYOffset
+;    reads:     playerCamX, playerCamY, hudYOffset  
 ;    Builds the on-screen test box used at scene load: X = camX-16..camX-16+$120, Y =
-;    camY-16..camY-16+$100-splitYOffset (roughly one screen plus a small margin on every side). Falls
+;    camY-16..camY-16+$100-hudYOffset   (roughly one screen plus a small margin on every side). Falls
 ;    into ScanAllPlacementsInBox.
 ; --------------------------------------------------------
 ComputeInitialViewBox:
@@ -22145,7 +22178,7 @@ ComputeInitialViewBox:
                 CLC                                            ;80EE96|
                 ADC.W #$0100                                   ;80EE97|
                 SEC                                            ;80EE9A|
-                SBC.W splitYOffset                             ;80EE9B|800340
+                SBC.W hudYOffset                               ;80EE9B|800340
                 STA.B tmp3A                                    ;80EE9E|00003A
                 RTS                                            ;80EEA0|
 
@@ -22173,7 +22206,7 @@ scanBoxPrepHorizontal:
 ;  scanBoxPrepHorizontal_right   [17 ins, returns ?]
 ;    callers: RefillColumnRight
 ;    writes:    tmp34, tmp36, tmp38, tmp3A
-;    reads:     playerCamX, playerCamY, splitYOffset
+;    reads:     playerCamX, playerCamY, hudYOffset  
 ; --------------------------------------------------------
     .right:
                 LDA.B playerCamX                               ;80EEB1|000044 ;load camX
@@ -22192,7 +22225,7 @@ scanBoxPrepHorizontal:
                 CLC                                            ;80EEC7|
                 ADC.W #$0100                                   ;80EEC8|
                 SEC                                            ;80EECB|
-                SBC.W splitYOffset                             ;80EECC|800340
+                SBC.W hudYOffset                               ;80EECC|800340
                 STA.B tmp3A                                    ;80EECF|00003A
                 BRA ScanAllPlacementsInBox                                 ;80EED1|80EF03
 
@@ -22201,14 +22234,14 @@ scanBoxPrepVertical:
 ;  scanBoxPrepVertical_down   [10 ins, returns ?]
 ;    callers: RefillRowDown
 ;    writes:    tmp38, tmp3A
-;    reads:     playerCamY, splitYOffset
+;    reads:     playerCamY, hudYOffset  
 ; --------------------------------------------------------
     .down:
                 LDA.B playerCamY                               ;80EED3|000046
                 CLC                                            ;80EED5|
                 ADC.W #$00F0                                   ;80EED6|
                 SEC                                            ;80EED9|
-                SBC.W splitYOffset                             ;80EEDA|800340
+                SBC.W hudYOffset                               ;80EEDA|800340
                 STA.B tmp3A                                    ;80EEDD|00003A
                 SEC                                            ;80EEDF|
                 SBC.W #$0020                                   ;80EEE0|
@@ -22475,7 +22508,7 @@ FlagOffscreenObjects:
                 CLC                                            ;80F03A|
                 ADC.W #$0100                                   ;80F03B|
                 SEC                                            ;80F03E|
-                SBC.W splitYOffset                             ;80F03F|800340
+                SBC.W hudYOffset                               ;80F03F|800340
                 STA.B tmp3A                                    ;80F042|00003A
                 LDX.W objScanStartSlot                                 ;80F044|80033E
 

@@ -13059,7 +13059,7 @@ RefillRowDownMod:
                 CLC                                             ;INSERT|
                 ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
-                LDA.W #$001E                                    ;INSERT|
+                LDA.W #$000E                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBits                          ;INSERT|
@@ -13078,7 +13078,7 @@ RefillRowDownMod:
                 CLC                                             ;INSERT|
                 ADC.W #$000C                                    ;INSERT|
                 TAY                                             ;INSERT|
-                LDA.W #$001C                                    ;INSERT|
+                LDA.W #$000C                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBits                          ;INSERT|

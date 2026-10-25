@@ -6011,6 +6011,7 @@ ExpandLevelTilemap:
 
                 LDX.B expandNewEnd                             ;INSERT|
 
+                
                 PLD                                            ;INSERT|
                 RTS                                            ;INSERT|
 
@@ -6301,7 +6302,18 @@ ppucfg_809DDA:
 ;    reads:     hudYOffset  , levelWidthMetaTiles, levelHeightMetaTiles, ram_19FB, ram_19FD
 ; --------------------------------------------------------
 ComputeCameraBounds:
-                LDA.W levelWidthMetaTiles             ;809E0D|8019F0
+                LDA.W modFlags                                  ;INSERT|
+                BIT.W #$0001                                    ;INSERT|
+                BEQ .original                                   ;INSERT|
+                
+                LDA.W #$0070
+                STA.W tmp32
+                BRA +
+     
+     .original: LDA.W #$0000
+                STA.W tmp32
+
+             +: LDA.W levelWidthMetaTiles                      ;809E0D|8019F0
                 ASL A                                          ;809E10|
                 STA.W levelRowStride                           ;809E11|8019AB
                 STA.W ram_19A7                                 ;809E14|8019A7
@@ -6321,6 +6333,7 @@ ComputeCameraBounds:
                 SBC.W #$00E0                                   ;809E2C|
                 CLC                                            ;809E2F|
                 ADC.W hudYOffset                               ;809E30|800340
+                ADC.W tmp32                                    ;INSERT|
                 STA.W camMaxY                                  ;809E33|8019A5
                 LDA.W ram_19FB                                 ;809E36|8019FB
                 ASL A                                          ;809E39|

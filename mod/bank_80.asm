@@ -802,8 +802,8 @@ wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 		modFlags = $0310                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
 ;RefillFlags = $0560                ; bit 0 = left half of metatile, bit 1 = right half of metatile, bit 2 = top half of metatile, bit 3 = bottom half of metatile
 refillStageStart = $0560
-; tempVertHigh = $0562
-; tempVertLo = $0564
+tempVertHigh = $0562
+tempVertLo = $0564
 P1rowDmaDest = $0566 ; hopefully this is free....         
 
 
@@ -1685,9 +1685,9 @@ input_808515:
 
                 ;default thresholds
                 LDA.W #$0080
-                STA.W tmp32
+                STA.W tempVertHigh
                 LDA.W #$0090
-                STA.W tmp34
+                STA.W tempVertLo
                 BRA .proceed
 
         .mod_thresholds: 
@@ -1695,9 +1695,9 @@ input_808515:
         ;However, this leaves cases where the bottom of the level is not visible. I think ill leave it for now, but might adjust later.
         ;(also can be fixed with look up/down feature later)
                 LDA.W #$0040
-                STA.W tmp32
+                STA.W tempVertHigh
                 LDA.W #$0050
-                STA.W tmp34
+                STA.W tempVertLo
 
       .proceed: LDX.W ram_03E4                                 ;80852A|8003E4
                 LDY.W p1vikingIdx,X                              ;80852D|8003D8
@@ -1715,35 +1715,35 @@ input_808515:
              +: STA.W ram_03F6                                 ;808546|8003F6
                 ASL A                                          ;808549|
                 TAY                                            ;80854A|
-                LDX.W data_808775,Y                            ;80854B|808775
+                LDX.W data_camSpeed2,Y                            ;80854B|808775
                 JSR.W sub_80C0FC                               ;80854E|80C0FC
                 BRA .skip2                                     ;808551|808573
 
 
-         .skip: LDA.W objX,Y                          ;808553|801179
-                SEC                                            ;808556|
-                SBC.B playerCamX                               ;808557|000044
-                SBC.W #$0080                                     ;808559|
-                BMI .skip2                                     ;80855C|808573
-                BEQ .skip2                                     ;80855E|808573
-                CMP.W #$0010                                   ;808560|
-                BCC +                                          ;808563|808568
-                LDA.W #$0010                                   ;808565|
+         .skip: LDA.W objX,Y                                   ;808553|801179   ;load active viking x pos
+                SEC                                            ;808556|         ;subtract 0080 to get to where the camera should be for viking
+                SBC.B playerCamX                               ;808557|000044   ;subtract current cam
+                SBC.W #$0080                                   ;808559|         ;result = target cam - current cam = difference
+                BMI .skip2                                     ;80855C|808573   ;if the result is negative, current cam is greater than target
+                BEQ .skip2                                     ;80855E|808573   
+                CMP.W #$0010                                   ;808560|         ;if pos, then cam is less than difference. 
+                BCC +                                          ;808563|808568   
+                LDA.W #$0010                                   ;808565|         ;if the distance is greater than 0x10, cap for cam speed
 
              +: STA.W ram_03F8                                 ;808568|8003F8
                 ASL A                                          ;80856B|
                 TAY                                            ;80856C|
-                LDX.W data_808775,Y                            ;80856D|808775
+                LDX.W data_camSpeed2,Y                            ;80856D|808775
                 JSR.W sub_80C0D2                               ;808570|80C0D2
 
         .skip2: LDX.W ram_03E4                                 ;808573|8003E4
                 LDY.W p1vikingIdx,X                              ;808576|8003D8
                 LDA.B playerCamY                               ;808579|000046
                 CLC                                            ;80857B|
-                ADC.W tmp32                                    ;80857C|
+                ADC.W tempVertHigh                                    ;80857C|
                 SEC                                            ;80857F|
                 SBC.W hudYOffset                               ;808580|800340
-                SBC.W objY,Y                          ;808583|8011A1
+                SBC.W objY,Y                                   ;808583|8011A1
                 BMI .skip3                                     ;808586|80859D
                 BEQ .skip3                                     ;808588|80859D
                 CMP.W #$0010                                   ;80858A|
@@ -1753,7 +1753,7 @@ input_808515:
              +: STA.W ram_03FC                                 ;808592|8003FC
                 ASL A                                          ;808595|
                 TAY                                            ;808596|
-                LDX.W data_808775,Y                            ;808597|808775
+                LDX.W data_camSpeed2,Y                            ;808597|808775
                 JMP.W sub_80C14E                               ;80859A|80C14E
 
 
@@ -1762,7 +1762,7 @@ input_808515:
                 ADC.W hudYOffset                               ;8085A1|800340
                 SEC                                            ;8085A4|
                 SBC.B playerCamY                               ;8085A5|000046
-                SBC.W tmp34                                     ;8085A7|
+                SBC.W tempVertLo                                     ;8085A7|
                 BMI .exit                                      ;8085AA|8085C1
                 BEQ .exit                                      ;8085AC|8085C1
                 CMP.W #$0010                                   ;8085AE|
@@ -1772,7 +1772,7 @@ input_808515:
              +: STA.W ram_03FA                                 ;8085B6|8003FA
                 ASL A                                          ;8085B9|
                 TAY                                            ;8085BA|
-                LDX.W data_808775,Y                            ;8085BB|808775
+                LDX.W data_camSpeed2,Y                            ;8085BB|808775
                 JSR.W sub_80C124                               ;8085BE|80C124
 
          .exit: RTS                                            ;8085C1|
@@ -1790,7 +1790,7 @@ sub_8085C2:
                 BEQ .skip                                      ;8085C8|8085D4
                 ASL A                                          ;8085CA|
                 TAY                                            ;8085CB|
-                LDX.W data_808773,Y                            ;8085CC|808773
+                LDX.W data_camSpeed1,Y                            ;8085CC|808773
                 JSR.W sub_80C0FC                               ;8085CF|80C0FC
                 BRA .skip2                                     ;8085D2|8085E1
 
@@ -1799,14 +1799,14 @@ sub_8085C2:
                 BEQ .skip2                                     ;8085D7|8085E1
                 ASL A                                          ;8085D9|
                 TAY                                            ;8085DA|
-                LDX.W data_808773,Y                            ;8085DB|808773
+                LDX.W data_camSpeed1,Y                            ;8085DB|808773
                 JSR.W sub_80C0D2                               ;8085DE|80C0D2
 
         .skip2: LDA.W ram_03FC                                 ;8085E1|8003FC
                 BEQ .skip3                                     ;8085E4|8085EE
                 ASL A                                          ;8085E6|
                 TAY                                            ;8085E7|
-                LDX.W data_808773,Y                            ;8085E8|808773
+                LDX.W data_camSpeed1,Y                            ;8085E8|808773
                 JMP.W sub_80C14E                               ;8085EB|80C14E
 
 
@@ -1814,7 +1814,7 @@ sub_8085C2:
                 BEQ .exit                                      ;8085F1|8085FB
                 ASL A                                          ;8085F3|
                 TAY                                            ;8085F4|
-                LDX.W data_808773,Y                            ;8085F5|808773
+                LDX.W data_camSpeed1,Y                            ;8085F5|808773
                 JMP.W sub_80C124                               ;8085F8|80C124
 
 
@@ -1833,7 +1833,7 @@ sub_8085FC:
                 BEQ .skip                                      ;808602|80860E
                 ASL A                                          ;808604|
                 TAY                                            ;808605|
-                LDX.W data_808771,Y                            ;808606|808771
+                LDX.W data_camSpeed,Y                            ;808606|808771
                 JSR.W sub_80C0FC                               ;808609|80C0FC
                 BRA .skip2                                     ;80860C|80861B
 
@@ -1842,14 +1842,14 @@ sub_8085FC:
                 BEQ .skip2                                     ;808611|80861B
                 ASL A                                          ;808613|
                 TAY                                            ;808614|
-                LDX.W data_808771,Y                            ;808615|808771
+                LDX.W data_camSpeed,Y                            ;808615|808771
                 JSR.W sub_80C0D2                               ;808618|80C0D2
 
         .skip2: LDA.W ram_03FC                                 ;80861B|8003FC
                 BEQ .skip3                                     ;80861E|808628
                 ASL A                                          ;808620|
                 TAY                                            ;808621|
-                LDX.W data_808771,Y                            ;808622|808771
+                LDX.W data_camSpeed,Y                            ;808622|808771
                 JMP.W sub_80C14E                               ;808625|80C14E
 
 
@@ -1857,7 +1857,7 @@ sub_8085FC:
                 BEQ .exit                                      ;80862B|808635
                 ASL A                                          ;80862D|
                 TAY                                            ;80862E|
-                LDX.W data_808771,Y                            ;80862F|808771
+                LDX.W data_camSpeed,Y                            ;80862F|808771
                 JMP.W sub_80C124                               ;808632|80C124
 
 
@@ -2068,13 +2068,13 @@ vbwait_808741:
          .exit: RTS                                            ;808770|
 
 
-data_808771:
+data_camSpeed:
                 dw $0000                                       ;808771|
 
-data_808773:
+data_camSpeed1:
                 dw $0000                                       ;808773|
 
-data_808775:
+data_camSpeed2:
                 dw $0000,$0001,$0001,$0001                     ;808775|
                 dw $0002,$0002,$0002,$0003                     ;80877D|
                 dw $0003,$0003,$0004,$0004                     ;808785|
@@ -6422,7 +6422,7 @@ ComputeCameras:
 
                 LDA.W objY,X                                    ;INSERT|
                 SEC
-                SBC.W #$0070
+                SBC.W #$0050
                 BMI +
                 BCS .skip3
                 BRA +
@@ -22301,7 +22301,7 @@ scanBoxPrepVertical:
                 LDA.B playerCamX                               ;80EEF5|000044
                 SEC                                            ;80EEF7|
                 SBC.W #$0010                                   ;80EEF8|
-                STA.B tmp34                           ;80EEFB|000034
+                STA.B tmp34                                    ;80EEFB|000034
                 CLC                                            ;80EEFD|
                 ADC.W #$0120                                   ;80EEFE|
                 STA.B tmp36                                    ;80EF01|000036

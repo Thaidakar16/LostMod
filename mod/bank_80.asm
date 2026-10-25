@@ -802,8 +802,8 @@ wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 		modFlags = $0310                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
 ;RefillFlags = $0560                ; bit 0 = left half of metatile, bit 1 = right half of metatile, bit 2 = top half of metatile, bit 3 = bottom half of metatile
 refillStageStart = $0560
-tempVertHigh = $0562
-tempVertLo = $0564
+; tempVertHigh = $0562
+; tempVertLo = $0564
 P1rowDmaDest = $0566 ; hopefully this is free....         
 
 
@@ -909,11 +909,11 @@ Boot_ClearWram:
                 JSR.W irqcfg_809202                             ;80805D|809202
                 JSR.W WindowWipeThenHdmaOff                     ;808060|808E33
 
-; -------------------               -------------------------------------
-;  MainLoop_Reinit                  [10 ins, returns ?]
-;    callers: vbwait_               808081
-;    reads:     gameM               odeFlags
-;    calls:     LoadI               nitialGfx, vbwait_808741, ComputeButtonEdges, input_8082F6, GiveUpDialog_TriggerGate, input_80814E, +1 more
+; --------------------------------------------------------
+;  MainLoop_Reinit    [10 ins, returns ?]
+;    callers: vbwait_808081
+;    reads:     gameModeFlags
+;    calls:     LoadInitialGfx, vbwait_808741, ComputeButtonEdges, input_8082F6, GiveUpDialog_TriggerGate, input_80814E, +1 more
 ;
 ;    RECON NOTE (trace-assisted, see level_loading_recon.md): gameModeFlags
 ;    is a small bitfield; the only two values seen across all 5 traces:
@@ -1685,16 +1685,19 @@ input_808515:
 
                 ;default thresholds
                 LDA.W #$0080
-                STA.W tempVertHigh
+                STA.W tmp32
                 LDA.W #$0090
-                STA.W tempVertLo
+                STA.W tmp34
                 BRA .proceed
 
-        .mod_thresholds:
+        .mod_thresholds: 
+        ;UNDECIDED!!! to match the centering of the original game, 40-50 should be used (maybe 40-48, but idk)
+        ;However, this leaves cases where the bottom of the level is not visible. I think ill leave it for now, but might adjust later.
+        ;(also can be fixed with look up/down feature later)
                 LDA.W #$0040
-                STA.W tempVertHigh
+                STA.W tmp32
                 LDA.W #$0050
-                STA.W tempVertLo
+                STA.W tmp34
 
       .proceed: LDX.W ram_03E4                                 ;80852A|8003E4
                 LDY.W p1vikingIdx,X                              ;80852D|8003D8
@@ -1737,7 +1740,7 @@ input_808515:
                 LDY.W p1vikingIdx,X                              ;808576|8003D8
                 LDA.B playerCamY                               ;808579|000046
                 CLC                                            ;80857B|
-                ADC.W tempVertHigh                                   ;80857C|
+                ADC.W tmp32                                    ;80857C|
                 SEC                                            ;80857F|
                 SBC.W hudYOffset                               ;808580|800340
                 SBC.W objY,Y                          ;808583|8011A1
@@ -1759,7 +1762,7 @@ input_808515:
                 ADC.W hudYOffset                               ;8085A1|800340
                 SEC                                            ;8085A4|
                 SBC.B playerCamY                               ;8085A5|000046
-                SBC.W tempVertLo                                     ;8085A7|
+                SBC.W tmp34                                     ;8085A7|
                 BMI .exit                                      ;8085AA|8085C1
                 BEQ .exit                                      ;8085AC|8085C1
                 CMP.W #$0010                                   ;8085AE|
@@ -7099,7 +7102,7 @@ sub_80A2C7:
                 AND.W #$001F                                   ;80A342|
                 ASL A                                          ;80A345|
                 TAY                                            ;80A346|
-                LDA.W data_80F363,Y                            ;80A347|80F363
+                LDA.W data_Xtimes20,Y                            ;80A347|80F363
                 CLC                                            ;80A34A|
                 ADC.W ram_04F1,X                               ;80A34B|8004F1
                 STA.W ram_04F1,X                               ;80A34E|8004F1
@@ -13034,10 +13037,10 @@ RefillColumnLeftMod:
          .exit: RTS                                            ;INSERT|
 
 RefillRowDownMod:
-                LDA.B playerCamY                                ;INSERT|
+                LDA.B playerCamY                                ;INSERT| ;load camera
+                LSR A                                           ;INSERT| ;devide by 8 to get tile count
                 LSR A                                           ;INSERT|
-                LSR A                                           ;INSERT|
-                LSR A                                           ;INSERT|
+                LSR A                                           ;INSERT| 
                 AND.W #$FFFE                                    ;INSERT|
                 LDX.B playerCamY                                ;INSERT|
                 BPL +                                           ;INSERT|
@@ -13054,7 +13057,7 @@ RefillRowDownMod:
                 INX
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$001E                                    ;INSERT|
+                ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$001E                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
@@ -13073,7 +13076,7 @@ RefillRowDownMod:
                 INX
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$001C                                    ;INSERT|
+                ADC.W #$000C                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$001C                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
@@ -13158,8 +13161,8 @@ RefillRowUpMod:
 ;        $19EA.  (This is the 32-column BG wrap the patch
 ;        cares about.)
 ;    VRAM word addr = quadrantBase
-;                   + data_80F363[destWord<<1]
-;    where data_80F363[i] = i*$20 = the word offset of
+;                   + data_Xtimes20[destWord<<1]
+;    where data_Xtimes20[i] = i*$20 = the word offset of
 ;    tilemap column i within the 32-wide map (NOT a seam
 ;    length).  The split into run0 ($16CD,len $16CF) and the
 ;    wrapped run1 ($16D1,len $16D3, 0 if no seam crossing)
@@ -13241,7 +13244,7 @@ BuildTilemapCol:
                 ASL A                                          ;80C302|         ; *2 : word index -> byte index (each tilemap column entry is 2 bytes)
                 STA.B tmp32                              ;80C303|000032
                 TAY                                            ;80C305|
-                LDA.W data_80F363,Y                            ;80C306|80F363   ; data_80F363[destWord<<1] = destWord*$20 = VRAM word offset of that tilemap column within the 32-wide map (LUT is 0,$20,$40,..; NOT a seam length)
+                LDA.W data_Xtimes20,Y                            ;80C306|80F363   ; data_Xtimes20[destWord<<1] = destWord*$20 = VRAM word offset of that tilemap column within the 32-wide map (LUT is 0,$20,$40,..; NOT a seam length)
                 CLC                                            ;80C309|
                 ADC.W colDmaVramDest0                          ;80C30A|8016CD   ; fold that column offset into the first DMA run's destination
                 STA.W colDmaVramDest0                          ;80C30D|8016CD
@@ -13401,7 +13404,7 @@ FetchConvertMetatile:
 ;  $1775/$1777/$17C5/$17C7.
 ;  destWord = (A + refillRowTileY) AND #$1F into the 32-row
 ;  map, same $19EA/$199D quadrant select; VRAM base =
-;  quadrant + data_80F363[destWord<<1] (=destWord*32).
+;  quadrant + data_Xtimes20[destWord<<1] (=destWord*32).
 ;  Emits up to three DMA runs ($16D5/$16D9/$16DD) to cover
 ;  the two map lines plus the horizontal wrap seam.
 BuildTilemapRow:
@@ -13456,7 +13459,7 @@ BuildTilemapRow:
                 AND.W #$001F                                   ;80C422|
                 ASL A                                          ;80C425|         ; *2: word index -> byte index into the column-offset LUT
                 TAY                                            ;80C426|
-                LDA.W data_80F363,Y                            ;80C427|80F363   ; data_80F363[i] = i*$20 (same LUT BuildTilemapCol uses, reused here
+                LDA.W data_Xtimes20,Y                            ;80C427|80F363   ; data_Xtimes20[i] = i*$20 (same LUT BuildTilemapCol uses, reused here
                 TAX                                            ;80C42A|         ; for the row's own column-within-map-row offset)
                 ADC.W rowDmaVramDest0                          ;80C42B|8016D5   ; fold that offset into all three destinations (dest0/1/2 all need it,
                 STA.W rowDmaVramDest0                          ;80C42E|8016D5   ; since it's the same "how far into this VRAM row" offset regardless
@@ -13642,10 +13645,10 @@ BuildTilemapRowMod:
          .skip: PLA                     ; row offset
                 CLC
                 ADC.W refillRowTileY
-                AND.W #$001F
+                AND.W #$000F
                 ASL A
                 TAY
-                LDA.W data_80F363,Y     ; row * $20
+                LDA.W data_Xtimes20,Y     ; row * $20
                 CLC
                 ADC.W tilemapBaseLo     ; P1 subscreen base
                 STA.W P1rowDmaDest      ; one dest word, no len variables
@@ -13952,19 +13955,19 @@ UploadTilemapRowP1:
                 LDA.B #$01                               
                 STA.W MDMAEN                             
                 REP #$30                                 
-                ; LDA.W P1rowDmaDest                       
-                ; CLC
-                ; ADC.W #$0200
+                LDA.W P1rowDmaDest                       
+                CLC
+                ADC.W #$0200
                 
-                ; STA.W VMADDL                             
-                ; LDA.W #$1775                             
-                ; STA.W A1TL0                              
-                ; LDA.W #$0080                             
-                ; STA.W DASL0                              
-                ; SEP #$30                                 
-                ; LDA.B #$01                               
-                ; STA.W MDMAEN                             
-                ; REP #$30                                 
+                STA.W VMADDL                             
+                LDA.W #$1775                             
+                STA.W A1TL0                              
+                LDA.W #$0080                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$01                               
+                STA.W MDMAEN                             
+                REP #$30                                 
                 RTS
 ; --------------------------------------------------------
 ;  sub_80C655   [60 ins, returns RTS]
@@ -14504,7 +14507,7 @@ sub_80C91E:
                 ASL A                                          ;80C962|
                 STA.B tmp32                              ;80C963|000032
                 TAY                                            ;80C965|
-                LDA.W data_80F363,Y                            ;80C966|80F363
+                LDA.W data_Xtimes20,Y                            ;80C966|80F363
                 CLC                                            ;80C969|
                 ADC.W vramColDstAddrC                          ;80C96A|8016E1
                 STA.W vramColDstAddrC                          ;80C96D|8016E1
@@ -14675,7 +14678,7 @@ sub_80CA32:
                 AND.W #$001F                                   ;80CA80|
                 ASL A                                          ;80CA83|
                 TAY                                            ;80CA84|
-                LDA.W data_80F363,Y                            ;80CA85|80F363
+                LDA.W data_Xtimes20,Y                            ;80CA85|80F363
                 TAX                                            ;80CA88|
                 ADC.W vramColDstAddrD                          ;80CA89|8016E9
                 STA.W vramColDstAddrD                          ;80CA8C|8016E9
@@ -23071,7 +23074,7 @@ InitObjectFromSpawnRec:
                 RTS                                            ;80F362|
 
 
-data_80F363:
+data_Xtimes20:
                 dw $0000,$0020,$0040,$0060                     ;80F363|
                 dw $0080,$00A0,$00C0,$00E0                     ;80F36B|
                 dw $0100,$0120,$0140,$0160                     ;80F373|

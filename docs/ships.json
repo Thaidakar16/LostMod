@@ -24,5 +24,18 @@
         "caption": "Sprite fix"
       }
     ]
+  },
+  {
+    "id": "week1-1",
+    "week": "Week 1",
+    "version": 1,
+    "notes": "Updated scrolling mechanics (broken)",
+    "details": "details/week1-1.txt",
+    "media": [
+      {
+        "mod": "media/week1-1.mp4",
+        "caption": "Broken Scrolling"
+      }
+    ]
   }
 ]

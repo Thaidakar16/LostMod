@@ -1,0 +1,4 @@
+I updated the horizontal and vertical scrolling mechanics!
+I managed to get the player 1 viking to always be in the top half.
+I then implemented the dual vertical scrolling system. 
+I then tried to fix the horizontal scrolling, but was unable to finish doing so before the end of the week.

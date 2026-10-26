@@ -13411,12 +13411,14 @@ BuildTilemapColMod:
                 CMP.W refillStageStart
                 BCC .loop2
 
-         .skip: PLY
+         .skip: PLY                                 ;I have no idea why this is what works...
                 PLA                                 
-                CLC                                 
-                ADC.W refillColTileX                
-                AND.W #$001F                        
-                ASL     
+                ; CLC                                 
+                ; ADC.W refillColTileX                 
+                LDA.W refillColTileX
+                CLC
+                ADC.W #$0002
+                AND.W #$001F                         
                 CLC
                 ADC.W tilemapBaseLo
                 STA.W P1colDmaDest
@@ -14107,8 +14109,9 @@ UploadTilemapColumnP1:
                 STA.W VMAIN
                 LDA.B #$01                               
                 STA.W DMAP0                              
-                LDA.B #$18                               
+                LDA.B #$18                                             
                 STA.W BBAD0                              
+                
                 REP #$30                                 
                 LDA.W P1colDmaDest                       
                 STA.W VMADDL                             
@@ -14123,8 +14126,8 @@ UploadTilemapColumnP1:
                 STA.W MDMAEN                             
                 
                 REP #$30                                 
-                LDA.W P1rowDmaDest                       
-                INC
+                LDA.W P1colDmaDest                       
+                ;INC
                 INC
                 STA.W VMADDL                             
                 LDA.W #$1715                             
@@ -14136,7 +14139,7 @@ UploadTilemapColumnP1:
                 STA.W MDMAEN                             
                 
                 REP #$30                                 
-                LDA.W P1rowDmaDest                       
+                LDA.W P1colDmaDest                       
                 CLC
                 ADC.W #$0200
                 STA.W VMADDL                             
@@ -14149,9 +14152,9 @@ UploadTilemapColumnP1:
                 STA.W MDMAEN                             
 
                 REP #$30                                 
-                LDA.W P1rowDmaDest                       
+                LDA.W P1colDmaDest                       
                 CLC
-                ADC.W #$0202
+                ADC.W #$0201
                 STA.W VMADDL                             
                 LDA.W #$1715                             
                 STA.W A1TL0                              

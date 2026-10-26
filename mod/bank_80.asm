@@ -801,10 +801,14 @@ wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 
 		modFlags = $0310                  ; low bit represents whether the mod is active or not. 0 = inactive, 1 = active
 ;RefillFlags = $0560                ; bit 0 = left half of metatile, bit 1 = right half of metatile, bit 2 = top half of metatile, bit 3 = bottom half of metatile
+
+;hopefully all of these are free
 refillStageStart = $0560
 tempVertHigh = $0562
 tempVertLo = $0564
-P1rowDmaDest = $0566 ; hopefully this is free....         
+P1rowDmaDest = $0566
+P1colDmaDest = $0568
+P1colDmaOffset = $056A
 
 
 ; jsl label defines (far calls into other banks):
@@ -836,6 +840,11 @@ P1rowStagedMetaTileLU    = $1775
 P1rowStagedMetaTileRU    = $1777
 P1rowStagedMetaTileLD    = $17B5
 P1rowStagedMetaTileRD    = $17B7
+
+P1colStagedMetaTileLU  = $16F5
+P1colStagedMetaTileLD  = $16F7
+P1colStagedMetaTileRU  = $1715
+P1colStagedMetaTileRD  = $1717
 
                        ORG $808000
 
@@ -3944,7 +3953,7 @@ Mul8x8:
 
 ; --------------------------------------------------------
 ;  Mul8x16   [27 ins, returns RTS]
-;    callers: sub_80A160, sub_80A3B1, sub_80A3D7, sub_80A402, FetchConvertMetatile, FetchConvertMetatileRow, +8 more
+;    callers: sub_80A160, sub_80A3B1, sub_80A3D7, sub_80A402, FetchConvertMetatileCol, FetchConvertMetatileRow, +8 more
 ;    reads HW:  RDMPYL
 ;    writes HW: WRMPYA, WRMPYB
 ;    writes:    mulResult, zp_B3, zp_B4
@@ -12385,10 +12394,10 @@ ProcessTilemapEdits:
                 BEQ +                                          ;80C076|80C07B
                 JSR.W VramColUpload_D                          ;80C078|80CBFF
              
-            ;  +: LDA.W tilemapUploadMask                        ;INSERT|8003AE
-            ;     BIT.W #$0010                                   ;INSERT|
-            ;     BEQ +                                          ;INSERT|
-            ;     JSR.W UploadTilemapColumnP1
+             +: LDA.W tilemapUploadMask                        ;INSERT|8003AE
+                BIT.W #$0010                                   ;INSERT|
+                BEQ +                                          ;INSERT|
+                JSR.W UploadTilemapColumnP1
 
             ;  +: LDA.W tilemapUploadMask                        ;INSERT|8003AE
             ;     BIT.W #$0020                                   ;INSERT|
@@ -12948,8 +12957,8 @@ RefillColumnRightMod:
 
              +: LDA.W #$0022                                   ;INSERT|
 
-                JSR.W BuildTilemapCol                          ;INSERT|
-                LDA.W #$0001                                   ;INSERT|
+                JSR.W BuildTilemapColMod                          ;INSERT|
+                LDA.W #$0010                                   ;INSERT|
                 JSR.W SetPpuUpdateBits                         ;INSERT|
                 JMP.W scanBoxPrepHorizontal_right                               ;INSERT|
 
@@ -12973,8 +12982,8 @@ RefillColumnRightMod:
 
              +: LDA.W #$0020                                   ;INSERT|
 
-                JSR.W BuildTilemapCol                          ;INSERT|
-                LDA.W #$0001                                   ;INSERT|
+                JSR.W BuildTilemapColMod                          ;INSERT|
+                LDA.W #$0010                                   ;INSERT|
                 JSR.W SetPpuUpdateBits                         ;INSERT|
                 JMP.W scanBoxPrepHorizontal_right                               ;INSERT|
 
@@ -13010,8 +13019,8 @@ RefillColumnLeftMod:
                 DEY
 
              +: LDA.W #$0002                                   ;INSERT|
-                JSR.W BuildTilemapCol                          ;INSERT|
-                LDA.W #$0001                                   ;INSERT|
+                JSR.W BuildTilemapColMod                          ;INSERT|
+                LDA.W #$0010                                   ;INSERT|
                 JSR.W SetPpuUpdateBits                         ;INSERT|
                 JMP.W scanBoxPrepHorizontal_left                               ;INSERT|
 
@@ -13028,8 +13037,8 @@ RefillColumnLeftMod:
                 INX                                            ;INSERT|
                 LDY.W refillRowTileY                           ;INSERT|
                 LDA.W #$0004                                   ;INSERT|
-                JSR.W BuildTilemapCol                          ;INSERT|
-                LDA.W #$0001                                   ;INSERT|
+                JSR.W BuildTilemapColMod                          ;INSERT|
+                LDA.W #$0010                                   ;INSERT|
                 JSR.W SetPpuUpdateBits                         ;INSERT|
                 JMP.W scanBoxPrepHorizontal_left               ;INSERT|
 
@@ -13142,7 +13151,7 @@ RefillRowUpMod:
 ;    callers: FillTilemapFull, RefillColumnRight, RefillColumnLeft
 ;    writes:    tmp32, tmp34, colDmaVramDest0, colDmaLen0, colDmaVramDest1, colDmaLen1
 ;    reads:     tmp32, tmp34, refillColTileX, colDmaVramDest0, colDmaLen0, tilemapBaseHi ...
-;    calls:     FetchConvertMetatile
+;    calls:     FetchConvertMetatileCol
 ; --------------------------------------------------------
 
 ;== hdr 80C2BE ==
@@ -13150,7 +13159,7 @@ RefillRowUpMod:
 ;  IN:  X = tile-X of the column (level space, *2 internally),
 ;       Y = tile-Y of the top, A = signed col offset.
 ;  Loop 16 metatile-rows (idx $34: 0,4,8..3C) calling the
-;  per-cell worker FetchConvertMetatile, which writes 4 BG
+;  per-cell worker FetchConvertMetatileCol, which writes 4 BG
 ;  map words per metatile (TL/TR/BL/BR) into the column
 ;  stage buffers ($16F5/$1735/$16F7/$1737).
 ;
@@ -13181,22 +13190,15 @@ BuildTilemapCol:
                 ASL A                                          ;80C2C6|         ; TILE-X/TILE-Y in -> METATILE-X/METATILE-Y out: this is the pixel/tile
                 TYA                                            ;80C2C7|         ; coordinate the caller passed getting converted into the coarser
                 ROR A                                          ;80C2C8|         ; metatile-grid coordinate that levelTileMapPtr is actually indexed by
-                TAY                                            ;80C2C9|         ; (see FetchConvertMetatile -- despite the "tileX/tileY" naming there,
+                TAY                                            ;80C2C9|         ; (see FetchConvertMetatileCol -- despite the "tileX/tileY" naming there,
                 STZ.B tmp34                           ;80C2CA|000034   ; the level array itself is one word per 16x16 METATILE, not per 8x8 tile).
-
                 
-                ; Mod Check
-                LDA.W modFlags                                 ;INSERT|
-                BIT.W #$0001                                   ;INSERT|
-                BNE .modloop                                   ;INSERT|
-
-                ; Original Loop
-         .loop: JSR.W FetchConvertMetatile                     ;80C2CC|80C324   ; X (metatile-col, held constant all loop -- this builds ONE column) and
-                                                                                        ; Y (metatile-row, incremented below) are FetchConvertMetatile's inputs
+         .loop: JSR.W FetchConvertMetatileCol                     ;80C2CC|80C324   ; X (metatile-col, held constant all loop -- this builds ONE column) and
+                                                                                        ; Y (metatile-row, incremented below) are FetchConvertMetatileCol's inputs
                 INY                                            ;80C2CF|         ; next metatile-row down
                 LDA.B tmp34                           ;80C2D0|000034   ; tmp34 is this loop's counter AND the write offset into the
                 CLC                                            ;80C2D2|         ; colStageBg1Even/Odd/Bl/Br staging arrays (4 bytes/metatile-row: see
-                ADC.W #$0004                                  ;80C2D3|         ; FetchConvertMetatile's writes)
+                ADC.W #$0004                                  ;80C2D3|         ; FetchConvertMetatileCol's writes)
                 STA.B tmp34                           ;80C2D6|000034
                 CMP.W #$0040                                   ;80C2D8|         ; column loop runs 16 metatile-rows ($34: 0,4,..,3C; ends at #$0040)
                 BCC .loop                                      ;80C2DB|80C2CC
@@ -13209,31 +13211,6 @@ BuildTilemapCol:
                 BCC +                                          ;80C2EB|80C2F3
                 LDY.W tilemapBaseHi                            ;80C2ED|80199D
                 AND.W #$001F                                   ;80C2F0|
-                BRA +                                          ;INSERT|80C2F3
-
-                ; Mod Loop
-      .modloop: JSR.W FetchConvertMetatile                     ;INSERT|
-                INY                                            ;INSERT|
-                LDA.B tmp34                           ;INSERT|
-                CLC                                            ;INSERT|
-                ADC.W #$0004                                  ;INSERT|
-                STA.B tmp34                           ;INSERT|
-                CMP.W #$0040                                   ;INSERT|
-                BCC .modloop                                   ;INSERT|
-
-                LDY.W tilemapBaseLo                            ;INSERT|
-                PLA                                            ;INSERT|
-                CLC                                            ;INSERT|
-                ADC.W refillColTileX                           ;INSERT|
-                AND.W #$001F                                   ;INSERT|         ; Wrap to the new 32-column wide screen
-                CMP.W #$0020                                   ;INSERT|
-                BCC +                                          ;INSERT|
-                LDY.W tilemapBaseHi                            ;INSERT|
-                AND.W #$001F                                   ;INSERT|
-                BRA +                                          ;INSERT|
-
-
-
              +: STY.B tmp32                              ;80C2F3|000032   ; tmp32 = the chosen VRAM quadrant base (tilemapBaseLo or -Hi)
                 CLC                                            ;80C2F5|
                 ADC.B tmp32                              ;80C2F6|000032   ; A = quadrant base + destWord (a first-pass VRAM word address, refined below)
@@ -13260,7 +13237,7 @@ BuildTilemapCol:
 
 
 ; --------------------------------------------------------
-;  FetchConvertMetatile   [83 ins, returns RTS]
+;  FetchConvertMetatileCol   [83 ins, returns RTS]
 ;    callers: BuildTilemapCol
 ;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, colStageBg1Even ...
 ;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, levelTileMapPtr, tileVisualPtr ...
@@ -13268,7 +13245,7 @@ BuildTilemapCol:
 ; --------------------------------------------------------
 
 ;== hdr 80C324 ==
-; --- FetchConvertMetatile: level word -> BG character words -
+; --- FetchConvertMetatileCol: level word -> BG character words -
 ;  1. Clamp/wrap (tileX,tileY) against level dimensions
 ;     levelWidthMetaTiles($19F0)/levelHeightMetaTiles($19F2) using
 ;     levelWrapFlags($19F4): bit1=wrap (mask with dim-1),
@@ -13284,7 +13261,7 @@ BuildTilemapCol:
 ;     OR tileAttr ($1997) -> palette/priority/flip bits.
 ;  4. Store the 4 words into the column stage:
 ;     $16F5 (TL), $1735 (TR), $16F7 (BL), $1737 (BR).
-FetchConvertMetatile:
+FetchConvertMetatileCol:
                 STX.B refillSaveX                    ;80C324|00003E   ; save the caller's metatile-X/Y (X/Y get clobbered below and are
                 STY.B refillSaveY                              ;80C326|000040   ; restored again right before every RTS in this function)
                 CPX.W levelWidthMetaTiles                      ;80C328|8019F0   ; step 1: is (X,Y) inside the level's metatile grid at all?
@@ -13386,6 +13363,162 @@ FetchConvertMetatile:
                 LDX.B refillSaveX                              ;80C3CF|00003E
                 LDY.B refillSaveY                              ;80C3D1|000040
                 RTS                                            ;80C3D3|
+
+
+BuildTilemapColMod:
+                PHY                                 
+                PHA                                 
+                                                    
+                TXA                                 
+                ASL A                               
+                TXA                                 
+                ROR A                               
+                TAX                                 
+                TYA                                 
+                ASL A                               
+                TYA                                 
+                ROR A                               
+                TAY                                 
+                
+                AND.W #$0007
+                
+                ASL A
+                ASL A
+                STA.W refillStageStart
+                STA.B tmp34                         
+
+         .loop: JSR.W FetchConvertMetatileColMod       
+                
+                INY                                 
+                LDA.B tmp34                         
+                CLC                                 
+                ADC.W #$0004                        
+                STA.B tmp34                         
+                CMP.W #$0020                        
+                BCC .loop                           
+
+                LDA.W refillStageStart
+                BEQ .skip
+                STZ.B tmp34
+
+        .loop2: JSR.W FetchConvertMetatileColMod
+
+                INY
+                LDA.B tmp34
+                CLC
+                ADC.W #$0004
+                STA.B tmp34
+                CMP.W refillStageStart
+                BCC .loop2
+
+         .skip: PLY
+                PLA                                 
+                CLC                                 
+                ADC.W refillColTileX                
+                AND.W #$001F                        
+                ASL     
+                CLC
+                ADC.W tilemapBaseLo
+                STA.W P1colDmaDest
+                RTS                   
+
+FetchConvertMetatileColMod:
+                STX.B refillSaveX                    
+                STY.B refillSaveY                    
+                CPX.W levelWidthMetaTiles            
+                BCS +                                
+                CPY.W levelHeightMetaTiles           
+                BCC .main                            
+
+             +: LDA.W levelWrapFlags                 
+                BIT.W #$0002                         
+                BEQ .skip                            
+                STX.B tmp32                          
+                LDA.W levelWidthMetaTiles            
+                DEC A                                
+                AND.B tmp32                          
+                TAX                                  
+                STY.B tmp32                          
+                LDA.W levelHeightMetaTiles           
+                DEC A                                
+                AND.B tmp32                          
+                TAY                                  
+                BRA .main                            
+
+
+         .skip: BIT.W #$0008                         
+                BEQ .skip2                           
+                LDX.B tmp34                          
+                LDA.W tileAttrOr                     
+                STA.W P1colStagedMetaTileLU,X              
+                STA.W P1colStagedMetaTileLD,X               
+                STA.W P1colStagedMetaTileRD,X                   
+                STA.W P1colStagedMetaTileRU,X                   
+                LDX.B refillSaveX                    
+                LDY.B refillSaveY                    
+                RTS                                  
+
+
+        .skip2: CPX.W levelWidthMetaTiles            
+                BCC .skip3                           
+                                                     
+                                                     
+                CPX.W #$8000                         
+                BCC +                                
+                LDX.W #$0000                         
+                BRA .skip3                           
+
+
+             +: LDX.W levelWidthMetaTiles            
+                DEX                                  
+
+        .skip3: CPY.W levelHeightMetaTiles           
+                BCC .main                           
+                CPY.W #$8000                         
+                BCC +                                
+                LDY.W #$0000                         
+                BRA .main                           
+
+
+             +: LDY.W levelHeightMetaTiles           
+                DEY                                  
+
+         .main: STY.B mulMultiplicand                
+                LDA.W levelRowStride                 
+                STA.B mulMultiplierLo                
+                JSR.W Mul8x16                        
+                TXA                                  
+                ASL A                                
+                ADC.B mulResult                      
+                TAY                                  
+                LDA.B [levelTileMapPtr],Y            
+                AND.W #$03FF                                                                
+                ASL A                                
+                ASL A                                
+                ASL A                                
+                TAY                                  
+                LDA.B [tileVisualPtr],Y              
+                ORA.W tileAttrOr                     
+                LDX.B tmp34                          
+                STA.W P1colStagedMetaTileLU,X              
+                INY                                  
+                INY                                  
+                LDA.B [tileVisualPtr],Y              
+                ORA.W tileAttrOr                     
+                STA.W P1colStagedMetaTileRU,X               
+                INY                                  
+                INY                                  
+                LDA.B [tileVisualPtr],Y              
+                ORA.W tileAttrOr                     
+                STA.W P1colStagedMetaTileLD,X                   
+                INY                                  
+                INY                                  
+                LDA.B [tileVisualPtr],Y              
+                ORA.W tileAttrOr                     
+                STA.W P1colStagedMetaTileRD,X                   
+                LDX.B refillSaveX                    
+                LDY.B refillSaveY                    
+                RTS                                  
 
 
 ; --------------------------------------------------------
@@ -13736,8 +13869,6 @@ FetchConvertMetatileRowMod:
                 LDA.B [tileVisualPtr],Y                        ;80C4F6|000054
                 ORA.W tileAttrOr                               ;80C4F8|801997
                 STA.W P1rowStagedMetaTileRU,X                    ;80C4FB|801777
-
-
                 INY                                            ;80C4FE|
                 INY                                            ;80C4FF|
                 LDA.B [tileVisualPtr],Y                        ;80C500|000054
@@ -13967,6 +14098,71 @@ UploadTilemapRowP1:
                 SEP #$30                                 
                 LDA.B #$01                               
                 STA.W MDMAEN                             
+                REP #$30                                 
+                RTS
+
+UploadTilemapColumnP1:
+                SEP #$30                                  
+                LDA.B #$81 
+                STA.W VMAIN
+                LDA.B #$01                               
+                STA.W DMAP0                              
+                LDA.B #$18                               
+                STA.W BBAD0                              
+                REP #$30                                 
+                LDA.W P1colDmaDest                       
+                STA.W VMADDL                             
+                LDA.W #$16F5                             
+                STA.W A1TL0                              
+                LDA.W #$0020                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$7E                               
+                STA.W A1B0                               
+                LDA.B #$01                               
+                STA.W MDMAEN                             
+                
+                REP #$30                                 
+                LDA.W P1rowDmaDest                       
+                INC
+                INC
+                STA.W VMADDL                             
+                LDA.W #$1715                             
+                STA.W A1TL0                              
+                LDA.W #$0020                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$01                               
+                STA.W MDMAEN                             
+                
+                REP #$30                                 
+                LDA.W P1rowDmaDest                       
+                CLC
+                ADC.W #$0200
+                STA.W VMADDL                             
+                LDA.W #$16F5                             
+                STA.W A1TL0                              
+                LDA.W #$0020                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$01                               
+                STA.W MDMAEN                             
+
+                REP #$30                                 
+                LDA.W P1rowDmaDest                       
+                CLC
+                ADC.W #$0202
+                STA.W VMADDL                             
+                LDA.W #$1715                             
+                STA.W A1TL0                              
+                LDA.W #$0020                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$01                               
+                STA.W MDMAEN                             
+                
+                LDA.B #$80 
+                STA.W VMAIN
                 REP #$30                                 
                 RTS
 ; --------------------------------------------------------

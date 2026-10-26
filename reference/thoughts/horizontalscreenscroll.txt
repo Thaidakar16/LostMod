@@ -1,0 +1,30 @@
+Okay! 
+We are tight on ram, so ideally, no duplicate info. 
+
+This, unfortunately means 3 dmas... 
+
+one starts at the top of the screen and starts in the ram up to a point. 
+then it is the full one
+then the last one.
+
+this means a set length, and 2 lengths that vary.
+if needed, one can be derived from the other.
+however, the game already has 2 length arguments for col, so no need.
+
+we will need 3 destwords
+
+or, we can do some clever stuff! 
+if we do what we did for the rows and make the table lined up for dma already, then we can use set lengths.
+we can then run the dma twice as needed for the regular and the mirror, with the same source! 
+we can also derive the location of the other column from the first.
+
+4 dmas, 1 argument. 
+
+how much staging?
+we reused the staging space of the old row for the new row, so no reason to not reuse the col staging!
+original col staging used 2x32 tiles, so 128 bytes.
+the mod will need 2x16 tiles, or 64 bytes.
+This fortunately leaves us enough space for 2 of these transfers, which is convenient bc i will need one for p1 and one for p2.
+
+also, if we are reusing the staging, we should also be able to reuse the old variables! 
+(i should also probably safeguard it so both the original and the new can't happen, even though it shouldnt ever happen)

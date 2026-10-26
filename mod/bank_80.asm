@@ -808,7 +808,7 @@ tempVertHigh = $0562
 tempVertLo = $0564
 P1rowDmaDest = $0566
 P1colDmaDest = $0568
-P1colDmaOffset = $056A
+
 
 
 ; jsl label defines (far calls into other banks):
@@ -6029,7 +6029,7 @@ ExpandLevelTilemap:
 
 
 ShiftObjPlacementBoxes:
-                ;IDK which of these are nessesary, but at least one of them is:
+                ;IDK which of these are necessary, but at least one of them is:
                 PHA
                 PHX
                 PHY
@@ -7435,7 +7435,7 @@ loc_80A4A1:
 ;    stores the hit in objTouchSlots; the normal pass tests that bit, sets objTarget and calls.
 ;--------------------------------------------------------------
 Op_CallIfPlayerTouchType:
-                LDA.W objTableEnd                              ;80A4A2|800380 ;teporarily pretend that the vikings are the only objects 
+                LDA.W objTableEnd                              ;80A4A2|800380 ;temporarily pretend that the vikings are the only objects 
                 PHA                                            ;80A4A5|       ;(so other objects dont set off the flag)
                 LDA.W #$0006                                   ;80A4A6|
                 STA.W objTableEnd                              ;80A4A9|800380
@@ -13025,9 +13025,9 @@ RefillColumnLeftMod:
                 JMP.W scanBoxPrepHorizontal_left                               ;INSERT|
 
 
-    .firstHalf: LDA.B playerCamX                               ;INSERT|
+    .firstHalf: LDA.W refillLastCamX                           ;INSERT|
                 SEC                                            ;INSERT|
-                SBC.W refillLastCamX                           ;INSERT|
+                SBC.W playerCamX                               ;INSERT|
                 CMP.W #$0009                                   ;INSERT|
                 BCC .exit                                      ;INSERT|
                 LDX.W refillColTileX                           ;INSERT|
@@ -13411,13 +13411,13 @@ BuildTilemapColMod:
                 CMP.W refillStageStart
                 BCC .loop2
 
-         .skip: PLY                                 ;I have no idea why this is what works...
-                PLA                                 
-                ; CLC                                 
-                ; ADC.W refillColTileX                 
-                LDA.W refillColTileX
-                CLC
-                ADC.W #$0002
+         .skip: PLA                                 ;I have no idea why this is what works...
+                PLY                                 
+                CLC                                 
+                ADC.W refillColTileX                 
+                ; LDA.W refillColTileX
+                ; CLC
+                ; ADC.W #$0002
                 AND.W #$001F                         
                 CLC
                 ADC.W tilemapBaseLo
@@ -14047,28 +14047,6 @@ UploadTilemapRow:
         .skip2: REP #$30                                       ;80C652|
                 RTS                                            ;80C654|
 
-; UploadTilemapRowP1:
-;         SEP #$30
-;         LDA.B #$80
-;         STA.W VMAIN             ; word-increment after high byte (use your label for $2115)
-;         LDA.B #$01
-;         STA.W DMAP0
-;         LDA.B #$18
-;         STA.W BBAD0
-;         LDA.B #$7E
-;         STA.W A1B0
-;         REP #$30
-;         LDA.W P1rowDmaDest
-;         STA.W VMADDL
-;         LDA.W #$1775
-;         STA.W A1TL0
-;         LDA.W #$0080
-;         STA.W DASL0
-;         SEP #$30
-;         LDA.B #$01
-;         STA.W MDMAEN
-;         REP #$30
-;         RTS
 UploadTilemapRowP1:
                 SEP #$30                                  
                 LDA.B #$01                               

@@ -13061,9 +13061,8 @@ RefillRowDownMod:
                 BEQ .firstHalf                                  ;INSERT|
                                                                 ;INSERT|
                                                                 ;INSERT|
-                LDX.W refillColTileX                            ;INSERT|
-                INX                                             ;INSERT|
-                INX
+                JSR.W GetRowStageXMod
+
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$000E                                    ;INSERT|
@@ -13080,9 +13079,7 @@ RefillRowDownMod:
                 SBC.W refillLastCamY                            ;INSERT|
                 CMP.W #$0009                                    ;INSERT|
                 BCC .exit                                       ;INSERT|
-                LDX.W refillColTileX                            ;INSERT|
-                INX                                             ;INSERT|
-                INX
+                JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$000C                                    ;INSERT|
@@ -13113,9 +13110,7 @@ RefillRowUpMod:
                                                             
                                                             
                                                             
-                LDX.W refillColTileX                          
-                INX                                           
-                INX
+                JSR.W GetRowStageXMod
                 LDY.W refillRowTileY                                                                     
                 DEY                                           
                 LDA.W #$FFFE                                  
@@ -13130,9 +13125,7 @@ RefillRowUpMod:
                 SBC.B playerCamY                              
                 CMP.W #$0009                                  
                 BCC .exit                                     
-                LDX.W refillColTileX                          
-                INX                                          
-                INX
+                JSR.W GetRowStageXMod
                 LDY.W refillRowTileY
                 INY                          
                 LDA.W #$0000                                  
@@ -13144,8 +13137,26 @@ RefillRowUpMod:
 
          .exit: RTS                                           
 
-
-
+GetRowStageXMod:    ;returns X = tile-x of the row window start
+                LDA.B playerCamX
+                LSR A
+                LSR A
+                LSR A
+                AND.W #$FFFE
+                LDX.B playerCamX
+                BPL +
+                ORA.W #$E000
+             +: STA.W refillColTileX
+                LDA.B playerCamX
+                AND.W #$0008
+                LSR A
+                LSR A 
+                CLC
+                ADC.W #$0002
+                CLC
+                ADC.W refillColTileX
+                TAX
+                RTS
 ; --------------------------------------------------------
 ;  BuildTilemapCol   [53 ins, returns RTS]
 ;    callers: FillTilemapFull, RefillColumnRight, RefillColumnLeft

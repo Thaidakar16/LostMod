@@ -5876,37 +5876,6 @@ sub_809C5C:
 
 
 ; --------------------------------------------------------
-;  ShiftObjectsForHud   [INSERT]
-;    Adds 32px to the X position of every active object,
-;    compensating for the 2 metatile columns added to the
-;    left of the level tilemap.
-;  Loops the full object table (stride $28, 0 to objTableEnd).
-;  Skips slots where objActive == 0.
-; --------------------------------------------------------
-; ShiftObjectsForHud:
-;                 REP #$30                                       ;INSERT| ; 16-bit A/X
-
-;                 LDX.W #$0000                                   ;INSERT|
-; .loop:          CPX.W objTableEnd                              ;INSERT| ; past last slot?
-;                 BCS .done                                      ;INSERT|
-
-;                 LDA.W objActive,X                              ;INSERT| ; is this slot live?
-;                 BEQ .skip                                      ;INSERT|
-
-;                 LDA.W objX,X                          ;INSERT| ; object X (pixels)
-;                 CLC                                            ;INSERT|
-;                 ADC.W #$0020                                   ;INSERT| ; +32px = 2 metatiles × 16px
-;                 STA.W objX,X                          ;INSERT|
-
-; .skip:          TXA                                            ;INSERT|
-;                 CLC                                            ;INSERT|
-;                 ADC.W #$0028                                   ;INSERT| ; next object slot
-;                 TAX                                            ;INSERT|
-;                 BRA .loop                                      ;INSERT|
-
-; .done:          RTS                                            ;INSERT|
-
-; --------------------------------------------------------
 ;  ExpandLevelTilemap   [INSERT]
 ;
 ;  Bottom-up backward scan: copies each row of the original level
@@ -13283,22 +13252,22 @@ FetchConvertMetatileCol:
              +: LDA.W levelWrapFlags                           ;80C332|8019F4   ; step 2: out of bounds -- how should this level handle it?
                 BIT.W #$0002                                   ;80C335|         ; levelWrapFlags bit1 set => coordinates wrap (AND with dim-1) instead of clamp
                 BEQ .skip                                      ;80C338|80C34E   ; bit1 clear -> not a wrapping level, go check the blank-fill flag instead
-                STX.B tmp32                              ;80C33A|000032   ; bit1 SET: wrap X -- requires levelWidthMetaTiles to be a power of 2
+                STX.B tmp32                                    ;80C33A|000032   ; bit1 SET: wrap X -- requires levelWidthMetaTiles to be a power of 2
                 LDA.W levelWidthMetaTiles                      ;80C33C|8019F0   ; (dim-1 is used as an AND mask, which only wraps correctly for
                 DEC A                                          ;80C33F|         ; power-of-2 dimensions)
-                AND.B tmp32                              ;80C340|000032
+                AND.B tmp32                                    ;80C340|000032
                 TAX                                            ;80C342|
-                STY.B tmp32                              ;80C343|000032   ; same wrap for Y against levelHeightMetaTiles
+                STY.B tmp32                                    ;80C343|000032   ; same wrap for Y against levelHeightMetaTiles
                 LDA.W levelHeightMetaTiles                     ;80C345|8019F2
                 DEC A                                          ;80C348|
-                AND.B tmp32                              ;80C349|000032
+                AND.B tmp32                                    ;80C349|000032
                 TAY                                            ;80C34B|
                 BRA .skip4                                     ;80C34C|80C38F   ; wrapped coordinates are now valid indices -> go do the main fetch
 
 
          .skip: BIT.W #$0008                                   ;80C34E|   ; levelWrapFlags bit3 set => off-map cells staged as blank fill ($1997) instead of clamped tile
                 BEQ .skip2                                     ;80C351|80C369   ; bit3 clear -> neither wrap nor blank-fill: fall into the CLAMP path below
-                LDX.B tmp34                           ;80C353|000034   ; bit3 SET: don't fetch anything real for this off-map cell -- just
+                LDX.B tmp34                                    ;80C353|000034   ; bit3 SET: don't fetch anything real for this off-map cell -- just
                 LDA.W tileAttrOr                               ;80C355|801997   ; write the "empty" attribute word (no tile index bits set, so tile 0)
                 STA.W colStageBg1Even,X                        ;80C358|8016F5   ; into all 4 of this metatile's staging slots (TL/TR/BL/BR) and
                 STA.W colStageBg1Odd,X                         ;80C35B|801735   ; return immediately -- this is what lets a level have "void" past its
@@ -13354,7 +13323,7 @@ FetchConvertMetatileCol:
                 TAY                                            ;80C3A6|
                 LDA.B [tileVisualPtr],Y                        ;80C3A7|000054   ; step 5: fetch the metatile's 4 BG character words (TL,TR,BL,BR, in that
                 ORA.W tileAttrOr                               ;80C3A9|801997   ; order) from the metatile->graphics lookup table, OR-ing in the current
-                LDX.B tmp34                           ;80C3AC|000034   ; scene's shared attribute bits (palette/priority/flip -- tileAttrOr) into
+                LDX.B tmp34                                    ;80C3AC|000034   ; scene's shared attribute bits (palette/priority/flip -- tileAttrOr) into
                 STA.W colStageBg1Even,X                        ;80C3AE|8016F5   ; each one, then write all 4 into this metatile's slot in the column
                 INY                                            ;80C3B1|         ; staging buffers, ready for BuildTilemapCol to DMA out to VRAM.
                 INY                                            ;80C3B2|
@@ -13422,13 +13391,10 @@ BuildTilemapColMod:
                 CMP.W refillStageStart
                 BCC .loop2
 
-         .skip: PLA                                 ;I have no idea why this is what works...
+         .skip: PLA                                 
                 PLY                                 
                 CLC                                 
                 ADC.W refillColTileX                 
-                ; LDA.W refillColTileX
-                ; CLC
-                ; ADC.W #$0002
                 AND.W #$001F                         
                 CLC
                 ADC.W tilemapBaseLo
@@ -23192,14 +23158,6 @@ InitObjectFromSpawnRec:
                 INY                                            ;80F2CC|
                 LDA.B [zp_2A],Y                                ;80F2CD|00002A
                 STA.W objMaxVelY,X                               ;80F2CF|8011F1
-    ;             LDA.W modFlags                                 ;INSERT|
-    ;             AND.W #$0001                                   ;INSERT| ; is mod active?
-    ;             BEQ .noShift                                   ;INSERT|
-    ;             LDA.B zp_6C                                    ;INSERT|
-    ;             CLC                                            ;INSERT|
-    ;             ADC.W #$0020                                   ;INSERT| ; +32px
-    ;             BRA .store                                     ;INSERT|
-    ; .noShift:   LDA.B zp_6C                                    ;INSERT|
                 LDA.B zp_6C                                 
        .store:  STA.W objX,X                          ;80F2D4|801179
                 STA.W objPrevX,X                               ;80F2D7|800DE1
@@ -23369,55 +23327,6 @@ data_80F5CB:
                 dw $007D,$011C,$0129,$0131                     ;80F613|
                 dw $0136,$0137,$012A,$0157                     ;80F61B|
                 dw $0158,$0159,$015A,$0082                     ;80F623|
-
-; ==============================================================================
-;  MOD: spawn-detection X correction  (lives in the free space after data_80F5CB
-;  so NOTHING in bank 80 moves; the two hooks in TrySpawnPlacementIfInBox are same-size
-;  replacements: ADC abs,Y -> JSR abs, LDA abs,Y -> JSR abs, both 3 bytes)
-;
-;  Why: with the mod active, sub_80F249 adds +$20 to every spawned object's X,
-;  and the camera (playerCamX) follows those shifted objects, so the spawn box
-;  built in ComputeInitialViewBox / scanBoxPrepHorizontal_left / scanBoxPrepHorizontal_right / loc_80EEF5 is in SHIFTED space.
-;  TrySpawnPlacementIfInBox compared it against the RAW placement X ($1A0A,Y), so placements
-;  were detected $20 px too early. These helpers make the comparison use
-;  placeX + modShift, where modShift = $20 when (modFlags & 1) else 0 --
-;  the exact same condition sub_80F249 uses, so the two can never disagree.
-;  With the mod off, modShift = 0 and behaviour is identical to the original.
-;
-;  Both helpers are called from the middle of a carry-dependent ADC/SBC chain
-;  (TrySpawnPlacementIfInBox relies on the carry left by each instruction), so they keep
-;  the carry exactly as the instruction they replaced would have left it.
-; ==============================================================================
-
-; --- replaces `ADC.W placeHalfW,Y` at $80EF3D.  Entry: C=0 (after CMP #$FFFF, A != $FFFF)
-; --- returns A = placeX + halfW + modShift, C = 0 (same as the original ADC).
-; Mod_PlacementX_PlusHalfW:
-;                 LDA.W modFlags                                 ;INSERT|
-;                 AND.W #$0001                                   ;INSERT|
-;                 ASL A                                          ;INSERT|  x2
-;                 ASL A                                          ;INSERT|  x4
-;                 ASL A                                          ;INSERT|  x8
-;                 ASL A                                          ;INSERT|  x16
-;                 ASL A                                          ;INSERT|  x32 -> A = 0 or $0020, C = 0
-;                 ADC.W placeX,Y                               ;INSERT|  + placeX
-;                 ADC.W placeHalfW,Y                               ;INSERT|  + halfW
-;                 RTS                                            ;INSERT|
-
-; ; --- replaces `LDA.W placeX,Y` at $80EF44.  Entry: C = carry from the previous SBC
-; ; --- returns A = placeX + modShift, C preserved (LDA never touched it).
-; Mod_PlacementX_Shifted:
-;                 PHP                                            ;INSERT|  save C
-;                 LDA.W modFlags                                 ;INSERT|
-;                 AND.W #$0001                                   ;INSERT|
-;                 ASL A                                          ;INSERT|
-;                 ASL A                                          ;INSERT|
-;                 ASL A                                          ;INSERT|
-;                 ASL A                                          ;INSERT|
-;                 ASL A                                          ;INSERT|  A = 0 or $0020
-;                 CLC                                            ;INSERT|
-;                 ADC.W placeX,Y                               ;INSERT|  + placeX
-;                 PLP                                            ;INSERT|  restore C (and M/X, unchanged)
-;                 RTS                                            ;INSERT|
 
 
 

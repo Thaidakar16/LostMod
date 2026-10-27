@@ -6452,16 +6452,30 @@ ComputeCameras:
 ;    writes HW: TM
 ;    writes:    mainScreenShadow
 ;    reads:     mainScreenShadow, ram_1A00
-;    calls:     FillTilemapFull, sub_80C655
+;    calls:     FillTilemapFull, FillTilemapFullBg2
 ; --------------------------------------------------------
 ppucfg_809EE2:
                 LDA.W #$0015                                   ;809EE2|
                 STA.W mainScreenShadow                         ;809EE5|800394
-                JSR.W FillTilemapFull                          ;809EE8|80C086
-                LDX.W ram_1A00                                 ;809EEB|801A00
+                
+                LDA.W modFlags
+                BIT.W #$0001
+                BEQ .original
+                JSR.W FillTilemapFullMod
+                BRA +
+
+     .original: JSR.W FillTilemapFull                          ;809EE8|80C086
+             +: LDX.W ram_1A00                                 ;809EEB|801A00
                 BMI .skip                                      ;809EEE|809EFC
-                JSR.W sub_80C655                               ;809EF0|80C655
-                LDA.W mainScreenShadow                         ;809EF3|800394
+                
+                ; LDA.W modFlags
+                ; BIT.W #$0001
+                ; BEQ .original2
+                ; JSR.W FillTilemapFullBg2Mod
+                ; BRA +
+
+    .original2: JSR.W FillTilemapFullBg2                               ;809EF0|80C655
+             +: LDA.W mainScreenShadow                         ;809EF3|800394
                 ORA.W #$0002                                   ;809EF6|
                 STA.W mainScreenShadow                         ;809EF9|800394
 
@@ -12477,6 +12491,61 @@ FillTilemapFull:
 
          .exit: RTS                                            ;80C0D1|
 
+FillTilemapFullMod:
+                LDA.B playerCamX                          ;80C086|000044
+                STA.W refillLastCamX                           ;80C088|8016A9
+                LSR A                                          ;80C08B|
+                LSR A                                          ;80C08C|
+                LSR A                                          ;80C08D|
+                AND.W #$FFFE                                   ;80C08E|
+          
+                STA.W refillColTileX                           ;80C091|8016C5
+                TAX                                            ;80C094|
+                LDA.B playerCamY                               ;80C095|000046
+                STA.W refillLastCamY                           ;80C097|8016AB
+                LSR A                                          ;80C09A|
+                LSR A                                          ;80C09B|
+                LSR A                                          ;80C09C|
+                AND.W #$FFFE                                   ;80C09D|
+             
+                STA.W refillRowTileY                           ;80C0A0|8016C7
+                TAY                                            ;80C0A3|
+                LDA.W gameModeFlags                            ;80C0A4|8019E3
+                BIT.W #$000A                                   ;80C0A7|
+                BNE .exit                                      ;80C0AA|80C0D1
+                DEX                                            ;80C0AC|
+                DEX                                            ;80C0AD|
+                DEX                                            ;80C0AE|
+                DEX                                            ;80C0AF|
+                LDA.B playerCamY                               ;80C0B0|000046
+                BIT.W #$0008                                   ;80C0B2|
+                BNE +                                          ;80C0B5|80C0B9
+                DEY                                            ;80C0B7|
+                DEY                                            ;80C0B8|
+
+             +: LDA.W #$FFFC                                   ;80C0B9|
+
+
+         .loop: PHX                                            ;80C0BC|
+                PHY                                            ;80C0BD|
+                PHA                                            ;80C0BE|
+                JSR.W BuildTilemapColMod                        ;80C0BF|80C2BE
+                JSR.W UploadTilemapColumnP1                      ;80C0C2|80C517
+                PLA                                            ;80C0C5|
+                PLY                                            ;80C0C6|
+                PLX                                            ;80C0C7|
+           
+                INX                                            ;80C0C8|
+                INX                                            ;80C0C9|
+                INC A                                          ;80C0CA|
+                INC A                                          ;80C0CB|
+  
+                CMP.W #$0024                                   ;80C0CC|
+                BNE .loop                                      ;80C0CF|80C0BC
+
+         .exit: RTS                                            ;80C0D1|
+
+
 
 ; --------------------------------------------------------
 ;  sub_80C0D2   [21 ins, returns RTS]
@@ -14142,13 +14211,13 @@ UploadTilemapColumnP1:
                 REP #$30                                 
                 RTS
 ; --------------------------------------------------------
-;  sub_80C655   [60 ins, returns RTS]
+;  FillTilemapFullBg2   [60 ins, returns RTS]
 ;    callers: ppucfg_809EE2
 ;    writes:    ram_16AD, ram_16AF, ram_16C9, ram_16CB
 ;    reads:     bg2CamXSrc, bg2CamYSrc, gameModeFlags
 ;    calls:     sub_80C91E, VramColUpload_C
 ; --------------------------------------------------------
-sub_80C655:
+FillTilemapFullBg2:
                 LDA.W bg2CamXSrc                               ;80C655|8016A5
                 STA.W ram_16AD                                 ;80C658|8016AD
                 LSR A                                          ;80C65B|
@@ -14214,6 +14283,74 @@ sub_80C655:
                 CMP.W #$0040                                   ;80C6B7|
                 BNE .loop2                                     ;80C6BA|80C6A7
                 RTS                                            ;80C6BC|
+
+; FillTilemapFullBg2Mod:
+;                 LDA.W bg2CamXSrc                               ;80C655|8016A5
+;                 STA.W ram_16AD                                 ;80C658|8016AD
+;                 LSR A                                          ;80C65B|
+;                 LSR A                                          ;80C65C|
+;                 LSR A                                          ;80C65D|
+;                 AND.W #$FFFE                                   ;80C65E|
+;                 STA.W ram_16C9                                 ;80C661|8016C9
+;                 TAX                                            ;80C664|
+;                 LDA.W bg2CamYSrc                               ;80C665|8016A7
+;                 STA.W ram_16AF                                 ;80C668|8016AF
+;                 LSR A                                          ;80C66B|
+;                 LSR A                                          ;80C66C|
+;                 LSR A                                          ;80C66D|
+;                 AND.W #$FFFE                                   ;80C66E|
+;                 STA.W ram_16CB                                 ;80C671|8016CB
+;                 TAY                                            ;80C674|
+;                 LDA.W gameModeFlags                            ;80C675|8019E3
+;                 BIT.W #$0004                                   ;80C678|
+;                 BNE .skip                                      ;80C67B|80C6A4
+;                 DEX                                            ;80C67D|
+;                 DEX                                            ;80C67E|
+;                 DEX                                            ;80C67F|
+;                 DEX                                            ;80C680|
+;                 LDA.W bg2CamYSrc                               ;80C681|8016A7
+;                 BIT.W #$0008                                   ;80C684|
+;                 BNE +                                          ;80C687|80C68B
+;                 DEY                                            ;80C689|
+;                 DEY                                            ;80C68A|
+
+;              +: LDA.W #$FFFC                                   ;80C68B|
+
+;          .loop: PHX                                            ;80C68E|
+;                 PHY                                            ;80C68F|
+;                 PHA                                            ;80C690|
+;                 JSR.W sub_80C91E                               ;80C691|80C91E
+;                 JSR.W VramColUpload_C                          ;80C694|80CB75
+;                 PLA                                            ;80C697|
+;                 PLY                                            ;80C698|
+;                 PLX                                            ;80C699|
+;                 INX                                            ;80C69A|
+;                 INX                                            ;80C69B|
+;                 INC A                                          ;80C69C|
+;                 INC A                                          ;80C69D|
+;                 CMP.W #$0024                                   ;80C69E|
+;                 BNE .loop                                      ;80C6A1|80C68E
+;                 RTS                                            ;80C6A3|
+
+
+;          .skip: LDA.W #$0000                                   ;80C6A4|
+
+;         .loop2: PHX                                            ;80C6A7|
+;                 PHY                                            ;80C6A8|
+;                 PHA                                            ;80C6A9|
+;                 JSR.W sub_80C91E                               ;80C6AA|80C91E
+;                 JSR.W VramColUpload_C                          ;80C6AD|80CB75
+;                 PLA                                            ;80C6B0|
+;                 PLY                                            ;80C6B1|
+;                 PLX                                            ;80C6B2|
+;                 INX                                            ;80C6B3|
+;                 INX                                            ;80C6B4|
+;                 INC A                                          ;80C6B5|
+;                 INC A                                          ;80C6B6|
+;                 CMP.W #$0040                                   ;80C6B7|
+;                 BNE .loop2                                     ;80C6BA|80C6A7
+;                 RTS                                            ;80C6BC|
+
 
 
 ; --------------------------------------------------------
@@ -14631,7 +14768,7 @@ sub_80C8CB:
 
 ; --------------------------------------------------------
 ;  sub_80C91E   [53 ins, returns RTS]
-;    callers: sub_80C655, sub_80C825, sub_80C84C
+;    callers: FillTilemapFullBg2, sub_80C825, sub_80C84C
 ;    writes:    tmp32, tmp34, vramColDstAddrC, vramColLen0C, vramColDstAddrCWrap, vramColLen1C
 ;    reads:     tmp32, tmp34, ram_16C9, vramColDstAddrC, vramColLen0C, ram_199F ...
 ;    calls:     sub_80C984
@@ -14987,7 +15124,7 @@ sub_80CAC7:
 
 ; --------------------------------------------------------
 ;  VramColUpload_C   [55 ins, returns RTS]
-;    callers: ProcessTilemapEdits, sub_80C655
+;    callers: ProcessTilemapEdits, FillTilemapFullBg2
 ;    writes HW: A1B0, A1TL0, BBAD0, DASL0, DMAP0, MDMAEN, VMADDL, VMAIN
 ;    reads:     vramColDstAddrC, vramColLen0C, vramColDstAddrCWrap, vramColLen1C
 ; --------------------------------------------------------

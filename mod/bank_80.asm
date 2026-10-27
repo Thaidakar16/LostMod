@@ -266,9 +266,9 @@ levelTileMapPtr        = $0050  ; refs=7 (r4/w3) [LDA:4,STA:2,STX:1], 6 site(s);
 zp_52                  = $0052  ; refs=3 (r1/w2) [STY:1,LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table
 tileVisualPtr          = $0054  ; refs=16 (r14/w2) [LDA:14,STX:1,STA:1], 6 site(s); indexed (,X/,Y) -> array/table
 zp_56                  = $0056  ; refs=3 (r1/w2) [STY:1,LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table
-zp_58                  = $0058  ; refs=7 (r4/w3) [LDA:4,STA:2,STX:1], 5 site(s); indexed (,X/,Y) -> array/table
+levelBg2TileMapPtr                  = $0058  ; refs=7 (r4/w3) [LDA:4,STA:2,STX:1], 5 site(s); indexed (,X/,Y) -> array/table
 zp_5A                  = $005A  ; refs=3 (r1/w2) [STY:1,LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table
-zp_5C                  = $005C  ; refs=12 (r9/w3) [LDA:9,STA:2,STX:1], 4 site(s); indexed (,X/,Y) -> array/table
+Bg2tileVisualPtr                  = $005C  ; refs=12 (r9/w3) [LDA:9,STA:2,STX:1], 4 site(s); indexed (,X/,Y) -> array/table
 zp_5E                  = $005E  ; refs=3 (r1/w2) [STY:1,LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table
 zp_60                  = $0060  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s); indexed (,X/,Y) -> array/table
 zp_62                  = $0062  ; refs=2 (r1/w1) [LDA:1,STA:1], 1 site(s); indexed (,X/,Y) -> array/table
@@ -577,8 +577,8 @@ bg2CamXSrc             = $16A5  ; refs=11 (r6/w5) [LDA:5,STA:4,ADC:1,STZ:1], 6 s
 bg2CamYSrc             = $16A7  ; refs=22 (r17/w5) [LDA:13,STA:4,LDX:2,ADC:1], 10 site(s)
 refillLastCamX         = $16A9  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s)
 refillLastCamY         = $16AB  ; refs=5 (r3/w2) [STA:2,LDA:2,SBC:1], 4 site(s)
-ram_16AD               = $16AD  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s)
-ram_16AF               = $16AF  ; refs=5 (r3/w2) [STA:2,LDA:2,SBC:1], 4 site(s)
+refillLastBg2CamXSrc               = $16AD  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s)
+refillLastBg2CamYSrc               = $16AF  ; refs=5 (r3/w2) [STA:2,LDA:2,SBC:1], 4 site(s)
 bg2CamXFrac            = $16B1  ; refs=5 (r2/w3) [STA:3,ADC:2], 3 site(s)
 bg2CamYFrac            = $16B3  ; refs=5 (r2/w3) [STA:3,ADC:2], 3 site(s)
 bg1CamX                = $16B5  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s)
@@ -595,8 +595,8 @@ bg2ScrollYLo           = $16C3  ; refs=2 (r1/w1) [STA:1,LDA:1], 1 site(s)
 bg2ScrollYHi           = $16C4  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 refillColTileX         = $16C5  ; refs=13 (r10/w3) [LDX:5,STA:3,LDA:3,SBC:1], 7 site(s)
 refillRowTileY         = $16C7  ; refs=11 (r8/w3) [LDY:4,STA:3,LDA:2,SBC:1], 7 site(s)
-ram_16C9               = $16C9  ; refs=12 (r11/w1) [LDX:5,INC:2,DEC:2,STA:1], 6 site(s)
-ram_16CB               = $16CB  ; refs=10 (r7/w3) [LDY:4,STA:3,LDA:2,ADC:1], 6 site(s)
+refillBgCol2TileX               = $16C9  ; refs=12 (r11/w1) [LDX:5,INC:2,DEC:2,STA:1], 6 site(s)
+refillBg2RowTileY               = $16CB  ; refs=10 (r7/w3) [LDY:4,STA:3,LDA:2,ADC:1], 6 site(s)
 colDmaVramDest0        = $16CD  ; refs=5 (r3/w2) [STA:2,LDA:2,ADC:1], 2 site(s)
 colDmaLen0             = $16CF  ; refs=4 (r3/w1) [LDA:2,STA:1,SBC:1], 2 site(s)
 colDmaVramDest1        = $16D1  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s)
@@ -607,32 +607,32 @@ rowDmaVramDest1        = $16D9  ; refs=5 (r3/w2) [LDA:2,STY:1,ADC:1,STA:1], 2 si
 rowDmaLen1             = $16DB  ; refs=4 (r2/w2) [STA:2,LDA:2], 2 site(s)
 rowDmaVramDest2        = $16DD  ; refs=5 (r3/w2) [LDA:2,STX:1,ADC:1,STA:1], 2 site(s)
 rowDmaLen2             = $16DF  ; refs=6 (r4/w2) [LDA:4,STA:1,STZ:1], 2 site(s)
-vramColDstAddrC        = $16E1  ; refs=5 (r3/w2) [STA:2,LDA:2,ADC:1], 2 site(s)
-vramColLen0C           = $16E3  ; refs=4 (r3/w1) [LDA:2,STA:1,SBC:1], 2 site(s)
-vramColDstAddrCWrap    = $16E5  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s)
-vramColLen1C           = $16E7  ; refs=5 (r4/w1) [LDA:4,STA:1], 2 site(s)
-vramColDstAddrD        = $16E9  ; refs=7 (r4/w3) [ADC:2,STA:2,LDA:2,STX:1], 2 site(s)
-vramColLen0D           = $16EB  ; refs=4 (r3/w1) [LDA:2,STA:1,SBC:1], 2 site(s)
-vramColDstAddrD2       = $16ED  ; refs=5 (r3/w2) [LDA:2,STY:1,ADC:1,STA:1], 2 site(s)
-vramColLen1D           = $16EF  ; refs=4 (r2/w2) [STA:2,LDA:2], 2 site(s)
-vramColDstAddrDWrap    = $16F1  ; refs=5 (r3/w2) [LDA:2,STX:1,ADC:1,STA:1], 2 site(s)
-vramColLen2D           = $16F3  ; refs=6 (r4/w2) [LDA:4,STA:1,STZ:1], 2 site(s)
-colStageBg1Even        = $16F5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStageBl             = $16F7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStageBg1Odd         = $1735  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStageBr             = $1737  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+Bg2colDmaVramDest0        = $16E1  ; refs=5 (r3/w2) [STA:2,LDA:2,ADC:1], 2 site(s)
+Bg2colDmaLen0           = $16E3  ; refs=4 (r3/w1) [LDA:2,STA:1,SBC:1], 2 site(s)
+Bg2colDmaVramDest1    = $16E5  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s)
+Bg2colDmaLen1           = $16E7  ; refs=5 (r4/w1) [LDA:4,STA:1], 2 site(s)
+Bg2rowDmaVramDest0       = $16E9  ; refs=7 (r4/w3) [ADC:2,STA:2,LDA:2,STX:1], 2 site(s)
+Bg2rowDmaLen0           = $16EB  ; refs=4 (r3/w1) [LDA:2,STA:1,SBC:1], 2 site(s)
+Bg2rowDmaVramDest1       = $16ED  ; refs=5 (r3/w2) [LDA:2,STY:1,ADC:1,STA:1], 2 site(s)
+Bg2rowDmaLen1           = $16EF  ; refs=4 (r2/w2) [STA:2,LDA:2], 2 site(s)
+Bg2rowDmaVramDest2    = $16F1  ; refs=5 (r3/w2) [LDA:2,STX:1,ADC:1,STA:1], 2 site(s)
+Bg2rowDmaLen2           = $16F3  ; refs=6 (r4/w2) [LDA:4,STA:1,STZ:1], 2 site(s)
+ colStagedMetaTileLU        = $16F5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+ colStagedMetaTileLD             = $16F7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+ colStagedMetaTileRU         = $1735  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+ colStagedMetaTileRD             = $1737  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
 rowStagedMetaTileLU    = $1775  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
 rowStagedMetaTileRU    = $1777  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
 rowStagedMetaTileLD    = $17C5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
 rowStagedMetaTileRD    = $17C7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-ram_1815               = $1815  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-ram_1817               = $1817  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-ram_1855               = $1855  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-ram_1857               = $1857  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-ram_1895               = $1895  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-ram_1897               = $1897  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-ram_18E5               = $18E5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-ram_18E7               = $18E7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+colStagedMetaTileBg2LU               = $1815  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+colStagedMetaTileBg2LD               = $1817  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+colStagedMetaTileBg2RU               = $1855  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+colStagedMetaTileBg2RD               = $1857  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+rowStagedMetaTileBg2LU               = $1895  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+rowStagedMetaTileBg2RU               = $1897  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+rowStagedMetaTileBg2LD               = $18E5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+rowStagedMetaTileBg2RD               = $18E7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
 ram_1935               = $1935  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s)
 ram_1947               = $1947  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table
 ram_1957               = $1957  ; refs=3 (r1/w2) [STA:2,DEC:1], 2 site(s); indexed (,X/,Y) -> array/table
@@ -640,10 +640,10 @@ ram_1967               = $1967  ; refs=6 (r5/w1) [LDA:4,CMP:1,STA:1], 4 site(s);
 ram_1977               = $1977  ; refs=4 (r3/w1) [LDA:3,STA:1], 4 site(s); indexed (,X/,Y) -> array/table
 ram_1987               = $1987  ; refs=3 (r2/w1) [LDA:2,STA:1], 3 site(s); indexed (,X/,Y) -> array/table
 tileAttrOr             = $1997  ; refs=12 (r10/w2) [ORA:8,LDA:2,STZ:1,STX:1], 3 site(s)
-ram_1999               = $1999  ; refs=12 (r10/w2) [ORA:8,LDA:2,STZ:1,STX:1], 3 site(s)
+tileAttrOrBg2               = $1999  ; refs=12 (r10/w2) [ORA:8,LDA:2,STZ:1,STX:1], 3 site(s)
 ram_199B               = $199B  ; refs=2 (r0/w2) [STZ:1,STX:1], 1 site(s)
 tilemapBaseHi          = $199D  ; refs=5 (r4/w1) [LDY:3,STA:1,LDX:1], 4 site(s)
-ram_199F               = $199F  ; refs=4 (r3/w1) [LDY:2,STA:1,LDX:1], 3 site(s)
+tilemapBaseBg2Hi               = $199F  ; refs=4 (r3/w1) [LDY:2,STA:1,LDX:1], 3 site(s)
 ram_19A1               = $19A1  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 camMaxX                = $19A3  ; refs=5 (r4/w1) [CMP:2,LDA:2,STA:1], 3 site(s)
 camMaxY                = $19A5  ; refs=5 (r4/w1) [CMP:2,LDA:2,STA:1], 3 site(s)
@@ -654,7 +654,7 @@ ram_19AD               = $19AD  ; refs=3 (r2/w1) [STA:1,CMP:1,LDA:1], 2 site(s)
 ram_19AF               = $19AF  ; refs=3 (r2/w1) [STA:1,CMP:1,LDA:1], 2 site(s)
 ram_19B1               = $19B1  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_19B3               = $19B3  ; refs=1 (r0/w1) [STA:1], 1 site(s)
-ram_19B5               = $19B5  ; refs=5 (r4/w1) [LDA:4,STA:1], 4 site(s)
+levelRowStrideBg2               = $19B5  ; refs=5 (r4/w1) [LDA:4,STA:1], 4 site(s)
 ram_19B7               = $19B7  ; refs=9 (r5/w4) [LDA:3,STY:2,CMP:1,LDY:1], 6 site(s)
 ram_19B9               = $19B9  ; refs=21 (r12/w9) [LDY:8,STY:8,CMP:2,LDA:1], 11 site(s)
 dialogueBoxColorLo     = $19BB  ; colour for CGRAM index 3, low byte
@@ -688,7 +688,7 @@ vramDmaVmaddAB         = $19E8  ; refs=4 (r4/w0) [LDA:3,ADC:1], 4 site(s)
 ram_19E9               = $19E9  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 tilemapBaseLo          = $19EA  ; refs=6 (r6/w0) [LDY:3,LDX:2,LDA:1], 5 site(s)
 ram_19EB               = $19EB  ; refs=2 (r2/w0) [LDA:2], 2 site(s)
-ram_19EC               = $19EC  ; refs=4 (r4/w0) [LDY:2,LDA:1,LDX:1], 3 site(s)
+tilemapBaseBg2Lo               = $19EC  ; refs=4 (r4/w0) [LDY:2,LDA:1,LDX:1], 3 site(s)
 ram_19ED               = $19ED  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 tilemapVramAddr        = $19EE  ; VRAM word address used as base for tilemap clears/uploads
 bg1scShadow            = $19EF  ; shadow of BG1SC (BG1 tilemap base/size) for the current scene
@@ -698,9 +698,9 @@ levelWrapFlags         = $19F4  ; refs=6 (r6/w0) [LDA:6], 6 site(s)
 ram_19F5               = $19F5  ; refs=2 (r2/w0) [LDA:2], 1 site(s)
 ram_19F7               = $19F7  ; refs=2 (r2/w0) [LDA:2], 1 site(s)
 ram_19F9               = $19F9  ; refs=2 (r2/w0) [LDA:1,CMP:1], 2 site(s)
-ram_19FB               = $19FB  ; refs=11 (r11/w0) [LDA:4,CPX:4,LDX:2,CMP:1], 4 site(s)
-ram_19FD               = $19FD  ; refs=11 (r11/w0) [LDA:4,CPY:4,LDY:2,CMP:1], 4 site(s)
-ram_19FF               = $19FF  ; refs=6 (r6/w0) [LDA:6], 6 site(s)
+levelWidthMetaTilesBg2               = $19FB  ; refs=11 (r11/w0) [LDA:4,CPX:4,LDX:2,CMP:1], 4 site(s)
+levelHeightMetaTilesBg2               = $19FD  ; refs=11 (r11/w0) [LDA:4,CPY:4,LDY:2,CMP:1], 4 site(s)
+levelWrapFlagsBg2               = $19FF  ; refs=6 (r6/w0) [LDA:6], 6 site(s)
 ram_1A00               = $1A00  ; refs=3 (r3/w0) [LDA:2,LDX:1], 3 site(s)
 ram_1A02               = $1A02  ; refs=2 (r2/w0) [LDA:2], 1 site(s)
 ram_1A04               = $1A04  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
@@ -5795,10 +5795,10 @@ oam_809BC3:
                 CLC                                            ;809C11|
                 ADC.W #$0400                                   ;809C12|
                 STA.W tilemapBaseHi                            ;809C15|80199D
-                LDA.W ram_19EC                                 ;809C18|8019EC
+                LDA.W tilemapBaseBg2Lo                                 ;809C18|8019EC
                 CLC                                            ;809C1B|
                 ADC.W #$0400                                   ;809C1C|
-                STA.W ram_199F                                 ;809C1F|80199F
+                STA.W tilemapBaseBg2Hi                                 ;809C1F|80199F
                 LDA.W tilemapVramAddr                          ;809C22|8019EE
                 CLC                                            ;809C25|
                 ADC.W #$0400                                   ;809C26|
@@ -6030,7 +6030,7 @@ ShiftObjPlacementBoxes:
 ; --------------------------------------------------------
 ;  sub_809CA6   [32 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
-;    writes:    tmp32, zp_58, zp_5A, zp_5C, zp_5E
+;    writes:    tmp32, levelBg2TileMapPtr, zp_5A, Bg2tileVisualPtr, zp_5E
 ;    reads:     tmp32, tileVisualPtr, ram_19E4, ram_19F9, ram_1A00, ram_1A02 ...
 ;    calls:     sub_80BCCD, sub_80BBFF, DecompressGfxEntry
 ; --------------------------------------------------------
@@ -6040,15 +6040,15 @@ sub_809CA6:
                 STY.B zp_5E                                    ;809CAB|00005E
                 LDA.W ram_1A00                                 ;809CAD|801A00
                 BMI .exit                                      ;809CB0|809CEB
-                STX.B zp_58                                    ;809CB2|000058
+                STX.B levelBg2TileMapPtr                                    ;809CB2|000058
                 JSR.W sub_80BCCD                               ;809CB4|80BCCD
                 LDA.B tileVisualPtr                            ;809CB7|000054
-                STA.B zp_5C                                    ;809CB9|00005C
+                STA.B Bg2tileVisualPtr                                    ;809CB9|00005C
                 LDA.W ram_1A04                                 ;809CBB|801A04
                 BMI .skip                                      ;809CBE|809CCD
                 CMP.W ram_19F9                                 ;809CC0|8019F9
                 BEQ .skip                                      ;809CC3|809CCD
-                STX.B zp_5C                                    ;809CC5|00005C
+                STX.B Bg2tileVisualPtr                                    ;809CC5|00005C
                 LDY.W #$007F                                   ;809CC7|
                 JSR.W sub_80BCCD                               ;809CCA|80BCCD
 
@@ -6247,12 +6247,12 @@ sub_809DC4:
 ;  ppucfg_809DDA   [20 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
 ;    writes HW: BGMODE
-;    writes:    tileAttrOr, ram_1999, ram_199B
+;    writes:    tileAttrOr, tileAttrOrBg2, ram_199B
 ;    reads:     ram_19E2
 ; --------------------------------------------------------
 ppucfg_809DDA:
                 STZ.W tileAttrOr                               ;809DDA|801997
-                STZ.W ram_1999                                 ;809DDD|801999
+                STZ.W tileAttrOrBg2                                 ;809DDD|801999
                 STZ.W ram_199B                                 ;809DE0|80199B
                 LDA.W ram_19E2                                 ;809DE3|8019E2
                 LDX.W #$2000                                   ;809DE6|
@@ -6262,7 +6262,7 @@ ppucfg_809DDA:
 
              +: BIT.W #$0002                                   ;809DF1|
                 BEQ +                                          ;809DF4|809DF9
-                STX.W ram_1999                                 ;809DF6|801999
+                STX.W tileAttrOrBg2                                 ;809DF6|801999
 
              +: BIT.W #$0004                                   ;809DF9|
                 BEQ +                                          ;809DFC|809E01
@@ -6280,7 +6280,7 @@ ppucfg_809DDA:
 ;  ComputeCameraBounds   [43 ins, returns RTS]
 ;    callers: ScreenReinitHdmaOff
 ;    writes:    camMaxX, camMaxY, ram_19A7, ram_19A9, levelRowStride, ram_19AD ...
-;    reads:     hudYOffset  , levelWidthMetaTiles, levelHeightMetaTiles, ram_19FB, ram_19FD
+;    reads:     hudYOffset  , levelWidthMetaTiles, levelHeightMetaTiles, levelWidthMetaTilesBg2, levelHeightMetaTilesBg2
 ; --------------------------------------------------------
 ComputeCameraBounds:
                 LDA.W modFlags                                  ;INSERT|
@@ -6316,9 +6316,9 @@ ComputeCameraBounds:
                 ADC.W hudYOffset                               ;809E30|800340
                 ADC.W tmp32                                    ;INSERT|
                 STA.W camMaxY                                  ;809E33|8019A5
-                LDA.W ram_19FB                                 ;809E36|8019FB
+                LDA.W levelWidthMetaTilesBg2                                 ;809E36|8019FB
                 ASL A                                          ;809E39|
-                STA.W ram_19B5                                 ;809E3A|8019B5
+                STA.W levelRowStrideBg2                                 ;809E3A|8019B5
                 STA.W ram_19B1                                 ;809E3D|8019B1
                 ASL A                                          ;809E40|
                 ASL A                                          ;809E41|
@@ -6326,7 +6326,7 @@ ComputeCameraBounds:
                 SEC                                            ;809E43|
                 SBC.W #$0100                                   ;809E44|
                 STA.W ram_19AD                                 ;809E47|8019AD
-                LDA.W ram_19FD                                 ;809E4A|8019FD
+                LDA.W levelHeightMetaTilesBg2                                 ;809E4A|8019FD
                 ASL A                                          ;809E4D|
                 STA.W ram_19B3                                 ;809E4E|8019B3
                 ASL A                                          ;809E51|
@@ -7276,42 +7276,42 @@ sub_80A3D7:
 ; --------------------------------------------------------
 ;  sub_80A402   [39 ins, returns RTS]
 ;    callers: sub_80A3D7
-;    writes:    tmp32, zp_58, mulMultiplicand, mulMultiplierLo
-;    reads:     tmp32, zp_58, mulResult, ram_19B5, ram_19FB, ram_19FD
+;    writes:    tmp32, levelBg2TileMapPtr, mulMultiplicand, mulMultiplierLo
+;    reads:     tmp32, levelBg2TileMapPtr, mulResult, levelRowStrideBg2, levelWidthMetaTilesBg2, levelHeightMetaTilesBg2
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
 sub_80A402:
-                LDA.W ram_19FD                                 ;80A402|8019FD
+                LDA.W levelHeightMetaTilesBg2                                 ;80A402|8019FD
                 DEC A                                          ;80A405|
                 STA.B tmp32                              ;80A406|000032
                 TYA                                            ;80A408|
-                CMP.W ram_19FD                                 ;80A409|8019FD
+                CMP.W levelHeightMetaTilesBg2                                 ;80A409|8019FD
                 BCC +                                          ;80A40C|80A410
                 AND.B tmp32                              ;80A40E|000032
 
              +: STA.B mulMultiplicand                          ;80A410|0000AC
-                LDA.W ram_19B5                                 ;80A412|8019B5
+                LDA.W levelRowStrideBg2                                 ;80A412|8019B5
                 STA.B mulMultiplierLo                          ;80A415|0000B0
                 JSR.W Mul8x16                                  ;80A417|809152
-                LDA.W ram_19FB                                 ;80A41A|8019FB
+                LDA.W levelWidthMetaTilesBg2                                 ;80A41A|8019FB
                 DEC A                                          ;80A41D|
                 STA.B tmp32                              ;80A41E|000032
                 TXA                                            ;80A420|
-                CMP.W ram_19FB                                 ;80A421|8019FB
+                CMP.W levelWidthMetaTilesBg2                                 ;80A421|8019FB
                 BCC +                                          ;80A424|80A428
                 AND.B tmp32                              ;80A426|000032
 
              +: ASL A                                          ;80A428|
                 ADC.B mulResult                                ;80A429|0000B2
                 TAY                                            ;80A42B|
-                LDA.B [zp_58],Y                                ;80A42C|000058
+                LDA.B [levelBg2TileMapPtr],Y                                ;80A42C|000058
                 RTS                                            ;80A42E|
 
                 PHX                                            ;80A42F|
                 PHY                                            ;80A430|
                 STA.B tmp32                              ;80A431|000032
                 STY.B mulMultiplicand                          ;80A433|0000AC
-                LDA.W ram_19B5                                 ;80A435|8019B5
+                LDA.W levelRowStrideBg2                                 ;80A435|8019B5
                 STA.B mulMultiplierLo                          ;80A438|0000B0
                 JSR.W Mul8x16                                  ;80A43A|809152
                 TXA                                            ;80A43D|
@@ -7319,7 +7319,7 @@ sub_80A402:
                 ADC.B mulResult                                ;80A43F|0000B2
                 TAY                                            ;80A441|
                 LDA.B tmp32                              ;80A442|000032
-                STA.B [zp_58],Y                                ;80A444|000058
+                STA.B [levelBg2TileMapPtr],Y                                ;80A444|000058
                 PLY                                            ;80A446|
                 PLX                                            ;80A447|
                 RTS                                            ;80A448|
@@ -12338,7 +12338,7 @@ SetPpuUpdateBits:
 ;    callers: VBlank_Flush_Tilemap
 ;    writes:    tilemapUploadMask
 ;    reads:     tilemapUploadMask
-;    calls:     UploadTilemapColumn, UploadTilemapRow, VramColUpload_C, VramColUpload_D
+;    calls:     UploadTilemapColumn, UploadTilemapRow, UploadTilemapColumnBg2, UploadTilemapRowBg2
 ; --------------------------------------------------------
 
 ;== hdr 80C04B ==
@@ -12348,8 +12348,8 @@ SetPpuUpdateBits:
 ; ($03AE) and dispatches up to four column-upload routines:
 ;   bit0 VramColUpload_A 80C517   src $7E:16F5 / $7E:1735
 ;   bit1 VramColUpload_B 80C5A1   src $7E:1775 / $7E:17C5
-;   bit2 VramColUpload_C 80CB75   src $7E:1815 / $7E:1855
-;   bit3 VramColUpload_D 80CBFF   src $7E:1895 / $7E:18E5
+;   bit2 UploadTilemapColumnBg2 80CB75   src $7E:1815 / $7E:1855
+;   bit3 UploadTilemapRowBg2 80CBFF   src $7E:1895 / $7E:18E5
 ;
 ; All four use GP-DMA on CHANNEL 0 ONLY (MDMAEN=$01):
 ;   VMAIN=$81  -> inc VRAM addr after $2119 write, +1 word/step
@@ -12388,12 +12388,12 @@ ProcessTilemapEdits:
              +: LDA.W tilemapUploadMask                        ;80C065|8003AE
                 BIT.W #$0004                                   ;80C068|
                 BEQ +                                          ;80C06B|80C070
-                JSR.W VramColUpload_C                          ;80C06D|80CB75
+                JSR.W UploadTilemapColumnBg2                          ;80C06D|80CB75
 
              +: LDA.W tilemapUploadMask                        ;80C070|8003AE
                 BIT.W #$0008                                   ;80C073|
                 BEQ +                                          ;80C076|80C07B
-                JSR.W VramColUpload_D                          ;80C078|80CBFF
+                JSR.W UploadTilemapRowBg2                          ;80C078|80CBFF
              
              +: LDA.W tilemapUploadMask                        ;INSERT|8003AE
                 BIT.W #$0010                                   ;INSERT|
@@ -12444,18 +12444,18 @@ FillTilemapFull:
                 LSR A                                          ;80C08C|
                 LSR A                                          ;80C08D|
                 AND.W #$FFFE                                   ;80C08E|
-          
                 STA.W refillColTileX                           ;80C091|8016C5
                 TAX                                            ;80C094|
+                
                 LDA.B playerCamY                               ;80C095|000046
                 STA.W refillLastCamY                           ;80C097|8016AB
                 LSR A                                          ;80C09A|
                 LSR A                                          ;80C09B|
                 LSR A                                          ;80C09C|
                 AND.W #$FFFE                                   ;80C09D|
-             
                 STA.W refillRowTileY                           ;80C0A0|8016C7
                 TAY                                            ;80C0A3|
+                
                 LDA.W gameModeFlags                            ;80C0A4|8019E3
                 BIT.W #$000A                                   ;80C0A7|
                 BNE .exit                                      ;80C0AA|80C0D1
@@ -13264,7 +13264,7 @@ BuildTilemapCol:
                                                                                         ; Y (metatile-row, incremented below) are FetchConvertMetatileCol's inputs
                 INY                                            ;80C2CF|         ; next metatile-row down
                 LDA.B tmp34                           ;80C2D0|000034   ; tmp34 is this loop's counter AND the write offset into the
-                CLC                                            ;80C2D2|         ; colStageBg1Even/Odd/Bl/Br staging arrays (4 bytes/metatile-row: see
+                CLC                                            ;80C2D2|         ;  colStagedMetaTileLU/Odd/Bl/Br staging arrays (4 bytes/metatile-row: see
                 ADC.W #$0004                                  ;80C2D3|         ; FetchConvertMetatileCol's writes)
                 STA.B tmp34                           ;80C2D6|000034
                 CMP.W #$0040                                   ;80C2D8|         ; column loop runs 16 metatile-rows ($34: 0,4,..,3C; ends at #$0040)
@@ -13306,7 +13306,7 @@ BuildTilemapCol:
 ; --------------------------------------------------------
 ;  FetchConvertMetatileCol   [83 ins, returns RTS]
 ;    callers: BuildTilemapCol
-;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, colStageBg1Even ...
+;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo,  colStagedMetaTileLU ...
 ;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, levelTileMapPtr, tileVisualPtr ...
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
@@ -13356,10 +13356,10 @@ FetchConvertMetatileCol:
                 BEQ .skip2                                     ;80C351|80C369   ; bit3 clear -> neither wrap nor blank-fill: fall into the CLAMP path below
                 LDX.B tmp34                                    ;80C353|000034   ; bit3 SET: don't fetch anything real for this off-map cell -- just
                 LDA.W tileAttrOr                               ;80C355|801997   ; write the "empty" attribute word (no tile index bits set, so tile 0)
-                STA.W colStageBg1Even,X                        ;80C358|8016F5   ; into all 4 of this metatile's staging slots (TL/TR/BL/BR) and
-                STA.W colStageBg1Odd,X                         ;80C35B|801735   ; return immediately -- this is what lets a level have "void" past its
-                STA.W colStageBl,X                             ;80C35E|8016F7   ; edges instead of either wrapping or showing a stretched last column
-                STA.W colStageBr,X                             ;80C361|801737
+                STA.W colStagedMetaTileLU,X                        ;80C358|8016F5   ; into all 4 of this metatile's staging slots (TL/TR/BL/BR) and
+                STA.W colStagedMetaTileRU,X                         ;80C35B|801735   ; return immediately -- this is what lets a level have "void" past its
+                STA.W colStagedMetaTileLD,X                             ;80C35E|8016F7   ; edges instead of either wrapping or showing a stretched last column
+                STA.W colStagedMetaTileRD,X                             ;80C361|801737
                 LDX.B refillSaveX                              ;80C364|00003E
                 LDY.B refillSaveY                              ;80C366|000040
                 RTS                                            ;80C368|
@@ -13411,22 +13411,22 @@ FetchConvertMetatileCol:
                 LDA.B [tileVisualPtr],Y                        ;80C3A7|000054   ; step 5: fetch the metatile's 4 BG character words (TL,TR,BL,BR, in that
                 ORA.W tileAttrOr                               ;80C3A9|801997   ; order) from the metatile->graphics lookup table, OR-ing in the current
                 LDX.B tmp34                                    ;80C3AC|000034   ; scene's shared attribute bits (palette/priority/flip -- tileAttrOr) into
-                STA.W colStageBg1Even,X                        ;80C3AE|8016F5   ; each one, then write all 4 into this metatile's slot in the column
+                STA.W colStagedMetaTileLU,X                        ;80C3AE|8016F5   ; each one, then write all 4 into this metatile's slot in the column
                 INY                                            ;80C3B1|         ; staging buffers, ready for BuildTilemapCol to DMA out to VRAM.
                 INY                                            ;80C3B2|
                 LDA.B [tileVisualPtr],Y                        ;80C3B3|000054
                 ORA.W tileAttrOr                               ;80C3B5|801997
-                STA.W colStageBg1Odd,X                         ;80C3B8|801735
+                STA.W  colStagedMetaTileRU,X                         ;80C3B8|801735
                 INY                                            ;80C3BB|
                 INY                                            ;80C3BC|
                 LDA.B [tileVisualPtr],Y                        ;80C3BD|000054
                 ORA.W tileAttrOr                               ;80C3BF|801997
-                STA.W colStageBl,X                             ;80C3C2|8016F7
+                STA.W  colStagedMetaTileLD,X                             ;80C3C2|8016F7
                 INY                                            ;80C3C5|
                 INY                                            ;80C3C6|
                 LDA.B [tileVisualPtr],Y                        ;80C3C7|000054
                 ORA.W tileAttrOr                               ;80C3C9|801997
-                STA.W colStageBr,X                             ;80C3CC|801737
+                STA.W  colStagedMetaTileRD,X                             ;80C3CC|801737
                 LDX.B refillSaveX                              ;80C3CF|00003E
                 LDY.B refillSaveY                              ;80C3D1|000040
                 RTS                                            ;80C3D3|
@@ -13965,8 +13965,8 @@ FetchConvertMetatileRowMod:
 ;  (address increments after the HIGH byte, +32 word step) so
 ;  consecutive writes walk DOWN a tilemap column. DMA ch.0,
 ;  mode 1 (write $2118/$2119), A-bus src in bank $7E.
-;    even half: src colStageBg1Even($16F5) -> $16CD
-;    odd  half: src colStageBg1Odd ($1735) -> $16CD+1
+;    even half: src  colStagedMetaTileLU($16F5) -> $16CD
+;    odd  half: src  colStagedMetaTileRU ($1735) -> $16CD+1
 ;  each split into the main run and the wrapped run when the
 ;  column crosses the 32-col seam ($16D3 != 0). VMAIN reset
 ;  to $80 on exit.
@@ -14213,27 +14213,29 @@ UploadTilemapColumnP1:
 ; --------------------------------------------------------
 ;  FillTilemapFullBg2   [60 ins, returns RTS]
 ;    callers: ppucfg_809EE2
-;    writes:    ram_16AD, ram_16AF, ram_16C9, ram_16CB
+;    writes:    refillLastBg2CamXSrc, refillLastBg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
 ;    reads:     bg2CamXSrc, bg2CamYSrc, gameModeFlags
-;    calls:     sub_80C91E, VramColUpload_C
+;    calls:     BuildTilemapColBg2, UploadTilemapColumnBg2
 ; --------------------------------------------------------
 FillTilemapFullBg2:
                 LDA.W bg2CamXSrc                               ;80C655|8016A5
-                STA.W ram_16AD                                 ;80C658|8016AD
+                STA.W refillLastBg2CamXSrc                                 ;80C658|8016AD
                 LSR A                                          ;80C65B|
                 LSR A                                          ;80C65C|
                 LSR A                                          ;80C65D|
                 AND.W #$FFFE                                   ;80C65E|
-                STA.W ram_16C9                                 ;80C661|8016C9
+                STA.W refillBgCol2TileX                                 ;80C661|8016C9
                 TAX                                            ;80C664|
+                
                 LDA.W bg2CamYSrc                               ;80C665|8016A7
-                STA.W ram_16AF                                 ;80C668|8016AF
+                STA.W refillLastBg2CamYSrc                                 ;80C668|8016AF
                 LSR A                                          ;80C66B|
                 LSR A                                          ;80C66C|
                 LSR A                                          ;80C66D|
                 AND.W #$FFFE                                   ;80C66E|
-                STA.W ram_16CB                                 ;80C671|8016CB
+                STA.W refillBg2RowTileY                                 ;80C671|8016CB
                 TAY                                            ;80C674|
+                
                 LDA.W gameModeFlags                            ;80C675|8019E3
                 BIT.W #$0004                                   ;80C678|
                 BNE .skip                                      ;80C67B|80C6A4
@@ -14252,8 +14254,8 @@ FillTilemapFullBg2:
          .loop: PHX                                            ;80C68E|
                 PHY                                            ;80C68F|
                 PHA                                            ;80C690|
-                JSR.W sub_80C91E                               ;80C691|80C91E
-                JSR.W VramColUpload_C                          ;80C694|80CB75
+                JSR.W BuildTilemapColBg2                               ;80C691|80C91E
+                JSR.W UploadTilemapColumnBg2                          ;80C694|80CB75
                 PLA                                            ;80C697|
                 PLY                                            ;80C698|
                 PLX                                            ;80C699|
@@ -14271,8 +14273,8 @@ FillTilemapFullBg2:
         .loop2: PHX                                            ;80C6A7|
                 PHY                                            ;80C6A8|
                 PHA                                            ;80C6A9|
-                JSR.W sub_80C91E                               ;80C6AA|80C91E
-                JSR.W VramColUpload_C                          ;80C6AD|80CB75
+                JSR.W BuildTilemapColBg2                               ;80C6AA|80C91E
+                JSR.W UploadTilemapColumnBg2                          ;80C6AD|80CB75
                 PLA                                            ;80C6B0|
                 PLY                                            ;80C6B1|
                 PLX                                            ;80C6B2|
@@ -14286,20 +14288,20 @@ FillTilemapFullBg2:
 
 ; FillTilemapFullBg2Mod:
 ;                 LDA.W bg2CamXSrc                               ;80C655|8016A5
-;                 STA.W ram_16AD                                 ;80C658|8016AD
+;                 STA.W refillLastBg2CamXSrc                                 ;80C658|8016AD
 ;                 LSR A                                          ;80C65B|
 ;                 LSR A                                          ;80C65C|
 ;                 LSR A                                          ;80C65D|
 ;                 AND.W #$FFFE                                   ;80C65E|
-;                 STA.W ram_16C9                                 ;80C661|8016C9
+;                 STA.W refillBgCol2TileX                                 ;80C661|8016C9
 ;                 TAX                                            ;80C664|
 ;                 LDA.W bg2CamYSrc                               ;80C665|8016A7
-;                 STA.W ram_16AF                                 ;80C668|8016AF
+;                 STA.W refillLastBg2CamYSrc                                 ;80C668|8016AF
 ;                 LSR A                                          ;80C66B|
 ;                 LSR A                                          ;80C66C|
 ;                 LSR A                                          ;80C66D|
 ;                 AND.W #$FFFE                                   ;80C66E|
-;                 STA.W ram_16CB                                 ;80C671|8016CB
+;                 STA.W refillBg2RowTileY                                 ;80C671|8016CB
 ;                 TAY                                            ;80C674|
 ;                 LDA.W gameModeFlags                            ;80C675|8019E3
 ;                 BIT.W #$0004                                   ;80C678|
@@ -14319,8 +14321,8 @@ FillTilemapFullBg2:
 ;          .loop: PHX                                            ;80C68E|
 ;                 PHY                                            ;80C68F|
 ;                 PHA                                            ;80C690|
-;                 JSR.W sub_80C91E                               ;80C691|80C91E
-;                 JSR.W VramColUpload_C                          ;80C694|80CB75
+;                 JSR.W BuildTilemapColBg2                               ;80C691|80C91E
+;                 JSR.W UploadTilemapColumnBg2                          ;80C694|80CB75
 ;                 PLA                                            ;80C697|
 ;                 PLY                                            ;80C698|
 ;                 PLX                                            ;80C699|
@@ -14338,8 +14340,8 @@ FillTilemapFullBg2:
 ;         .loop2: PHX                                            ;80C6A7|
 ;                 PHY                                            ;80C6A8|
 ;                 PHA                                            ;80C6A9|
-;                 JSR.W sub_80C91E                               ;80C6AA|80C91E
-;                 JSR.W VramColUpload_C                          ;80C6AD|80CB75
+;                 JSR.W BuildTilemapColBg2                               ;80C6AA|80C91E
+;                 JSR.W UploadTilemapColumnBg2                          ;80C6AD|80CB75
 ;                 PLA                                            ;80C6B0|
 ;                 PLY                                            ;80C6B1|
 ;                 PLX                                            ;80C6B2|
@@ -14373,7 +14375,7 @@ sub_80C6BD:
 ;  sub_80C6CF   [20 ins, returns RTS]
 ;    callers: sub_808636
 ;    writes:    bg2CamXSrc, bg2CamXFrac
-;    reads:     bg2CamXSrc, bg2CamXFrac, ram_19AD, ram_19FF
+;    reads:     bg2CamXSrc, bg2CamXFrac, ram_19AD, levelWrapFlagsBg2
 ; --------------------------------------------------------
 sub_80C6CF:
                 CLC                                            ;80C6CF|
@@ -14386,7 +14388,7 @@ sub_80C6CF:
                 STA.W bg2CamXSrc                               ;80C6DC|8016A5
                 CMP.W ram_19AD                                 ;80C6DF|8019AD
                 BCC .skip                                      ;80C6E2|80C6F5
-                LDA.W ram_19FF                                 ;80C6E4|8019FF
+                LDA.W levelWrapFlagsBg2                                 ;80C6E4|8019FF
                 AND.W #$0001                                   ;80C6E7|
                 BEQ .skip                                      ;80C6EA|80C6F5
                 LDA.W ram_19AD                                 ;80C6EC|8019AD
@@ -14421,7 +14423,7 @@ sub_80C6FD:
 ;  sub_80C70F   [27 ins, returns RTS]
 ;    callers: sub_808636
 ;    writes:    tmp32, bg2CamXSrc, bg2CamXFrac
-;    reads:     tmp32, bg2CamXSrc, bg2CamXFrac, ram_19FF
+;    reads:     tmp32, bg2CamXSrc, bg2CamXFrac, levelWrapFlagsBg2
 ; --------------------------------------------------------
 sub_80C70F:
                 EOR.W #$FFFF                                   ;80C70F|
@@ -14443,7 +14445,7 @@ sub_80C70F:
                 SBC.B tmp32                              ;80C72E|000032
                 STA.W bg2CamXSrc                               ;80C730|8016A5
                 BCS .skip                                      ;80C733|80C743
-                LDA.W ram_19FF                                 ;80C735|8019FF
+                LDA.W levelWrapFlagsBg2                                 ;80C735|8019FF
                 AND.W #$0001                                   ;80C738|
                 BEQ .skip                                      ;80C73B|80C743
                 STZ.W bg2CamXSrc                               ;80C73D|8016A5
@@ -14477,7 +14479,7 @@ sub_80C74B:
 ;  sub_80C75D   [20 ins, returns RTS]
 ;    callers: sub_808636
 ;    writes:    bg2CamYSrc, bg2CamYFrac
-;    reads:     bg2CamYSrc, bg2CamYFrac, ram_19AF, ram_19FF
+;    reads:     bg2CamYSrc, bg2CamYFrac, ram_19AF, levelWrapFlagsBg2
 ; --------------------------------------------------------
 sub_80C75D:
                 CLC                                            ;80C75D|
@@ -14490,7 +14492,7 @@ sub_80C75D:
                 STA.W bg2CamYSrc                               ;80C76A|8016A7
                 CMP.W ram_19AF                                 ;80C76D|8019AF
                 BCC .skip                                      ;80C770|80C783
-                LDA.W ram_19FF                                 ;80C772|8019FF
+                LDA.W levelWrapFlagsBg2                                 ;80C772|8019FF
                 AND.W #$0001                                   ;80C775|
                 BEQ .skip                                      ;80C778|80C783
                 LDA.W ram_19AF                                 ;80C77A|8019AF
@@ -14525,7 +14527,7 @@ sub_80C78B:
 ;  sub_80C79D   [27 ins, returns RTS]
 ;    callers: sub_808636
 ;    writes:    tmp32, bg2CamYSrc, bg2CamYFrac
-;    reads:     tmp32, bg2CamYSrc, bg2CamYFrac, ram_19FF
+;    reads:     tmp32, bg2CamYSrc, bg2CamYFrac, levelWrapFlagsBg2
 ; --------------------------------------------------------
 sub_80C79D:
                 EOR.W #$FFFF                                   ;80C79D|
@@ -14547,7 +14549,7 @@ sub_80C79D:
                 SBC.B tmp32                              ;80C7BC|000032
                 STA.W bg2CamYSrc                               ;80C7BE|8016A7
                 BCS .skip                                      ;80C7C1|80C7D1
-                LDA.W ram_19FF                                 ;80C7C3|8019FF
+                LDA.W levelWrapFlagsBg2                                 ;80C7C3|8019FF
                 AND.W #$0001                                   ;80C7C6|
                 BEQ .skip                                      ;80C7C9|80C7D1
                 STZ.W bg2CamYSrc                               ;80C7CB|8016A7
@@ -14564,14 +14566,14 @@ loc_80C7D8:
 ; --------------------------------------------------------
 ;  sub_80C7D9   [31 ins, returns RTS]
 ;    callers: sub_80C080
-;    writes:    tmp32, ram_16AD, ram_16AF
-;    reads:     tmp32, bg2CamXSrc, bg2CamYSrc, ram_16AD, ram_16AF, ram_1A00
+;    writes:    tmp32, refillLastBg2CamXSrc, refillLastBg2CamYSrc
+;    reads:     tmp32, bg2CamXSrc, bg2CamYSrc, refillLastBg2CamXSrc, refillLastBg2CamYSrc, ram_1A00
 ;    calls:     sub_80C8CB, sub_80C870, sub_80C84C, sub_80C825
 ; --------------------------------------------------------
 sub_80C7D9:
                 LDA.W ram_1A00                                 ;80C7D9|801A00
                 BMI .exit                                      ;80C7DC|80C824
-                LDA.W ram_16AF                                 ;80C7DE|8016AF
+                LDA.W refillLastBg2CamYSrc                                 ;80C7DE|8016AF
                 AND.W #$FFF8                                   ;80C7E1|
                 STA.B tmp32                              ;80C7E4|000032
                 LDA.W bg2CamYSrc                               ;80C7E6|8016A7
@@ -14586,7 +14588,7 @@ sub_80C7D9:
 
              +: JSR.W sub_80C870                               ;80C7F8|80C870
 
-         .skip: LDA.W ram_16AD                                 ;80C7FB|8016AD
+         .skip: LDA.W refillLastBg2CamXSrc                                 ;80C7FB|8016AD
                 AND.W #$FFF0                                   ;80C7FE|
                 STA.B tmp32                              ;80C801|000032
                 LDA.W bg2CamXSrc                               ;80C803|8016A5
@@ -14602,9 +14604,9 @@ sub_80C7D9:
              +: JSR.W sub_80C825                               ;80C815|80C825
 
         .skip2: LDA.W bg2CamXSrc                               ;80C818|8016A5
-                STA.W ram_16AD                                 ;80C81B|8016AD
+                STA.W refillLastBg2CamXSrc                                 ;80C81B|8016AD
                 LDA.W bg2CamYSrc                               ;80C81E|8016A7
-                STA.W ram_16AF                                 ;80C821|8016AF
+                STA.W refillLastBg2CamYSrc                                 ;80C821|8016AF
 
          .exit: RTS                                            ;80C824|
 
@@ -14612,17 +14614,17 @@ sub_80C7D9:
 ; --------------------------------------------------------
 ;  sub_80C825   [16 ins, returns ?]
 ;    callers: sub_80C7D9
-;    reads:     bg2CamYSrc, ram_16C9, ram_16CB
-;    calls:     sub_80C91E, SetPpuUpdateBits
+;    reads:     bg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
+;    calls:     BuildTilemapColBg2, SetPpuUpdateBits
 ; --------------------------------------------------------
 sub_80C825:
-                INC.W ram_16C9                                 ;80C825|8016C9
-                INC.W ram_16C9                                 ;80C828|8016C9
-                LDA.W ram_16C9                                 ;80C82B|8016C9
+                INC.W refillBgCol2TileX                                 ;80C825|8016C9
+                INC.W refillBgCol2TileX                                 ;80C828|8016C9
+                LDA.W refillBgCol2TileX                                 ;80C82B|8016C9
                 CLC                                            ;80C82E|
                 ADC.W #$0022                                   ;80C82F|
                 TAX                                            ;80C832|
-                LDY.W ram_16CB                                 ;80C833|8016CB
+                LDY.W refillBg2RowTileY                                 ;80C833|8016CB
                 LDA.W bg2CamYSrc                               ;80C836|8016A7
                 AND.W #$0008                                   ;80C839|
                 BNE +                                          ;80C83C|80C840
@@ -14630,7 +14632,7 @@ sub_80C825:
                 DEY                                            ;80C83F|
 
              +: LDA.W #$0022                                   ;80C840|
-                JSR.W sub_80C91E                               ;80C843|80C91E
+                JSR.W BuildTilemapColBg2                               ;80C843|80C91E
                 LDA.W #$0004                                   ;80C846|
                 JMP.W SetPpuUpdateBits                         ;80C849|80C044
 
@@ -14638,16 +14640,16 @@ sub_80C825:
 ; --------------------------------------------------------
 ;  sub_80C84C   [15 ins, returns ?]
 ;    callers: sub_80C7D9
-;    reads:     bg2CamYSrc, ram_16C9, ram_16CB
-;    calls:     sub_80C91E, SetPpuUpdateBits
+;    reads:     bg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
+;    calls:     BuildTilemapColBg2, SetPpuUpdateBits
 ; --------------------------------------------------------
 sub_80C84C:
-                DEC.W ram_16C9                                 ;80C84C|8016C9
-                DEC.W ram_16C9                                 ;80C84F|8016C9
-                LDX.W ram_16C9                                 ;80C852|8016C9
+                DEC.W refillBgCol2TileX                                 ;80C84C|8016C9
+                DEC.W refillBgCol2TileX                                 ;80C84F|8016C9
+                LDX.W refillBgCol2TileX                                 ;80C852|8016C9
                 DEX                                            ;80C855|
                 DEX                                            ;80C856|
-                LDY.W ram_16CB                                 ;80C857|8016CB
+                LDY.W refillBg2RowTileY                                 ;80C857|8016CB
                 LDA.W bg2CamYSrc                               ;80C85A|8016A7
                 AND.W #$0008                                   ;80C85D|
                 BNE +                                          ;80C860|80C864
@@ -14655,7 +14657,7 @@ sub_80C84C:
                 DEY                                            ;80C863|
 
              +: LDA.W #$FFFE                                   ;80C864|
-                JSR.W sub_80C91E                               ;80C867|80C91E
+                JSR.W BuildTilemapColBg2                               ;80C867|80C91E
                 LDA.W #$0004                                   ;80C86A|
                 JMP.W SetPpuUpdateBits                         ;80C86D|80C044
 
@@ -14663,9 +14665,9 @@ sub_80C84C:
 ; --------------------------------------------------------
 ;  sub_80C870   [40 ins, returns RTS]
 ;    callers: sub_80C7D9
-;    writes:    ram_16CB
-;    reads:     bg2CamYSrc, ram_16AF, ram_16C9, ram_16CB
-;    calls:     sub_80CA32, SetPpuUpdateBits
+;    writes:    refillBg2RowTileY
+;    reads:     bg2CamYSrc, refillLastBg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
+;    calls:     BuildTilemapRowBg2, SetPpuUpdateBits
 ; --------------------------------------------------------
 sub_80C870:
                 LDA.W bg2CamYSrc                               ;80C870|8016A7
@@ -14677,37 +14679,37 @@ sub_80C870:
                 BPL +                                          ;80C87C|80C881
                 ORA.W #$E000                                   ;80C87E|
 
-             +: STA.W ram_16CB                                 ;80C881|8016CB
+             +: STA.W refillBg2RowTileY                                 ;80C881|8016CB
                 LDA.W bg2CamYSrc                               ;80C884|8016A7
                 AND.W #$0008                                   ;80C887|
                 BEQ .skip                                      ;80C88A|80C8A5
-                LDX.W ram_16C9                                 ;80C88C|8016C9
+                LDX.W refillBgCol2TileX                                 ;80C88C|8016C9
                 DEX                                            ;80C88F|
                 DEX                                            ;80C890|
-                LDA.W ram_16CB                                 ;80C891|8016CB
+                LDA.W refillBg2RowTileY                                 ;80C891|8016CB
                 CLC                                            ;80C894|
                 ADC.W #$001E                                   ;80C895|
                 TAY                                            ;80C898|
                 LDA.W #$001E                                   ;80C899|
-                JSR.W sub_80CA32                               ;80C89C|80CA32
+                JSR.W BuildTilemapRowBg2                               ;80C89C|80CA32
                 LDA.W #$0008                                   ;80C89F|
                 JMP.W SetPpuUpdateBits                         ;80C8A2|80C044
 
 
          .skip: LDA.W bg2CamYSrc                               ;80C8A5|8016A7
                 SEC                                            ;80C8A8|
-                SBC.W ram_16AF                                 ;80C8A9|8016AF
+                SBC.W refillLastBg2CamYSrc                                 ;80C8A9|8016AF
                 CMP.W #$0009                                   ;80C8AC|
                 BCC .exit                                      ;80C8AF|80C8CA
-                LDX.W ram_16C9                                 ;80C8B1|8016C9
+                LDX.W refillBgCol2TileX                                 ;80C8B1|8016C9
                 DEX                                            ;80C8B4|
                 DEX                                            ;80C8B5|
-                LDA.W ram_16CB                                 ;80C8B6|8016CB
+                LDA.W refillBg2RowTileY                                 ;80C8B6|8016CB
                 CLC                                            ;80C8B9|
                 ADC.W #$001C                                   ;80C8BA|
                 TAY                                            ;80C8BD|
                 LDA.W #$001C                                   ;80C8BE|
-                JSR.W sub_80CA32                               ;80C8C1|80CA32
+                JSR.W BuildTilemapRowBg2                               ;80C8C1|80CA32
                 LDA.W #$0008                                   ;80C8C4|
                 JMP.W SetPpuUpdateBits                         ;80C8C7|80C044
 
@@ -14718,9 +14720,9 @@ sub_80C870:
 ; --------------------------------------------------------
 ;  sub_80C8CB   [36 ins, returns RTS]
 ;    callers: sub_80C7D9
-;    writes:    ram_16CB
-;    reads:     bg2CamYSrc, ram_16AF, ram_16C9, ram_16CB
-;    calls:     sub_80CA32, SetPpuUpdateBits
+;    writes:    refillBg2RowTileY
+;    reads:     bg2CamYSrc, refillLastBg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
+;    calls:     BuildTilemapRowBg2, SetPpuUpdateBits
 ; --------------------------------------------------------
 sub_80C8CB:
                 LDA.W bg2CamYSrc                               ;80C8CB|8016A7
@@ -14732,33 +14734,33 @@ sub_80C8CB:
                 BPL +                                          ;80C8D7|80C8DC
                 ORA.W #$E000                                   ;80C8D9|
 
-             +: STA.W ram_16CB                                 ;80C8DC|8016CB
+             +: STA.W refillBg2RowTileY                                 ;80C8DC|8016CB
                 LDA.W bg2CamYSrc                               ;80C8DF|8016A7
                 AND.W #$0008                                   ;80C8E2|
                 BNE .skip                                      ;80C8E5|80C8FD
-                LDX.W ram_16C9                                 ;80C8E7|8016C9
+                LDX.W refillBgCol2TileX                                 ;80C8E7|8016C9
                 DEX                                            ;80C8EA|
                 DEX                                            ;80C8EB|
-                LDY.W ram_16CB                                 ;80C8EC|8016CB
+                LDY.W refillBg2RowTileY                                 ;80C8EC|8016CB
                 DEY                                            ;80C8EF|
                 DEY                                            ;80C8F0|
                 LDA.W #$FFFE                                   ;80C8F1|
-                JSR.W sub_80CA32                               ;80C8F4|80CA32
+                JSR.W BuildTilemapRowBg2                               ;80C8F4|80CA32
                 LDA.W #$0008                                   ;80C8F7|
                 JMP.W SetPpuUpdateBits                         ;80C8FA|80C044
 
 
-         .skip: LDA.W ram_16AF                                 ;80C8FD|8016AF
+         .skip: LDA.W refillLastBg2CamYSrc                                 ;80C8FD|8016AF
                 SEC                                            ;80C900|
                 SBC.W bg2CamYSrc                               ;80C901|8016A7
                 CMP.W #$0009                                   ;80C904|
                 BCC .exit                                      ;80C907|80C91D
-                LDX.W ram_16C9                                 ;80C909|8016C9
+                LDX.W refillBgCol2TileX                                 ;80C909|8016C9
                 DEX                                            ;80C90C|
                 DEX                                            ;80C90D|
-                LDY.W ram_16CB                                 ;80C90E|8016CB
+                LDY.W refillBg2RowTileY                                 ;80C90E|8016CB
                 LDA.W #$0000                                   ;80C911|
-                JSR.W sub_80CA32                               ;80C914|80CA32
+                JSR.W BuildTilemapRowBg2                               ;80C914|80CA32
                 LDA.W #$0008                                   ;80C917|
                 JMP.W SetPpuUpdateBits                         ;80C91A|80C044
 
@@ -14767,13 +14769,13 @@ sub_80C8CB:
 
 
 ; --------------------------------------------------------
-;  sub_80C91E   [53 ins, returns RTS]
+;  BuildTilemapColBg2   [53 ins, returns RTS]
 ;    callers: FillTilemapFullBg2, sub_80C825, sub_80C84C
-;    writes:    tmp32, tmp34, vramColDstAddrC, vramColLen0C, vramColDstAddrCWrap, vramColLen1C
-;    reads:     tmp32, tmp34, ram_16C9, vramColDstAddrC, vramColLen0C, ram_199F ...
-;    calls:     sub_80C984
+;    writes:    tmp32, tmp34, Bg2colDmaVramDest0, Bg2colDmaLen0, Bg2colDmaVramDest1, Bg2colDmaLen1
+;    reads:     tmp32, tmp34, refillBgCol2TileX, Bg2colDmaVramDest0, Bg2colDmaLen0, tilemapBaseBg2Hi ...
+;    calls:     FetchConvertMetatileColBg2
 ; --------------------------------------------------------
-sub_80C91E:
+BuildTilemapColBg2:
                 PHY                                            ;80C91E|
                 PHA                                            ;80C91F|
                 TXA                                            ;80C920|
@@ -14788,7 +14790,7 @@ sub_80C91E:
                 TAY                                            ;80C929|
                 STZ.B tmp34                           ;80C92A|000034
 
-         .loop: JSR.W sub_80C984                               ;80C92C|80C984
+         .loop: JSR.W FetchConvertMetatileColBg2                               ;80C92C|80C984
                 INY                                            ;80C92F|
                 LDA.B tmp34                           ;80C930|000034
                 CLC                                            ;80C932|
@@ -14796,21 +14798,21 @@ sub_80C91E:
                 STA.B tmp34                           ;80C936|000034
                 CMP.W #$0040                                   ;80C938|
                 BCC .loop                                      ;80C93B|80C92C
-                LDY.W ram_19EC                                 ;80C93D|8019EC
+                LDY.W tilemapBaseBg2Lo                                 ;80C93D|8019EC
                 PLA                                            ;80C940|
                 CLC                                            ;80C941|
-                ADC.W ram_16C9                                 ;80C942|8016C9
+                ADC.W refillBgCol2TileX                                 ;80C942|8016C9
                 AND.W #$003F                                   ;80C945|
                 CMP.W #$0020                                   ;80C948|
                 BCC +                                          ;80C94B|80C953
-                LDY.W ram_199F                                 ;80C94D|80199F
+                LDY.W tilemapBaseBg2Hi                                 ;80C94D|80199F
                 AND.W #$001F                                   ;80C950|
 
              +: STY.B tmp32                              ;80C953|000032
                 CLC                                            ;80C955|
                 ADC.B tmp32                              ;80C956|000032
-                STA.W vramColDstAddrC                          ;80C958|8016E1
-                STA.W vramColDstAddrCWrap                      ;80C95B|8016E5
+                STA.W Bg2colDmaVramDest0                          ;80C958|8016E1
+                STA.W Bg2colDmaVramDest1                      ;80C95B|8016E5
                 PLA                                            ;80C95E|
                 AND.W #$001F                                   ;80C95F|
                 ASL A                                          ;80C962|
@@ -14818,44 +14820,44 @@ sub_80C91E:
                 TAY                                            ;80C965|
                 LDA.W data_Xtimes20,Y                            ;80C966|80F363
                 CLC                                            ;80C969|
-                ADC.W vramColDstAddrC                          ;80C96A|8016E1
-                STA.W vramColDstAddrC                          ;80C96D|8016E1
+                ADC.W Bg2colDmaVramDest0                          ;80C96A|8016E1
+                STA.W Bg2colDmaVramDest0                          ;80C96D|8016E1
                 LDA.W #$0040                                   ;80C970|
                 SEC                                            ;80C973|
                 SBC.B tmp32                              ;80C974|000032
-                STA.W vramColLen0C                             ;80C976|8016E3
+                STA.W Bg2colDmaLen0                             ;80C976|8016E3
                 LDA.W #$0040                                   ;80C979|
                 SEC                                            ;80C97C|
-                SBC.W vramColLen0C                             ;80C97D|8016E3
-                STA.W vramColLen1C                             ;80C980|8016E7
+                SBC.W Bg2colDmaLen0                             ;80C97D|8016E3
+                STA.W Bg2colDmaLen1                             ;80C980|8016E7
                 RTS                                            ;80C983|
 
 
 ; --------------------------------------------------------
-;  sub_80C984   [82 ins, returns RTS]
-;    callers: sub_80C91E
-;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, ram_1815 ...
-;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, zp_58, zp_5C ...
+;  FetchConvertMetatileColBg2   [82 ins, returns RTS]
+;    callers: BuildTilemapColBg2
+;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, colStagedMetaTileBg2LU ...
+;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, levelBg2TileMapPtr, Bg2tileVisualPtr ...
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
-sub_80C984:
+FetchConvertMetatileColBg2:
                 STX.B refillSaveX                              ;80C984|00003E
                 STY.B refillSaveY                              ;80C986|000040
-                CPX.W ram_19FB                                 ;80C988|8019FB
+                CPX.W levelWidthMetaTilesBg2                                 ;80C988|8019FB
                 BCS +                                          ;80C98B|80C992
-                CPY.W ram_19FD                                 ;80C98D|8019FD
+                CPY.W levelHeightMetaTilesBg2                                 ;80C98D|8019FD
                 BCC .skip4                                     ;80C990|80C9ED
 
-             +: LDA.W ram_19FF                                 ;80C992|8019FF
+             +: LDA.W levelWrapFlagsBg2                                 ;80C992|8019FF
                 BIT.W #$0002                                   ;80C995|
                 BEQ .skip                                      ;80C998|80C9AE
                 STX.B tmp32                              ;80C99A|000032
-                LDA.W ram_19FB                                 ;80C99C|8019FB
+                LDA.W levelWidthMetaTilesBg2                                 ;80C99C|8019FB
                 DEC A                                          ;80C99F|
                 AND.B tmp32                              ;80C9A0|000032
                 TAX                                            ;80C9A2|
                 STY.B tmp32                              ;80C9A3|000032
-                LDA.W ram_19FD                                 ;80C9A5|8019FD
+                LDA.W levelHeightMetaTilesBg2                                 ;80C9A5|8019FD
                 DEC A                                          ;80C9A8|
                 AND.B tmp32                              ;80C9A9|000032
                 TAY                                            ;80C9AB|
@@ -14865,16 +14867,16 @@ sub_80C984:
          .skip: BIT.W #$0008                                   ;80C9AE|
                 BEQ .skip2                                     ;80C9B1|80C9C7
                 LDX.B tmp34                           ;80C9B3|000034
-                LDA.W ram_1999                                 ;80C9B5|801999
-                STA.W ram_1815,X                               ;80C9B8|801815
-                STA.W ram_1855,X                               ;80C9BB|801855
-                STA.W ram_1817,X                               ;80C9BE|801817
-                STA.W ram_1857,X                               ;80C9C1|801857
+                LDA.W tileAttrOrBg2                                 ;80C9B5|801999
+                STA.W colStagedMetaTileBg2LU,X                               ;80C9B8|801815
+                STA.W colStagedMetaTileBg2RU,X                               ;80C9BB|801855
+                STA.W colStagedMetaTileBg2LD,X                               ;80C9BE|801817
+                STA.W colStagedMetaTileBg2RD,X                               ;80C9C1|801857
                 LDX.B refillSaveX                              ;80C9C4|00003E
                 RTS                                            ;80C9C6|
 
 
-        .skip2: CPX.W ram_19FB                                 ;80C9C7|8019FB
+        .skip2: CPX.W levelWidthMetaTilesBg2                                 ;80C9C7|8019FB
                 BCC .skip3                                     ;80C9CA|80C9DA
                 CPX.W #$8000                                   ;80C9CC|
                 BCC +                                          ;80C9CF|80C9D6
@@ -14882,10 +14884,10 @@ sub_80C984:
                 BRA .skip3                                     ;80C9D4|80C9DA
 
 
-             +: LDX.W ram_19FB                                 ;80C9D6|8019FB
+             +: LDX.W levelWidthMetaTilesBg2                                 ;80C9D6|8019FB
                 DEX                                            ;80C9D9|
 
-        .skip3: CPY.W ram_19FD                                 ;80C9DA|8019FD
+        .skip3: CPY.W levelHeightMetaTilesBg2                                 ;80C9DA|8019FD
                 BCC .skip4                                     ;80C9DD|80C9ED
                 CPY.W #$8000                                   ;80C9DF|
                 BCC +                                          ;80C9E2|80C9E9
@@ -14893,55 +14895,55 @@ sub_80C984:
                 BRA .skip4                                     ;80C9E7|80C9ED
 
 
-             +: LDY.W ram_19FD                                 ;80C9E9|8019FD
+             +: LDY.W levelHeightMetaTilesBg2                                 ;80C9E9|8019FD
                 DEY                                            ;80C9EC|
 
         .skip4: STY.B mulMultiplicand                          ;80C9ED|0000AC
-                LDA.W ram_19B5                                 ;80C9EF|8019B5
+                LDA.W levelRowStrideBg2                                 ;80C9EF|8019B5
                 STA.B mulMultiplierLo                          ;80C9F2|0000B0
                 JSR.W Mul8x16                                  ;80C9F4|809152
                 TXA                                            ;80C9F7|
                 ASL A                                          ;80C9F8|
                 ADC.B mulResult                                ;80C9F9|0000B2
                 TAY                                            ;80C9FB|
-                LDA.B [zp_58],Y                                ;80C9FC|000058
+                LDA.B [levelBg2TileMapPtr],Y                                ;80C9FC|000058
                 AND.W #$03FF                                   ;80C9FE|
                 ASL A                                          ;80CA01|
                 ASL A                                          ;80CA02|
                 ASL A                                          ;80CA03|
                 TAY                                            ;80CA04|
-                LDA.B [zp_5C],Y                                ;80CA05|00005C
+                LDA.B [Bg2tileVisualPtr],Y                                ;80CA05|00005C
                 LDX.B tmp34                           ;80CA07|000034
-                ORA.W ram_1999                                 ;80CA09|801999
-                STA.W ram_1815,X                               ;80CA0C|801815
+                ORA.W tileAttrOrBg2                                 ;80CA09|801999
+                STA.W colStagedMetaTileBg2LU,X                               ;80CA0C|801815
                 INY                                            ;80CA0F|
                 INY                                            ;80CA10|
-                LDA.B [zp_5C],Y                                ;80CA11|00005C
-                ORA.W ram_1999                                 ;80CA13|801999
-                STA.W ram_1855,X                               ;80CA16|801855
+                LDA.B [Bg2tileVisualPtr],Y                                ;80CA11|00005C
+                ORA.W tileAttrOrBg2                                 ;80CA13|801999
+                STA.W colStagedMetaTileBg2RU,X                               ;80CA16|801855
                 INY                                            ;80CA19|
                 INY                                            ;80CA1A|
-                LDA.B [zp_5C],Y                                ;80CA1B|00005C
-                ORA.W ram_1999                                 ;80CA1D|801999
-                STA.W ram_1817,X                               ;80CA20|801817
+                LDA.B [Bg2tileVisualPtr],Y                                ;80CA1B|00005C
+                ORA.W tileAttrOrBg2                                 ;80CA1D|801999
+                STA.W colStagedMetaTileBg2LD,X                               ;80CA20|801817
                 INY                                            ;80CA23|
                 INY                                            ;80CA24|
-                LDA.B [zp_5C],Y                                ;80CA25|00005C
-                ORA.W ram_1999                                 ;80CA27|801999
-                STA.W ram_1857,X                               ;80CA2A|801857
+                LDA.B [Bg2tileVisualPtr],Y                                ;80CA25|00005C
+                ORA.W tileAttrOrBg2                                 ;80CA27|801999
+                STA.W colStagedMetaTileBg2RD,X                               ;80CA2A|801857
                 LDX.B refillSaveX                              ;80CA2D|00003E
                 LDY.B refillSaveY                              ;80CA2F|000040
                 RTS                                            ;80CA31|
 
 
 ; --------------------------------------------------------
-;  sub_80CA32   [71 ins, returns RTS]
+;  BuildTilemapRowBg2   [71 ins, returns RTS]
 ;    callers: sub_80C870, sub_80C8CB
-;    writes:    tmp32, tmp34, vramColDstAddrD, vramColLen0D, vramColDstAddrD2, vramColLen1D ...
-;    reads:     tmp32, tmp34, ram_16CB, vramColDstAddrD, vramColLen0D, vramColDstAddrD2 ...
-;    calls:     sub_80CAC7
+;    writes:    tmp32, tmp34, vramColDstAddrD, Bg2rowDmaLen0, Bg2rowDmaVramDest1, Bg2rowDmaLen1 ...
+;    reads:     tmp32, tmp34, refillBg2RowTileY, vramColDstAddrD, Bg2rowDmaLen0, Bg2rowDmaVramDest1 ...
+;    calls:     FetchConvertMetatileRowBg2
 ; --------------------------------------------------------
-sub_80CA32:
+BuildTilemapRowBg2:
                 PHA                                            ;80CA32|
                 PHX                                            ;80CA33|
                 TXA                                            ;80CA34|
@@ -14956,7 +14958,7 @@ sub_80CA32:
                 TAY                                            ;80CA3D|
                 STZ.B tmp34                           ;80CA3E|000034
 
-         .loop: JSR.W sub_80CAC7                               ;80CA40|80CAC7
+         .loop: JSR.W FetchConvertMetatileRowBg2                               ;80CA40|80CAC7
                 INX                                            ;80CA43|
                 LDA.B tmp34                           ;80CA44|000034
                 CLC                                            ;80CA46|
@@ -14964,86 +14966,86 @@ sub_80CA32:
                 STA.B tmp34                           ;80CA4A|000034
                 CMP.W #$0050                                   ;80CA4C|
                 BCC .loop                                      ;80CA4F|80CA40
-                LDX.W ram_19EC                                 ;80CA51|8019EC
-                LDY.W ram_199F                                 ;80CA54|80199F
+                LDX.W tilemapBaseBg2Lo                                 ;80CA51|8019EC
+                LDY.W tilemapBaseBg2Hi                                 ;80CA54|80199F
                 PLA                                            ;80CA57|
                 AND.W #$003F                                   ;80CA58|
                 CMP.W #$0020                                   ;80CA5B|
                 BCC +                                          ;80CA5E|80CA69
-                LDX.W ram_199F                                 ;80CA60|80199F
-                LDY.W ram_19EC                                 ;80CA63|8019EC
+                LDX.W tilemapBaseBg2Hi                                 ;80CA60|80199F
+                LDY.W tilemapBaseBg2Lo                                 ;80CA63|8019EC
                 AND.W #$001F                                   ;80CA66|
 
              +: STA.B tmp32                              ;80CA69|000032
-                STX.W vramColDstAddrD                          ;80CA6B|8016E9
-                STX.W vramColDstAddrDWrap                      ;80CA6E|8016F1
-                STY.W vramColDstAddrD2                         ;80CA71|8016ED
+                STX.W Bg2rowDmaVramDest0                         ;80CA6B|8016E9
+                STX.W Bg2rowDmaVramDest2                      ;80CA6E|8016F1
+                STY.W Bg2rowDmaVramDest1                         ;80CA71|8016ED
                 CLC                                            ;80CA74|
-                ADC.W vramColDstAddrD                          ;80CA75|8016E9
-                STA.W vramColDstAddrD                          ;80CA78|8016E9
+                ADC.W Bg2rowDmaVramDest0                         ;80CA75|8016E9
+                STA.W Bg2rowDmaVramDest0                         ;80CA78|8016E9
                 PLA                                            ;80CA7B|
                 CLC                                            ;80CA7C|
-                ADC.W ram_16CB                                 ;80CA7D|8016CB
+                ADC.W refillBg2RowTileY                                 ;80CA7D|8016CB
                 AND.W #$001F                                   ;80CA80|
                 ASL A                                          ;80CA83|
                 TAY                                            ;80CA84|
                 LDA.W data_Xtimes20,Y                            ;80CA85|80F363
                 TAX                                            ;80CA88|
-                ADC.W vramColDstAddrD                          ;80CA89|8016E9
-                STA.W vramColDstAddrD                          ;80CA8C|8016E9
+                ADC.W Bg2rowDmaVramDest0                         ;80CA89|8016E9
+                STA.W Bg2rowDmaVramDest0                         ;80CA8C|8016E9
                 TXA                                            ;80CA8F|
-                ADC.W vramColDstAddrD2                         ;80CA90|8016ED
-                STA.W vramColDstAddrD2                         ;80CA93|8016ED
+                ADC.W Bg2rowDmaVramDest1                         ;80CA90|8016ED
+                STA.W Bg2rowDmaVramDest1                         ;80CA93|8016ED
                 TXA                                            ;80CA96|
-                ADC.W vramColDstAddrDWrap                      ;80CA97|8016F1
-                STA.W vramColDstAddrDWrap                      ;80CA9A|8016F1
+                ADC.W Bg2rowDmaVramDest2                      ;80CA97|8016F1
+                STA.W Bg2rowDmaVramDest2                      ;80CA9A|8016F1
                 LDA.W #$0020                                   ;80CA9D|
                 SEC                                            ;80CAA0|
                 SBC.B tmp32                              ;80CAA1|000032
                 ASL A                                          ;80CAA3|
-                STA.W vramColLen0D                             ;80CAA4|8016EB
+                STA.W Bg2rowDmaLen0                             ;80CAA4|8016EB
                 LDA.W #$0050                                   ;80CAA7|
                 SEC                                            ;80CAAA|
-                SBC.W vramColLen0D                             ;80CAAB|8016EB
+                SBC.W Bg2rowDmaLen0                             ;80CAAB|8016EB
                 CMP.W #$0040                                   ;80CAAE|
                 BCC .skip                                      ;80CAB1|80CAC0
                 AND.W #$003F                                   ;80CAB3|
-                STA.W vramColLen2D                             ;80CAB6|8016F3
+                STA.W Bg2rowDmaLen2                             ;80CAB6|8016F3
                 LDA.W #$0040                                   ;80CAB9|
-                STA.W vramColLen1D                             ;80CABC|8016EF
+                STA.W Bg2rowDmaLen1                             ;80CABC|8016EF
                 RTS                                            ;80CABF|
 
 
-         .skip: STA.W vramColLen1D                             ;80CAC0|8016EF
-                STZ.W vramColLen2D                             ;80CAC3|8016F3
+         .skip: STA.W Bg2rowDmaLen1                             ;80CAC0|8016EF
+                STZ.W Bg2rowDmaLen2                             ;80CAC3|8016F3
                 RTS                                            ;80CAC6|
 
 
 ; --------------------------------------------------------
-;  sub_80CAC7   [82 ins, returns RTS]
-;    callers: sub_80CA32
-;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, ram_1895 ...
-;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, zp_58, zp_5C ...
+;  FetchConvertMetatileRowBg2   [82 ins, returns RTS]
+;    callers: BuildTilemapRowBg2
+;    writes:    tmp32, refillSaveX, refillSaveY, mulMultiplicand, mulMultiplierLo, rowStagedMetaTileBg2LU ...
+;    reads:     tmp32, tmp34, refillSaveX, refillSaveY, levelBg2TileMapPtr, Bg2tileVisualPtr ...
 ;    calls:     Mul8x16
 ; --------------------------------------------------------
-sub_80CAC7:
+FetchConvertMetatileRowBg2:
                 STX.B refillSaveX                              ;80CAC7|00003E
                 STY.B refillSaveY                              ;80CAC9|000040
-                CPX.W ram_19FB                                 ;80CACB|8019FB
+                CPX.W levelWidthMetaTilesBg2                                 ;80CACB|8019FB
                 BCS +                                          ;80CACE|80CAD5
-                CPY.W ram_19FD                                 ;80CAD0|8019FD
+                CPY.W levelHeightMetaTilesBg2                                 ;80CAD0|8019FD
                 BCC .skip4                                     ;80CAD3|80CB30
 
-             +: LDA.W ram_19FF                                 ;80CAD5|8019FF
+             +: LDA.W levelWrapFlagsBg2                                 ;80CAD5|8019FF
                 BIT.W #$0002                                   ;80CAD8|
                 BEQ .skip                                      ;80CADB|80CAF1
                 STX.B tmp32                              ;80CADD|000032
-                LDA.W ram_19FB                                 ;80CADF|8019FB
+                LDA.W levelWidthMetaTilesBg2                                 ;80CADF|8019FB
                 DEC A                                          ;80CAE2|
                 AND.B tmp32                              ;80CAE3|000032
                 TAX                                            ;80CAE5|
                 STY.B tmp32                              ;80CAE6|000032
-                LDA.W ram_19FD                                 ;80CAE8|8019FD
+                LDA.W levelHeightMetaTilesBg2                                 ;80CAE8|8019FD
                 DEC A                                          ;80CAEB|
                 AND.B tmp32                              ;80CAEC|000032
                 TAY                                            ;80CAEE|
@@ -15053,16 +15055,16 @@ sub_80CAC7:
          .skip: BIT.W #$0008                                   ;80CAF1|
                 BEQ .skip2                                     ;80CAF4|80CB0A
                 LDX.B tmp34                           ;80CAF6|000034
-                LDA.W ram_1999                                 ;80CAF8|801999
-                STA.W ram_1895,X                               ;80CAFB|801895
-                STA.W ram_18E5,X                               ;80CAFE|8018E5
-                STA.W ram_1897,X                               ;80CB01|801897
-                STA.W ram_18E7,X                               ;80CB04|8018E7
+                LDA.W tileAttrOrBg2                                 ;80CAF8|801999
+                STA.W rowStagedMetaTileBg2LU,X                               ;80CAFB|801895
+                STA.W rowStagedMetaTileBg2LD,X                               ;80CAFE|8018E5
+                STA.W rowStagedMetaTileBg2RU,X                               ;80CB01|801897
+                STA.W rowStagedMetaTileBg2RD,X                               ;80CB04|8018E7
                 LDX.B refillSaveX                              ;80CB07|00003E
                 RTS                                            ;80CB09|
 
 
-        .skip2: CPX.W ram_19FB                                 ;80CB0A|8019FB
+        .skip2: CPX.W levelWidthMetaTilesBg2                                 ;80CB0A|8019FB
                 BCC .skip3                                     ;80CB0D|80CB1D
                 CPX.W #$8000                                   ;80CB0F|
                 BCC +                                          ;80CB12|80CB19
@@ -15070,10 +15072,10 @@ sub_80CAC7:
                 BRA .skip3                                     ;80CB17|80CB1D
 
 
-             +: LDX.W ram_19FB                                 ;80CB19|8019FB
+             +: LDX.W levelWidthMetaTilesBg2                                 ;80CB19|8019FB
                 DEX                                            ;80CB1C|
 
-        .skip3: CPY.W ram_19FD                                 ;80CB1D|8019FD
+        .skip3: CPY.W levelHeightMetaTilesBg2                                 ;80CB1D|8019FD
                 BCC .skip4                                     ;80CB20|80CB30
                 CPY.W #$8000                                   ;80CB22|
                 BCC +                                          ;80CB25|80CB2C
@@ -15081,54 +15083,54 @@ sub_80CAC7:
                 BRA .skip4                                     ;80CB2A|80CB30
 
 
-             +: LDY.W ram_19FD                                 ;80CB2C|8019FD
+             +: LDY.W levelHeightMetaTilesBg2                                 ;80CB2C|8019FD
                 DEY                                            ;80CB2F|
 
         .skip4: STY.B mulMultiplicand                          ;80CB30|0000AC
-                LDA.W ram_19B5                                 ;80CB32|8019B5
+                LDA.W levelRowStrideBg2                                 ;80CB32|8019B5
                 STA.B mulMultiplierLo                          ;80CB35|0000B0
                 JSR.W Mul8x16                                  ;80CB37|809152
                 TXA                                            ;80CB3A|
                 ASL A                                          ;80CB3B|
                 ADC.B mulResult                                ;80CB3C|0000B2
                 TAY                                            ;80CB3E|
-                LDA.B [zp_58],Y                                ;80CB3F|000058
+                LDA.B [levelBg2TileMapPtr],Y                                ;80CB3F|000058
                 AND.W #$03FF                                   ;80CB41|
                 ASL A                                          ;80CB44|
                 ASL A                                          ;80CB45|
                 ASL A                                          ;80CB46|
                 TAY                                            ;80CB47|
-                LDA.B [zp_5C],Y                                ;80CB48|00005C
+                LDA.B [Bg2tileVisualPtr],Y                                ;80CB48|00005C
                 LDX.B tmp34                           ;80CB4A|000034
-                ORA.W ram_1999                                 ;80CB4C|801999
-                STA.W ram_1895,X                               ;80CB4F|801895
+                ORA.W tileAttrOrBg2                                 ;80CB4C|801999
+                STA.W rowStagedMetaTileBg2LU,X                               ;80CB4F|801895
                 INY                                            ;80CB52|
                 INY                                            ;80CB53|
-                LDA.B [zp_5C],Y                                ;80CB54|00005C
-                ORA.W ram_1999                                 ;80CB56|801999
-                STA.W ram_1897,X                               ;80CB59|801897
+                LDA.B [Bg2tileVisualPtr],Y                                ;80CB54|00005C
+                ORA.W tileAttrOrBg2                                 ;80CB56|801999
+                STA.W rowStagedMetaTileBg2RU,X                               ;80CB59|801897
                 INY                                            ;80CB5C|
                 INY                                            ;80CB5D|
-                LDA.B [zp_5C],Y                                ;80CB5E|00005C
-                ORA.W ram_1999                                 ;80CB60|801999
-                STA.W ram_18E5,X                               ;80CB63|8018E5
+                LDA.B [Bg2tileVisualPtr],Y                                ;80CB5E|00005C
+                ORA.W tileAttrOrBg2                                 ;80CB60|801999
+                STA.W rowStagedMetaTileBg2LD,X                               ;80CB63|8018E5
                 INY                                            ;80CB66|
                 INY                                            ;80CB67|
-                LDA.B [zp_5C],Y                                ;80CB68|00005C
-                ORA.W ram_1999                                 ;80CB6A|801999
-                STA.W ram_18E7,X                               ;80CB6D|8018E7
+                LDA.B [Bg2tileVisualPtr],Y                                ;80CB68|00005C
+                ORA.W tileAttrOrBg2                                 ;80CB6A|801999
+                STA.W rowStagedMetaTileBg2RD,X                               ;80CB6D|8018E7
                 LDX.B refillSaveX                              ;80CB70|00003E
                 LDY.B refillSaveY                              ;80CB72|000040
                 RTS                                            ;80CB74|
 
 
 ; --------------------------------------------------------
-;  VramColUpload_C   [55 ins, returns RTS]
+;  UploadTilemapColumnBg2   [55 ins, returns RTS]
 ;    callers: ProcessTilemapEdits, FillTilemapFullBg2
 ;    writes HW: A1B0, A1TL0, BBAD0, DASL0, DMAP0, MDMAEN, VMADDL, VMAIN
-;    reads:     vramColDstAddrC, vramColLen0C, vramColDstAddrCWrap, vramColLen1C
+;    reads:     Bg2colDmaVramDest0, Bg2colDmaLen0, Bg2colDmaVramDest1, Bg2colDmaLen1
 ; --------------------------------------------------------
-VramColUpload_C:
+UploadTilemapColumnBg2:
                 SEP #$30                                      ;80CB75|
                 LDA.B #$81                                     ;80CB77|
                 STA.W VMAIN                                    ;80CB79|802115
@@ -15137,46 +15139,46 @@ VramColUpload_C:
                 LDA.B #$18                                     ;80CB81|
                 STA.W BBAD0                                    ;80CB83|804301
                 REP #$30                                       ;80CB86|
-                LDA.W vramColDstAddrC                          ;80CB88|8016E1
+                LDA.W Bg2colDmaVramDest0                          ;80CB88|8016E1
                 STA.W VMADDL                                   ;80CB8B|802116   ; set VRAM addr (low) for upcoming write
                 LDA.W #$1815                                   ;80CB8E|
                 STA.W A1TL0                                    ;80CB91|804302
-                LDA.W vramColLen0C                             ;80CB94|8016E3
+                LDA.W Bg2colDmaLen0                             ;80CB94|8016E3
                 STA.W DASL0                                    ;80CB97|804305
                 SEP #$30                                       ;80CB9A|
                 LDA.B #$7E                                     ;80CB9C|
                 STA.W A1B0                                     ;80CB9E|804304
                 LDA.B #$01                                     ;80CBA1|
                 STA.W MDMAEN                                   ;80CBA3|80420B   ; trigger GP-DMA (MDMAEN)
-                LDA.W vramColLen1C                             ;80CBA6|8016E7
+                LDA.W Bg2colDmaLen1                             ;80CBA6|8016E7
                 BEQ .skip                                      ;80CBA9|80CBC0
                 REP #$30                                       ;80CBAB|
-                LDA.W vramColDstAddrCWrap                      ;80CBAD|8016E5
+                LDA.W Bg2colDmaVramDest1                       ;80CBAD|8016E5
                 STA.W VMADDL                                   ;80CBB0|802116   ; set VRAM addr (low) for upcoming write
-                LDA.W vramColLen1C                             ;80CBB3|8016E7
+                LDA.W Bg2colDmaLen1                             ;80CBB3|8016E7
                 STA.W DASL0                                    ;80CBB6|804305
                 SEP #$30                                       ;80CBB9|
                 LDA.B #$01                                     ;80CBBB|
                 STA.W MDMAEN                                   ;80CBBD|80420B   ; trigger GP-DMA (MDMAEN)
 
          .skip: REP #$30                                       ;80CBC0|
-                LDA.W vramColDstAddrC                          ;80CBC2|8016E1
+                LDA.W Bg2colDmaVramDest0                          ;80CBC2|8016E1
                 INC A                                          ;80CBC5|
                 STA.W VMADDL                                   ;80CBC6|802116   ; set VRAM addr (low) for upcoming write
                 LDA.W #$1855                                   ;80CBC9|
                 STA.W A1TL0                                    ;80CBCC|804302
-                LDA.W vramColLen0C                             ;80CBCF|8016E3
+                LDA.W Bg2colDmaLen0                             ;80CBCF|8016E3
                 STA.W DASL0                                    ;80CBD2|804305
                 SEP #$30                                       ;80CBD5|
                 LDA.B #$01                                     ;80CBD7|
                 STA.W MDMAEN                                   ;80CBD9|80420B   ; trigger GP-DMA (MDMAEN)
-                LDA.W vramColLen1C                             ;80CBDC|8016E7
+                LDA.W Bg2colDmaLen1                             ;80CBDC|8016E7
                 BEQ .skip2                                     ;80CBDF|80CBF7
                 REP #$30                                       ;80CBE1|
-                LDA.W vramColDstAddrCWrap                      ;80CBE3|8016E5
+                LDA.W Bg2colDmaVramDest1                      ;80CBE3|8016E5
                 INC A                                          ;80CBE6|
                 STA.W VMADDL                                   ;80CBE7|802116   ; set VRAM addr (low) for upcoming write
-                LDA.W vramColLen1C                             ;80CBEA|8016E7
+                LDA.W Bg2colDmaLen1                             ;80CBEA|8016E7
                 STA.W DASL0                                    ;80CBED|804305
                 SEP #$30                                       ;80CBF0|
                 LDA.B #$01                                     ;80CBF2|
@@ -15189,23 +15191,23 @@ VramColUpload_C:
 
 
 ; --------------------------------------------------------
-;  VramColUpload_D   [71 ins, returns RTS]
+;  UploadTilemapRowBg2   [71 ins, returns RTS]
 ;    callers: ProcessTilemapEdits
 ;    writes HW: A1B0, A1TL0, BBAD0, DASL0, DMAP0, MDMAEN, VMADDL
-;    reads:     vramColDstAddrD, vramColLen0D, vramColDstAddrD2, vramColLen1D, vramColDstAddrDWrap, vramColLen2D
+;    reads:     vramColDstAddrD, Bg2rowDmaLen0, Bg2rowDmaVramDest1, Bg2rowDmaLen1, Bg2rowDmaVramDest2, Bg2rowDmaLen2
 ; --------------------------------------------------------
-VramColUpload_D:
+UploadTilemapRowBg2:
                 SEP #$30                                      ;80CBFF|
                 LDA.B #$01                                     ;80CC01|
                 STA.W DMAP0                                    ;80CC03|804300
                 LDA.B #$18                                     ;80CC06|
                 STA.W BBAD0                                    ;80CC08|804301
                 REP #$30                                       ;80CC0B|
-                LDA.W vramColDstAddrD                          ;80CC0D|8016E9
+                LDA.W Bg2rowDmaVramDest0                         ;80CC0D|8016E9
                 STA.W VMADDL                                   ;80CC10|802116   ; set VRAM addr (low) for upcoming write
                 LDA.W #$1895                                   ;80CC13|
                 STA.W A1TL0                                    ;80CC16|804302
-                LDA.W vramColLen0D                             ;80CC19|8016EB
+                LDA.W Bg2rowDmaLen0                             ;80CC19|8016EB
                 STA.W DASL0                                    ;80CC1C|804305
                 SEP #$30                                       ;80CC1F|
                 LDA.B #$7E                                     ;80CC21|
@@ -15213,54 +15215,54 @@ VramColUpload_D:
                 LDA.B #$01                                     ;80CC26|
                 STA.W MDMAEN                                   ;80CC28|80420B   ; trigger GP-DMA (MDMAEN)
                 REP #$30                                       ;80CC2B|
-                LDA.W vramColDstAddrD2                         ;80CC2D|8016ED
+                LDA.W Bg2rowDmaVramDest1                         ;80CC2D|8016ED
                 STA.W VMADDL                                   ;80CC30|802116   ; set VRAM addr (low) for upcoming write
-                LDA.W vramColLen1D                             ;80CC33|8016EF
+                LDA.W Bg2rowDmaLen1                             ;80CC33|8016EF
                 STA.W DASL0                                    ;80CC36|804305
                 SEP #$30                                       ;80CC39|
                 LDA.B #$01                                     ;80CC3B|
                 STA.W MDMAEN                                   ;80CC3D|80420B   ; trigger GP-DMA (MDMAEN)
-                LDA.W vramColLen2D                             ;80CC40|8016F3
+                LDA.W Bg2rowDmaLen2                             ;80CC40|8016F3
                 BEQ .skip                                      ;80CC43|80CC5A
                 REP #$30                                       ;80CC45|
-                LDA.W vramColDstAddrDWrap                      ;80CC47|8016F1
+                LDA.W Bg2rowDmaVramDest2                      ;80CC47|8016F1
                 STA.W VMADDL                                   ;80CC4A|802116   ; set VRAM addr (low) for upcoming write
-                LDA.W vramColLen2D                             ;80CC4D|8016F3
+                LDA.W Bg2rowDmaLen2                             ;80CC4D|8016F3
                 STA.W DASL0                                    ;80CC50|804305
                 SEP #$30                                       ;80CC53|
                 LDA.B #$01                                     ;80CC55|
                 STA.W MDMAEN                                   ;80CC57|80420B   ; trigger GP-DMA (MDMAEN)
 
          .skip: REP #$30                                       ;80CC5A|
-                LDA.W vramColDstAddrD                          ;80CC5C|8016E9
+                LDA.W Bg2rowDmaVramDest0                         ;80CC5C|8016E9
                 CLC                                            ;80CC5F|
                 ADC.W #$0020                                   ;80CC60|
                 STA.W VMADDL                                   ;80CC63|802116   ; set VRAM addr (low) for upcoming write
                 LDA.W #$18E5                                   ;80CC66|
                 STA.W A1TL0                                    ;80CC69|804302
-                LDA.W vramColLen0D                             ;80CC6C|8016EB
+                LDA.W Bg2rowDmaLen0                             ;80CC6C|8016EB
                 STA.W DASL0                                    ;80CC6F|804305
                 SEP #$30                                       ;80CC72|
                 LDA.B #$01                                     ;80CC74|
                 STA.W MDMAEN                                   ;80CC76|80420B   ; trigger GP-DMA (MDMAEN)
                 REP #$30                                       ;80CC79|
-                LDA.W vramColDstAddrD2                         ;80CC7B|8016ED
+                LDA.W Bg2rowDmaVramDest1                         ;80CC7B|8016ED
                 CLC                                            ;80CC7E|
                 ADC.W #$0020                                   ;80CC7F|
                 STA.W VMADDL                                   ;80CC82|802116   ; set VRAM addr (low) for upcoming write
-                LDA.W vramColLen1D                             ;80CC85|8016EF
+                LDA.W Bg2rowDmaLen1                             ;80CC85|8016EF
                 STA.W DASL0                                    ;80CC88|804305
                 SEP #$30                                       ;80CC8B|
                 LDA.B #$01                                     ;80CC8D|
                 STA.W MDMAEN                                   ;80CC8F|80420B   ; trigger GP-DMA (MDMAEN)
-                LDA.W vramColLen2D                             ;80CC92|8016F3
+                LDA.W Bg2rowDmaLen2                             ;80CC92|8016F3
                 BEQ .skip2                                     ;80CC95|80CCB0
                 REP #$30                                       ;80CC97|
-                LDA.W vramColDstAddrDWrap                      ;80CC99|8016F1
+                LDA.W Bg2rowDmaVramDest2                      ;80CC99|8016F1
                 CLC                                            ;80CC9C|
                 ADC.W #$0020                                   ;80CC9D|
                 STA.W VMADDL                                   ;80CCA0|802116   ; set VRAM addr (low) for upcoming write
-                LDA.W vramColLen2D                             ;80CCA3|8016F3
+                LDA.W Bg2rowDmaLen2                             ;80CCA3|8016F3
                 STA.W DASL0                                    ;80CCA6|804305
                 SEP #$30                                       ;80CCA9|
                 LDA.B #$01                                     ;80CCAB|
@@ -21345,12 +21347,12 @@ DmaWramStagingUpload:
                 STA.W tileVisualPtr,X                          ;80E73A|7E0054
                 LDA.W zp_56,Y                                  ;80E73D|7E0056
                 STA.W zp_56,X                                  ;80E740|7E0056
-                LDA.W zp_58,Y                                  ;80E743|7E0058
-                STA.W zp_58,X                                  ;80E746|7E0058
+                LDA.W levelBg2TileMapPtr,Y                                  ;80E743|7E0058
+                STA.W levelBg2TileMapPtr,X                                  ;80E746|7E0058
                 LDA.W zp_5A,Y                                  ;80E749|7E005A
                 STA.W zp_5A,X                                  ;80E74C|7E005A
-                LDA.W zp_5C,Y                                  ;80E74F|7E005C
-                STA.W zp_5C,X                                  ;80E752|7E005C
+                LDA.W Bg2tileVisualPtr,Y                                  ;80E74F|7E005C
+                STA.W Bg2tileVisualPtr,X                                  ;80E752|7E005C
                 LDA.W zp_5E,Y                                  ;80E755|7E005E
                 STA.W zp_5E,X                                  ;80E758|7E005E
                 LDA.W zp_60,Y                                  ;80E75B|7E0060

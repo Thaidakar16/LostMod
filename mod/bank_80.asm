@@ -5759,10 +5759,10 @@ oam_809BC3:
                        ;WIP
                        ;remember to change the ORAs to #$02 later
                 LDA.W ram_19EB                                 ;INSERT|8019EB
-                ORA.B #$00                                     ;INSERT|
+                ORA.B #$02                                     ;INSERT|
                 STA.W BG1SC                                    ;INSERT|802107
                 LDA.W ram_19ED                                 ;INSERT|8019ED
-                ORA.B #$00                                     ;INSERT|
+                ORA.B #$02                                     ;INSERT|
                 STA.W BG2SC                                    ;INSERT|802108
                 BRA ++                                         ;INSERT|
 
@@ -12242,14 +12242,32 @@ LatchBgScroll:
 
     .unusedJmpLoc:
                 STA.W bg1ScrollXLo                             ;80BFEF|8016BD   ; -> BG1 scroll X shadow
-                LDA.W bg1CamY                                  ;80BFF2|8016B7   ; bg1CamY
+                
+                LDA.W modFlags
+                BIT.W #$0001
+                BEQ .original
+                LDA.W bg1CamY
+                CLC
+                ADC.W scrollAdjustY
+                AND.W #$007F
+                BRA + 
+
+     .original: LDA.W bg1CamY                                  ;80BFF2|8016B7   ; bg1CamY
                 CLC                                            ;80BFF5|
                 ADC.W scrollAdjustY                            ;80BFF6|8003A4   ; + scrollAdjustY
-                STA.W bg1ScrollYLo                             ;80BFF9|8016BF   ; -> BG1 scroll Y shadow
+             +: STA.W bg1ScrollYLo                             ;80BFF9|8016BF   ; -> BG1 scroll Y shadow
                 LDA.W bg2CamX                                  ;80BFFC|8016B9   ; bg2CamX
                 STA.W bg2ScrollXLo                             ;80BFFF|8016C1   ; -> BG2 scroll X shadow   ; bg2ScrollX = bg2CamX directly (no scrollAdjust on BG2)
-                LDA.W bg2CamY                                  ;80C002|8016BB   ; bg2CamY
-                STA.W bg2ScrollYLo                             ;80C005|8016C3   ; -> BG2 scroll Y shadow
+                
+                LDA.W modFlags
+                BIT.W #$0001
+                BEQ .original2
+                LDA.W bg2CamY
+                AND.W #$00FF
+                BRA + 
+
+    .original2: LDA.W bg2CamY                                  ;80C002|8016BB   ; bg2CamY
+             +: STA.W bg2ScrollYLo                             ;80C005|8016C3   ; -> BG2 scroll Y shadow
 
          .skip: SEP #$30                                       ;80C008|
                 LDA.W gameModeFlags                            ;80C00A|8019E3

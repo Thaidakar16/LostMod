@@ -806,8 +806,12 @@ wram_7FC1A4            = $7FC1A4  ; refs=14 (r8/w6) [LDA:8,STA:6], 7 site(s)
 refillStageStart = $0560
 tempVertHigh = $0562
 tempVertLo = $0564
-P1rowDmaDest = $0566
-P1colDmaDest = $0568
+
+P1rowDmaDest = $16D5
+P1colDmaDest = $16CD
+
+P1Bg2colDmaDest        = $16E1
+P1Bg2rowDmaDest       = $16E9
 
 
 
@@ -6468,11 +6472,11 @@ ppucfg_809EE2:
              +: LDX.W ram_1A00                                 ;809EEB|801A00
                 BMI .skip                                      ;809EEE|809EFC
                 
-                ; LDA.W modFlags
-                ; BIT.W #$0001
-                ; BEQ .original2
-                ; JSR.W FillTilemapFullBg2Mod
-                ; BRA +
+                LDA.W modFlags
+                BIT.W #$0001
+                BEQ .original2
+                JSR.W FillTilemapFullBg2Mod
+                BRA +
 
     .original2: JSR.W FillTilemapFullBg2                               ;809EF0|80C655
              +: LDA.W mainScreenShadow                         ;809EF3|800394
@@ -12415,6 +12419,26 @@ ProcessTilemapEdits:
             ;     BEQ +                                          ;INSERT|
             ;     JSR.W UploadTilemapRowP2
              
+             +: LDA.W tilemapUploadMask                        ;INSERT|
+                BIT.W #$0100                                   ;INSERT|
+                BEQ +                                          ;INSERT|
+                JSR.W UploadTilemapColumnBg2P1
+
+            ;  +: LDA.W tilemapUploadMask                        ;INSERT|
+            ;     BIT.W #$0200                                   ;INSERT|
+            ;     BEQ +                                          ;INSERT|
+            ;     JSR.W UploadTilemapColumnBg2P2
+
+             +: LDA.W tilemapUploadMask                        ;INSERT|
+                BIT.W #$0400                                   ;INSERT|
+                BEQ +                                          ;INSERT|
+                JSR.W UploadTilemapRowBg2P1
+
+            ;  +: LDA.W tilemapUploadMask                        ;INSERT|
+            ;     BIT.W #$0800                                   ;INSERT|
+            ;     BEQ +                                          ;INSERT|
+            ;     JSR.W UploadTilemapRowBg2P2
+
              +: STZ.W tilemapUploadMask                        ;80C07B|8003AE
                 SEC                                            ;80C07E|
                 RTS                                            ;80C07F|
@@ -14286,73 +14310,72 @@ FillTilemapFullBg2:
                 BNE .loop2                                     ;80C6BA|80C6A7
                 RTS                                            ;80C6BC|
 
-; FillTilemapFullBg2Mod:
-;                 LDA.W bg2CamXSrc                               ;80C655|8016A5
-;                 STA.W refillLastBg2CamXSrc                                 ;80C658|8016AD
-;                 LSR A                                          ;80C65B|
-;                 LSR A                                          ;80C65C|
-;                 LSR A                                          ;80C65D|
-;                 AND.W #$FFFE                                   ;80C65E|
-;                 STA.W refillBgCol2TileX                                 ;80C661|8016C9
-;                 TAX                                            ;80C664|
-;                 LDA.W bg2CamYSrc                               ;80C665|8016A7
-;                 STA.W refillLastBg2CamYSrc                                 ;80C668|8016AF
-;                 LSR A                                          ;80C66B|
-;                 LSR A                                          ;80C66C|
-;                 LSR A                                          ;80C66D|
-;                 AND.W #$FFFE                                   ;80C66E|
-;                 STA.W refillBg2RowTileY                                 ;80C671|8016CB
-;                 TAY                                            ;80C674|
-;                 LDA.W gameModeFlags                            ;80C675|8019E3
-;                 BIT.W #$0004                                   ;80C678|
-;                 BNE .skip                                      ;80C67B|80C6A4
-;                 DEX                                            ;80C67D|
-;                 DEX                                            ;80C67E|
-;                 DEX                                            ;80C67F|
-;                 DEX                                            ;80C680|
-;                 LDA.W bg2CamYSrc                               ;80C681|8016A7
-;                 BIT.W #$0008                                   ;80C684|
-;                 BNE +                                          ;80C687|80C68B
-;                 DEY                                            ;80C689|
-;                 DEY                                            ;80C68A|
+FillTilemapFullBg2Mod:
+                LDA.W bg2CamXSrc                               ;80C655|8016A5
+                STA.W refillLastBg2CamXSrc                                 ;80C658|8016AD
+                LSR A                                          ;80C65B|
+                LSR A                                          ;80C65C|
+                LSR A                                          ;80C65D|
+                AND.W #$FFFE                                   ;80C65E|
+                STA.W refillBgCol2TileX                                 ;80C661|8016C9
+                TAX                                            ;80C664|
+                LDA.W bg2CamYSrc                               ;80C665|8016A7
+                STA.W refillLastBg2CamYSrc                                 ;80C668|8016AF
+                LSR A                                          ;80C66B|
+                LSR A                                          ;80C66C|
+                LSR A                                          ;80C66D|
+                AND.W #$FFFE                                   ;80C66E|
+                STA.W refillBg2RowTileY                                 ;80C671|8016CB
+                TAY                                            ;80C674|
+                LDA.W gameModeFlags                            ;80C675|8019E3
+                BIT.W #$0004                                   ;80C678|
+                BNE .skip                                      ;80C67B|80C6A4
+                DEX                                            ;80C67D|
+                DEX                                            ;80C67E|
+                DEX                                            ;80C67F|
+                DEX                                            ;80C680|
+                LDA.W bg2CamYSrc                               ;80C681|8016A7
+                BIT.W #$0008                                   ;80C684|
+                BNE +                                          ;80C687|80C68B
+                DEY                                            ;80C689|
+                DEY                                            ;80C68A|
 
-;              +: LDA.W #$FFFC                                   ;80C68B|
+             +: LDA.W #$FFFC                                   ;80C68B|
 
-;          .loop: PHX                                            ;80C68E|
-;                 PHY                                            ;80C68F|
-;                 PHA                                            ;80C690|
-;                 JSR.W BuildTilemapColBg2                               ;80C691|80C91E
-;                 JSR.W UploadTilemapColumnBg2                          ;80C694|80CB75
-;                 PLA                                            ;80C697|
-;                 PLY                                            ;80C698|
-;                 PLX                                            ;80C699|
-;                 INX                                            ;80C69A|
-;                 INX                                            ;80C69B|
-;                 INC A                                          ;80C69C|
-;                 INC A                                          ;80C69D|
-;                 CMP.W #$0024                                   ;80C69E|
-;                 BNE .loop                                      ;80C6A1|80C68E
-;                 RTS                                            ;80C6A3|
+         .loop: PHX                                            ;80C68E|
+                PHY                                            ;80C68F|
+                PHA                                            ;80C690|
+                JSR.W BuildTilemapColBg2Mod
+                JSR.W UploadTilemapColumnBg2P1
+                PLA                                            ;80C697|
+                PLY                                            ;80C698|
+                PLX                                            ;80C699|
+                INX                                            ;80C69A|
+                INX                                            ;80C69B|
+                INC A                                          ;80C69C|
+                INC A                                          ;80C69D|
+                CMP.W #$0024                                   ;80C69E|
+                BNE .loop                                      ;80C6A1|80C68E
+                RTS                                            ;80C6A3|
 
 
-;          .skip: LDA.W #$0000                                   ;80C6A4|
+         .skip: LDA.W #$0000                                   ;80C6A4|
 
-;         .loop2: PHX                                            ;80C6A7|
-;                 PHY                                            ;80C6A8|
-;                 PHA                                            ;80C6A9|
-;                 JSR.W BuildTilemapColBg2                               ;80C6AA|80C91E
-;                 JSR.W UploadTilemapColumnBg2                          ;80C6AD|80CB75
-;                 PLA                                            ;80C6B0|
-;                 PLY                                            ;80C6B1|
-;                 PLX                                            ;80C6B2|
-;                 INX                                            ;80C6B3|
-;                 INX                                            ;80C6B4|
-;                 INC A                                          ;80C6B5|
-;                 INC A                                          ;80C6B6|
-;                 CMP.W #$0040                                   ;80C6B7|
-;                 BNE .loop2                                     ;80C6BA|80C6A7
-;                 RTS                                            ;80C6BC|
-
+        .loop2: PHX                                            ;80C6A7|
+                PHY                                            ;80C6A8|
+                PHA                                            ;80C6A9|
+                JSR.W BuildTilemapColBg2Mod
+                JSR.W UploadTilemapColumnBg2P1
+                PLA                                            ;80C6B0|
+                PLY                                            ;80C6B1|
+                PLX                                            ;80C6B2|
+                INX                                            ;80C6B3|
+                INX                                            ;80C6B4|
+                INC A                                          ;80C6B5|
+                INC A                                          ;80C6B6|
+                CMP.W #$0040                                   ;80C6B7|
+                BNE .loop2                                     ;80C6BA|80C6A7
+                RTS                                            ;80C6BC|
 
 
 ; --------------------------------------------------------
@@ -14573,6 +14596,8 @@ loc_80C7D8:
 RefillTilemapOnScrollBg2:
                 LDA.W ram_1A00                                 ;80C7D9|801A00
                 BMI .exit                                      ;80C7DC|80C824
+
+                ;Vertical refill
                 LDA.W refillLastBg2CamYSrc                                 ;80C7DE|8016AF
                 AND.W #$FFF8                                   ;80C7E1|
                 STA.B tmp32                              ;80C7E4|000032
@@ -14580,33 +14605,74 @@ RefillTilemapOnScrollBg2:
                 AND.W #$FFF8                                   ;80C7E9|
                 SEC                                            ;80C7EC|
                 SBC.B tmp32                              ;80C7ED|000032
-                BEQ .skip                                      ;80C7EF|80C7FB
-                BPL +                                          ;80C7F1|80C7F8
-                JSR.W RefillRowUpBg2                               ;80C7F3|80C8CB
-                BRA .skip                                      ;80C7F6|80C7FB
+                BEQ .refillX                                   ;80C7EF|80C7FB   ; no vertical crossing -> horizontal check
+                BPL .goDown                                    ;80C7F1|80C7F8   ; positive delta = camera moved DOWN
+
+                LDA.W modFlags
+                BIT.W #$0001
+                BEQ .upOrig
+                JSR.W RefillRowUpBg2Mod
+                BRA .refillX
+       .upOrig: JSR.W RefillRowUpBg2                               ;80C7F3|80C8CB
+                BRA .refillX                                   ;80C7F6|80C7FB
 
 
-             +: JSR.W RefillRowDownBg2                               ;80C7F8|80C870
+       .goDown: LDA.W modFlags
+                BIT.W #$0001
+                BEQ .downOrig
+                JSR.W RefillRowDownBg2Mod
+                BRA .refillX
+     .downOrig: JSR.W RefillRowDownBg2                               ;80C7F8|80C870
 
-         .skip: LDA.W refillLastBg2CamXSrc                                 ;80C7FB|8016AD
+
+                ;Horizontal refill
+
+                ; Mod check:
+      .refillX: LDA.W modFlags                                 ;INSERT|         ; check to see if the mod is enabled
+                BIT.W #$0001                                   ;INSERT|
+                BEQ .originalX                                 ;INSERT|
+
+
+                ; modded logic:
+                LDA.W refillLastBg2CamXSrc                     ;INSERT|         ; last camera X position
+                AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
+                STA.B tmp32                                    ;INSERT|
+                LDA.W bg2CamXSrc                               ;INSERT|         ; current camera X position
+                AND.W #$FFF8                                   ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.B tmp32                                    ;INSERT|
+
+                BEQ .updateLastCam                             ;INSERT|         ; no horizontal movement
+
+                BPL +                                          ;INSERT|         ; positive = camera moved right
+
+                JSR.W RefillColumnLeftBg2Mod                   ;INSERT|         ; camera moved left
+                BRA .updateLastCam                             ;INSERT|
+
+             +: JSR.W RefillColumnRightBg2Mod                  ;INSERT|
+                BRA .updateLastCam                             ;INSERT|
+
+
+                ; Original logic:
+    .originalX: LDA.W refillLastBg2CamXSrc                                 ;80C7FB|8016AD
                 AND.W #$FFF0                                   ;80C7FE|
                 STA.B tmp32                              ;80C801|000032
                 LDA.W bg2CamXSrc                               ;80C803|8016A5
                 AND.W #$FFF0                                   ;80C806|
                 SEC                                            ;80C809|
                 SBC.B tmp32                              ;80C80A|000032
-                
-                BEQ .skip2                                     ;80C80C|80C818
-                
+
+                BEQ .updateLastCam                             ;80C80C|80C818
+
                 BPL +                                          ;80C80E|80C815
-                
+
                 JSR.W RefillColumnLeftBg2                               ;80C810|80C84C
-                BRA .skip2                                     ;80C813|80C818
+                BRA .updateLastCam                             ;80C813|80C818
 
 
              +: JSR.W RefillColumnRightBg2                               ;80C815|80C825
 
-        .skip2: LDA.W bg2CamXSrc                               ;80C818|8016A5
+.updateLastCam: LDA.W bg2CamXSrc                               ;80C818|8016A5
                 STA.W refillLastBg2CamXSrc                                 ;80C81B|8016AD
                 LDA.W bg2CamYSrc                               ;80C81E|8016A7
                 STA.W refillLastBg2CamYSrc                                 ;80C821|8016AF
@@ -14770,6 +14836,233 @@ RefillRowUpBg2:
 
          .exit: RTS                                            ;80C91D|
 
+
+; MODDED BG2 REFILL FUNCTIONS (mirrors of the BG1 *Mod routines):
+
+RefillColumnRightBg2Mod:
+                LDA.W bg2CamXSrc                               ;INSERT|
+                LSR A                                          ;INSERT|
+                LSR A                                          ;INSERT|
+                LSR A                                          ;INSERT|
+
+
+                AND.W #$FFFE                                   ;INSERT|
+                LDX.W bg2CamXSrc                               ;INSERT|
+                BPL +                                          ;INSERT|
+                ORA.W #$E000                                   ;INSERT|
+             +: STA.W refillBgCol2TileX                        ;INSERT|
+
+
+                LDA.W bg2CamXSrc                               ;INSERT|
+                AND.W #$0008                                   ;INSERT|
+                BEQ .firstHalf                                 ;INSERT|
+
+
+                LDA.W refillBgCol2TileX                        ;INSERT|
+                CLC                                            ;INSERT|
+                ADC.W #$0022                                   ;INSERT|
+                TAX                                            ;INSERT|
+                LDY.W refillBg2RowTileY                        ;INSERT|
+                LDA.W bg2CamYSrc                               ;INSERT|
+                AND.W #$0008                                   ;INSERT|
+                BNE +                                          ;INSERT|
+                DEY                                            ;INSERT|
+                DEY                                            ;INSERT|
+
+             +: LDA.W #$0022                                   ;INSERT|
+
+                JSR.W BuildTilemapColBg2Mod                    ;INSERT|
+                LDA.W #$0100                                   ;INSERT|
+                JMP.W SetPpuUpdateBits                         ;INSERT|
+
+
+    .firstHalf: LDA.W bg2CamXSrc                               ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.W refillLastBg2CamXSrc                     ;INSERT|
+                CMP.W #$0009                                   ;INSERT|
+                BCC .exit                                      ;INSERT|
+
+                LDA.W refillBgCol2TileX                        ;INSERT|
+                CLC                                            ;INSERT|
+                ADC.W #$0020                                   ;INSERT|
+                TAX                                            ;INSERT|
+                LDY.W refillBg2RowTileY                        ;INSERT|
+                LDA.W bg2CamYSrc                               ;INSERT|
+                AND.W #$0008                                   ;INSERT|
+                BNE +                                          ;INSERT|
+                DEY                                            ;INSERT|
+                DEY                                            ;INSERT|
+
+             +: LDA.W #$0020                                   ;INSERT|
+
+                JSR.W BuildTilemapColBg2Mod                    ;INSERT|
+                LDA.W #$0100                                   ;INSERT|
+                JMP.W SetPpuUpdateBits                         ;INSERT|
+
+
+         .exit: RTS                                            ;INSERT|
+
+
+RefillColumnLeftBg2Mod:
+                LDA.W bg2CamXSrc                               ;INSERT|
+                LSR A                                          ;INSERT|
+                LSR A                                          ;INSERT|
+                LSR A                                          ;INSERT|
+
+                AND.W #$FFFE                                   ;INSERT|
+                LDX.W bg2CamXSrc                               ;INSERT|
+                BPL +                                          ;INSERT|
+                ORA.W #$E000                                   ;INSERT|
+
+             +: STA.W refillBgCol2TileX                        ;INSERT|
+
+                LDA.W bg2CamXSrc                               ;INSERT|
+                AND.W #$0008                                   ;INSERT|
+                BNE .firstHalf                                 ;INSERT|
+
+                LDX.W refillBgCol2TileX                        ;INSERT|
+                INX                                            ;INSERT|
+                INX                                            ;INSERT|
+                LDY.W refillBg2RowTileY                        ;INSERT|
+                LDA.W bg2CamYSrc
+                AND.W #$0008                                   ;INSERT|
+                BNE +                                          ;INSERT|
+                DEY
+                DEY
+
+             +: LDA.W #$0002                                   ;INSERT|
+                JSR.W BuildTilemapColBg2Mod                    ;INSERT|
+                LDA.W #$0100                                   ;INSERT|
+                JMP.W SetPpuUpdateBits                         ;INSERT|
+
+
+    .firstHalf: LDA.W refillLastBg2CamXSrc                     ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.W bg2CamXSrc                               ;INSERT|
+                CMP.W #$0009                                   ;INSERT|
+                BCC .exit                                      ;INSERT|
+                LDX.W refillBgCol2TileX                        ;INSERT|
+                INX                                            ;INSERT|
+                INX                                            ;INSERT|
+                INX                                            ;INSERT|
+                INX                                            ;INSERT|
+                LDY.W refillBg2RowTileY                        ;INSERT|
+                LDA.W #$0004                                   ;INSERT|
+                JSR.W BuildTilemapColBg2Mod                    ;INSERT|
+                LDA.W #$0100                                   ;INSERT|
+                JMP.W SetPpuUpdateBits                         ;INSERT|
+
+
+         .exit: RTS                                            ;INSERT|
+
+RefillRowDownBg2Mod:
+                LDA.W bg2CamYSrc                                ;INSERT| ;load camera
+                LSR A                                           ;INSERT| ;divide by 8 to get tile count
+                LSR A                                           ;INSERT|
+                LSR A                                           ;INSERT|
+                AND.W #$FFFE                                    ;INSERT|
+                LDX.W bg2CamYSrc                                ;INSERT|
+                BPL +                                           ;INSERT|
+                ORA.W #$E000                                    ;INSERT|
+                                                                ;INSERT|
+             +: STA.W refillBg2RowTileY                         ;INSERT|
+                LDA.W bg2CamYSrc                                ;INSERT|
+                AND.W #$0008                                    ;INSERT|
+                BEQ .firstHalf                                  ;INSERT|
+                                                                ;INSERT|
+                                                                ;INSERT|
+                JSR.W GetRowStageXBg2Mod
+
+                LDA.W refillBg2RowTileY                         ;INSERT|
+                CLC                                             ;INSERT|
+                ADC.W #$000E                                    ;INSERT|
+                TAY                                             ;INSERT|
+                LDA.W #$000E                                    ;INSERT|
+                JSR.W BuildTilemapRowBg2Mod                     ;INSERT|
+                LDA.W #$0400                                    ;INSERT|
+                JMP.W SetPpuUpdateBits                          ;INSERT|
+
+
+    .firstHalf: LDA.W bg2CamYSrc                                ;INSERT|
+                SEC                                             ;INSERT|
+                SBC.W refillLastBg2CamYSrc                      ;INSERT|
+                CMP.W #$0009                                    ;INSERT|
+                BCC .exit                                       ;INSERT|
+                JSR.W GetRowStageXBg2Mod
+                LDA.W refillBg2RowTileY                         ;INSERT|
+                CLC                                             ;INSERT|
+                ADC.W #$000C                                    ;INSERT|
+                TAY                                             ;INSERT|
+                LDA.W #$000C                                    ;INSERT|
+                JSR.W BuildTilemapRowBg2Mod                     ;INSERT|
+                LDA.W #$0400                                    ;INSERT|
+                JMP.W SetPpuUpdateBits                          ;INSERT|
+
+
+         .exit: RTS                                             ;INSERT|
+
+RefillRowUpBg2Mod:
+                LDA.W bg2CamYSrc
+                LSR A
+                LSR A
+                LSR A
+                AND.W #$FFFE
+                LDX.W bg2CamYSrc
+                BPL +
+                ORA.W #$E000
+
+             +: STA.W refillBg2RowTileY
+                LDA.W bg2CamYSrc
+                AND.W #$0008
+                BNE .skip
+
+
+
+                JSR.W GetRowStageXBg2Mod
+                LDY.W refillBg2RowTileY
+                DEY
+                LDA.W #$FFFE
+                JSR.W BuildTilemapRowBg2Mod
+                LDA.W #$0400
+                JMP.W SetPpuUpdateBits
+
+
+         .skip: LDA.W refillLastBg2CamYSrc
+                SEC
+                SBC.W bg2CamYSrc
+                CMP.W #$0009
+                BCC .exit
+                JSR.W GetRowStageXBg2Mod
+                LDY.W refillBg2RowTileY
+                INY
+                LDA.W #$0000
+                JSR.W BuildTilemapRowBg2Mod
+                LDA.W #$0400
+                JMP.W SetPpuUpdateBits
+
+
+         .exit: RTS
+
+GetRowStageXBg2Mod:    ;returns X = tile-x of the row window start
+                LDA.W bg2CamXSrc
+                LSR A
+                LSR A
+                LSR A
+                AND.W #$FFFE
+                LDX.W bg2CamXSrc
+                BPL +
+                ORA.W #$E000
+             +: STA.W refillBgCol2TileX
+                LDA.W bg2CamXSrc
+                AND.W #$0008
+                LSR A
+                LSR A
+                CLC
+                ADC.W #$0002
+                CLC
+                ADC.W refillBgCol2TileX
+                TAX
+                RTS
 
 ; --------------------------------------------------------
 ;  BuildTilemapColBg2   [53 ins, returns RTS]
@@ -14937,6 +15230,161 @@ FetchConvertMetatileColBg2:
                 LDX.B refillSaveX                              ;80CA2D|00003E
                 LDY.B refillSaveY                              ;80CA2F|000040
                 RTS                                            ;80CA31|
+
+
+BuildTilemapColBg2Mod:
+                PHY
+                PHA
+
+                TXA
+                ASL A
+                TXA
+                ROR A
+                TAX
+                TYA
+                ASL A
+                TYA
+                ROR A
+                TAY
+
+                AND.W #$0007
+
+                ASL A
+                ASL A
+                STA.W refillStageStart
+                STA.B tmp34
+
+         .loop: JSR.W FetchConvertMetatileColBg2Mod
+
+                INY
+                LDA.B tmp34
+                CLC
+                ADC.W #$0004
+                STA.B tmp34
+                CMP.W #$0020
+                BCC .loop
+
+                LDA.W refillStageStart
+                BEQ .skip
+                STZ.B tmp34
+
+        .loop2: JSR.W FetchConvertMetatileColBg2Mod
+
+                INY
+                LDA.B tmp34
+                CLC
+                ADC.W #$0004
+                STA.B tmp34
+                CMP.W refillStageStart
+                BCC .loop2
+
+         .skip: PLA
+                PLY
+                CLC
+                ADC.W refillBgCol2TileX
+                AND.W #$001F
+                CLC
+                ADC.W tilemapBaseBg2Lo
+                STA.W P1Bg2colDmaDest
+                RTS
+
+FetchConvertMetatileColBg2Mod:
+                STX.B refillSaveX
+                STY.B refillSaveY
+                CPX.W levelWidthMetaTilesBg2
+                BCS +
+                CPY.W levelHeightMetaTilesBg2
+                BCC .main
+
+             +: LDA.W levelWrapFlagsBg2
+                BIT.W #$0002
+                BEQ .skip
+                STX.B tmp32
+                LDA.W levelWidthMetaTilesBg2
+                DEC A
+                AND.B tmp32
+                TAX
+                STY.B tmp32
+                LDA.W levelHeightMetaTilesBg2
+                DEC A
+                AND.B tmp32
+                TAY
+                BRA .main
+
+
+         .skip: BIT.W #$0008
+                BEQ .skip2
+                LDX.B tmp34
+                LDA.W tileAttrOrBg2
+                STA.W P1Bg2colStagedMetaTileLU,X
+                STA.W P1Bg2colStagedMetaTileLD,X
+                STA.W P1Bg2colStagedMetaTileRD,X
+                STA.W P1Bg2colStagedMetaTileRU,X
+                LDX.B refillSaveX
+                LDY.B refillSaveY
+                RTS
+
+
+        .skip2: CPX.W levelWidthMetaTilesBg2
+                BCC .skip3
+
+
+                CPX.W #$8000
+                BCC +
+                LDX.W #$0000
+                BRA .skip3
+
+
+             +: LDX.W levelWidthMetaTilesBg2
+                DEX
+
+        .skip3: CPY.W levelHeightMetaTilesBg2
+                BCC .main
+                CPY.W #$8000
+                BCC +
+                LDY.W #$0000
+                BRA .main
+
+
+             +: LDY.W levelHeightMetaTilesBg2
+                DEY
+
+         .main: STY.B mulMultiplicand
+                LDA.W levelRowStrideBg2
+                STA.B mulMultiplierLo
+                JSR.W Mul8x16
+                TXA
+                ASL A
+                ADC.B mulResult
+                TAY
+                LDA.B [levelBg2TileMapPtr],Y
+                AND.W #$03FF
+                ASL A
+                ASL A
+                ASL A
+                TAY
+                LDA.B [Bg2tileVisualPtr],Y
+                ORA.W tileAttrOrBg2
+                LDX.B tmp34
+                STA.W P1Bg2colStagedMetaTileLU,X
+                INY
+                INY
+                LDA.B [Bg2tileVisualPtr],Y
+                ORA.W tileAttrOrBg2
+                STA.W P1Bg2colStagedMetaTileRU,X
+                INY
+                INY
+                LDA.B [Bg2tileVisualPtr],Y
+                ORA.W tileAttrOrBg2
+                STA.W P1Bg2colStagedMetaTileLD,X
+                INY
+                INY
+                LDA.B [Bg2tileVisualPtr],Y
+                ORA.W tileAttrOrBg2
+                STA.W P1Bg2colStagedMetaTileRD,X
+                LDX.B refillSaveX
+                LDY.B refillSaveY
+                RTS
 
 
 ; --------------------------------------------------------
@@ -15127,6 +15575,163 @@ FetchConvertMetatileRowBg2:
                 RTS                                            ;80CB74|
 
 
+BuildTilemapRowBg2Mod:
+                PHA
+                TXA
+                ASL A
+                TXA
+                ROR A
+                TAX
+                TYA
+                ASL A
+                TYA
+                ROR A
+                TAY
+
+                TXA
+                AND.W #$000F
+
+                ASL A
+                ASL A
+                STA.W refillStageStart
+                STA.B tmp34
+
+
+         .loop: JSR.W FetchConvertMetatileRowBg2Mod
+
+                INX
+                LDA.B tmp34
+                CLC
+                ADC.W #$0004
+                STA.B tmp34
+                CMP.W #$0040
+                BCC .loop
+
+
+                LDA.W refillStageStart
+                BEQ .skip
+                STZ.B tmp34
+
+        .loop2: JSR.W FetchConvertMetatileRowBg2Mod
+                INX
+                LDA.B tmp34
+                CLC
+                ADC.W #$0004
+                STA.B tmp34
+                CMP.W refillStageStart
+                BCC .loop2
+
+         .skip: PLA                     ; row offset
+                CLC
+                ADC.W refillBg2RowTileY
+                AND.W #$000F
+                ASL A
+                TAY
+                LDA.W data_Xtimes20,Y     ; row * $20
+                CLC
+                ADC.W tilemapBaseBg2Lo    ; BG2 P1 subscreen base
+                STA.W P1Bg2rowDmaDest     ; one dest word, no len variables
+                RTS
+
+
+FetchConvertMetatileRowBg2Mod:
+                STX.B refillSaveX
+                STY.B refillSaveY
+                CPX.W levelWidthMetaTilesBg2
+                BCS +
+                CPY.W levelHeightMetaTilesBg2
+                BCC .main
+
+             +: LDA.W levelWrapFlagsBg2
+                BIT.W #$0002
+                BEQ .skip
+                STX.B tmp32
+                LDA.W levelWidthMetaTilesBg2
+                DEC A
+                AND.B tmp32
+                TAX
+                STY.B tmp32
+                LDA.W levelHeightMetaTilesBg2
+                DEC A
+                AND.B tmp32
+                TAY
+                BRA .main
+
+
+         .skip: BIT.W #$0008
+                BEQ .skip2
+                LDX.B tmp34
+                LDA.W tileAttrOrBg2
+                STA.W P1Bg2rowStagedMetaTileLU,X
+                STA.W P1Bg2rowStagedMetaTileLD,X
+                STA.W P1Bg2rowStagedMetaTileRD,X
+                STA.W P1Bg2rowStagedMetaTileRU,X
+                LDX.B refillSaveX
+                RTS
+
+
+        .skip2: CPX.W levelWidthMetaTilesBg2
+                BCC .skip3
+                CPX.W #$8000
+                BCC +
+                LDX.W #$0000
+                BRA .skip3
+
+
+             +: LDX.W levelWidthMetaTilesBg2
+                DEX
+
+        .skip3: CPY.W levelHeightMetaTilesBg2
+                BCC .main
+                CPY.W #$8000
+                BCC +
+                LDY.W #$0000
+                BRA .main
+
+
+             +: LDY.W levelHeightMetaTilesBg2
+                DEY
+
+         .main: STY.B mulMultiplicand
+                LDA.W levelRowStrideBg2
+                STA.B mulMultiplierLo
+                JSR.W Mul8x16
+                TXA
+                ASL A
+                ADC.B mulResult
+                TAY
+                LDA.B [levelBg2TileMapPtr],Y
+                AND.W #$03FF
+                ASL A
+                ASL A
+                ASL A
+                TAY
+                LDA.B [Bg2tileVisualPtr],Y
+                LDX.B tmp34
+                ORA.W tileAttrOrBg2
+                STA.W P1Bg2rowStagedMetaTileLU,X
+                INY
+                INY
+                LDA.B [Bg2tileVisualPtr],Y
+                ORA.W tileAttrOrBg2
+                STA.W P1Bg2rowStagedMetaTileRU,X
+                INY
+                INY
+                LDA.B [Bg2tileVisualPtr],Y
+                ORA.W tileAttrOrBg2
+                STA.W P1Bg2rowStagedMetaTileLD,X
+                INY
+                INY
+                LDA.B [Bg2tileVisualPtr],Y
+                ORA.W tileAttrOrBg2
+                STA.W P1Bg2rowStagedMetaTileRD,X
+                LDX.B refillSaveX
+                LDY.B refillSaveY
+                RTS
+
+
+
+
 ; --------------------------------------------------------
 ;  UploadTilemapColumnBg2   [55 ins, returns RTS]
 ;    callers: ProcessTilemapEdits, FillTilemapFullBg2
@@ -15274,7 +15879,104 @@ UploadTilemapRowBg2:
         .skip2: REP #$30                                       ;80CCB0|
                 RTS                                            ;80CCB2|
 
+UploadTilemapRowBg2P1:
+                SEP #$30
+                LDA.B #$01
+                STA.W DMAP0
+                LDA.B #$18
+                STA.W BBAD0
+                REP #$30
+                LDA.W P1Bg2rowDmaDest
+                STA.W VMADDL
+                LDA.W #$1895
+                STA.W A1TL0
+                LDA.W #$0080
+                STA.W DASL0
+                SEP #$30
+                LDA.B #$7E
+                STA.W A1B0
+                LDA.B #$01
+                STA.W MDMAEN
+                REP #$30
+                LDA.W P1Bg2rowDmaDest
+                CLC
+                ADC.W #$0200
 
+                STA.W VMADDL
+                LDA.W #$1895
+                STA.W A1TL0
+                LDA.W #$0080
+                STA.W DASL0
+                SEP #$30
+                LDA.B #$01
+                STA.W MDMAEN
+                REP #$30
+                RTS
+
+UploadTilemapColumnBg2P1:
+                SEP #$30
+                LDA.B #$81
+                STA.W VMAIN
+                LDA.B #$01
+                STA.W DMAP0
+                LDA.B #$18
+                STA.W BBAD0
+
+                REP #$30
+                LDA.W P1Bg2colDmaDest
+                STA.W VMADDL
+                LDA.W #$1815
+                STA.W A1TL0
+                LDA.W #$0020
+                STA.W DASL0
+                SEP #$30
+                LDA.B #$7E
+                STA.W A1B0
+                LDA.B #$01
+                STA.W MDMAEN
+
+                REP #$30
+                LDA.W P1Bg2colDmaDest
+                INC A
+                STA.W VMADDL
+                LDA.W #$1835
+                STA.W A1TL0
+                LDA.W #$0020
+                STA.W DASL0
+                SEP #$30
+                LDA.B #$01
+                STA.W MDMAEN
+
+                REP #$30
+                LDA.W P1Bg2colDmaDest
+                CLC
+                ADC.W #$0200
+                STA.W VMADDL
+                LDA.W #$1815
+                STA.W A1TL0
+                LDA.W #$0020
+                STA.W DASL0
+                SEP #$30
+                LDA.B #$01
+                STA.W MDMAEN
+
+                REP #$30
+                LDA.W P1Bg2colDmaDest
+                CLC
+                ADC.W #$0201
+                STA.W VMADDL
+                LDA.W #$1835
+                STA.W A1TL0
+                LDA.W #$0020
+                STA.W DASL0
+                SEP #$30
+                LDA.B #$01
+                STA.W MDMAEN
+
+                LDA.B #$80
+                STA.W VMAIN
+                REP #$30
+                RTS
 ; --------------------------------------------------------
 ;  UpdateAllObjects   [25 ins, returns RTS]
 ;    callers: vbwait_808081, timedoor_Transition, input_80814E, RunGameplayFrame_NoBlank

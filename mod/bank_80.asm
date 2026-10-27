@@ -12323,7 +12323,7 @@ LatchBG2Scroll:
 
 ; --------------------------------------------------------
 ;  SetPpuUpdateBits   [3 ins, returns RTS]
-;    callers: RefillColumnRight, RefillColumnLeft, RefillRowDown, RefillRowUp, sub_80C825, sub_80C84C, +2 more
+;    callers: RefillColumnRight, RefillColumnLeft, RefillRowDown, RefillRowUp, RefillColumnRightBg2, RefillColumnLeftBg2, +2 more
 ;    writes:    tilemapUploadMask
 ;    reads:     tilemapUploadMask
 ; --------------------------------------------------------
@@ -12423,11 +12423,11 @@ ProcessTilemapEdits:
 ; --------------------------------------------------------
 ;  sub_80C080   [2 ins, returns ?]
 ;    callers: vbwait_808081, RunGameplayFrame_NoBlank
-;    calls:     RefillTilemapOnScroll, sub_80C7D9
+;    calls:     RefillTilemapOnScroll, RefillTilemapOnScrollBg2
 ; --------------------------------------------------------
 sub_80C080:
                 JSR.W RefillTilemapOnScroll                    ;80C080|80C176
-                JMP.W sub_80C7D9                               ;80C083|80C7D9
+                JMP.W RefillTilemapOnScrollBg2                               ;80C083|80C7D9
 
 
 ; --------------------------------------------------------
@@ -14564,13 +14564,13 @@ loc_80C7D8:
 
 
 ; --------------------------------------------------------
-;  sub_80C7D9   [31 ins, returns RTS]
+;  RefillTilemapOnScrollBg2   [31 ins, returns RTS]
 ;    callers: sub_80C080
 ;    writes:    tmp32, refillLastBg2CamXSrc, refillLastBg2CamYSrc
 ;    reads:     tmp32, bg2CamXSrc, bg2CamYSrc, refillLastBg2CamXSrc, refillLastBg2CamYSrc, ram_1A00
-;    calls:     sub_80C8CB, sub_80C870, sub_80C84C, sub_80C825
+;    calls:     RefillRowUpBg2, RefillRowDownBg2, RefillColumnLeftBg2, RefillColumnRightBg2
 ; --------------------------------------------------------
-sub_80C7D9:
+RefillTilemapOnScrollBg2:
                 LDA.W ram_1A00                                 ;80C7D9|801A00
                 BMI .exit                                      ;80C7DC|80C824
                 LDA.W refillLastBg2CamYSrc                                 ;80C7DE|8016AF
@@ -14582,11 +14582,11 @@ sub_80C7D9:
                 SBC.B tmp32                              ;80C7ED|000032
                 BEQ .skip                                      ;80C7EF|80C7FB
                 BPL +                                          ;80C7F1|80C7F8
-                JSR.W sub_80C8CB                               ;80C7F3|80C8CB
+                JSR.W RefillRowUpBg2                               ;80C7F3|80C8CB
                 BRA .skip                                      ;80C7F6|80C7FB
 
 
-             +: JSR.W sub_80C870                               ;80C7F8|80C870
+             +: JSR.W RefillRowDownBg2                               ;80C7F8|80C870
 
          .skip: LDA.W refillLastBg2CamXSrc                                 ;80C7FB|8016AD
                 AND.W #$FFF0                                   ;80C7FE|
@@ -14595,13 +14595,16 @@ sub_80C7D9:
                 AND.W #$FFF0                                   ;80C806|
                 SEC                                            ;80C809|
                 SBC.B tmp32                              ;80C80A|000032
+                
                 BEQ .skip2                                     ;80C80C|80C818
+                
                 BPL +                                          ;80C80E|80C815
-                JSR.W sub_80C84C                               ;80C810|80C84C
+                
+                JSR.W RefillColumnLeftBg2                               ;80C810|80C84C
                 BRA .skip2                                     ;80C813|80C818
 
 
-             +: JSR.W sub_80C825                               ;80C815|80C825
+             +: JSR.W RefillColumnRightBg2                               ;80C815|80C825
 
         .skip2: LDA.W bg2CamXSrc                               ;80C818|8016A5
                 STA.W refillLastBg2CamXSrc                                 ;80C81B|8016AD
@@ -14612,12 +14615,12 @@ sub_80C7D9:
 
 
 ; --------------------------------------------------------
-;  sub_80C825   [16 ins, returns ?]
-;    callers: sub_80C7D9
+;  RefillColumnRightBg2   [16 ins, returns ?]
+;    callers: RefillTilemapOnScrollBg2
 ;    reads:     bg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
 ;    calls:     BuildTilemapColBg2, SetPpuUpdateBits
 ; --------------------------------------------------------
-sub_80C825:
+RefillColumnRightBg2:
                 INC.W refillBgCol2TileX                                 ;80C825|8016C9
                 INC.W refillBgCol2TileX                                 ;80C828|8016C9
                 LDA.W refillBgCol2TileX                                 ;80C82B|8016C9
@@ -14638,13 +14641,13 @@ sub_80C825:
 
 
 ; --------------------------------------------------------
-;  sub_80C84C   [15 ins, returns ?]
-;    callers: sub_80C7D9
+;  RefillColumnLeftBg2   [15 ins, returns ?]
+;    callers: RefillTilemapOnScrollBg2
 ;    reads:     bg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
 ;    calls:     BuildTilemapColBg2, SetPpuUpdateBits
 ; --------------------------------------------------------
-sub_80C84C:
-                DEC.W refillBgCol2TileX                                 ;80C84C|8016C9
+RefillColumnLeftBg2:
+                DEC.W refillBgCol2TileX                                 ;80C84C|8016C9 ;Note, this works slightly differently then the main one.
                 DEC.W refillBgCol2TileX                                 ;80C84F|8016C9
                 LDX.W refillBgCol2TileX                                 ;80C852|8016C9
                 DEX                                            ;80C855|
@@ -14663,13 +14666,13 @@ sub_80C84C:
 
 
 ; --------------------------------------------------------
-;  sub_80C870   [40 ins, returns RTS]
-;    callers: sub_80C7D9
+;  RefillRowDownBg2   [40 ins, returns RTS]
+;    callers: RefillTilemapOnScrollBg2
 ;    writes:    refillBg2RowTileY
 ;    reads:     bg2CamYSrc, refillLastBg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
 ;    calls:     BuildTilemapRowBg2, SetPpuUpdateBits
 ; --------------------------------------------------------
-sub_80C870:
+RefillRowDownBg2:
                 LDA.W bg2CamYSrc                               ;80C870|8016A7
                 LSR A                                          ;80C873|
                 LSR A                                          ;80C874|
@@ -14718,13 +14721,13 @@ sub_80C870:
 
 
 ; --------------------------------------------------------
-;  sub_80C8CB   [36 ins, returns RTS]
-;    callers: sub_80C7D9
+;  RefillRowUpBg2   [36 ins, returns RTS]
+;    callers: RefillTilemapOnScrollBg2
 ;    writes:    refillBg2RowTileY
 ;    reads:     bg2CamYSrc, refillLastBg2CamYSrc, refillBgCol2TileX, refillBg2RowTileY
 ;    calls:     BuildTilemapRowBg2, SetPpuUpdateBits
 ; --------------------------------------------------------
-sub_80C8CB:
+RefillRowUpBg2:
                 LDA.W bg2CamYSrc                               ;80C8CB|8016A7
                 LSR A                                          ;80C8CE|
                 LSR A                                          ;80C8CF|
@@ -14770,7 +14773,7 @@ sub_80C8CB:
 
 ; --------------------------------------------------------
 ;  BuildTilemapColBg2   [53 ins, returns RTS]
-;    callers: FillTilemapFullBg2, sub_80C825, sub_80C84C
+;    callers: FillTilemapFullBg2, RefillColumnRightBg2, RefillColumnLeftBg2
 ;    writes:    tmp32, tmp34, Bg2colDmaVramDest0, Bg2colDmaLen0, Bg2colDmaVramDest1, Bg2colDmaLen1
 ;    reads:     tmp32, tmp34, refillBgCol2TileX, Bg2colDmaVramDest0, Bg2colDmaLen0, tilemapBaseBg2Hi ...
 ;    calls:     FetchConvertMetatileColBg2
@@ -14938,7 +14941,7 @@ FetchConvertMetatileColBg2:
 
 ; --------------------------------------------------------
 ;  BuildTilemapRowBg2   [71 ins, returns RTS]
-;    callers: sub_80C870, sub_80C8CB
+;    callers: RefillRowDownBg2, RefillRowUpBg2
 ;    writes:    tmp32, tmp34, vramColDstAddrD, Bg2rowDmaLen0, Bg2rowDmaVramDest1, Bg2rowDmaLen1 ...
 ;    reads:     tmp32, tmp34, refillBg2RowTileY, vramColDstAddrD, Bg2rowDmaLen0, Bg2rowDmaVramDest1 ...
 ;    calls:     FetchConvertMetatileRowBg2

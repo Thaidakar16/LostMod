@@ -59,7 +59,7 @@ Additionally, if you own a legally obtained ROM dump of *The Lost Vikings*, the 
 Here is the current task list for completing the split-screen mod:
 
 - [x] Compact horizontal screen scrolling
-- [ ] Modify vertical screen scrolling
+- [x] Modify vertical screen scrolling
 - [ ] Implement independent camera tracking for Player 2
 - [ ] Adjust object culling behavior for both viewports
 - [ ] Redesign and relocate the HUD

@@ -936,7 +936,7 @@ Boot_ClearWram:
 
 ; --------------------------------------------------------
 ;  MainLoop_Reinit    [10 ins, returns ?]
-;    callers: vbwait_808081
+;    callers: MainGameLoop
 ;    reads:     gameModeFlags
 ;    calls:     LoadInitialGfx, vbwait_808741, ComputeButtonEdges, input_8082F6, GiveUpDialog_TriggerGate, input_80814E, +1 more
 ;
@@ -960,18 +960,18 @@ MainLoop_Reinit:
                 JSR.W input_80814E                             ;808073|80814E
                 LDA.W gameModeFlags                            ;808076|8019E3
                 BIT.W #$0008                                   ;808079|
-                BEQ vbwait_808081                              ;80807C|808081
+                BEQ MainGameLoop                              ;80807C|808081
                 JMP.W timedoor_Transition                     ;80807E|80811B
 
 
 ; --------------------------------------------------------
-;  vbwait_808081   [51 ins, returns ?]
-;    callers: vbwait_808081
+;  MainGameLoop   [51 ins, returns ?]
+;    callers: MainGameLoop
 ;    writes:    vblankCmd
 ;    reads:     vblankCmd, gameModeFlags
 ;    calls:     input_80B529, farsub_8182B2, sub_8086E1, RunCircleIrisHdma, UpdateAllObjects, SnapshotAllObjectPositions, +27 more
 ; --------------------------------------------------------
-vbwait_808081:
+MainGameLoop:
                 JSR.W input_80B529                              ;808081|80B529
                 JSL.L farsub_8182B2                             ;808084|8182B2
                 JSR.W sub_8086E1                                ;808088|8086E1
@@ -1027,7 +1027,7 @@ loc_808101:
                 LDA.W gameModeFlags                            ;808110|8019E3
                 BIT.W #$0008                                   ;808113|
                 BNE timedoor_Transition                        ;808116|80811B
-                JMP.W vbwait_808081                            ;808118|808081
+                JMP.W MainGameLoop                            ;808118|808081
 
 
 ; --------------------------------------------------------
@@ -1059,7 +1059,7 @@ timedoor_Transition:
 
 ; --------------------------------------------------------
 ;  WaitVBlankCmd   [4 ins, returns RTS]
-;    callers: vbwait_808081, timedoor_Transition, sub_8081FD, GiveUpDialog_Run, vbwait_808741, RunGameplayFrame_NoBlank, +1 more
+;    callers: MainGameLoop, timedoor_Transition, sub_8081FD, GiveUpDialog_Run, vbwait_808741, RunGameplayFrame_NoBlank, +1 more
 ;    writes:    vblankCmd
 ;    reads:     vblankCmd
 ; --------------------------------------------------------
@@ -1073,7 +1073,7 @@ WaitVBlankCmd:
 
 ; --------------------------------------------------------
 ;  input_80814E   [52 ins, returns RTS]
-;    callers: MainLoop_Reinit, vbwait_808081, vbwait_808741
+;    callers: MainLoop_Reinit, MainGameLoop, vbwait_808741
 ;    writes:    ppuUpdateFlags, requestedSceneId
 ;    reads:     spawnGateFrame, ppuUpdateFlags, joy1Pressed, joy2Pressed, gameModeFlags
 ;    calls:     sub_8087B7, hdma_808E7E, irqcfg_809210, irqcfg_808834, UpdateAllObjects, ScreenReinitHdmaOff, +7 more
@@ -1215,7 +1215,7 @@ sub_8081FD:
 
 ; --------------------------------------------------------
 ;  sub_808219   [20 ins, returns RTS]
-;    callers: vbwait_808081, sub_8081FD, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, sub_8081FD, RunGameplayFrame_NoBlank
 ;    writes:    ram_1957
 ;    reads:     ram_1935, ram_1947, ram_1957, ram_1967, ram_1977
 ;    calls:     sub_808299, sub_808249
@@ -1371,7 +1371,7 @@ sub_808299:
 
 ; --------------------------------------------------------
 ;  input_8082F6   [64 ins, returns RTS]
-;    callers: MainLoop_Reinit, vbwait_808081
+;    callers: MainLoop_Reinit, MainGameLoop
 ;    writes:    zp_8A, numPlayers, ppuUpdateFlags, p1vikingIdx, p2vikingIdx, ram_03E4 ...
 ;    reads:     zp_8A, ppuUpdateFlags, joy1Held, joy1Pressed, ram_03E6, ram_03EA ...
 ; --------------------------------------------------------
@@ -1690,7 +1690,7 @@ GiveUpDialog_NavConfirm:
 
 ; --------------------------------------------------------
 ;  input_808515   [74 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    writes:    ram_0356, ram_0358, ram_03F6, ram_03F8, ram_03FA, ram_03FC
 ;    reads:     playerCamX, playerCamY, hudYOffset  , p1vikingIdx, ram_03E4, objX ...
 ;    calls:     sub_808636, sub_80C0FC, sub_80C0D2, sub_80C124, sub_80C14E
@@ -1805,7 +1805,7 @@ input_808515:
 
 ; --------------------------------------------------------
 ;  sub_8085C2   [27 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    reads:     ram_03F6, ram_03F8, ram_03FA, ram_03FC
 ;    calls:     sub_808636, sub_80C0FC, sub_80C0D2, sub_80C14E, sub_80C124
 ; --------------------------------------------------------
@@ -1848,7 +1848,7 @@ sub_8085C2:
 
 ; --------------------------------------------------------
 ;  sub_8085FC   [27 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    reads:     ram_03F6, ram_03F8, ram_03FA, ram_03FC
 ;    calls:     sub_808636, sub_80C0FC, sub_80C0D2, sub_80C14E, sub_80C124
 ; --------------------------------------------------------
@@ -1926,7 +1926,7 @@ sub_808636:
 
 ; --------------------------------------------------------
 ;  SetupCgramGpDma   [12 ins, returns RTS]
-;    callers: vbwait_808081, sub_8081FD, GiveUpDialog_Run, RunGameplayFrame_NoBlank, vbwait_80B54E, color_80CF31, +1 more
+;    callers: MainGameLoop, sub_8081FD, GiveUpDialog_Run, RunGameplayFrame_NoBlank, vbwait_80B54E, color_80CF31, +1 more
 ;    writes HW: A1B2, A1TL2, BBAD2, DASL2, DMAP2
 ; --------------------------------------------------------
 SetupCgramGpDma:
@@ -1997,7 +1997,7 @@ input_808685:
 
 ; --------------------------------------------------------
 ;  sub_8086E1   [8 ins, returns RTS]
-;    callers: vbwait_808081
+;    callers: MainGameLoop
 ;    reads:     dialogArmedFlag
 ;    calls:     input_8086F6
 ; --------------------------------------------------------
@@ -2448,7 +2448,7 @@ sub_808932:
 ;    scene change by itself. Also called from vbwait_80B54E, a nearly
 ;    identical fade/nav/confirm box gated on Select (not Start) and
 ;    gameModeFlags bit0, driven from the in-level loop via
-;    vbwait_808081 -- i.e. this game has a general "modal Yes/No
+;    MainGameLoop -- i.e. this game has a general "modal Yes/No
 ;    confirm box" pattern (fade backdrop, poll L/R+confirm, fade out,
 ;    on-decline stop cues) that gets reused for at least two different
 ;    prompts. We have not identified vbwait_80B54E's purpose (its own
@@ -5659,8 +5659,8 @@ ScreenReinitHdmaOff:
                 JSR.W ComputeCameras                           ;809B60|809E60
                 JSR.W LatchBgScroll                            ;809B63|80BFE0
                 JSR.W ppucfg_809EE2                            ;809B66|809EE2
-                JSR.W SpawnAlwaysActivePlacements                               ;809B69|80EFBD
-                JSR.W SpawnPlacementsInInitialView                               ;809B6C|80EE7A
+                JSR.W SpawnAlwaysActivePlacements              ;809B69|80EFBD
+                JSR.W SpawnPlacementsInInitialView             ;809B6C|80EE7A
                 JSR.W sub_80879F                               ;809B6F|80879F
                 JSR.W input_80886F                             ;809B72|80886F
                 JSR.W RunGameplayFrame_NoBlank                               ;809B75|80A0A3
@@ -6015,7 +6015,7 @@ ExpandLevelTilemap:
 
 ShiftObjPlacementBoxes:
                 ;IDK which of these are necessary, but at least one of them is:
-                PHA
+                PHA                                             ;INSERT|
                 PHX
                 PHY
 
@@ -6725,7 +6725,7 @@ ScreenModeSetupTable:
 ;  RunGameplayFrame_NoBlank   [38 ins, returns ?]
 ;    callers: ScreenReinitHdmaOff
 ;    calls:     ClearInputState, UpdateAllObjects, SnapshotAllObjectPositions, sub_80B04E, RunObjectScriptsPass, ApplyAllObjectFollows, +19 more
-;    A second, compressed copy of the vbwait_808081 main-loop body (object update / script run /
+;    A second, compressed copy of the MainGameLoop main-loop body (object update / script run /
 ;    render / VBlank-sync sequence), used where a frame needs to run without a true VBlank wait --
 ;    e.g. right after a scene reinit, to get one frame of state settled before the first real NMI-
 ;    synced frame.
@@ -7343,7 +7343,7 @@ sub_80A402:
 
 ; --------------------------------------------------------
 ;  sub_80A449   [9 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    writes:    vmQueryPass
 ;    reads:     objTableEnd
 ;    calls:     RunOneObjectScript
@@ -7363,7 +7363,7 @@ sub_80A449:
 
 ; --------------------------------------------------------
 ;  RunObjectScriptsPass   [9 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    writes:    vmQueryPass
 ;    reads:     objTableEnd
 ;    calls:     sub_80A471
@@ -9791,7 +9791,7 @@ Op_RequestGroundSnap:
 
 ; --------------------------------------------------------
 ;  sub_80B04E   [1 ins, returns ?]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ; --------------------------------------------------------
 sub_80B04E:
                 LDY.W #$0000                                   ;80B04E|
@@ -10088,7 +10088,7 @@ data_80B225:
 
 ; --------------------------------------------------------
 ;  sub_80B285   [9 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank, vbwait_80B54E
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank, vbwait_80B54E
 ;    reads:     gameModeFlags
 ;    calls:     input_80B965, sub_80BA02, sub_80B949, sub_80B435, SetupVramGpDmaCh6
 ; --------------------------------------------------------
@@ -10497,7 +10497,7 @@ sub_80B435:
 
 ; --------------------------------------------------------
 ;  input_80B529   [14 ins, returns RTS]
-;    callers: vbwait_808081
+;    callers: MainGameLoop
 ;    reads:     joy1Pressed, joy2Pressed, gameModeFlags
 ;    calls:     vbwait_80B54E
 ; --------------------------------------------------------
@@ -12192,7 +12192,7 @@ loc_80BF38:
 
 ; --------------------------------------------------------
 ;  SnapshotCameras   [15 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    writes:    scrollDirty, bg1CamX, bg1CamY, bg2CamX, bg2CamY
 ;    reads:     playerCamX, playerCamY, hudYOffset  , bg2CamXSrc, bg2CamYSrc
 ; --------------------------------------------------------
@@ -12458,7 +12458,7 @@ ProcessTilemapEdits:
 
 ; --------------------------------------------------------
 ;  sub_80C080   [2 ins, returns ?]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    calls:     RefillTilemapOnScroll, RefillTilemapOnScrollBg2
 ; --------------------------------------------------------
 sub_80C080:
@@ -12667,7 +12667,7 @@ sub_80C14E:
 ;  RefillTilemapOnScroll  (scroll-driven BG tilemap streaming)
 ; ============================================================
 ;  Called every frame from the vblank-wait loop:
-;    vbwait_808081 -> sub_80C080 -> here.
+;    MainGameLoop -> sub_80C080 -> here.
 ;  Compares the camera latched after the previous refill
 ;  (refillLastCamX $16A9 / refillLastCamY $16AB, stored RAW)
 ;  against the current camera ($44 = camX, $46 = camY):
@@ -14572,7 +14572,7 @@ UploadTilemapRowBg2:
                 RTS                                            ;80CCB2|
 ; --------------------------------------------------------
 ;  UpdateAllObjects   [25 ins, returns RTS]
-;    callers: vbwait_808081, timedoor_Transition, input_80814E, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, timedoor_Transition, input_80814E, RunGameplayFrame_NoBlank
 ;    writes:    newChildCount, vmQueryPass
 ;    reads:     objTableEnd, newChildCount, newChildList
 ;    calls:     ClearPerFrameMoveDeltas, UpdateOneObject
@@ -14842,7 +14842,7 @@ Op_RequestReinit:
 ;--------------------------------------------------------------
 Op_DestroySelf:
                 LDY.B curObjIdx                                ;80CDCF|000042
-                JSR.W DestroyObject                               ;80CDD1|80F095
+                JSR.W DestroyObject                            ;80CDD1|80F095
                 LDX.B curObjIdx                                ;80CDD4|000042
                 PLA                                            ;80CDD6|
                 RTS                                            ;80CDD7|
@@ -18349,7 +18349,7 @@ Op_SetPlacementX:
 Op_SetPlacementY:
                 LDX.B curObjIdx                                ;80DB2B|000042
                 LDA.W objPlacementIdx,X                               ;80DB2D|801101
-                BMI StorePlacementWord_Exit                                 ;80DB30|80DB4C
+                BMI StorePlacementWord_X_exit                                 ;80DB30|80DB4C
                 LDX.W #$0002                                   ;80DB32|
 
 ;--------------------------------------------------------------
@@ -18377,7 +18377,7 @@ StorePlacementWord_X:
 ;  StorePlacementWord_Exit
 ;    RTS tail for the placement-store family.
 ;--------------------------------------------------------------
-StorePlacementWord_Exit:
+        .exit:
                 RTS                                            ;80DB4C|
 
 
@@ -19338,7 +19338,7 @@ sub_80DFFC:
 
 ; --------------------------------------------------------
 ;  sub_80E02D   [2 ins, returns ?]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ; --------------------------------------------------------
 sub_80E02D:
                 LDX.W #$0000                                   ;80E02D|
@@ -19347,7 +19347,7 @@ sub_80E02D:
 
 ; --------------------------------------------------------
 ;  sub_80E032   [2 ins, returns ?]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ; --------------------------------------------------------
 sub_80E032:
                 LDX.W #$0002                                   ;80E032|
@@ -19356,7 +19356,7 @@ sub_80E032:
 
 ; --------------------------------------------------------
 ;  UpdateObjectMotion   [9 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    reads:     objTableEnd
 ;    calls:     UpdateObjectMotion_One
 ; --------------------------------------------------------
@@ -19462,7 +19462,7 @@ ptrtbl_80E0B1:
 
 ; --------------------------------------------------------
 ;  BuildSpriteOam   [1 ins, returns ?]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ; --------------------------------------------------------
 
 ;== hdr 80E0B7 ==
@@ -20793,7 +20793,7 @@ SpawnObject_QueueVramUpload:
 
 ; --------------------------------------------------------
 ;  SetupVramGpDmaCh5_GfxSet   [15 ins, returns RTS]
-;    callers: vbwait_808081, timedoor_Transition, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, timedoor_Transition, RunGameplayFrame_NoBlank
 ;    writes HW: A1B5, A1TL5, BBAD5, DASL5, DMAP5
 ;    reads:     vramDmaPendA
 ;    Programs (but does not yet trigger) GP-DMA channel 5 to upload a full graphics-set's worth of
@@ -20820,7 +20820,7 @@ SetupVramGpDmaCh5_GfxSet:
 
 ; --------------------------------------------------------
 ;  SetupVramGpDmaCh5_Frame   [32 ins, returns RTS]
-;    callers: vbwait_808081, timedoor_Transition, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, timedoor_Transition, RunGameplayFrame_NoBlank
 ;    writes HW: A1B5, A1TL5, BBAD5, DASL5, DMAP5
 ;    writes:    tmp32, objGfxSetIdx
 ;    reads:     tmp32, curObjIdx, animPC, pendingMapFillFlag, gfxSetId
@@ -21481,7 +21481,7 @@ SpawnObject:
 
 ; --------------------------------------------------------
 ;  SnapshotAllObjectPositions   [3 ins, returns ?]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    reads:     objTableEnd
 ;    Copies every live object's current objX/objY into objPrevX/objPrevY (ram_0DE1/ram_0E09), for use
 ;    by this frame's collision direction tests. Runs once per frame before collision resolution.
@@ -21627,7 +21627,7 @@ ApplyAllObjectFollows_Next:
 
 ; --------------------------------------------------------
 ;  ApplyAllObjectFollows   [3 ins, returns ?]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    reads:     objTableEnd
 ;    Runs ApplyAllObjectFollows_One for every live object: resolves objParent-based following
 ;    (Op_AttachSelfToObj0/Op_AttachSelfToTarget) and the one-shot Op_MoveToXY move, then resets
@@ -21792,8 +21792,14 @@ ApplyAllObjectFollows_One_Next:
 ;    overlaps the initial view. Called once from ScreenReinitHdmaOff.
 ; --------------------------------------------------------
 SpawnPlacementsInInitialView:
-                JSR.W ComputeInitialViewBox                               ;80EE7A|80EE80
-                JMP.W ScanAllPlacementsInBox                               ;80EE7D|80EF03
+                LDA.W modFlags                                            ;INSERT|
+                BIT.W #$0001                                              ;INSERT|
+                BEQ .original                                             ;INSERT|
+                JSR.W ComputeInitialViewBoxMod                            ;INSERT|
+                BRA +
+
+     .original: JSR.W ComputeInitialViewBox                               ;80EE7A|80EE80
+             +: JMP.W ScanAllPlacementsInBox                               ;80EE7D|80EF03
 
 
 ; --------------------------------------------------------
@@ -21809,7 +21815,7 @@ ComputeInitialViewBox:
                 LDA.B playerCamX                               ;80EE80|000044
                 SEC                                            ;80EE82|
                 SBC.W #$0010                                   ;80EE83|
-                STA.B tmp34                           ;80EE86|000034
+                STA.B tmp34                                    ;80EE86|000034
                 CLC                                            ;80EE88|
                 ADC.W #$0120                                   ;80EE89|
                 STA.B tmp36                                    ;80EE8C|000036
@@ -21823,6 +21829,25 @@ ComputeInitialViewBox:
                 SBC.W hudYOffset                               ;80EE9B|800340
                 STA.B tmp3A                                    ;80EE9E|00003A
                 RTS                                            ;80EEA0|
+
+ComputeInitialViewBoxMod:
+                LDA.B playerCamX
+                SEC             
+                SBC.W #$0010    
+                STA.B tmp34     
+                CLC             
+                ADC.W #$0120    
+                STA.B tmp36     
+                LDA.B playerCamY
+                SEC             
+                SBC.W #$0010    
+                STA.B tmp38     
+                CLC             
+                ADC.W #$0090    
+                SEC             
+                SBC.W hudYOffset
+                STA.B tmp3A     
+                RTS             
 
 
 
@@ -22062,7 +22087,7 @@ SpawnAlwaysActivePlacements:
                 LDX.W #$0000                                   ;80EFC2|
                 LDY.W #$0000                                   ;80EFC5|
 
-         .loop: JSR.W TrySpawnAlwaysActivePlacement                               ;80EFC8|80EFD7
+         .loop: JSR.W TrySpawnAlwaysActivePlacement            ;80EFC8|80EFD7
                 BCS .exit                                      ;80EFCB|80EFD6
                 INX                                            ;80EFCD|
                 TYA                                            ;80EFCE|
@@ -22120,7 +22145,7 @@ TrySpawnAlwaysActivePlacement:
 
 ; --------------------------------------------------------
 ;  FlagOffscreenObjects   [60 ins, returns RTS]
-;    callers: vbwait_808081, RunGameplayFrame_NoBlank
+;    callers: MainGameLoop, RunGameplayFrame_NoBlank
 ;    writes:    tmp34, tmp36, tmp38, tmp3A, objFlags
 ;    reads:     tmp34, tmp36, tmp38, tmp3A, playerCamX, playerCamY ...
 ;    Sets objFlags bit $0200 (off-screen) on any active object whose box, offset by
@@ -22128,6 +22153,9 @@ TrySpawnAlwaysActivePlacement:
 ;    bit (it's exposed as part of objFlags) to decide whether to self-destruct when off-screen.
 ; --------------------------------------------------------
 FlagOffscreenObjects:
+                LDA.W modFlags
+                BIT.W #$0001
+                BNE FlagOffscreenObjectsMod
                 LDA.B playerCamX                               ;80F018|000044
                 SEC                                            ;80F01A|
                 SBC.W #$0010                                   ;80F01B|
@@ -22135,7 +22163,7 @@ FlagOffscreenObjects:
                 BPL +                                          ;80F01F|80F024
                 LDY.W #$0000                                   ;80F021|
 
-             +: STY.B tmp34                           ;80F024|000034
+             +: STY.B tmp34                                    ;80F024|000034
                 CLC                                            ;80F026|
                 ADC.W #$0120                                   ;80F027|
                 STA.B tmp36                                    ;80F02A|000036
@@ -22194,7 +22222,33 @@ FlagOffscreenObjects:
                 BCC .loop                                      ;80F092|80F047
                 RTS                                            ;80F094|
 
+FlagOffscreenObjectsMod:
+                LDA.B playerCamX                               ;80F018|000044
+                SEC                                            ;80F01A|
+                SBC.W #$0010                                   ;80F01B|
+                TAY                                            ;80F01E|
+                BPL +                                          ;80F01F|80F024
+                LDY.W #$0000                                   ;80F021|
 
+             +: STY.B tmp34                                    ;80F024|000034
+                CLC                                            ;80F026|
+                ADC.W #$0120                                   ;80F027|
+                STA.B tmp36                                    ;80F02A|000036
+                LDA.B playerCamY                               ;80F02C|000046
+                SEC                                            ;80F02E|
+                SBC.W #$0010                                   ;80F02F|
+                TAY                                            ;80F032|
+                BPL +                                          ;80F033|80F038
+                LDY.W #$0000                                   ;80F035|
+
+             +: STY.B tmp38                                    ;80F038|000038
+                CLC                                            ;80F03A|
+                ADC.W #$0090                                   ;80F03B|
+                SEC                                            ;80F03E|
+                SBC.W hudYOffset                               ;80F03F|800340
+                STA.B tmp3A                                    ;80F042|00003A
+                LDX.W objScanStartSlot                         ;80F044|80033E
+                BRA FlagOffscreenObjects_loop
 ; --------------------------------------------------------
 ;  DestroyObject   [62 ins, returns RTS]
 ;    callers: Op_Goto
@@ -22546,32 +22600,32 @@ UnmirrorNewObject:
 ;    calls:     GetGfxSetSrcOrAllocCue
 ; --------------------------------------------------------
 InitObjectFromSpawnRec:
-                LDA.B tmp34                           ;80F249|000034
-                STA.W objTypeId,X                               ;80F24B|801129
+                LDA.B tmp34                                    ;80F249|000034
+                STA.W objTypeId,X                              ;80F24B|801129
                 LDA.B tmp36                                    ;80F24E|000036
-                STA.W objPlacementIdx,X                               ;80F250|801101
+                STA.W objPlacementIdx,X                        ;80F250|801101
                 LDA.B tmp38                                    ;80F253|000038
-                STA.W objFlags,X                          ;80F255|800FC1
-                LDA.W spawnOamPool                                 ;80F258|800382
-                STA.W objOamPool,X                               ;80F25B|8010D9
-                STZ.W spawnOamPool                                 ;80F25E|800382
+                STA.W objFlags,X                               ;80F255|800FC1
+                LDA.W spawnOamPool                             ;80F258|800382
+                STA.W objOamPool,X                             ;80F25B|8010D9
+                STZ.W spawnOamPool                             ;80F25E|800382
                 LDY.W #$0000                                   ;80F261|
                 LDA.B [zp_2A],Y                                ;80F264|00002A
-                JSR.W GetGfxSetSrcOrAllocCue                               ;80F266|80DF80
+                JSR.W GetGfxSetSrcOrAllocCue                   ;80F266|80DF80
                 BCC +                                          ;80F269|80F26C
                 RTS                                            ;80F26B|
 
 
-             +: STA.W objGfxBase,X                               ;80F26C|801291
+             +: STA.W objGfxBase,X                             ;80F26C|801291
                 LDY.W #$0002                                   ;80F26F|
                 LDA.B [zp_2A],Y                                ;80F272|00002A
                 BIT.W #$0080                                   ;80F274|
                 BEQ +                                          ;80F277|80F27F
-                INC.W spawnOamPool                                 ;80F279|800382
-                INC.W spawnOamPool                                 ;80F27C|800382
+                INC.W spawnOamPool                             ;80F279|800382
+                INC.W spawnOamPool                             ;80F27C|800382
 
              +: AND.W #$007F                                   ;80F27F|
-                STA.W objOamCount,X                               ;80F282|801511
+                STA.W objOamCount,X                            ;80F282|801511
                 INY                                            ;80F285|
                 LDA.B [zp_2A],Y                                ;80F286|00002A
                 CLC                                            ;80F288|
@@ -22593,84 +22647,84 @@ InitObjectFromSpawnRec:
                 INY                                            ;80F2A7|
                 LDA.B [zp_2A],Y                                ;80F2A8|00002A
                 AND.W #$00FF                                   ;80F2AA|
-                STA.W objHeight,X                               ;80F2AD|800EA9
+                STA.W objHeight,X                              ;80F2AD|800EA9
                 INY                                            ;80F2B0|
                 LDA.B [zp_2A],Y                                ;80F2B1|00002A
-                STA.W objDamage,X                               ;80F2B3|801011
+                STA.W objDamage,X                              ;80F2B3|801011
                 INY                                            ;80F2B6|
                 INY                                            ;80F2B7|
                 LDA.B [zp_2A],Y                                ;80F2B8|00002A
-                STA.W objTouchType,X                               ;80F2BA|801039
+                STA.W objTouchType,X                           ;80F2BA|801039
                 INY                                            ;80F2BD|
                 INY                                            ;80F2BE|
                 LDA.B [zp_2A],Y                                ;80F2BF|00002A
-                STA.W objHitMask,X                               ;80F2C1|801061
+                STA.W objHitMask,X                             ;80F2C1|801061
                 INY                                            ;80F2C4|
                 INY                                            ;80F2C5|
                 LDA.B [zp_2A],Y                                ;80F2C6|00002A
-                STA.W objMaxVelX,X                               ;80F2C8|8011C9
+                STA.W objMaxVelX,X                             ;80F2C8|8011C9
                 INY                                            ;80F2CB|
                 INY                                            ;80F2CC|
                 LDA.B [zp_2A],Y                                ;80F2CD|00002A
-                STA.W objMaxVelY,X                               ;80F2CF|8011F1
+                STA.W objMaxVelY,X                             ;80F2CF|8011F1
                 LDA.B zp_6C                                 
-       .store:  STA.W objX,X                          ;80F2D4|801179
+       .store:  STA.W objX,X                                   ;80F2D4|801179
                 STA.W objPrevX,X                               ;80F2D7|800DE1
                 LDA.B zp_6E                                    ;80F2DA|00006E
-                STA.W objY,X                          ;80F2DC|8011A1
+                STA.W objY,X                                   ;80F2DC|8011A1
                 STA.W objPrevY,X                               ;80F2DF|800E09
                 LDA.B curObjIdx                                ;80F2E2|000042
-                STA.W objSpawnerIdx,X                               ;80F2E4|801241
+                STA.W objSpawnerIdx,X                          ;80F2E4|801241
                 STZ.W objFracX,X                               ;80F2E7|8013F9
                 STZ.W objFracY,X                               ;80F2EA|801421
                 STZ.W objTimer,X                               ;80F2ED|801151
-                STZ.W objVelX,X                               ;80F2F0|801089
-                STZ.W objVelY,X                               ;80F2F3|8010B1
+                STZ.W objVelX,X                                ;80F2F0|801089
+                STZ.W objVelY,X                                ;80F2F3|8010B1
                 STZ.W objMoveX,X                               ;80F2F6|801381
-                STZ.W objMoveY,X                          ;80F2F9|8013A9
-                STZ.W objSolidClass,X                               ;80F2FC|801219
-                STZ.W objVar1,X                               ;80F2FF|8012E1
-                STZ.W objVar2,X                               ;80F302|801309
-                STZ.W objGfxFrame,X                               ;80F305|801359
-                STZ.W objVar0,X                               ;80F308|8012B9
-                STZ.W objVar3,X                               ;80F30B|801331
+                STZ.W objMoveY,X                               ;80F2F9|8013A9
+                STZ.W objSolidClass,X                          ;80F2FC|801219
+                STZ.W objVar1,X                                ;80F2FF|8012E1
+                STZ.W objVar2,X                                ;80F302|801309
+                STZ.W objGfxFrame,X                            ;80F305|801359
+                STZ.W objVar0,X                                ;80F308|8012B9
+                STZ.W objVar3,X                                ;80F30B|801331
                 LDA.W #$FFFF                                   ;80F30E|
-                STA.W objChildIdx,X                               ;80F311|801269
-                STA.W objAnimPtr,X                               ;80F314|801449
-                STA.W objParent,X                               ;80F317|800E59
+                STA.W objChildIdx,X                            ;80F311|801269
+                STA.W objAnimPtr,X                             ;80F314|801449
+                STA.W objParent,X                              ;80F317|800E59
                 LDA.W objWidth,X                               ;80F31A|800E81
                 LSR A                                          ;80F31D|
-                STA.B tmp32                              ;80F31E|000032
-                LDA.W objX,X                          ;80F320|801179
+                STA.B tmp32                                    ;80F31E|000032
+                LDA.W objX,X                                   ;80F320|801179
                 SEC                                            ;80F323|
-                SBC.B tmp32                              ;80F324|000032
-                STA.W objBoxLeft,X                          ;80F326|800F71
+                SBC.B tmp32                                    ;80F324|000032
+                STA.W objBoxLeft,X                             ;80F326|800F71
                 CLC                                            ;80F329|
                 ADC.W objWidth,X                               ;80F32A|800E81
                 DEC A                                          ;80F32D|
-                STA.W objBoxRight,X                          ;80F32E|800F99
-                LDA.W objHeight,X                               ;80F331|800EA9
+                STA.W objBoxRight,X                            ;80F32E|800F99
+                LDA.W objHeight,X                              ;80F331|800EA9
                 LSR A                                          ;80F334|
-                STA.B tmp32                              ;80F335|000032
-                LDA.W objY,X                          ;80F337|8011A1
+                STA.B tmp32                                    ;80F335|000032
+                LDA.W objY,X                                   ;80F337|8011A1
                 SEC                                            ;80F33A|
-                SBC.B tmp32                              ;80F33B|000032
-                STA.W objBoxTop,X                          ;80F33D|800F21
+                SBC.B tmp32                                    ;80F33B|000032
+                STA.W objBoxTop,X                              ;80F33D|800F21
                 CLC                                            ;80F340|
-                ADC.W objHeight,X                               ;80F341|800EA9
+                ADC.W objHeight,X                              ;80F341|800EA9
                 DEC A                                          ;80F344|
-                STA.W objBoxBottom,X                          ;80F345|800F49
-                LDA.W spawnHalfW                                 ;80F348|8003FE
+                STA.W objBoxBottom,X                           ;80F345|800F49
+                LDA.W spawnHalfW                               ;80F348|8003FE
                 BPL .skip                                      ;80F34B|80F358
-                LDA.W objHeight,X                               ;80F34D|800EA9
+                LDA.W objHeight,X                              ;80F34D|800EA9
                 LSR A                                          ;80F350|
-                STA.W spawnHalfH                                 ;80F351|800400
+                STA.W spawnHalfH                               ;80F351|800400
                 LDA.W objWidth,X                               ;80F354|800E81
                 LSR A                                          ;80F357|
 
-         .skip: STA.W objCullHalfW,X                               ;80F358|800EF9
-                LDA.W spawnHalfH                                 ;80F35B|800400
-                STA.W objCullHalfH,X                               ;80F35E|800ED1
+         .skip: STA.W objCullHalfW,X                           ;80F358|800EF9
+                LDA.W spawnHalfH                               ;80F35B|800400
+                STA.W objCullHalfH,X                           ;80F35E|800ED1
                 CLC                                            ;80F361|
                 RTS                                            ;80F362|
 
@@ -22814,6 +22868,10 @@ Far_scanBoxPrepVertical_up:
                 JSR.W scanBoxPrepVertical_up
                 RTL
 
+Far_ScanAllPlacementsInBox:
+                JSR.W ScanAllPlacementsInBox
+                RTL
+
 
                 assert pc() <= $80FFBE
 org $80FFBE
@@ -22822,11 +22880,11 @@ EMPTY_80FFBE:
                        db $00,$00                                     ;80FFBE|
                        db "THE LOST VIKINGS     "                     ;80FFC0|
                        db $30,$00,$0A,$00,$01,$71,$00                 ;80FFD5|
-                dw $9316,$6CE9                                 ;80FFDC|
+                dw $9316,$6CE9                                        ;80FFDC|
 Native_Reserved1__ignored:
-                dw $0000                                   ;80FFE0|800000
+                dw $0000                                       ;80FFE0|800000
 Native_Reserved2__ignored:
-                dw $0000                                   ;80FFE2|800000
+                dw $0000                                       ;80FFE2|800000
 Native_COP:
                 dw Brk_Cop_Return                              ;80FFE4|808B38
 Native_BRK:
@@ -22839,14 +22897,14 @@ Native_NMI:
 Native_IRQ:
                 dw IRQ                                         ;80FFEE|808C37
 Emulation_Reserved1__ignored:
-                dw $0000                                ;80FFF0|800000
+                dw $0000                                       ;80FFF0|800000
 Emulation_Reserved2__ignored:
-                dw $0000                                ;80FFF2|800000
+                dw $0000                                       ;80FFF2|800000
 Emulation_COP:
                 dw Brk_Cop_Return                              ;80FFF4|808B38
                 dw $0000                                       ;80FFF6|800000
 Emulation_ABORT__ignored:
-                dw Brk_Cop_Return                           ;80FFF8|808B38
+                dw Brk_Cop_Return                              ;80FFF8|808B38
 Emulation_NMI:
                 dw NMI                                         ;80FFFA|808AFC
 Emulation_RESET:
@@ -22884,58 +22942,58 @@ SetPpuUpdateBitsMod:
 
 
 FillTilemapFullMod:
-                LDA.B playerCamX                          ;80C086|000044
-                STA.W refillLastCamX                           ;80C088|8016A9
-                LSR A                                          ;80C08B|
-                LSR A                                          ;80C08C|
-                LSR A                                          ;80C08D|
-                AND.W #$FFFE                                   ;80C08E|
+                LDA.B playerCamX                          
+                STA.W refillLastCamX                      
+                LSR A                                     
+                LSR A                                     
+                LSR A                                     
+                AND.W #$FFFE                              
           
-                STA.W refillColTileX                           ;80C091|8016C5
-                TAX                                            ;80C094|
-                LDA.B playerCamY                               ;80C095|000046
-                STA.W refillLastCamY                           ;80C097|8016AB
-                LSR A                                          ;80C09A|
-                LSR A                                          ;80C09B|
-                LSR A                                          ;80C09C|
-                AND.W #$FFFE                                   ;80C09D|
+                STA.W refillColTileX                      
+                TAX                                       
+                LDA.B playerCamY                          
+                STA.W refillLastCamY                      
+                LSR A                                     
+                LSR A                                     
+                LSR A                                     
+                AND.W #$FFFE                              
              
-                STA.W refillRowTileY                           ;80C0A0|8016C7
-                TAY                                            ;80C0A3|
-                LDA.W gameModeFlags                            ;80C0A4|8019E3
-                BIT.W #$000A                                   ;80C0A7|
-                BNE .exit                                      ;80C0AA|80C0D1
-                DEX                                            ;80C0AC|
-                DEX                                            ;80C0AD|
-                DEX                                            ;80C0AE|
-                DEX                                            ;80C0AF|
-                LDA.B playerCamY                               ;80C0B0|000046
-                BIT.W #$0008                                   ;80C0B2|
-                BNE +                                          ;80C0B5|80C0B9
-                DEY                                            ;80C0B7|
-                DEY                                            ;80C0B8|
+                STA.W refillRowTileY                      
+                TAY                                       
+                LDA.W gameModeFlags                       
+                BIT.W #$000A                              
+                BNE .exit                                 
+                DEX                                       
+                DEX                                       
+                DEX                                       
+                DEX                                       
+                LDA.B playerCamY                          
+                BIT.W #$0008                              
+                BNE +                                     
+                DEY                                       
+                DEY                                       
 
-             +: LDA.W #$FFFC                                   ;80C0B9|
+             +: LDA.W #$FFFC                              
 
 
-         .loop: PHX                                            ;80C0BC|
-                PHY                                            ;80C0BD|
-                PHA                                            ;80C0BE|
-                JSR.W BuildTilemapColMod                        ;80C0BF|80C2BE
-                JSL.L UploadTilemapColumnP1                      ;80C0C2|80C517
-                PLA                                            ;80C0C5|
-                PLY                                            ;80C0C6|
-                PLX                                            ;80C0C7|
+         .loop: PHX                                       
+                PHY                                       
+                PHA                                       
+                JSR.W BuildTilemapColMod                  
+                JSL.L UploadTilemapColumnP1               
+                PLA                                       
+                PLY                                       
+                PLX                                       
            
-                INX                                            ;80C0C8|
-                INX                                            ;80C0C9|
-                INC A                                          ;80C0CA|
-                INC A                                          ;80C0CB|
+                INX                                       
+                INX                                       
+                INC A                                     
+                INC A                                     
   
-                CMP.W #$0024                                   ;80C0CC|
-                BNE .loop                                      ;80C0CF|80C0BC
+                CMP.W #$0024                              
+                BNE .loop                                 
 
-         .exit: RTL                                            ;80C0D1|
+         .exit: RTL                                       
 
 
 ; MODDED REFILL FUNCTIONS:
@@ -22972,10 +23030,10 @@ RefillColumnRightMod:
 
              +: LDA.W #$0022                                   ;INSERT|
 
-                JSR.W BuildTilemapColMod                          ;INSERT|
+                JSR.W BuildTilemapColMod                       ;INSERT|
                 LDA.W #$0010                                   ;INSERT|
-                JSR.W SetPpuUpdateBitsMod                         ;INSERT|
-                JML.L Far_scanBoxPrepHorizontal_right;INSERT|
+                JSR.W SetPpuUpdateBitsMod                      ;INSERT|
+                JMP.W scanBoxPrepHorizontalMod_right           ;INSERT|
 
 
     .firstHalf: LDA.B playerCamX                               ;INSERT|
@@ -22997,10 +23055,10 @@ RefillColumnRightMod:
 
              +: LDA.W #$0020                                   ;INSERT|
 
-                JSR.W BuildTilemapColMod                          ;INSERT|
+                JSR.W BuildTilemapColMod                       ;INSERT|
                 LDA.W #$0010                                   ;INSERT|
-                JSR.W SetPpuUpdateBitsMod                         ;INSERT|
-                JML.L Far_scanBoxPrepHorizontal_right;INSERT|
+                JSR.W SetPpuUpdateBitsMod                      ;INSERT|
+                JMP.W scanBoxPrepHorizontalMod_right           ;INSERT|
 
 
          .exit: RTL                                            ;INSERT|
@@ -23034,10 +23092,10 @@ RefillColumnLeftMod:
                 DEY
 
              +: LDA.W #$0002                                   ;INSERT|
-                JSR.W BuildTilemapColMod                          ;INSERT|
+                JSR.W BuildTilemapColMod                       ;INSERT|
                 LDA.W #$0010                                   ;INSERT|
-                JSR.W SetPpuUpdateBitsMod                         ;INSERT|
-                JML.L Far_scanBoxPrepHorizontal_left;INSERT|
+                JSR.W SetPpuUpdateBitsMod                      ;INSERT|
+                JMP.W scanBoxPrepHorizontalMod_left            ;INSERT|
 
 
     .firstHalf: LDA.W refillLastCamX                           ;INSERT|
@@ -23052,10 +23110,10 @@ RefillColumnLeftMod:
                 INX                                            ;INSERT|
                 LDY.W refillRowTileY                           ;INSERT|
                 LDA.W #$0004                                   ;INSERT|
-                JSR.W BuildTilemapColMod                          ;INSERT|
+                JSR.W BuildTilemapColMod                       ;INSERT|
                 LDA.W #$0010                                   ;INSERT|
-                JSR.W SetPpuUpdateBitsMod                         ;INSERT|
-                JML.L Far_scanBoxPrepHorizontal_left;INSERT|
+                JSR.W SetPpuUpdateBitsMod                      ;INSERT|
+                JMP.W scanBoxPrepHorizontalMod_left            ;INSERT|
 
 
          .exit: RTL                                            ;INSERT|
@@ -23085,8 +23143,8 @@ RefillRowDownMod:
                 LDA.W #$000E                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 LDA.W #$0040                                    ;INSERT|
-                JSR.W SetPpuUpdateBitsMod                          ;INSERT|
-                JML.L Far_scanBoxPrepVertical_down;INSERT|
+                JSR.W SetPpuUpdateBitsMod                       ;INSERT|
+                JMP.W scanBoxPrepVerticalMod_down               ;INSERT|
 
 
     .firstHalf: LDA.B playerCamY                                ;INSERT|
@@ -23102,11 +23160,10 @@ RefillRowDownMod:
                 LDA.W #$000C                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 LDA.W #$0040                                    ;INSERT|
-                JSR.W SetPpuUpdateBitsMod                          ;INSERT|
-                JML.L Far_scanBoxPrepVertical_down;INSERT|
+                JSR.W SetPpuUpdateBitsMod                       ;INSERT|
+                JMP.W scanBoxPrepVerticalMod_down               ;INSERT|
 
-
-         .exit: RTL                                            ;80C268|
+         .exit: RTL                                             
 
 RefillRowUpMod:
                 LDA.B playerCamY                              
@@ -23116,7 +23173,7 @@ RefillRowUpMod:
                 AND.W #$FFFE                                  
                 LDX.B playerCamY                              
                 BPL +                                         
-                ORA.W #$E000                                  
+                ORA.W #$E000                                 
 
              +: STA.W refillRowTileY                          
                 LDA.B playerCamY                              
@@ -23132,7 +23189,7 @@ RefillRowUpMod:
                 JSR.W BuildTilemapRowMod                         
                 LDA.W #$0040                                  
                 JSR.W SetPpuUpdateBitsMod                        
-                JML.L Far_scanBoxPrepVertical_up
+                JMP.W scanBoxPrepVerticalMod_up
 
 
          .skip: LDA.W refillLastCamY                          
@@ -23147,7 +23204,7 @@ RefillRowUpMod:
                 JSR.W BuildTilemapRowMod                         
                 LDA.W #$0040                                  
                 JSR.W SetPpuUpdateBitsMod                        
-                JML.L Far_scanBoxPrepVertical_up
+                JMP.W scanBoxPrepVerticalMod_up
 
 
          .exit: RTL                                           
@@ -24301,6 +24358,77 @@ UploadTilemapColumnBg2P1:
                 LDA.B #$80
                 STA.W VMAIN
                 REP #$30
+                RTL
+
+
+scanBoxPrepHorizontalMod:
+ 
+    .left:
+                LDA.B playerCamX                    
+                SEC                                 
+                SBC.W #$0010                        
+                STA.B tmp34                         
+                CLC                                 
+                ADC.W #$0020                        
+                STA.B tmp36                         
+                BRA .addY                           
+
+    .right:
+                LDA.B playerCamX                              
+                CLC                                           
+                ADC.W #$0110                                  
+                STA.B tmp36                                   
+                SEC                                           
+                SBC.W #$0020                                  
+                STA.B tmp34                                   
+
+    .addY:
+                LDA.B playerCamY                               
+                SEC                                            
+                SBC.W #$0010                                   
+                STA.B tmp38                                    
+                CLC                                            
+                ADC.W #$0090                                   
+                SEC                                            
+                SBC.W hudYOffset                               
+                STA.B tmp3A                                    
+                
+                JSL.L Far_ScanAllPlacementsInBox
+                RTL
+
+scanBoxPrepVerticalMod:
+
+    .down:
+                LDA.B playerCamY                        
+                CLC                                     
+                ADC.W #$0080                            
+                SEC                                     
+                SBC.W hudYOffset                        
+                STA.B tmp3A                             
+                SEC                                     
+                SBC.W #$0020                            
+                STA.B tmp38                             
+                BRA .addX                               
+
+    .up:
+                LDA.B playerCamY                        
+                SEC                                     
+                SBC.W #$0010                            
+                STA.B tmp38                             
+                CLC                                     
+                ADC.W #$0020                            
+                STA.B tmp3A                             
+
+    .addX:
+                LDA.B playerCamX                        
+                SEC                                     
+                SBC.W #$0010                            
+                STA.B tmp34                             
+                CLC                                     
+                ADC.W #$0120                            
+                STA.B tmp36                             
+
+                JSL.L Far_ScanAllPlacementsInBox
                 RTL
 
 

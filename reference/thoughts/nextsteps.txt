@@ -1,1 +1,23 @@
-text
+Okay! Messy thoughts time again!
+
+Main things:
+    There might be an issue with the vertical scrolling
+        I don't feel like fixing this rn.
+
+
+    I need to adjust the object spawn boxes.
+        Done? I think that i also need to adjust the despawn mechanic
+            I have no idea how that happens...
+                we will come back here later.
+                    fixed it!
+
+
+    I need to set up the secondary camera
+        I have NO idea how I will do this.
+        But, it is probably the next big step.
+
+    I need to set up the Vblank system
+
+    I need to add the hud sidebar
+
+    I need to add conveniences.

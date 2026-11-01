@@ -1,3 +1,5 @@
+// This is stale and out of date!
+
 okay. the code checks for if you crossed a tile boundry. 
 if we were to move back and forth in 00-07, nothing would be called. this means that you need the 14 tall, plus one for that wiggle, so 15.
 however, if we were to move to -1 or 8, it would dectect a boundry crossed. This would probably be too late to update the screen for that, so there is padding on either side. 17 total used at all times.

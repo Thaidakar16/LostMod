@@ -1,0 +1,102 @@
+Okay! Ring of 18 time!
+
+18 = 9 meta-rows
+
+7 to 8 visible. 
+
+
+When crossing into a new row:
+that new row must already be loaded. 
+Then, we load the one after. aka, cam goes from meta-row 1 to the very beginning of 2, rows 2-8 are visible, 9 must already be loaded, and we need to start loading 10.
+
+When we start:
+One offscreen meta-row, cam at 16 px (meta-row 1)
+we can scroll all the way to 31 and we would still only see 1-8, but nine must already be loaded anyways.
+when we scroll to 32, 1 is no longer visible, 0 should be obsolete, as if we scroll back to 31, it should (probably) load 0 fresh again.
+    2-8 would be visible, 9 would be at 33.
+    Therefore, 10 must load. 
+first load will be row 10. 
+
+when at bottom:
+
+When 7-14 are visible, 15 must already be loaded.
+when we can no longer see 7, we will see (or soon see) 15. 
+    This cross could still be used to load what would be the next to the mirror. 
+    When we cross this, 7 is no longer visible, so we could mirror 8 to the top.
+    We could instead mirror 7 to the top.
+
+    We will probably want to do double cues instead of direct mirrors as we would still need additional ram required for double cues even if we did direct mirroring.
+
+So: in the case we mirror 7,
+    When we load 10, we load 7 into 0
+    11, 8 to 1
+    12, 9 to 2
+    13, 10 to 3
+    14, 11 to 4
+    15, 12 to 5
+    then, we need to perform the next load. this would mean we have to be ready for the snapback already, so, we need to overwrite.
+    when we snap, 16 must be loaded.
+    13 to 6
+    14 to 7
+    15 to 8
+    16 to 9
+
+    FOUR. 
+    FOUR stages. When accounting for P2, This is EIGHT TIMES the amount of staging for rows. (not quite, but pretty much)
+
+In the case we mirror 8,
+    When we load 10, we load 8 into 0
+    11, 9 to 1
+    12, 10 to 2
+    13, 11 to 3
+    14, 12 to 4
+    15, 13 to 5
+    then, we need to perform the next load. this would mean we have to be ready for the snapback already, so, we need to overwrite.
+    when we snap, 16 must be loaded.
+    14 to 6
+    15 to 7
+    16 to 8
+
+
+    only 3 this time, but that is still 6 times the original.
+    This scares me. I don't know if i can find that much. 
+    Even if I forced p2 on to a different vblank set, that is STILL 3 times the original.
+    If I can't find that much, I still wouldn't be screwed, but I would have to resort to desperate measures: SRAM.
+        SRAM is ram on the cartridge itself. However, It is often treated like the cartridge itself, and in some cases, even worse.
+        When doing a DMA from SRAM, we would be limited to slowRom speed, even though this is a fastRom. 
+        This is exactly 3 times slower. 
+        Lets not think too hard about that case and instead just hope i can find spare WRAM.
+            This sucks. Im very scared that Im gonna break some rarely triggered system by using seemingly blank space.
+            found enough WRAM for everything! (hopefully actually unused.)
+
+
+Okay! logic time!!!
+
+When scrolling down, we will want to do a cam check. 
+If the cam is at a certain level, then, we run the triple update (and maybe the camera snap here?)
+Else, run normal. In either case, we will want to reuse the same build row system, so we need a new flag system for output destination.
+
+This is the original logic:
+
+         .loop: JSR.W FetchConvertMetatileRow     
+                                                  
+                INX                               
+                LDA.B tmp34                       
+                CLC                               
+                ADC.W #$0004                      
+                STA.B tmp34                       
+                CMP.W #$0050                      
+                BCC .loop                         
+
+Where X is used as a storing index. 
+So, if our rows are stacked right after each other, we can just add 80 if we need the next block.
+(we would also need to and out the top so the cmp doesnt clear prematurely.)
+We could take this further and stack the p2 ones right after to reuse the function!
+
+
+
+
+
+
+
+

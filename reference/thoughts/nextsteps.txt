@@ -1,22 +1,51 @@
 Okay! Messy thoughts time again!
 
 Main things:
+
     There might be an issue with the vertical scrolling
         I don't feel like fixing this rn.
+        Not might. there IS an issue. and it sucks.
+            currently I use a 16 tile ring. This gives us the 14 always visible, and the 15 possible visible. that leaves us with ONE update bar. 
+                1 is not enough.
+                    Unless, let me try something.
+                        doesnt work.
+                1 is not enough.
+                    options: decrease the visible portion of the ring, or increase the ring.
+                        I really hate option 1. Im already cutting almost half of the vertical screen space. 
+                        Option 2 will SUCK to implement, but I want to do this correctly.
 
+
+    We need a ring of 18. 
+        before, we were using a ring of 16. this had the advantage of letting us jump directly back when we reach an edge.
+            we can't do that anymore. 
+                options: 
+                    write the whole ring when we need to jump.
+                        pros: it would be equally strenuous to jump to any point, so we would jump to the middle, likely leading to less jumps overall
+                        cons: EXTREMELY costly. 
+                    we can reuse the duplicate uploading logic we have right now.
+                        pros: we wouldn't have to load 2 different rows, which saves wram and causes less headaches
+                        cons: we would need to have an extra 2? rows to update. 
+                            At time of last possible update, 2 possible tile rows are stale. this means that there would be 12, and we would need 6 verses the normal 4.
+                    we could write the behind row like we are doing now
+                        pros: consistently 2 metatile rows, even when jumping. (I think. even if that is wrong, it is still the least strenuous)
+                        cons: we would have to load 2 different rows, which is costly on the wram.
+                    Thats about all I can think of.
+                        So, either double the amount of row staging, or one frame that we update only 1 metatile ro and a frame that we update 3 metatile rows. 
+                            I did research and math, and there would be plenty of time for the 3 metatile rows!
 
     I need to adjust the object spawn boxes.
-        Done? I think that i also need to adjust the despawn mechanic
+        Done? 
+        I think that i also need to adjust the despawn mechanic
             I have no idea how that happens...
                 we will come back here later.
-                    fixed it!
+            fixed it!
 
 
     I need to set up the secondary camera
         I have NO idea how I will do this.
         But, it is probably the next big step.
 
-    I need to set up the Vblank system
+    I need to set up the Fblank system
 
     I need to add the hud sidebar
 

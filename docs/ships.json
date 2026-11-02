@@ -44,5 +44,12 @@
     "version": 1,
     "notes": "Okay scrolling",
     "details": "details/week2-1.txt"
+  },
+  {
+    "id": "week2-2",
+    "week": "Week 2",
+    "version": 2,
+    "notes": "Started new scroll system, broken",
+    "details": "details/week2-2.txt"
   }
 ]

@@ -1,0 +1,2 @@
+There was indeed a problem with the vertical. I need to completely change how it works. Additionally, I needed to find a lot of free WRAM.
+It looks broken right now because I am in the middle of transitioning to a new scrolling layout.

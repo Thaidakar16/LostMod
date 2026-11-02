@@ -1,0 +1,2 @@
+I fixed the scrolling for the new layout! I then copied over the logic to the parallax background. However, there was not enough space for the additions, so I moved everything to a different location!
+There is probably a problem with the vertical scrolling though. I am not exited to fix this. 

@@ -43,13 +43,25 @@
     "week": "Week 2",
     "version": 1,
     "notes": "Okay scrolling",
-    "details": "details/week2-1.txt"
+    "details": "details/week2-1.txt",
+    "media": [
+      {
+        "mod": "media/week2-1.mp4",
+        "caption": "Okay Scrolling"
+      }
+    ]
   },
   {
     "id": "week2-2",
     "week": "Week 2",
     "version": 2,
     "notes": "Started new scroll system, broken",
-    "details": "details/week2-2.txt"
+    "details": "details/week2-2.txt",
+    "media": [
+      {
+        "mod": "media/week2-2.mp4",
+        "caption": "Broken Scrolling"
+      }
+    ]
   }
 ]

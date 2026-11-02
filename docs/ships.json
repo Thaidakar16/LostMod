@@ -37,5 +37,12 @@
         "caption": "Broken Scrolling"
       }
     ]
+  },
+  {
+    "id": "week2-1",
+    "week": "Week 2",
+    "version": 1,
+    "notes": "Okay scrolling",
+    "details": "details/week2-1.txt"
   }
 ]

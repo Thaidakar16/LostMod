@@ -579,8 +579,8 @@ bg2CamXSrc             = $16A5  ; refs=11 (r6/w5) [LDA:5,STA:4,ADC:1,STZ:1], 6 s
 bg2CamYSrc             = $16A7  ; refs=22 (r17/w5) [LDA:13,STA:4,LDX:2,ADC:1], 10 site(s)
 refillLastCamX         = $16A9  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s)
 refillLastCamY         = $16AB  ; refs=5 (r3/w2) [STA:2,LDA:2,SBC:1], 4 site(s)
-refillLastBg2CamXSrc               = $16AD  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s)
-refillLastBg2CamYSrc               = $16AF  ; refs=5 (r3/w2) [STA:2,LDA:2,SBC:1], 4 site(s)
+refillLastBg2CamXSrc   = $16AD  ; refs=3 (r1/w2) [STA:2,LDA:1], 2 site(s)
+refillLastBg2CamYSrc   = $16AF  ; refs=5 (r3/w2) [STA:2,LDA:2,SBC:1], 4 site(s)
 bg2CamXFrac            = $16B1  ; refs=5 (r2/w3) [STA:3,ADC:2], 3 site(s)
 bg2CamYFrac            = $16B3  ; refs=5 (r2/w3) [STA:3,ADC:2], 3 site(s)
 bg1CamX                = $16B5  ; refs=2 (r1/w1) [STA:1,LDA:1], 2 site(s)
@@ -597,8 +597,8 @@ bg2ScrollYLo           = $16C3  ; refs=2 (r1/w1) [STA:1,LDA:1], 1 site(s)
 bg2ScrollYHi           = $16C4  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 refillColTileX         = $16C5  ; refs=13 (r10/w3) [LDX:5,STA:3,LDA:3,SBC:1], 7 site(s)
 refillRowTileY         = $16C7  ; refs=11 (r8/w3) [LDY:4,STA:3,LDA:2,SBC:1], 7 site(s)
-refillBgCol2TileX               = $16C9  ; refs=12 (r11/w1) [LDX:5,INC:2,DEC:2,STA:1], 6 site(s)
-refillBg2RowTileY               = $16CB  ; refs=10 (r7/w3) [LDY:4,STA:3,LDA:2,ADC:1], 6 site(s)
+refillBgCol2TileX      = $16C9  ; refs=12 (r11/w1) [LDX:5,INC:2,DEC:2,STA:1], 6 site(s)
+refillBg2RowTileY      = $16CB  ; refs=10 (r7/w3) [LDY:4,STA:3,LDA:2,ADC:1], 6 site(s)
 colDmaVramDest0        = $16CD  ; refs=5 (r3/w2) [STA:2,LDA:2,ADC:1], 2 site(s)
 colDmaLen0             = $16CF  ; refs=4 (r3/w1) [LDA:2,STA:1,SBC:1], 2 site(s)
 colDmaVramDest1        = $16D1  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s)
@@ -619,22 +619,22 @@ Bg2rowDmaVramDest1       = $16ED  ; refs=5 (r3/w2) [LDA:2,STY:1,ADC:1,STA:1], 2 
 Bg2rowDmaLen1           = $16EF  ; refs=4 (r2/w2) [STA:2,LDA:2], 2 site(s)
 Bg2rowDmaVramDest2    = $16F1  ; refs=5 (r3/w2) [LDA:2,STX:1,ADC:1,STA:1], 2 site(s)
 Bg2rowDmaLen2           = $16F3  ; refs=6 (r4/w2) [LDA:4,STA:1,STZ:1], 2 site(s)
-colStagedMetaTileLU        = $16F5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStagedMetaTileLD             = $16F7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStagedMetaTileRU         = $1735  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStagedMetaTileRD             = $1737  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-rowStagedMetaTileLU    = $1775  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-rowStagedMetaTileRU    = $1777  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-rowStagedMetaTileLD    = $17C5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-rowStagedMetaTileRD    = $17C7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStagedMetaTileBg2LU               = $1815  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStagedMetaTileBg2LD               = $1817  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStagedMetaTileBg2RU               = $1855  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-colStagedMetaTileBg2RD               = $1857  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-rowStagedMetaTileBg2LU               = $1895  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-rowStagedMetaTileBg2RU               = $1897  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-rowStagedMetaTileBg2LD               = $18E5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
-rowStagedMetaTileBg2RD               = $18E7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!colStagedMetaTileLU        = $16F5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!colStagedMetaTileLD             = $16F7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!colStagedMetaTileRU         = $1735  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!colStagedMetaTileRD           = $1737  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!rowStagedMetaTileLU    = $1775  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!rowStagedMetaTileRU    = $1777  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!rowStagedMetaTileLD    = $17C5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!rowStagedMetaTileRD    = $17C7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!colStagedMetaTileBg2LU               = $1815  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!colStagedMetaTileBg2LD               = $1817  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!colStagedMetaTileBg2RU               = $1855  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!colStagedMetaTileBg2RD               = $1857  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!rowStagedMetaTileBg2LU               = $1895  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!rowStagedMetaTileBg2RU               = $1897  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!rowStagedMetaTileBg2LD               = $18E5  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
+!rowStagedMetaTileBg2RD               = $18E7  ; refs=2 (r0/w2) [STA:2], 1 site(s); indexed (,X/,Y) -> array/table
 ram_1935               = $1935  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s)
 ram_1947               = $1947  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s); indexed (,X/,Y) -> array/table
 ram_1957               = $1957  ; refs=3 (r1/w2) [STA:2,DEC:1], 2 site(s); indexed (,X/,Y) -> array/table
@@ -642,10 +642,10 @@ ram_1967               = $1967  ; refs=6 (r5/w1) [LDA:4,CMP:1,STA:1], 4 site(s);
 ram_1977               = $1977  ; refs=4 (r3/w1) [LDA:3,STA:1], 4 site(s); indexed (,X/,Y) -> array/table
 ram_1987               = $1987  ; refs=3 (r2/w1) [LDA:2,STA:1], 3 site(s); indexed (,X/,Y) -> array/table
 tileAttrOr             = $1997  ; refs=12 (r10/w2) [ORA:8,LDA:2,STZ:1,STX:1], 3 site(s)
-tileAttrOrBg2               = $1999  ; refs=12 (r10/w2) [ORA:8,LDA:2,STZ:1,STX:1], 3 site(s)
+tileAttrOrBg2          = $1999  ; refs=12 (r10/w2) [ORA:8,LDA:2,STZ:1,STX:1], 3 site(s)
 ram_199B               = $199B  ; refs=2 (r0/w2) [STZ:1,STX:1], 1 site(s)
 tilemapBaseHi          = $199D  ; refs=5 (r4/w1) [LDY:3,STA:1,LDX:1], 4 site(s)
-tilemapBaseBg2Hi               = $199F  ; refs=4 (r3/w1) [LDY:2,STA:1,LDX:1], 3 site(s)
+tilemapBaseBg2Hi       = $199F  ; refs=4 (r3/w1) [LDY:2,STA:1,LDX:1], 3 site(s)
 ram_19A1               = $19A1  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 camMaxX                = $19A3  ; refs=5 (r4/w1) [CMP:2,LDA:2,STA:1], 3 site(s)
 camMaxY                = $19A5  ; refs=5 (r4/w1) [CMP:2,LDA:2,STA:1], 3 site(s)
@@ -656,7 +656,7 @@ ram_19AD               = $19AD  ; refs=3 (r2/w1) [STA:1,CMP:1,LDA:1], 2 site(s)
 ram_19AF               = $19AF  ; refs=3 (r2/w1) [STA:1,CMP:1,LDA:1], 2 site(s)
 ram_19B1               = $19B1  ; refs=1 (r0/w1) [STA:1], 1 site(s)
 ram_19B3               = $19B3  ; refs=1 (r0/w1) [STA:1], 1 site(s)
-levelRowStrideBg2               = $19B5  ; refs=5 (r4/w1) [LDA:4,STA:1], 4 site(s)
+levelRowStrideBg2      = $19B5  ; refs=5 (r4/w1) [LDA:4,STA:1], 4 site(s)
 ram_19B7               = $19B7  ; refs=9 (r5/w4) [LDA:3,STY:2,CMP:1,LDY:1], 6 site(s)
 ram_19B9               = $19B9  ; refs=21 (r12/w9) [LDY:8,STY:8,CMP:2,LDA:1], 11 site(s)
 dialogueBoxColorLo     = $19BB  ; colour for CGRAM index 3, low byte
@@ -690,7 +690,7 @@ vramDmaVmaddAB         = $19E8  ; refs=4 (r4/w0) [LDA:3,ADC:1], 4 site(s)
 ram_19E9               = $19E9  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 tilemapBaseLo          = $19EA  ; refs=6 (r6/w0) [LDY:3,LDX:2,LDA:1], 5 site(s)
 ram_19EB               = $19EB  ; refs=2 (r2/w0) [LDA:2], 2 site(s)
-tilemapBaseBg2Lo               = $19EC  ; refs=4 (r4/w0) [LDY:2,LDA:1,LDX:1], 3 site(s)
+tilemapBaseBg2Lo       = $19EC  ; refs=4 (r4/w0) [LDY:2,LDA:1,LDX:1], 3 site(s)
 ram_19ED               = $19ED  ; refs=1 (r1/w0) [LDA:1], 1 site(s)
 tilemapVramAddr        = $19EE  ; VRAM word address used as base for tilemap clears/uploads
 bg1scShadow            = $19EF  ; shadow of BG1SC (BG1 tilemap base/size) for the current scene
@@ -847,93 +847,99 @@ expandNewEnd  = $006A   ; 2 bytes: return value (new data end offset)
 
 ;smt=StagedMetaTile
 
-P1colSmtLU  = $7E3810
-P1colSmtLD  = P1colSmtLU + $2
-P1colSmtRU  = P1colSmtLU + $24
-P1colSmtRD  = P1colSmtLU + $26
 
-P1row0smtLU  = P1colSmtLU + $48
-P1row0smtRU  = P1row0smtLU + $2
-P1row0smtLD  = P1row0smtLU + $40
-P1row0smtRD  = P1row0smtLU + $42
+!P1colSmtLU = $7E3810
+!P1colSmtLD = !P1colSmtLU+2
+!P1colSmtRU = !P1colSmtLU+24
+!P1colSmtRD = !P1colSmtLU+26
 
-P1row1smtLU  = P1row0smtLU + $80
-P1row1smtRU  = P1row1smtLU + $2
-P1row1smtLD  = P1row1smtLU + $40
-P1row1smtRD  = P1row1smtLU + $42
+; Aka 7E3858
+!P1row0smtLU = !P1colSmtLU+48
+!P1row0smtRU = !P1row0smtLU+2
+!P1row0smtLD = !P1row0smtLU+40
+!P1row0smtRD = !P1row0smtLU+42
 
-P1row2smtLU  = P1row1smtLU + $80
-P1row2smtRU  = P1row2smtLU + $2
-P1row2smtLD  = P1row2smtLU + $40
-P1row2smtRD  = P1row2smtLU + $42
+; Aka 7E38D8
+!P1row1smtLU = !P1row0smtLU+80
+!P1row1smtRU = !P1row1smtLU+2
+!P1row1smtLD = !P1row1smtLU+40
+!P1row1smtRD = !P1row1smtLU+42
 
+; Aka 7E3958
+!P1row2smtLU  = !P1row1smtLU+80
+!P1row2smtRU  = !P1row2smtLU+2
+!P1row2smtLD  = !P1row2smtLU+40
+!P1row2smtRD  = !P1row2smtLU+42
 
-P1Bg2colSmtLU  = P1row2smtLU + $80
-P1Bg2colSmtLD  = P1Bg2colSmtLU + $2
-P1Bg2colSmtRU  = P1Bg2colSmtLU + $24
-P1Bg2colSmtRD  = P1Bg2colSmtLU + $26
+; Aka 7E39D8
+!P1Bg2colSmtLU  = !P1row2smtLU+80
+!P1Bg2colSmtLD  = !P1Bg2colSmtLU+2
+!P1Bg2colSmtRU  = !P1Bg2colSmtLU+24
+!P1Bg2colSmtRD  = !P1Bg2colSmtLU+26
 
-P1Bg2row0smtLU  = P1Bg2colSmtLU + $48
-P1Bg2row0smtRU  = P1Bg2row0smtLU + $2
-P1Bg2row0smtLD  = P1Bg2row0smtLU + $40
-P1Bg2row0smtRD  = P1Bg2row0smtLU + $42
+; Aka 7E3A30
+!P1Bg2row0smtLU  = !P1Bg2colSmtLU+48
+!P1Bg2row0smtRU  = !P1Bg2row0smtLU+2
+!P1Bg2row0smtLD  = !P1Bg2row0smtLU+40
+!P1Bg2row0smtRD  = !P1Bg2row0smtLU+42
 
+; Aka 7E3AB0
+!P1Bg2row1smtLU  = !P1Bg2row0smtLU+80
+!P1Bg2row1smtRU  = !P1Bg2row1smtLU+2
+!P1Bg2row1smtLD  = !P1Bg2row1smtLU+40
+!P1Bg2row1smtRD  = !P1Bg2row1smtLU+42
 
-P1Bg2row1smtLU  = P1Bg2row0smtLU + $80
-P1Bg2row1smtRU  = P1Bg2row1smtLU + $2
-P1Bg2row1smtLD  = P1Bg2row1smtLU + $40
-P1Bg2row1smtRD  = P1Bg2row1smtLU + $42
-
-
-P1Bg2row2smtLU  = P1Bg2row1smtLU + $80
-P1Bg2row2smtRU  = P1Bg2row2smtLU + $2
-P1Bg2row2smtLD  = P1Bg2row2smtLU + $40
-P1Bg2row2smtRD  = P1Bg2row2smtLU + $42
-
-
-
-P2colSmtLU  = P1Bg2row2smtLU + $80
-P2colSmtLD  = P2colSmtLU + $2
-P2colSmtRU  = P2colSmtLU + $24
-P2colSmtRD  = P2colSmtLU + $26
-
-P2row0smtLU  = P2colSmtLU + $48
-P2row0smtRU  = P2row0smtLU + $2
-P2row0smtLD  = P2row0smtLU + $40
-P2row0smtRD  = P2row0smtLU + $42
-
-P2row1smtLU  = P2row0smtLU + $80
-P2row1smtRU  = P2row1smtLU + $2
-P2row1smtLD  = P2row1smtLU + $40
-P2row1smtRD  = P2row1smtLU + $42
-
-P2row2smtLU  = P2row1smtLU + $80
-P2row2smtRU  = P2row2smtLU + $2
-P2row2smtLD  = P2row2smtLU + $40
-P2row2smtRD  = P2row2smtLU + $42
+; Aka 7E3B30
+!P1Bg2row2smtLU  = !P1Bg2row1smtLU+80
+!P1Bg2row2smtRU  = !P1Bg2row2smtLU+2
+!P1Bg2row2smtLD  = !P1Bg2row2smtLU+40
+!P1Bg2row2smtRD  = !P1Bg2row2smtLU+42
 
 
-P2Bg2colSmtLU  = P2row2smtLU + $80
-P2Bg2colSmtLD  = P2Bg2colSmtLU + $2
-P2Bg2colSmtRU  = P2Bg2colSmtLU + $24
-P2Bg2colSmtRD  = P2Bg2colSmtLU + $26
 
-P2Bg2row0smtLU  = P2Bg2colSmtLU + $48
-P2Bg2row0smtRU  = P2Bg2row0smtLU + $2
-P2Bg2row0smtLD  = P2Bg2row0smtLU + $40
-P2Bg2row0smtRD  = P2Bg2row0smtLU + $42
+!P2colSmtLU  = !P1Bg2row2smtLU+80
+!P2colSmtLD  = !P2colSmtLU+2
+!P2colSmtRU  = !P2colSmtLU+24
+!P2colSmtRD  = !P2colSmtLU+26
+
+!P2row0smtLU  = !P2colSmtLU+48
+!P2row0smtRU  = !P2row0smtLU+2
+!P2row0smtLD  = !P2row0smtLU+40
+!P2row0smtRD  = !P2row0smtLU+42
+
+!P2row1smtLU  = !P2row0smtLU+80
+!P2row1smtRU  = !P2row1smtLU+2
+!P2row1smtLD  = !P2row1smtLU+40
+!P2row1smtRD  = !P2row1smtLU+42
 
 
-P2Bg2row1smtLU  = P2Bg2row0smtLU + $80
-P2Bg2row1smtRU  = P2Bg2row1smtLU + $2
-P2Bg2row1smtLD  = P2Bg2row1smtLU + $40
-P2Bg2row1smtRD  = P2Bg2row1smtLU + $42
+!P2row2smtLU  = !P2row1smtLU+80
+!P2row2smtRU  = !P2row2smtLU+2
+!P2row2smtLD  = !P2row2smtLU+40
+!P2row2smtRD  = !P2row2smtLU+42
 
 
-P2Bg2row2smtLU  = P2Bg2row1smtLU + $80
-P2Bg2row2smtRU  = P2Bg2row2smtLU + $2
-P2Bg2row2smtLD  = P2Bg2row2smtLU + $40
-P2Bg2row2smtRD  = P2Bg2row2smtLU + $42
+!P2Bg2colSmtLU  = !P2row2smtLU+80
+!P2Bg2colSmtLD  = !P2Bg2colSmtLU+2
+!P2Bg2colSmtRU  = !P2Bg2colSmtLU+24
+!P2Bg2colSmtRD  = !P2Bg2colSmtLU+26
+
+!P2Bg2row0smtLU  = !P2Bg2colSmtLU+48
+!P2Bg2row0smtRU  = !P2Bg2row0smtLU+2
+!P2Bg2row0smtLD  = !P2Bg2row0smtLU+40
+!P2Bg2row0smtRD  = !P2Bg2row0smtLU+42
+
+
+!P2Bg2row1smtLU  = !P2Bg2row0smtLU+80
+!P2Bg2row1smtRU  = !P2Bg2row1smtLU+2
+!P2Bg2row1smtLD  = !P2Bg2row1smtLU+40
+!P2Bg2row1smtRD  = !P2Bg2row1smtLU+42
+
+
+!P2Bg2row2smtLU  = !P2Bg2row1smtLU+80
+!P2Bg2row2smtRU  = !P2Bg2row2smtLU+2
+!P2Bg2row2smtLD  = !P2Bg2row2smtLU+40
+!P2Bg2row2smtRD  = !P2Bg2row2smtLU+42
 
 
                        ORG $808000
@@ -1034,8 +1040,8 @@ MainLoop_Reinit:
                 JSR.W input_80814E                             ;808073|80814E
                 LDA.W gameModeFlags                            ;808076|8019E3
                 BIT.W #$0008                                   ;808079|
-                BEQ MainGameLoop                              ;80807C|808081
-                JMP.W timedoor_Transition                     ;80807E|80811B
+                BEQ MainGameLoop                               ;80807C|808081
+                JMP.W timedoor_Transition                      ;80807E|80811B
 
 
 ; --------------------------------------------------------
@@ -1101,7 +1107,7 @@ loc_808101:
                 LDA.W gameModeFlags                            ;808110|8019E3
                 BIT.W #$0008                                   ;808113|
                 BNE timedoor_Transition                        ;808116|80811B
-                JMP.W MainGameLoop                            ;808118|808081
+                JMP.W MainGameLoop                             ;808118|808081
 
 
 ; --------------------------------------------------------
@@ -1300,7 +1306,7 @@ sub_808219:
                 LDX.W #$001E                                   ;80821E|
 
          .loop: LDA.W ram_1935                                 ;808221|801935
-                AND.W data_X_to_Mask_16,X                            ;808224|80F3F7
+                AND.W data_X_to_Mask_16,X                      ;808224|80F3F7
                 BEQ .skip                                      ;808227|808244
                 DEC.W ram_1957,X                               ;808229|801957
                 BNE .skip                                      ;80822C|808244
@@ -1497,9 +1503,9 @@ input_8082F6:
                 LDA.W #$0000                                   ;808352|
                 STA.W targetLevelIndex                         ;808355|8019DD
 
-        .skip4: STZ.W p1vikingIdx                                ;808358|8003D8
+        .skip4: STZ.W p1vikingIdx                              ;808358|8003D8
                 LDA.W #$0002                                   ;80835B|
-                STA.W p2vikingIdx                                ;80835E|8003DA
+                STA.W p2vikingIdx                              ;80835E|8003DA
                 STZ.W ram_03E4                                 ;808361|8003E4
                 BRA .cont2                                     ;808364|808384
 
@@ -1721,7 +1727,7 @@ sub_80847D:
 ;    confirms 0/Yes).
 ; --------------------------------------------------------
 GiveUpDialog_NavConfirm:
-                LDA.W joy1Pressed                        ;8084B9|8003C8
+                LDA.W joy1Pressed                              ;8084B9|8003C8
                 ORA.W joy2Pressed                              ;8084BC|8003CA
                 BIT.W #$0200                                   ;8084BF|
                 BEQ .skip                                      ;8084C2|8084DE
@@ -1799,12 +1805,12 @@ input_808515:
                 STA.W tempVertLo
 
       .proceed: LDX.W ram_03E4                                 ;80852A|8003E4
-                LDY.W p1vikingIdx,X                              ;80852D|8003D8
+                LDY.W p1vikingIdx,X                            ;80852D|8003D8
                 LDA.B playerCamX                               ;808530|000044
                 CLC                                            ;808532|
                 ADC.W #$0070                                   ;808533|
                 SEC                                            ;808536|
-                SBC.W objX,Y                          ;808537|801179
+                SBC.W objX,Y                                   ;808537|801179
                 BMI .skip                                      ;80853A|808553
                 BEQ .skip                                      ;80853C|808553
                 CMP.W #$0010                                   ;80853E|
@@ -1814,7 +1820,7 @@ input_808515:
              +: STA.W ram_03F6                                 ;808546|8003F6
                 ASL A                                          ;808549|
                 TAY                                            ;80854A|
-                LDX.W data_camSpeed2,Y                            ;80854B|808775
+                LDX.W data_camSpeed2,Y                         ;80854B|808775
                 JSR.W sub_80C0FC                               ;80854E|80C0FC
                 BRA .skip2                                     ;808551|808573
 
@@ -1832,14 +1838,14 @@ input_808515:
              +: STA.W ram_03F8                                 ;808568|8003F8
                 ASL A                                          ;80856B|
                 TAY                                            ;80856C|
-                LDX.W data_camSpeed2,Y                            ;80856D|808775
+                LDX.W data_camSpeed2,Y                         ;80856D|808775
                 JSR.W sub_80C0D2                               ;808570|80C0D2
 
         .skip2: LDX.W ram_03E4                                 ;808573|8003E4
-                LDY.W p1vikingIdx,X                              ;808576|8003D8
+                LDY.W p1vikingIdx,X                            ;808576|8003D8
                 LDA.B playerCamY                               ;808579|000046
                 CLC                                            ;80857B|
-                ADC.W tempVertHigh                                    ;80857C|
+                ADC.W tempVertHigh                             ;80857C|
                 SEC                                            ;80857F|
                 SBC.W hudYOffset                               ;808580|800340
                 SBC.W objY,Y                                   ;808583|8011A1
@@ -1852,16 +1858,16 @@ input_808515:
              +: STA.W ram_03FC                                 ;808592|8003FC
                 ASL A                                          ;808595|
                 TAY                                            ;808596|
-                LDX.W data_camSpeed2,Y                            ;808597|808775
+                LDX.W data_camSpeed2,Y                         ;808597|808775
                 JMP.W sub_80C14E                               ;80859A|80C14E
 
 
-        .skip3: LDA.W objY,Y                          ;80859D|8011A1
+        .skip3: LDA.W objY,Y                                   ;80859D|8011A1
                 CLC                                            ;8085A0|
                 ADC.W hudYOffset                               ;8085A1|800340
                 SEC                                            ;8085A4|
                 SBC.B playerCamY                               ;8085A5|000046
-                SBC.W tempVertLo                                     ;8085A7|
+                SBC.W tempVertLo                               ;8085A7|
                 BMI .exit                                      ;8085AA|8085C1
                 BEQ .exit                                      ;8085AC|8085C1
                 CMP.W #$0010                                   ;8085AE|
@@ -1871,7 +1877,7 @@ input_808515:
              +: STA.W ram_03FA                                 ;8085B6|8003FA
                 ASL A                                          ;8085B9|
                 TAY                                            ;8085BA|
-                LDX.W data_camSpeed2,Y                            ;8085BB|808775
+                LDX.W data_camSpeed2,Y                         ;8085BB|808775
                 JSR.W sub_80C124                               ;8085BE|80C124
 
          .exit: RTS                                            ;8085C1|
@@ -1889,7 +1895,7 @@ sub_8085C2:
                 BEQ .skip                                      ;8085C8|8085D4
                 ASL A                                          ;8085CA|
                 TAY                                            ;8085CB|
-                LDX.W data_camSpeed1,Y                            ;8085CC|808773
+                LDX.W data_camSpeed1,Y                         ;8085CC|808773
                 JSR.W sub_80C0FC                               ;8085CF|80C0FC
                 BRA .skip2                                     ;8085D2|8085E1
 
@@ -1898,14 +1904,14 @@ sub_8085C2:
                 BEQ .skip2                                     ;8085D7|8085E1
                 ASL A                                          ;8085D9|
                 TAY                                            ;8085DA|
-                LDX.W data_camSpeed1,Y                            ;8085DB|808773
+                LDX.W data_camSpeed1,Y                         ;8085DB|808773
                 JSR.W sub_80C0D2                               ;8085DE|80C0D2
 
         .skip2: LDA.W ram_03FC                                 ;8085E1|8003FC
                 BEQ .skip3                                     ;8085E4|8085EE
                 ASL A                                          ;8085E6|
                 TAY                                            ;8085E7|
-                LDX.W data_camSpeed1,Y                            ;8085E8|808773
+                LDX.W data_camSpeed1,Y                         ;8085E8|808773
                 JMP.W sub_80C14E                               ;8085EB|80C14E
 
 
@@ -1913,7 +1919,7 @@ sub_8085C2:
                 BEQ .exit                                      ;8085F1|8085FB
                 ASL A                                          ;8085F3|
                 TAY                                            ;8085F4|
-                LDX.W data_camSpeed1,Y                            ;8085F5|808773
+                LDX.W data_camSpeed1,Y                         ;8085F5|808773
                 JMP.W sub_80C124                               ;8085F8|80C124
 
 
@@ -1932,7 +1938,7 @@ sub_8085FC:
                 BEQ .skip                                      ;808602|80860E
                 ASL A                                          ;808604|
                 TAY                                            ;808605|
-                LDX.W data_camSpeed,Y                            ;808606|808771
+                LDX.W data_camSpeed,Y                          ;808606|808771
                 JSR.W sub_80C0FC                               ;808609|80C0FC
                 BRA .skip2                                     ;80860C|80861B
 
@@ -1941,14 +1947,14 @@ sub_8085FC:
                 BEQ .skip2                                     ;808611|80861B
                 ASL A                                          ;808613|
                 TAY                                            ;808614|
-                LDX.W data_camSpeed,Y                            ;808615|808771
+                LDX.W data_camSpeed,Y                          ;808615|808771
                 JSR.W sub_80C0D2                               ;808618|80C0D2
 
         .skip2: LDA.W ram_03FC                                 ;80861B|8003FC
                 BEQ .skip3                                     ;80861E|808628
                 ASL A                                          ;808620|
                 TAY                                            ;808621|
-                LDX.W data_camSpeed,Y                            ;808622|808771
+                LDX.W data_camSpeed,Y                          ;808622|808771
                 JMP.W sub_80C14E                               ;808625|80C14E
 
 
@@ -1956,7 +1962,7 @@ sub_8085FC:
                 BEQ .exit                                      ;80862B|808635
                 ASL A                                          ;80862D|
                 TAY                                            ;80862E|
-                LDX.W data_camSpeed,Y                            ;80862F|808771
+                LDX.W data_camSpeed,Y                          ;80862F|808771
                 JMP.W sub_80C124                               ;808632|80C124
 
 
@@ -2004,7 +2010,7 @@ sub_808636:
 ;    writes HW: A1B2, A1TL2, BBAD2, DASL2, DMAP2
 ; --------------------------------------------------------
 SetupCgramGpDma:
-                SEP #$20                                  ;808667|
+                SEP #$20                                       ;808667|
                 STZ.W DMAP2                                    ;808669|804320
                 LDA.B #$22                                     ;80866C|
                 STA.W BBAD2                                    ;80866E|804321
@@ -2026,33 +2032,33 @@ SetupCgramGpDma:
 ; --------------------------------------------------------
 input_808685:
                 LDA.W ram_03DC,X                               ;808685|8003DC
-                CMP.W p1vikingIdx,X                              ;808688|8003D8
+                CMP.W p1vikingIdx,X                            ;808688|8003D8
                 BEQ .skip2                                     ;80868B|8086B1
                 CMP.W #$0006                                   ;80868D|
                 BCS .skip                                      ;808690|8086A5
                 TAY                                            ;808692|
-                LDA.W objTypeId,Y                               ;808693|801129
+                LDA.W objTypeId,Y                              ;808693|801129
                 BMI .skip                                      ;808696|8086A5
-                LDA.W objOamFirst,Y                               ;808698|8014C1
+                LDA.W objOamFirst,Y                            ;808698|8014C1
                 TAY                                            ;80869B|
                 LDA.W oamSrcAttr,Y                             ;80869C|800985
                 AND.W #$FFDF                                   ;80869F|
                 STA.W oamSrcAttr,Y                             ;8086A2|800985
 
-         .skip: LDA.W p1vikingIdx,X                              ;8086A5|8003D8
+         .skip: LDA.W p1vikingIdx,X                            ;8086A5|8003D8
                 STA.W ram_03DC,X                               ;8086A8|8003DC
                 LDA.W #$0015                                   ;8086AB|
                 STA.W ram_03E0,X                               ;8086AE|8003E0
 
         .skip2: LDA.W ram_03E0,X                               ;8086B1|8003E0
                 BEQ .exit                                      ;8086B4|8086E0
-                LDY.W p1vikingIdx,X                              ;8086B6|8003D8
+                LDY.W p1vikingIdx,X                            ;8086B6|8003D8
                 DEC A                                          ;8086B9|
                 STA.W ram_03E0,X                               ;8086BA|8003E0
                 BIT.W #$0002                                   ;8086BD|
                 BEQ .skip3                                     ;8086C0|8086D3
                 DEC.W ram_03E0,X                               ;8086C2|8003E0
-                LDA.W objOamFirst,Y                               ;8086C5|8014C1
+                LDA.W objOamFirst,Y                            ;8086C5|8014C1
                 TAY                                            ;8086C8|
                 LDA.W oamSrcAttr,Y                             ;8086C9|800985
                 ORA.W #$0020                                   ;8086CC|
@@ -2060,7 +2066,7 @@ input_808685:
                 RTS                                            ;8086D2|
 
 
-        .skip3: LDA.W objOamFirst,Y                               ;8086D3|8014C1
+        .skip3: LDA.W objOamFirst,Y                            ;8086D3|8014C1
                 TAY                                            ;8086D6|
                 LDA.W oamSrcAttr,Y                             ;8086D7|800985
                 AND.W #$FFDF                                   ;8086DA|
@@ -2076,7 +2082,7 @@ input_808685:
 ;    calls:     input_8086F6
 ; --------------------------------------------------------
 sub_8086E1:
-                LDA.W dialogArmedFlag                                 ;8086E1|8019CE
+                LDA.W dialogArmedFlag                          ;8086E1|8019CE
                 AND.W #$00FF                                   ;8086E4|
                 BEQ .exit                                      ;8086E7|8086F5
                 LDX.W #$0000                                   ;8086E9|
@@ -2095,10 +2101,10 @@ sub_8086E1:
 ;    calls:     input_808685
 ; --------------------------------------------------------
 input_8086F6:
-                LDY.W p1vikingIdx,X                              ;8086F6|8003D8
+                LDY.W p1vikingIdx,X                            ;8086F6|8003D8
                 CPY.W #$0006                                   ;8086F9|
                 BCS .skip2                                     ;8086FC|80873A
-                LDA.W objX,Y                          ;8086FE|801179
+                LDA.W objX,Y                                   ;8086FE|801179
                 SEC                                            ;808701|
                 SBC.B playerCamX                               ;808702|000044
                 CLC                                            ;808704|
@@ -2108,14 +2114,14 @@ input_8086F6:
                 CLC                                            ;80870C|
                 ADC.W #$010C                                   ;80870D|
                 SEC                                            ;808710|
-                SBC.W objX,Y                          ;808711|801179
+                SBC.W objX,Y                                   ;808711|801179
                 BMI .skip2                                     ;808714|80873A
                 CPX.W ram_03E4                                 ;808716|8003E4
                 BNE +                                          ;808719|80871F
                 LDA.B playerCamY                               ;80871B|000046
                 BEQ .skip                                      ;80871D|808737
 
-             +: LDA.W objY,Y                          ;80871F|8011A1
+             +: LDA.W objY,Y                                   ;80871F|8011A1
                 SEC                                            ;808722|
                 SBC.B playerCamY                               ;808723|000046
                 CLC                                            ;808725|
@@ -2125,7 +2131,7 @@ input_8086F6:
                 CLC                                            ;80872D|
                 ADC.W #$00C0                                   ;80872E|
                 SEC                                            ;808731|
-                SBC.W objY,Y                          ;808732|8011A1
+                SBC.W objY,Y                                   ;808732|8011A1
                 BMI .skip2                                     ;808735|80873A
 
          .skip: JMP.W input_808685                             ;808737|808685
@@ -13174,10 +13180,10 @@ FetchConvertMetatileCol:
                 BEQ .skip2                                     ;80C351|80C369   ; bit3 clear -> neither wrap nor blank-fill: fall into the CLAMP path below
                 LDX.B tmp34                                    ;80C353|000034   ; bit3 SET: don't fetch anything real for this off-map cell -- just
                 LDA.W tileAttrOr                               ;80C355|801997   ; write the "empty" attribute word (no tile index bits set, so tile 0)
-                STA.W colStagedMetaTileLU,X                        ;80C358|8016F5   ; into all 4 of this metatile's staging slots (TL/TR/BL/BR) and
-                STA.W colStagedMetaTileRU,X                         ;80C35B|801735   ; return immediately -- this is what lets a level have "void" past its
-                STA.W colStagedMetaTileLD,X                             ;80C35E|8016F7   ; edges instead of either wrapping or showing a stretched last column
-                STA.W colStagedMetaTileRD,X                             ;80C361|801737
+                STA.W !colStagedMetaTileLU,X                        ;80C358|8016F5   ; into all 4 of this metatile's staging slots (TL/TR/BL/BR) and
+                STA.W !colStagedMetaTileRU,X                         ;80C35B|801735   ; return immediately -- this is what lets a level have "void" past its
+                STA.W !colStagedMetaTileLD,X                             ;80C35E|8016F7   ; edges instead of either wrapping or showing a stretched last column
+                STA.W !colStagedMetaTileRD,X                             ;80C361|801737
                 LDX.B refillSaveX                              ;80C364|00003E
                 LDY.B refillSaveY                              ;80C366|000040
                 RTS                                            ;80C368|
@@ -13229,22 +13235,22 @@ FetchConvertMetatileCol:
                 LDA.B [tileVisualPtr],Y                        ;80C3A7|000054   ; step 5: fetch the metatile's 4 BG character words (TL,TR,BL,BR, in that
                 ORA.W tileAttrOr                               ;80C3A9|801997   ; order) from the metatile->graphics lookup table, OR-ing in the current
                 LDX.B tmp34                                    ;80C3AC|000034   ; scene's shared attribute bits (palette/priority/flip -- tileAttrOr) into
-                STA.W colStagedMetaTileLU,X                        ;80C3AE|8016F5   ; each one, then write all 4 into this metatile's slot in the column
+                STA.W !colStagedMetaTileLU,X                        ;80C3AE|8016F5   ; each one, then write all 4 into this metatile's slot in the column
                 INY                                            ;80C3B1|         ; staging buffers, ready for BuildTilemapCol to DMA out to VRAM.
                 INY                                            ;80C3B2|
                 LDA.B [tileVisualPtr],Y                        ;80C3B3|000054
                 ORA.W tileAttrOr                               ;80C3B5|801997
-                STA.W  colStagedMetaTileRU,X                         ;80C3B8|801735
+                STA.W !colStagedMetaTileRU,X                         ;80C3B8|801735
                 INY                                            ;80C3BB|
                 INY                                            ;80C3BC|
                 LDA.B [tileVisualPtr],Y                        ;80C3BD|000054
                 ORA.W tileAttrOr                               ;80C3BF|801997
-                STA.W  colStagedMetaTileLD,X                             ;80C3C2|8016F7
+                STA.W !colStagedMetaTileLD,X                             ;80C3C2|8016F7
                 INY                                            ;80C3C5|
                 INY                                            ;80C3C6|
                 LDA.B [tileVisualPtr],Y                        ;80C3C7|000054
                 ORA.W tileAttrOr                               ;80C3C9|801997
-                STA.W  colStagedMetaTileRD,X                             ;80C3CC|801737
+                STA.W !colStagedMetaTileRD,X                             ;80C3CC|801737
                 LDX.B refillSaveX                              ;80C3CF|00003E
                 LDY.B refillSaveY                              ;80C3D1|000040
                 RTS                                            ;80C3D3|
@@ -13386,10 +13392,10 @@ FetchConvertMetatileRow:
                 BEQ .skip2                                     ;80C496|80C4AC
                 LDX.B tmp34                           ;80C498|000034
                 LDA.W tileAttrOr                               ;80C49A|801997
-                STA.W rowStagedMetaTileLU,X                    ;80C49D|801775
-                STA.W rowStagedMetaTileLD,X                    ;80C4A0|8017C5
-                STA.W rowStagedMetaTileRD,X                    ;80C4A6|8017C7
-                STA.W rowStagedMetaTileRU,X                    ;80C4A3|801777
+                STA.W !rowStagedMetaTileLU,X                    ;80C49D|801775
+                STA.W !rowStagedMetaTileLD,X                    ;80C4A0|8017C5
+                STA.W !rowStagedMetaTileRD,X                    ;80C4A6|8017C7
+                STA.W !rowStagedMetaTileRU,X                    ;80C4A3|801777
                 LDX.B refillSaveX                              ;80C4A9|00003E
                 RTS                                            ;80C4AB|
 
@@ -13433,24 +13439,24 @@ FetchConvertMetatileRow:
              +: LDA.B [tileVisualPtr],Y                        ;80C4EA|000054
                 LDX.B tmp34                           ;80C4EC|000034
                 ORA.W tileAttrOr                               ;80C4EE|801997
-                STA.W rowStagedMetaTileLU,X                    ;80C4F1|801775
+                STA.W !rowStagedMetaTileLU,X                    ;80C4F1|801775
                 INY                                            ;80C4F4|
                 INY                                            ;80C4F5|
                 LDA.B [tileVisualPtr],Y                        ;80C4F6|000054
                 ORA.W tileAttrOr                               ;80C4F8|801997
-                STA.W rowStagedMetaTileRU,X                    ;80C4FB|801777
+                STA.W !rowStagedMetaTileRU,X                    ;80C4FB|801777
 
 
                 INY                                            ;80C4FE|
                 INY                                            ;80C4FF|
                 LDA.B [tileVisualPtr],Y                        ;80C500|000054
                 ORA.W tileAttrOr                               ;80C502|801997
-                STA.W rowStagedMetaTileLD,X                    ;80C505|8017C5
+                STA.W !rowStagedMetaTileLD,X                    ;80C505|8017C5
                 INY                                            ;80C508|
                 INY                                            ;80C509|8017C5
                 LDA.B [tileVisualPtr],Y                        ;80C50A|000054
                 ORA.W tileAttrOr                               ;80C50C|801997
-                STA.W rowStagedMetaTileRD,X                    ;80C50F|8017C7
+                STA.W !rowStagedMetaTileRD,X                    ;80C50F|8017C7
                 LDX.B refillSaveX                              ;80C512|00003E
                 LDY.B refillSaveY                              ;80C514|000040
                 RTS                                            ;80C516|
@@ -14246,10 +14252,10 @@ FetchConvertMetatileColBg2:
                 BEQ .skip2                                     ;80C9B1|80C9C7
                 LDX.B tmp34                           ;80C9B3|000034
                 LDA.W tileAttrOrBg2                                 ;80C9B5|801999
-                STA.W colStagedMetaTileBg2LU,X                               ;80C9B8|801815
-                STA.W colStagedMetaTileBg2RU,X                               ;80C9BB|801855
-                STA.W colStagedMetaTileBg2LD,X                               ;80C9BE|801817
-                STA.W colStagedMetaTileBg2RD,X                               ;80C9C1|801857
+                STA.W !colStagedMetaTileBg2LU,X                               ;80C9B8|801815
+                STA.W !colStagedMetaTileBg2RU,X                               ;80C9BB|801855
+                STA.W !colStagedMetaTileBg2LD,X                               ;80C9BE|801817
+                STA.W !colStagedMetaTileBg2RD,X                               ;80C9C1|801857
                 LDX.B refillSaveX                              ;80C9C4|00003E
                 RTS                                            ;80C9C6|
 
@@ -14293,22 +14299,22 @@ FetchConvertMetatileColBg2:
                 LDA.B [Bg2tileVisualPtr],Y                                ;80CA05|00005C
                 LDX.B tmp34                           ;80CA07|000034
                 ORA.W tileAttrOrBg2                                 ;80CA09|801999
-                STA.W colStagedMetaTileBg2LU,X                               ;80CA0C|801815
+                STA.W !colStagedMetaTileBg2LU,X                               ;80CA0C|801815
                 INY                                            ;80CA0F|
                 INY                                            ;80CA10|
                 LDA.B [Bg2tileVisualPtr],Y                                ;80CA11|00005C
                 ORA.W tileAttrOrBg2                                 ;80CA13|801999
-                STA.W colStagedMetaTileBg2RU,X                               ;80CA16|801855
+                STA.W !colStagedMetaTileBg2RU,X                               ;80CA16|801855
                 INY                                            ;80CA19|
                 INY                                            ;80CA1A|
                 LDA.B [Bg2tileVisualPtr],Y                                ;80CA1B|00005C
                 ORA.W tileAttrOrBg2                                 ;80CA1D|801999
-                STA.W colStagedMetaTileBg2LD,X                               ;80CA20|801817
+                STA.W !colStagedMetaTileBg2LD,X                               ;80CA20|801817
                 INY                                            ;80CA23|
                 INY                                            ;80CA24|
                 LDA.B [Bg2tileVisualPtr],Y                                ;80CA25|00005C
                 ORA.W tileAttrOrBg2                                 ;80CA27|801999
-                STA.W colStagedMetaTileBg2RD,X                               ;80CA2A|801857
+                STA.W !colStagedMetaTileBg2RD,X                               ;80CA2A|801857
                 LDX.B refillSaveX                              ;80CA2D|00003E
                 LDY.B refillSaveY                              ;80CA2F|000040
                 RTS                                            ;80CA31|
@@ -14432,10 +14438,10 @@ FetchConvertMetatileRowBg2:
                 BEQ .skip2                                     ;80CAF4|80CB0A
                 LDX.B tmp34                           ;80CAF6|000034
                 LDA.W tileAttrOrBg2                                 ;80CAF8|801999
-                STA.W rowStagedMetaTileBg2LU,X                               ;80CAFB|801895
-                STA.W rowStagedMetaTileBg2LD,X                               ;80CAFE|8018E5
-                STA.W rowStagedMetaTileBg2RU,X                               ;80CB01|801897
-                STA.W rowStagedMetaTileBg2RD,X                               ;80CB04|8018E7
+                STA.W !rowStagedMetaTileBg2LU,X                               ;80CAFB|801895
+                STA.W !rowStagedMetaTileBg2LD,X                               ;80CAFE|8018E5
+                STA.W !rowStagedMetaTileBg2RU,X                               ;80CB01|801897
+                STA.W !rowStagedMetaTileBg2RD,X                               ;80CB04|8018E7
                 LDX.B refillSaveX                              ;80CB07|00003E
                 RTS                                            ;80CB09|
 
@@ -14479,22 +14485,22 @@ FetchConvertMetatileRowBg2:
                 LDA.B [Bg2tileVisualPtr],Y                                ;80CB48|00005C
                 LDX.B tmp34                           ;80CB4A|000034
                 ORA.W tileAttrOrBg2                                 ;80CB4C|801999
-                STA.W rowStagedMetaTileBg2LU,X                               ;80CB4F|801895
+                STA.W !rowStagedMetaTileBg2LU,X                               ;80CB4F|801895
                 INY                                            ;80CB52|
                 INY                                            ;80CB53|
                 LDA.B [Bg2tileVisualPtr],Y                                ;80CB54|00005C
                 ORA.W tileAttrOrBg2                                 ;80CB56|801999
-                STA.W rowStagedMetaTileBg2RU,X                               ;80CB59|801897
+                STA.W !rowStagedMetaTileBg2RU,X                               ;80CB59|801897
                 INY                                            ;80CB5C|
                 INY                                            ;80CB5D|
                 LDA.B [Bg2tileVisualPtr],Y                                ;80CB5E|00005C
                 ORA.W tileAttrOrBg2                                 ;80CB60|801999
-                STA.W rowStagedMetaTileBg2LD,X                               ;80CB63|8018E5
+                STA.W !rowStagedMetaTileBg2LD,X                               ;80CB63|8018E5
                 INY                                            ;80CB66|
                 INY                                            ;80CB67|
                 LDA.B [Bg2tileVisualPtr],Y                                ;80CB68|00005C
                 ORA.W tileAttrOrBg2                                 ;80CB6A|801999
-                STA.W rowStagedMetaTileBg2RD,X                               ;80CB6D|8018E7
+                STA.W !rowStagedMetaTileBg2RD,X                               ;80CB6D|8018E7
                 LDX.B refillSaveX                              ;80CB70|00003E
                 LDY.B refillSaveY                              ;80CB72|000040
                 RTS                                            ;80CB74|
@@ -23391,10 +23397,10 @@ FetchConvertMetatileColMod:
                 BEQ .skip2                           
                 LDX.B tmp34                          
                 LDA.W tileAttrOr                     
-                STA.W P1colSmtLU,X              
-                STA.W P1colSmtLD,X               
-                STA.W P1colSmtRD,X                   
-                STA.W P1colSmtRU,X                   
+                STA.L !P1colSmtLU,X              
+                STA.L !P1colSmtLD,X               
+                STA.L !P1colSmtRD,X                   
+                STA.L !P1colSmtRU,X                   
                 LDX.B refillSaveX                    
                 LDY.B refillSaveY                    
                 RTS                                  
@@ -23441,22 +23447,22 @@ FetchConvertMetatileColMod:
                 LDA.B [tileVisualPtr],Y              
                 ORA.W tileAttrOr                     
                 LDX.B tmp34                          
-                STA.W P1colSmtLU,X              
+                STA.L !P1colSmtLU,X              
                 INY                                  
                 INY                                  
                 LDA.B [tileVisualPtr],Y              
                 ORA.W tileAttrOr                     
-                STA.W P1colSmtRU,X               
+                STA.L !P1colSmtRU,X               
                 INY                                  
                 INY                                  
                 LDA.B [tileVisualPtr],Y              
                 ORA.W tileAttrOr                     
-                STA.W P1colSmtLD,X                   
+                STA.L !P1colSmtLD,X                   
                 INY                                  
                 INY                                  
                 LDA.B [tileVisualPtr],Y              
                 ORA.W tileAttrOr                     
-                STA.W P1colSmtRD,X                   
+                STA.L !P1colSmtRD,X                   
                 LDX.B refillSaveX                    
                 LDY.B refillSaveY                    
                 RTS                                  
@@ -23543,10 +23549,10 @@ FetchConvertMetatileRowMod:
                 BEQ .skip2                                     ;80C496|80C4AC
                 LDX.B tmp34                           ;80C498|000034
                 LDA.W tileAttrOr                               ;80C49A|801997
-                STA.W P1row0smtLU,X                  ;80C49D|801775
-                STA.W P1row0smtLD,X                  ;80C4A0|8017C5
-                STA.W P1row0smtRD,X                  ;80C4A6|8017C7
-                STA.W P1row0smtRU,X                  ;80C4A3|801777
+                STA.L !P1row0smtLU,X                  ;80C49D|801775
+                STA.L !P1row0smtLD,X                  ;80C4A0|8017C5
+                STA.L !P1row0smtRD,X                  ;80C4A6|8017C7
+                STA.L !P1row0smtRU,X                  ;80C4A3|801777
                 LDX.B refillSaveX                              ;80C4A9|00003E
                 RTS                                            ;80C4AB|
 
@@ -23590,22 +23596,22 @@ FetchConvertMetatileRowMod:
              +: LDA.B [tileVisualPtr],Y                        ;80C4EA|000054
                 LDX.B tmp34                           ;80C4EC|000034
                 ORA.W tileAttrOr                               ;80C4EE|801997
-                STA.W P1row0smtLU,X                    ;80C4F1|801775
+                STA.L !P1row0smtLU,X                    ;80C4F1|801775
                 INY                                            ;80C4F4|
                 INY                                            ;80C4F5|
                 LDA.B [tileVisualPtr],Y                        ;80C4F6|000054
                 ORA.W tileAttrOr                               ;80C4F8|801997
-                STA.W P1row0smtRU,X                    ;80C4FB|801777
+                STA.L !P1row0smtRU,X                    ;80C4FB|801777
                 INY                                            ;80C4FE|
                 INY                                            ;80C4FF|
                 LDA.B [tileVisualPtr],Y                        ;80C500|000054
                 ORA.W tileAttrOr                               ;80C502|801997
-                STA.W P1row0smtLD,X                    ;80C505|8017C5
+                STA.L !P1row0smtLD,X                    ;80C505|8017C5
                 INY                                            ;80C508|
                 INY                                            ;80C509|8017C5
                 LDA.B [tileVisualPtr],Y                        ;80C50A|000054
                 ORA.W tileAttrOr                               ;80C50C|801997
-                STA.W P1row0smtRD,X                    ;80C50F|8017C7
+                STA.L !P1row0smtRD,X                    ;80C50F|8017C7
                 LDX.B refillSaveX                              ;80C512|00003E
                 LDY.B refillSaveY                              ;80C514|000040
                 RTS                                            ;80C516|
@@ -23617,10 +23623,12 @@ UploadTilemapRowP1:
                 STA.W DMAP0                              
                 LDA.B #$18                               
                 STA.W BBAD0                              
+                ; LDA.B #$01                                  ;Change bank for modded uploads
+                ; STA.W A1B0
                 REP #$30                                 
                 LDA.W P1rowDmaDest                       
                 STA.W VMADDL                             
-                LDA.W #$1775                             
+                LDA.W #$3858                          
                 STA.W A1TL0                              
                 LDA.W #$0080                             
                 STA.W DASL0                              
@@ -23635,13 +23643,15 @@ UploadTilemapRowP1:
                 ADC.W #$0200
                 
                 STA.W VMADDL                             
-                LDA.W #$1775                             
+                LDA.W #$38D8                             
                 STA.W A1TL0                              
                 LDA.W #$0080                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$01                               
                 STA.W MDMAEN                             
+                ; LDA.B #$00
+                ; STA.W A1B0                                  ;Reset in case other code doesnt
                 REP #$30                                 
                 RTL
 
@@ -23653,11 +23663,12 @@ UploadTilemapColumnP1:
                 STA.W DMAP0                              
                 LDA.B #$18                                             
                 STA.W BBAD0                              
-                
+                ; LDA.B #$7E                                  ;Change bank for modded uploads
+                ; STA.W A1B0
                 REP #$30                                 
                 LDA.W P1colDmaDest                       
                 STA.W VMADDL                             
-                LDA.W #$16F5                             
+                LDA.W #$3810                             
                 STA.W A1TL0                              
                 LDA.W #$0020                             
                 STA.W DASL0                              
@@ -23669,10 +23680,9 @@ UploadTilemapColumnP1:
                 
                 REP #$30                                 
                 LDA.W P1colDmaDest                       
-                ;INC
                 INC
                 STA.W VMADDL                             
-                LDA.W #$1715                             
+                LDA.W #$3812                          
                 STA.W A1TL0                              
                 LDA.W #$0020                             
                 STA.W DASL0                              
@@ -23685,7 +23695,7 @@ UploadTilemapColumnP1:
                 CLC
                 ADC.W #$0200
                 STA.W VMADDL                             
-                LDA.W #$16F5                             
+                LDA.W #$3810                             
                 STA.W A1TL0                              
                 LDA.W #$0020                             
                 STA.W DASL0                              
@@ -23698,7 +23708,7 @@ UploadTilemapColumnP1:
                 CLC
                 ADC.W #$0201
                 STA.W VMADDL                             
-                LDA.W #$1715                             
+                LDA.W #$3812                             
                 STA.W A1TL0                              
                 LDA.W #$0020                             
                 STA.W DASL0                              
@@ -23708,6 +23718,8 @@ UploadTilemapColumnP1:
                 
                 LDA.B #$80 
                 STA.W VMAIN
+                ; LDA.B #$7E
+                ; STA.W A1B0                                  ;Reset in case other code doesnt
                 REP #$30                                 
                 RTL
 
@@ -24102,10 +24114,10 @@ FetchConvertMetatileColBg2Mod:
                 BEQ .skip2
                 LDX.B tmp34
                 LDA.W tileAttrOrBg2
-                STA.W P1Bg2colSmtLU,X
-                STA.W P1Bg2colSmtLD,X
-                STA.W P1Bg2colSmtRD,X
-                STA.W P1Bg2colSmtRU,X
+                STA.L !P1Bg2colSmtLU,X
+                STA.L !P1Bg2colSmtLD,X
+                STA.L !P1Bg2colSmtRD,X
+                STA.L !P1Bg2colSmtRU,X
                 LDX.B refillSaveX
                 LDY.B refillSaveY
                 RTS
@@ -24152,22 +24164,22 @@ FetchConvertMetatileColBg2Mod:
                 LDA.B [Bg2tileVisualPtr],Y
                 ORA.W tileAttrOrBg2
                 LDX.B tmp34
-                STA.W P1Bg2colSmtLU,X
+                STA.L !P1Bg2colSmtLU,X
                 INY
                 INY
                 LDA.B [Bg2tileVisualPtr],Y
                 ORA.W tileAttrOrBg2
-                STA.W P1Bg2colSmtRU,X
+                STA.L !P1Bg2colSmtRU,X
                 INY
                 INY
                 LDA.B [Bg2tileVisualPtr],Y
                 ORA.W tileAttrOrBg2
-                STA.W P1Bg2colSmtLD,X
+                STA.L !P1Bg2colSmtLD,X
                 INY
                 INY
                 LDA.B [Bg2tileVisualPtr],Y
                 ORA.W tileAttrOrBg2
-                STA.W P1Bg2colSmtRD,X
+                STA.L !P1Bg2colSmtRD,X
                 LDX.B refillSaveX
                 LDY.B refillSaveY
                 RTS
@@ -24261,10 +24273,10 @@ FetchConvertMetatileRowBg2Mod:
                 BEQ .skip2
                 LDX.B tmp34
                 LDA.W tileAttrOrBg2
-                STA.W P1Bg2row0smtLU,X
-                STA.W P1Bg2row0smtLD,X
-                STA.W P1Bg2row0smtRD,X
-                STA.W P1Bg2row0smtRU,X
+                STA.L !P1Bg2row0smtLU,X
+                STA.L !P1Bg2row0smtLD,X
+                STA.L !P1Bg2row0smtRD,X
+                STA.L !P1Bg2row0smtRU,X
                 LDX.B refillSaveX
                 RTS
 
@@ -24308,22 +24320,22 @@ FetchConvertMetatileRowBg2Mod:
                 LDA.B [Bg2tileVisualPtr],Y
                 LDX.B tmp34
                 ORA.W tileAttrOrBg2
-                STA.W P1Bg2row0smtLU,X
+                STA.L !P1Bg2row0smtLU,X
                 INY
                 INY
                 LDA.B [Bg2tileVisualPtr],Y
                 ORA.W tileAttrOrBg2
-                STA.W P1Bg2row0smtRU,X
+                STA.L !P1Bg2row0smtRU,X
                 INY
                 INY
                 LDA.B [Bg2tileVisualPtr],Y
                 ORA.W tileAttrOrBg2
-                STA.W P1Bg2row0smtLD,X
+                STA.L !P1Bg2row0smtLD,X
                 INY
                 INY
                 LDA.B [Bg2tileVisualPtr],Y
                 ORA.W tileAttrOrBg2
-                STA.W P1Bg2row0smtRD,X
+                STA.L !P1Bg2row0smtRD,X
                 LDX.B refillSaveX
                 LDY.B refillSaveY
                 RTS
@@ -24335,10 +24347,12 @@ UploadTilemapRowBg2P1:
                 STA.W DMAP0
                 LDA.B #$18
                 STA.W BBAD0
+                ; LDA.B #$01                                  ;Change bank for modded uploads
+                ; STA.W A1B0
                 REP #$30
                 LDA.W P1Bg2rowDmaDest
                 STA.W VMADDL
-                LDA.W #$1895
+                LDA.W #$3A30
                 STA.W A1TL0
                 LDA.W #$0080
                 STA.W DASL0
@@ -24353,13 +24367,15 @@ UploadTilemapRowBg2P1:
                 ADC.W #$0200
 
                 STA.W VMADDL
-                LDA.W #$1895
+                LDA.W #$3A30
                 STA.W A1TL0
                 LDA.W #$0080
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
                 STA.W MDMAEN
+                ; LDA.B #$00
+                ; STA.W A1B0                                  ;Reset in case other code doesnt
                 REP #$30
                 RTL
 
@@ -24371,11 +24387,12 @@ UploadTilemapColumnBg2P1:
                 STA.W DMAP0
                 LDA.B #$18
                 STA.W BBAD0
-
+                ; LDA.B #$01                                  ;Change bank for modded uploads
+                ; STA.W A1B0
                 REP #$30
                 LDA.W P1Bg2colDmaDest
                 STA.W VMADDL
-                LDA.W #$1815
+                LDA.W #$39D8
                 STA.W A1TL0
                 LDA.W #$0020
                 STA.W DASL0
@@ -24389,7 +24406,7 @@ UploadTilemapColumnBg2P1:
                 LDA.W P1Bg2colDmaDest
                 INC A
                 STA.W VMADDL
-                LDA.W #$1835
+                LDA.W #$39DA
                 STA.W A1TL0
                 LDA.W #$0020
                 STA.W DASL0
@@ -24402,7 +24419,7 @@ UploadTilemapColumnBg2P1:
                 CLC
                 ADC.W #$0200
                 STA.W VMADDL
-                LDA.W #$1815
+                LDA.W #$39D8
                 STA.W A1TL0
                 LDA.W #$0020
                 STA.W DASL0
@@ -24415,7 +24432,7 @@ UploadTilemapColumnBg2P1:
                 CLC
                 ADC.W #$0201
                 STA.W VMADDL
-                LDA.W #$1835
+                LDA.W #$39D8
                 STA.W A1TL0
                 LDA.W #$0020
                 STA.W DASL0
@@ -24425,6 +24442,8 @@ UploadTilemapColumnBg2P1:
 
                 LDA.B #$80
                 STA.W VMAIN
+                ; LDA.B #$00
+                ; STA.W A1B0                                  ;Reset in case other code doesnt
                 REP #$30
                 RTL
 

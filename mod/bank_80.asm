@@ -1064,7 +1064,7 @@ MainGameLoop:
 
          .loop: LDA.W vblankCmd                                 ;80809E|800333   ; poll vblankCmd (wait for NMI to consume)
                 BNE .loop                                       ;8080A1|80809E
-                JSR.W input_808515                              ;8080A3|808515
+                JSR.W input_808515                              ;8080A3|808515   ; Touches camY
                 JSR.W sub_80E02D                                ;8080A6|80E02D
                 JSR.W BuildSpriteOam                            ;8080A9|80E0B7
                 JSR.W SetupVramGpDmaCh5_GfxSet                  ;8080AC|80E860
@@ -1073,7 +1073,7 @@ MainGameLoop:
                 JSR.W WaitVBlankCmd                             ;8080B5|808145
                 JSL.L input_81822C                              ;8080B8|81822C
                 JSR.W sub_80A449                                ;8080BC|80A449
-                JSR.W sub_8085C2                                ;8080BF|8085C2
+                JSR.W sub_8085C2                                ;8080BF|8085C2  ; Touches camY
                 JSR.W sub_80E032                                ;8080C2|80E032
                 JSR.W BuildSpriteOam                            ;8080C5|80E0B7
                 JSR.W SetupVramGpDmaCh5_Frame                   ;8080C8|80E885
@@ -6519,6 +6519,8 @@ ComputeCameras:
                 LDA.W camMaxY                                  ;809EAA|8019A5
 
              +: STA.B playerCamY                               ;809EAD|000046   ; playerCamY = clamp(followObjY-(224-hudYOffset)/2, 0, camMaxY)
+                JSL.L moduloCamY
+
                 LDA.W parallaxScaleX                           ;809EAF|801A06
                 STA.B mulMultiplicand                          ;809EB2|0000AC
                 LDA.B playerCamX                               ;809EB4|000044
@@ -12698,6 +12700,7 @@ sub_80C124:
                 CLC                                            ;80C145|
                 ADC.B playerCamY                               ;80C146|000046
                 STA.B playerCamY                               ;80C148|000046
+                JSL.L moduloCamY
                 JSR.W sub_80C74B                               ;80C14A|80C74B
 
          .exit: RTS                                            ;80C14D|
@@ -12729,6 +12732,7 @@ sub_80C14E:
                 SEC                                            ;80C16D|
                 SBC.B tmp32                              ;80C16E|000032
                 STA.B playerCamY                               ;80C170|000046
+                JSL.L moduloCamY
                 JSR.W sub_80C78B                               ;80C172|80C78B
 
          .exit: RTS                                            ;80C175|
@@ -23198,6 +23202,8 @@ RefillColumnLeftMod:
 
          .exit: RTL                                            ;INSERT|
 
+
+;BAD BAD BAD
 RefillRowDownMod:
                 LDA.B playerCamY                                ;INSERT| ;load camera
                 LSR A                                           ;INSERT| ;devide by 8 to get tile count
@@ -23209,21 +23215,40 @@ RefillRowDownMod:
                 ORA.W #$E000                                    ;INSERT|
                                                                 ;INSERT|
              +: STA.W refillRowTileY                            ;INSERT|
-                LDA.B playerCamY                                ;INSERT|
-                AND.W #$0008                                    ;INSERT|
+                LDA.B snapCamY                                  ;INSERT|
+                PHA
+                BIT.W #$0008                                    ;INSERT|
                 BEQ .firstHalf                                  ;INSERT|
                                                                 ;INSERT|
                                                                 ;INSERT|
+                CMP.W #$0080                                    ;INSERT| ;if camera goes below 0x80, we need to jump back to the top.       
+                BCS .jumpUp                                     ;INSERT|
+                
                 JSR.W GetRowStageXMod
 
-                LDA.W refillRowTileY                            ;INSERT|
+                LDA.W refillRowTileY                            ;INSERT| ;C
                 CLC                                             ;INSERT|
                 ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$000E                                    ;INSERT|
+                LDA.W #$000E                                   ;INSERT|
+                PHX ; X is the same for the second update. 
                 JSR.W BuildTilemapRowMod                        ;INSERT|
-                LDA.W #$0040                                    ;INSERT|
+                PLX
+                PLA
+                CMP.W #$0020
+                BCC .skip
+                
+                LDA.W #$0080
+                STA.W tmp34
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC
+                ADC.W #$000A                                    ;INSERT|
+                TAY
+                LDA.W #$FFFE
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+
+         .skip: LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod                       ;INSERT|
                 JMP.W scanBoxPrepVerticalMod_down               ;INSERT|
 
@@ -23468,15 +23493,17 @@ FetchConvertMetatileColMod:
                 RTS                                  
 
 
-
+; INPORTANT:
+; A = row offset for screen
+; X and Y = world coordinates for loading
 BuildTilemapRowMod:
                 PHA                                                                            
-                TXA                                      
+                TXA                                      ; devide by 2, but perserve negative flag
                 ASL A                                    
                 TXA                                      
                 ROR A                                    
                 TAX                                      
-                TYA                                      
+                TYA                                      ; devide by 2, but perserve negative flag
                 ASL A                                    
                 TYA                                      
                 ROR A                                    
@@ -24517,6 +24544,34 @@ scanBoxPrepVerticalMod:
 
                 JSL.L Far_ScanAllPlacementsInBox
                 RTL
+
+; A = playerCamY
+; Function to perform modulo operation on playerCamY for the 18 ring
+; Stores snapCamY = playerCamY modulo 0x120 
+
+; We will need to get a bit creative as SNES does not support a 16 bit divisor
+moduloCamY:
+    PHA     ;Save original camera val for the sub-metatile bits.
+    LSR : LSR : LSR : LSR
+    STA.W WRDIVL
+    
+    SEP #$20
+    LDA #$12
+    STA.B WRDIVB
+
+    NOP : NOP : NOP : NOP
+    NOP : NOP : NOP : NOP
+    
+    REP #$20
+    LDA.W RDMPYL ; remainder
+    ASL : ASL : ASL : ASL
+    STA.W tmp32
+    PLA
+    AND.W #$000F
+    ORA.W tmp32     ;Add the sub-metatile bits back in
+    STA.W snapCamY
+    RTL
+
 
 
 ; ---- end of bank $81 region A.  Bank-$81 free space is $81ED00-$81FFFF ----

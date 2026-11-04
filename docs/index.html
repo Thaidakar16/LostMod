@@ -206,6 +206,18 @@ async function loadShips() {
     option.textContent = `${ship.week}, version ${ship.version}: ${ship.notes}`;
     shipSelect.appendChild(option);
   }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const targetShip = urlParams.get("ship");
+  if (targetShip) {
+    //make sure it is a real ship
+    const matchingOption = Array.from(shipSelect.options).some(opt => opt.value === targetShip);
+    if (matchingOption) {
+        shipSelect.value = targetShip;
+
+        shipSelect.onchange();
+    }
+  }
 }
 
 function figure(src, label) {

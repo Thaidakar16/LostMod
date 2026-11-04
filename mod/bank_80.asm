@@ -6521,7 +6521,6 @@ ComputeCameras:
                 LDA.W camMaxY                                  ;809EAA|8019A5
 
              +: STA.B playerCamY                               ;809EAD|000046   ; playerCamY = clamp(followObjY-(224-hudYOffset)/2, 0, camMaxY)
-                JSL.L moduloCamY
 
                 LDA.W parallaxScaleX                           ;809EAF|801A06
                 STA.B mulMultiplicand                          ;809EB2|0000AC
@@ -12308,6 +12307,7 @@ SnapshotCameras:
                 BIT.W #$0001
                 BEQ .original
 
+                JSL.L moduloCamY
                 LDA.L snapCamY
                 BRA +
 
@@ -12700,7 +12700,6 @@ sub_80C124:
                 CLC                                            ;80C145|
                 ADC.B playerCamY                               ;80C146|000046
                 STA.B playerCamY                               ;80C148|000046
-                JSL.L moduloCamY
                 JSR.W sub_80C74B                               ;80C14A|80C74B
 
          .exit: RTS                                            ;80C14D|
@@ -12732,7 +12731,6 @@ sub_80C14E:
                 SEC                                            ;80C16D|
                 SBC.B tmp32                              ;80C16E|000032
                 STA.B playerCamY                               ;80C170|000046
-                JSL.L moduloCamY
                 JSR.W sub_80C78B                               ;80C172|80C78B
 
          .exit: RTS                                            ;80C175|
@@ -12774,7 +12772,7 @@ sub_80C14E:
 
 RefillTilemapOnScroll:
 
-              
+                JSL.L moduloCamY
                 ;Vertical refill
                 LDA.W refillLastCamY                           ;80C176|8016AB   
                 AND.W #$FFF8                                   ;80C179|         
@@ -24667,7 +24665,7 @@ moduloCamY:
     STA.W WRDIVL
     
     SEP #$20
-    LDA #$90
+    LDA #$09
     STA.B WRDIVB
 
     NOP : NOP : NOP : NOP

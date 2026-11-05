@@ -12308,13 +12308,14 @@ loc_80BF38:
 SnapshotCameras:
                 LDA.B playerCamX                          ;80BFBB|000044
                 STA.W bg1CamX                                  ;80BFBD|8016B5
+                
                 LDA.W modFlags
                 BIT.W #$0001
                 BEQ .original
 
-                JSL.L moduloCamY ;FIX
-                LDA.L snapCamY
-                BRA +
+                ; JSL.L moduloCamY
+                ; LDA.L snapCamY
+                ; BRA +
 
      .original: LDA.B playerCamY                               ;80BFC0|000046
                 SEC                                            ;80BFC2|
@@ -23191,7 +23192,6 @@ RefillColumnLeftMod:
          .exit: RTS                                            ;INSERT|
 
 
-;BAD BAD BAD
 RefillRowDownMod:
                 LDA.B playerCamY                                ;INSERT| ;load camera
                 LSR A                                           ;INSERT| ;devide by 8 to get tile count
@@ -23450,9 +23450,10 @@ BuildTilemapColMod:
                 CLC
                 ADC.W colDmaVramDest0
                 STA.W colDmaVramDest0
-                LDA.W #$0040
-                SEC             
-                SBC.B tmp32
+                ; LDA.W #$0040
+                ; SEC             
+                ; SBC.B tmp32
+                LDA.W tmp32
                 STA.W colDmaLen0
                 LDA.W #$001C    
                 SEC             
@@ -23818,10 +23819,9 @@ UploadTilemapColumnP1:
                 
                 REP #$30                                 
                 LDA.W colDmaLen1
-                ; BEQ +
-                BRA +
+                BEQ +
 
-                LDA.W #$38E2 ;this is wrong
+                LDA.W #$38E2 ;this (probably) is wrong
                 STA.W A1TL0                              
                 LDA.W colDmaLen1                             
                 STA.W DASL0                              
@@ -23831,9 +23831,12 @@ UploadTilemapColumnP1:
             
 
                 REP #$30                                 
-             +: LDA.W P1colDmaDest1                       
+             +: LDA.W colDmaLen0
+                BEQ +
+
+                LDA.W P1colDmaDest1                       
                 STA.W VMADDL                             
-                LDA.W #$3818                             
+                LDA.W #$38E0                             
                 STA.W A1TL0                              
                 LDA.W colDmaLen0                             
                 STA.W DASL0                              
@@ -23841,11 +23844,12 @@ UploadTilemapColumnP1:
                 LDA.B #$01                               
                 STA.W MDMAEN                                
 
-                REP #$30
+            ;SECOND COLUMN
+             +: REP #$30
                 LDA.W P1colDmaDest0
                 INC                       
                 STA.W VMADDL                             
-                LDA.W #$38E2                             
+                LDA.W #$3904                             
                 STA.W A1TL0                              
                 LDA.W #$0024                             
                 STA.W DASL0                              
@@ -23857,10 +23861,10 @@ UploadTilemapColumnP1:
                 
                 REP #$30                                 
                 LDA.W colDmaLen1
-                ; BEQ +
-                BRA +
+                BEQ +
 
-                LDA.W #$38E4 ;this is wrong
+
+                LDA.W #$3906 ;this (probably) is wrong
                 STA.W A1TL0                              
                 LDA.W colDmaLen1                             
                 STA.W DASL0                              
@@ -23870,10 +23874,13 @@ UploadTilemapColumnP1:
             
 
                 REP #$30                                 
-             +: LDA.W P1colDmaDest1                       
+             +: LDA.W colDmaLen0
+                BEQ +
+             
+                LDA.W P1colDmaDest1                       
                 INC
                 STA.W VMADDL                             
-                LDA.W #$3818                             
+                LDA.W #$3904                             
                 STA.W A1TL0                              
                 LDA.W colDmaLen0                             
                 STA.W DASL0                              
@@ -23881,6 +23888,7 @@ UploadTilemapColumnP1:
                 LDA.B #$01                               
                 STA.W MDMAEN                                
 
+             +: SEP #$30
                 LDA.B #$80 
                 STA.W VMAIN
                 REP #$30                                 

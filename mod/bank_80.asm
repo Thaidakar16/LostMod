@@ -836,7 +836,8 @@ tempVertLo = $0564
 P1rowDmaDest0 = $16D5
 P1rowDmaDest1 = $16D9
 
-P1colDmaDest = $16CD
+P1colDmaDest0 = $16CD
+P1colDmaDest1 = $16D1
 
 P1Bg2colDmaDest        = $16E1
 P1Bg2rowDmaDest       = $16E9
@@ -851,6 +852,10 @@ expandNewEnd  = $006A   ; 2 bytes: return value (new data end offset)
 rowLenFlags = $7E3810
 snapCamY = $7E3812
 lastSnapCamY = $7E3814
+
+; i have no idea if this a safe value to use
+refillSnapRowTileY = $0566
+
 
 ; Corrected with hex semantics: bare +$NN values are decimal in ASAR, so the true bank-end alignment
 ; is found by using the hex offsets directly. This block spans $683 bytes, so to end at $7E3FFF we start at $7E397D.
@@ -12307,7 +12312,7 @@ SnapshotCameras:
                 BIT.W #$0001
                 BEQ .original
 
-                JSL.L moduloCamY
+                JSL.L moduloCamY ;FIX
                 LDA.L snapCamY
                 BRA +
 
@@ -12544,7 +12549,16 @@ ProcessTilemapEdits:
 ;    calls:     RefillTilemapOnScroll, RefillTilemapOnScrollBg2
 ; --------------------------------------------------------
 sub_80C080:
-                JSR.W RefillTilemapOnScroll                    ;80C080|80C176
+                LDA.W modFlags 
+                BIT.W #$0001
+                BEQ +
+                
+                JSL.L RefillTilemapOnScrollMod
+                JSL.L RefillTilemapOnScrollBg2Mod
+                RTS
+                
+
+             +: JSR.W RefillTilemapOnScroll                    ;80C080|80C176
                 JMP.W RefillTilemapOnScrollBg2                               ;80C083|80C7D9
 
 
@@ -12771,73 +12785,31 @@ sub_80C14E:
 ;  BuildTilemapColumn ($80C2E5 AND #$003F / $80C2F0 AND #$001F).
 
 RefillTilemapOnScroll:
-
-                JSL.L moduloCamY
                 ;Vertical refill
                 LDA.W refillLastCamY                           ;80C176|8016AB   
                 AND.W #$FFF8                                   ;80C179|         
-                STA.B tmp32                              ;80C17C|000032   
+                STA.B tmp32                                    ;80C17C|000032   
                 LDA.B playerCamY                               ;80C17E|000046   
                 AND.W #$FFF8                                   ;80C180|         
 
                 SEC                                            ;80C183|
-                SBC.B tmp32                              ;80C184|000032   ; A = new snapped camY - old snapped camY: 0 = same row, nonzero = crossed at least one row
+                SBC.B tmp32                                    ;80C184|000032   ; A = new snapped camY - old snapped camY: 0 = same row, nonzero = crossed at least one row
                 BEQ .refillX                                   ;80C186|80C192   ; no vertical crossing -> skip straight to the horizontal check
-                BPL .goDown                                          ;80C188|80C18F   ; positive delta = camera moved DOWN -> refill the row revealed at the bottom
+                BPL .goDown                                    ;80C188|80C18F   ; positive delta = camera moved DOWN -> refill the row revealed at the bottom
                 
-                LDA.W modFlags
-                BIT.W #$0001
-                BEQ .upOrig
-                JSL.L RefillRowUpMod
-                BRA .refillX
-       .upOrig: JSR.W RefillRowUp                              ;80C18A|80C269   ; negative delta = camera moved UP -> refill the row revealed at the top
+                JSR.W RefillRowUp                              ;80C18A|80C269   ; negative delta = camera moved UP -> refill the row revealed at the top
                 BRA .refillX                                   ;80C18D|80C192
 
-
-       .goDown: LDA.W modFlags
-                BIT.W #$0001
-                BEQ .downOrig
-                JSL.L RefillRowDownMod
-                BRA .refillX
-     .downOrig: JSR.W RefillRowDown                            ;80C18F|80C20C
-
+       .goDown: JSR.W RefillRowDown                            ;80C18F|80C20C
 
                 ;Horizontal refill
-
-                ; Mod check:
-      .refillX: LDA.W modFlags                                 ;INSERT|         ; check to see if the mod is enabled
-                BIT.W #$0001                                   ;INSERT|
-                BEQ .originalX                                 ;INSERT|
-
-
-                ; modded logic:                                                 ; if it is, perform modded logic.
-                LDA.W refillLastCamX                           ;INSERT|         ; load the last camera X position
-                AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
-                STA.B tmp32                              ;INSERT|         ; store to tmp var for subtraction
-                LDA.B playerCamX                               ;INSERT|         ; load the current camera X position
-                AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
-                SEC                                            ;INSERT|         ; set carry for subtraction
-                SBC.B tmp32                              ;INSERT|         ; subtract the floored values: 
-
-                BEQ .updateLastCam                             ;INSERT|         ; if the difference is zero, no horizontal movement occurred, so skip the refill logic
-
-                BPL +                                          ;INSERT|         ; if the difference is positive, the camera moved right
-
-                JSL.L RefillColumnLeftMod                      ;INSERT|         ; otherwise, the camera moved left, so refill the left column
-                BRA .updateLastCam                             ;INSERT|         ; after handling the refill, update the last camera position
-
-             +: JSL.L RefillColumnRightMod                     ;INSERT|         ;
-                BRA .updateLastCam                             ;INSERT|         ; after handling the refill, update the last camera position
-
-
-                ; Original logic:                                               ; if the mod is not active, fall back to the original logic
-    .originalX: LDA.W refillLastCamX                           ;80C192|8016A9   ; load the last camera X position
+      .refillX: LDA.W refillLastCamX                           ;80C192|8016A9   ; load the last camera X position
                 AND.W #$FFF0                                   ;80C195|         ; align to the metatile boundary
-                STA.B tmp32                              ;80C198|000032   ; store to tmp var for subtraction
+                STA.B tmp32                                    ;80C198|000032   ; store to tmp var for subtraction
                 LDA.B playerCamX                               ;80C19A|000044   ; load the current camera X position
                 AND.W #$FFF0                                   ;80C19C|         ; align to the metatile boundary
                 SEC                                            ;80C19F|         ; set carry flag for subtraction
-                SBC.B tmp32                              ;80C1A0|000032   ; subract the floored values: 
+                SBC.B tmp32                                    ;80C1A0|000032   ; subract the floored values: 
 
                 BEQ .updateLastCam                             ;80C1A2|80C1AE   ; if the difference is zero, no horizontal movement occurred, so skip the refill logic
                 
@@ -12850,12 +12822,11 @@ RefillTilemapOnScroll:
 
 
                 ; update the last camera X position for the next frame's comparison
-.updateLastCam: LDA.B playerCamX                               ;80C1AE|000044   ; load the current camera X position
+    .updateLastCam: 
+                LDA.B playerCamX                               ;80C1AE|000044   ; load the current camera X position
                 STA.W refillLastCamX                           ;80C1B0|8016A9   ; and store it as the last camera X position for the next frame's comparison
                 LDA.B playerCamY                               ;80C1B3|000046   ; load the current camera Y position
                 STA.W refillLastCamY                           ;80C1B5|8016AB   ; and store it as the last camera Y position for the next frame's comparison
-                LDA.L snapCamY
-                STA.L lastSnapCamY
                 RTS                                            ;80C1B8|
 
 
@@ -13097,6 +13068,7 @@ BuildTilemapCol:
                 STA.B tmp34                           ;80C2D6|000034
                 CMP.W #$0040                                   ;80C2D8|         ; column loop runs 16 metatile-rows ($34: 0,4,..,3C; ends at #$0040)
                 BCC .loop                                      ;80C2DB|80C2CC
+                
                 LDY.W tilemapBaseLo                            ;80C2DD|8019EA   ; --- from here: figure out WHERE in VRAM this column lands ---
                 PLA                                            ;80C2E0|         ; restore the signed col offset (the earlier PHA)
                 CLC                                            ;80C2E1|
@@ -13914,9 +13886,7 @@ loc_80C7D8:
 ; --------------------------------------------------------
 RefillTilemapOnScrollBg2:
                 LDA.W ram_1A00                                 ;80C7D9|801A00
-                BPL +                                          ;INSERT|         ; was BMI .exit, which is now out of branch range
-                RTS                                            ;INSERT|
-             +:
+                BMI .exit                                      
 
                 ;Vertical refill
                 LDA.W refillLastBg2CamYSrc                                 ;80C7DE|8016AF
@@ -13929,53 +13899,17 @@ RefillTilemapOnScrollBg2:
                 BEQ .refillX                                   ;80C7EF|80C7FB   ; no vertical crossing -> horizontal check
                 BPL .goDown                                    ;80C7F1|80C7F8   ; positive delta = camera moved DOWN
 
-                LDA.W modFlags
-                BIT.W #$0001
-                BEQ .upOrig
-                JSL.L RefillRowUpBg2Mod
-                BRA .refillX
-       .upOrig: JSR.W RefillRowUpBg2                               ;80C7F3|80C8CB
+
+                JSR.W RefillRowUpBg2                               ;80C7F3|80C8CB
                 BRA .refillX                                   ;80C7F6|80C7FB
 
 
-       .goDown: LDA.W modFlags
-                BIT.W #$0001
-                BEQ .downOrig
-                JSL.L RefillRowDownBg2Mod
-                BRA .refillX
-     .downOrig: JSR.W RefillRowDownBg2                               ;80C7F8|80C870
+       .goDown: JSR.W RefillRowDownBg2                               ;80C7F8|80C870
 
 
                 ;Horizontal refill
 
-                ; Mod check:
-      .refillX: LDA.W modFlags                                 ;INSERT|         ; check to see if the mod is enabled
-                BIT.W #$0001                                   ;INSERT|
-                BEQ .originalX                                 ;INSERT|
-
-
-                ; modded logic:
-                LDA.W refillLastBg2CamXSrc                     ;INSERT|         ; last camera X position
-                AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
-                STA.B tmp32                                    ;INSERT|
-                LDA.W bg2CamXSrc                               ;INSERT|         ; current camera X position
-                AND.W #$FFF8                                   ;INSERT|
-                SEC                                            ;INSERT|
-                SBC.B tmp32                                    ;INSERT|
-
-                BEQ .updateLastCam                             ;INSERT|         ; no horizontal movement
-
-                BPL +                                          ;INSERT|         ; positive = camera moved right
-
-                JSL.L RefillColumnLeftBg2Mod                   ;INSERT|         ; camera moved left
-                BRA .updateLastCam                             ;INSERT|
-
-             +: JSL.L RefillColumnRightBg2Mod                  ;INSERT|
-                BRA .updateLastCam                             ;INSERT|
-
-
-                ; Original logic:
-    .originalX: LDA.W refillLastBg2CamXSrc                                 ;80C7FB|8016AD
+      .refillX: LDA.W refillLastBg2CamXSrc                                 ;80C7FB|8016AD
                 AND.W #$FFF0                                   ;80C7FE|
                 STA.B tmp32                              ;80C801|000032
                 LDA.W bg2CamXSrc                               ;80C803|8016A5
@@ -13993,7 +13927,8 @@ RefillTilemapOnScrollBg2:
 
              +: JSR.W RefillColumnRightBg2                               ;80C815|80C825
 
-.updateLastCam: LDA.W bg2CamXSrc                               ;80C818|8016A5
+    .updateLastCam: 
+                LDA.W bg2CamXSrc                               ;80C818|8016A5
                 STA.W refillLastBg2CamXSrc                                 ;80C81B|8016AD
                 LDA.W bg2CamYSrc                               ;80C81E|8016A7
                 STA.W refillLastBg2CamYSrc                                 ;80C821|8016AF
@@ -23032,18 +22967,25 @@ FillTilemapFullMod:
                 LSR A                                     
                 LSR A                                     
                 AND.W #$FFFE                              
-          
                 STA.W refillColTileX                      
-                TAX                                       
+                TAX    
+
                 LDA.B playerCamY                          
                 STA.W refillLastCamY                      
                 LSR A                                     
                 LSR A                                     
                 LSR A                                     
                 AND.W #$FFFE                              
-             
                 STA.W refillRowTileY                      
                 TAY                                       
+                
+                LDA.B snapCamY                          
+                STA.W lastSnapCamY                      
+                LSR A                                     
+                LSR A                                     
+                LSR A                                     
+                AND.W #$FFFE                              
+                STA.W refillSnapRowTileY 
                 LDA.W gameModeFlags                       
                 BIT.W #$000A                              
                 BNE .exit                                 
@@ -23080,15 +23022,60 @@ FillTilemapFullMod:
          .exit: RTL                                       
 
 
-; MODDED REFILL FUNCTIONS:
+RefillTilemapOnScrollMod:
+                
+                JSL.L moduloCamY
+                ;Vertical refill
+                LDA.W refillLastCamY 
+                AND.W #$FFF8         
+                STA.B tmp32          
+                LDA.B playerCamY     
+                AND.W #$FFF8         
+
+                SEC                  
+                SBC.B tmp32          
+                BEQ .refillX         
+                BPL .goDown          
+
+                JSR.W RefillRowUpMod
+                BRA .refillX
+
+       .goDown: JSR.W RefillRowDownMod
+
+
+                ;Horizontal refill
+      .refillX: LDA.W refillLastCamX                           ;INSERT|         ; load the last camera X position
+                AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
+                STA.B tmp32                                    ;INSERT|         ; store to tmp var for subtraction
+                LDA.B playerCamX                               ;INSERT|         ; load the current camera X position
+                AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
+                SEC                                            ;INSERT|         ; set carry for subtraction
+                SBC.B tmp32                                    ;INSERT|         ; subtract the floored values: 
+
+                BEQ .updateLastCam                             ;INSERT|         ; if the difference is zero, no horizontal movement occurred, so skip the refill logic
+
+                BPL +                                          ;INSERT|         ; if the difference is positive, the camera moved right
+
+                JSR.W RefillColumnLeftMod                      ;INSERT|         ; otherwise, the camera moved left, so refill the left column
+                BRA .updateLastCam                             ;INSERT|         ; after handling the refill, update the last camera position
+
+             +: JSR.W RefillColumnRightMod                     ;INSERT|         ;
+
+                ; update the last camera X position for the next frame's comparison
+.updateLastCam: LDA.B playerCamX                                 ; load the current camera X position
+                STA.W refillLastCamX                             ; and store it as the last camera X position for the next frame's comparison
+                LDA.B playerCamY                                 ; load the current camera Y position
+                STA.W refillLastCamY                             ; and store it as the last camera Y position for the next frame's comparison
+                LDA.L snapCamY
+                STA.L lastSnapCamY
+                RTL                                            
+
 
 RefillColumnRightMod:
                 LDA.B playerCamX                               ;INSERT|
                 LSR A                                          ;INSERT|
                 LSR A                                          ;INSERT|
                 LSR A                                          ;INSERT|
-
-
                 AND.W #$FFFE                                   ;INSERT|
                 LDX.B playerCamX                               ;INSERT|
                 BPL +                                          ;INSERT|
@@ -23098,7 +23085,7 @@ RefillColumnRightMod:
 
                 LDA.B playerCamX                               ;INSERT|
                 AND.W #$0008                                   ;INSERT|
-                BEQ .firstHalf                                 ;INSERT|
+                BEQ .secondHalf                                 ;INSERT|
 
 
                 LDA.W refillColTileX                           ;INSERT|
@@ -23120,7 +23107,7 @@ RefillColumnRightMod:
                 JMP.W scanBoxPrepHorizontalMod_right           ;INSERT|
 
 
-    .firstHalf: LDA.B playerCamX                               ;INSERT|
+   .secondHalf: LDA.B playerCamX                               ;INSERT|
                 SEC                                            ;INSERT|
                 SBC.W refillLastCamX                           ;INSERT|
                 CMP.W #$0009                                   ;INSERT|
@@ -23130,6 +23117,7 @@ RefillColumnRightMod:
                 CLC                                            ;INSERT|
                 ADC.W #$0020                                   ;INSERT|
                 TAX                                            ;INSERT|
+
                 LDY.W refillRowTileY                           ;INSERT|
                 LDA.B playerCamY                               ;INSERT|
                 AND.W #$0008                                   ;INSERT|
@@ -23145,7 +23133,7 @@ RefillColumnRightMod:
                 JMP.W scanBoxPrepHorizontalMod_right           ;INSERT|
 
 
-         .exit: RTL                                            ;INSERT|
+         .exit: RTS                                           ;INSERT|
 
 
 RefillColumnLeftMod:
@@ -23200,7 +23188,7 @@ RefillColumnLeftMod:
                 JMP.W scanBoxPrepHorizontalMod_left            ;INSERT|
 
 
-         .exit: RTL                                            ;INSERT|
+         .exit: RTS                                            ;INSERT|
 
 
 ;BAD BAD BAD
@@ -23216,6 +23204,12 @@ RefillRowDownMod:
                                                                 ;INSERT|
              +: STA.W refillRowTileY                            ;INSERT|
                 
+                LDA.L snapCamY                              
+                LSR A                                         
+                LSR A                                         
+                LSR A                                         
+                AND.W #$FFFE                                  
+                STA.W refillSnapRowTileY 
                 
                 LDA.L snapCamY                                  ;INSERT|
                 CMP.L lastSnapCamY                                      ;If the snapCam is smaller than the last one when we are scolling down, the only explanation is a snapback.
@@ -23347,6 +23341,14 @@ RefillRowUpMod:
                 ORA.W #$E000                                 
 
              +: STA.W refillRowTileY                          
+                
+                LDA.L snapCamY                              
+                LSR A                                         
+                LSR A                                         
+                LSR A                                         
+                AND.W #$FFFE                                  
+                STA.W refillSnapRowTileY                          
+
                 LDA.B playerCamY                              
                 AND.W #$0008                                  
                 BNE .skip                                     
@@ -23378,7 +23380,7 @@ RefillRowUpMod:
                 JMP.W scanBoxPrepVerticalMod_up
 
 
-         .exit: RTL                                           
+         .exit: RTS                                           
 
 GetRowStageXMod:    ;returns X = tile-x of the row window start
                 LDA.B playerCamX
@@ -23404,7 +23406,6 @@ GetRowStageXMod:    ;returns X = tile-x of the row window start
 
 
 BuildTilemapColMod:
-                PHY                                 
                 PHA                                 
                                                     
                 TXA                                 
@@ -23417,13 +23418,8 @@ BuildTilemapColMod:
                 TYA                                 
                 ROR A                               
                 TAY                                 
-                
-                AND.W #$0007
-                
-                ASL A
-                ASL A
-                STA.W refillStageStart
-                STA.B tmp34                         
+
+                STZ.B tmp34
 
          .loop: JSR.W FetchConvertMetatileColMod       
                 
@@ -23432,32 +23428,37 @@ BuildTilemapColMod:
                 CLC                                 
                 ADC.W #$0004                        
                 STA.B tmp34                         
-                CMP.W #$0020                        
+                CMP.W #$0024                        
                 BCC .loop                           
 
-                LDA.W refillStageStart
-                BEQ .skip
-                STZ.B tmp34
-
-        .loop2: JSR.W FetchConvertMetatileColMod
-
-                INY
-                LDA.B tmp34
-                CLC
-                ADC.W #$0004
-                STA.B tmp34
-                CMP.W refillStageStart
-                BCC .loop2
-
-         .skip: PLA                                 
-                PLY                                 
+                PLA                                                                  
                 CLC                                 
                 ADC.W refillColTileX                 
                 AND.W #$001F                         
                 CLC
                 ADC.W tilemapBaseLo
-                STA.W P1colDmaDest
-                RTS                   
+                STA.W P1colDmaDest0
+                STA.W colDmaVramDest1    ;top of col
+                LDY.W refillSnapRowTileY
+                LDA.B playerCamY                               ;INSERT|
+                AND.W #$0008                                   ;INSERT|
+                BNE +                                          ;INSERT|
+                DEY                                            ;INSERT|
+                DEY
+             +: STY.B tmp32
+                LDA.W data_Xtimes20,Y
+                CLC
+                ADC.W colDmaVramDest0
+                STA.W colDmaVramDest0
+                LDA.W #$0040
+                SEC             
+                SBC.B tmp32
+                STA.W colDmaLen0
+                LDA.W #$001C    
+                SEC             
+                SBC.W colDmaLen0
+                STA.W colDmaLen1
+                RTS
 
 FetchConvertMetatileColMod:
                 STX.B refillSaveX                    
@@ -23801,12 +23802,13 @@ UploadTilemapColumnP1:
                 STA.W DMAP0                              
                 LDA.B #$18                                             
                 STA.W BBAD0                              
+
                 REP #$30                                 
-                LDA.W P1colDmaDest                       
+                LDA.W P1colDmaDest0                       
                 STA.W VMADDL                             
                 LDA.W #$38E0                             
                 STA.W A1TL0                              
-                LDA.W #$0020                             
+                LDA.W #$0024                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$7E                               
@@ -23815,47 +23817,72 @@ UploadTilemapColumnP1:
                 STA.W MDMAEN                             
                 
                 REP #$30                                 
-                LDA.W P1colDmaDest                       
-                INC
-                STA.W VMADDL                             
-                LDA.W #$38E2                          
+                LDA.W colDmaLen1
+                ; BEQ +
+                BRA +
+
+                LDA.W #$38E2 ;this is wrong
                 STA.W A1TL0                              
-                LDA.W #$0020                             
+                LDA.W colDmaLen1                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$01                               
                 STA.W MDMAEN                             
-                
+            
+
                 REP #$30                                 
-                LDA.W P1colDmaDest                       
-                CLC
-                ADC.W #$0200
+             +: LDA.W P1colDmaDest1                       
                 STA.W VMADDL                             
-                LDA.W #$3810                             
+                LDA.W #$3818                             
                 STA.W A1TL0                              
-                LDA.W #$0020                             
+                LDA.W colDmaLen0                             
+                STA.W DASL0                              
+                SEP #$30
+                LDA.B #$01                               
+                STA.W MDMAEN                                
+
+                REP #$30
+                LDA.W P1colDmaDest0
+                INC                       
+                STA.W VMADDL                             
+                LDA.W #$38E2                             
+                STA.W A1TL0                              
+                LDA.W #$0024                             
                 STA.W DASL0                              
                 SEP #$30                                 
-                ; LDA.B #$01                               
-                ; STA.W MDMAEN                             
-
-                ; REP #$30                                 
-                ; LDA.W P1colDmaDest                       
-                ; CLC
-                ; ADC.W #$0201
-                ; STA.W VMADDL                             
-                ; LDA.W #$3812                             
-                ; STA.W A1TL0                              
-                ; LDA.W #$0020                             
-                ; STA.W DASL0                              
-                ; SEP #$30                                 
-                ; LDA.B #$01                               
-                ; STA.W MDMAEN                             
+                LDA.B #$7E                               
+                STA.W A1B0                               
+                LDA.B #$01                               
+                STA.W MDMAEN                             
                 
+                REP #$30                                 
+                LDA.W colDmaLen1
+                ; BEQ +
+                BRA +
+
+                LDA.W #$38E4 ;this is wrong
+                STA.W A1TL0                              
+                LDA.W colDmaLen1                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$01                               
+                STA.W MDMAEN                             
+            
+
+                REP #$30                                 
+             +: LDA.W P1colDmaDest1                       
+                INC
+                STA.W VMADDL                             
+                LDA.W #$3818                             
+                STA.W A1TL0                              
+                LDA.W colDmaLen0                             
+                STA.W DASL0                              
+                SEP #$30
+                LDA.B #$01                               
+                STA.W MDMAEN                                
+
                 LDA.B #$80 
                 STA.W VMAIN
-                ; LDA.B #$7E
-                ; STA.W A1B0                                  ;Reset in case other code doesnt
                 REP #$30                                 
                 RTL
 
@@ -23925,11 +23952,57 @@ FillTilemapFullBg2Mod:
                 INC A                                          ;80C6B6|
                 CMP.W #$0040                                   ;80C6B7|
                 BNE .loop2                                     ;80C6BA|80C6A7
-                RTL                                            ;80C6BC|
+                RTS                                            ;80C6BC|
 
 
+RefillTilemapOnScrollBg2Mod:
+                LDA.W ram_1A00                              
+                BMI .exit                                      ;INSERT|
 
-; MODDED BG2 REFILL FUNCTIONS (mirrors of the BG1 *Mod routines):
+                ;Vertical refill
+                LDA.W refillLastBg2CamYSrc                                 ;80C7DE|8016AF
+                AND.W #$FFF8                                   ;80C7E1|
+                STA.B tmp32                              ;80C7E4|000032
+                LDA.W bg2CamYSrc                               ;80C7E6|8016A7
+                AND.W #$FFF8                                   ;80C7E9|
+                SEC                                            ;80C7EC|
+                SBC.B tmp32                              ;80C7ED|000032
+                BEQ .refillX                                   ;80C7EF|80C7FB   ; no vertical crossing -> horizontal check
+                BPL .goDown                                    ;80C7F1|80C7F8   ; positive delta = camera moved DOWN
+
+                JSR.W RefillRowUpBg2Mod
+                BRA .refillX
+
+
+       .goDown: JSR.W RefillRowDownBg2Mod
+
+                ;Horizontal refill
+
+      .refillX: LDA.W refillLastBg2CamXSrc                     ;INSERT|         ; last camera X position
+                AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
+                STA.B tmp32                                    ;INSERT|
+                LDA.W bg2CamXSrc                               ;INSERT|         ; current camera X position
+                AND.W #$FFF8                                   ;INSERT|
+                SEC                                            ;INSERT|
+                SBC.B tmp32                                    ;INSERT|
+
+                BEQ .updateLastCam                             ;INSERT|         ; no horizontal movement
+
+                BPL +                                          ;INSERT|         ; positive = camera moved right
+
+                JSR.W RefillColumnLeftBg2Mod                   ;INSERT|         ; camera moved left
+                BRA .updateLastCam                             ;INSERT|
+
+             +: JSR.W RefillColumnRightBg2Mod                  ;INSERT|
+
+    .updateLastCam: 
+                LDA.W bg2CamXSrc                               ;80C818|8016A5
+                STA.W refillLastBg2CamXSrc                                 ;80C81B|8016AD
+                LDA.W bg2CamYSrc                               ;80C81E|8016A7
+                STA.W refillLastBg2CamYSrc                                 ;80C821|8016AF
+
+         .exit: RTL                                            ;80C824|
+
 
 RefillColumnRightBg2Mod:
                 LDA.W bg2CamXSrc                               ;INSERT|
@@ -23966,7 +24039,7 @@ RefillColumnRightBg2Mod:
                 JSR.W BuildTilemapColBg2Mod                    ;INSERT|
                 LDA.W #$0100                                   ;INSERT|
                 JSR.W SetPpuUpdateBitsMod;INSERT|
-                RTL
+                RTS
 
 
     .firstHalf: LDA.W bg2CamXSrc                               ;INSERT|
@@ -23991,10 +24064,9 @@ RefillColumnRightBg2Mod:
                 JSR.W BuildTilemapColBg2Mod                    ;INSERT|
                 LDA.W #$0100                                   ;INSERT|
                 JSR.W SetPpuUpdateBitsMod;INSERT|
-                RTL
+ 
 
-
-         .exit: RTL                                            ;INSERT|
+         .exit: RTS                                            ;INSERT|
 
 
 RefillColumnLeftBg2Mod:
@@ -24028,7 +24100,7 @@ RefillColumnLeftBg2Mod:
                 JSR.W BuildTilemapColBg2Mod                    ;INSERT|
                 LDA.W #$0100                                   ;INSERT|
                 JSR.W SetPpuUpdateBitsMod;INSERT|
-                RTL
+                RTS
 
 
     .firstHalf: LDA.W refillLastBg2CamXSrc                     ;INSERT|
@@ -24046,10 +24118,8 @@ RefillColumnLeftBg2Mod:
                 JSR.W BuildTilemapColBg2Mod                    ;INSERT|
                 LDA.W #$0100                                   ;INSERT|
                 JSR.W SetPpuUpdateBitsMod;INSERT|
-                RTL
 
-
-         .exit: RTL                                            ;INSERT|
+         .exit: RTS                                            ;INSERT|
 
 RefillRowDownBg2Mod:
                 LDA.W bg2CamYSrc                                ;INSERT| ;load camera
@@ -24077,7 +24147,7 @@ RefillRowDownBg2Mod:
                 JSR.W BuildTilemapRowBg2Mod                     ;INSERT|
                 LDA.W #$0400                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod;INSERT|
-                RTL
+                RTS
 
 
     .firstHalf: LDA.W bg2CamYSrc                                ;INSERT|
@@ -24094,10 +24164,10 @@ RefillRowDownBg2Mod:
                 JSR.W BuildTilemapRowBg2Mod                     ;INSERT|
                 LDA.W #$0400                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod;INSERT|
-                RTL
+                RTS
 
 
-         .exit: RTL                                             ;INSERT|
+         .exit: RTS                                             ;INSERT|
 
 RefillRowUpBg2Mod:
                 LDA.W bg2CamYSrc
@@ -24123,7 +24193,7 @@ RefillRowUpBg2Mod:
                 JSR.W BuildTilemapRowBg2Mod
                 LDA.W #$0400
                 JSR.W SetPpuUpdateBitsMod
-                RTL
+                RTS
 
 
          .skip: LDA.W refillLastBg2CamYSrc
@@ -24138,10 +24208,9 @@ RefillRowUpBg2Mod:
                 JSR.W BuildTilemapRowBg2Mod
                 LDA.W #$0400
                 JSR.W SetPpuUpdateBitsMod
-                RTL
 
 
-         .exit: RTL
+         .exit: RTS
 
 GetRowStageXBg2Mod:    ;returns X = tile-x of the row window start
                 LDA.W bg2CamXSrc
@@ -24617,7 +24686,7 @@ scanBoxPrepHorizontalMod:
                 STA.B tmp3A                                    
                 
                 JSL.L Far_ScanAllPlacementsInBox
-                RTL
+                RTS
 
 scanBoxPrepVerticalMod:
 
@@ -24652,7 +24721,7 @@ scanBoxPrepVerticalMod:
                 STA.B tmp36                             
 
                 JSL.L Far_ScanAllPlacementsInBox
-                RTL
+                RTS
 
 ; A = playerCamY
 ; Function to perform modulo operation on playerCamY for the 18 ring

@@ -216,6 +216,10 @@ async function loadShips() {
         shipSelect.value = targetShip;
 
         shipSelect.onchange();
+    } else if (targetShip === "latest") {
+        shipSelect.value = shipSelect.options[3].value;
+
+        shipSelect.onchange();
     }
   }
 }

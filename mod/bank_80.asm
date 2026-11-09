@@ -23463,9 +23463,16 @@ BuildTilemapColMod:
                 LDA.B playerCamY                               ;INSERT|
                 AND.W #$0008                                   ;INSERT|
                 BNE +                                          ;INSERT|
-                DEY                                            ;INSERT|
-                DEY
-             +: STY.B tmp32
+                TYA
+                DEC
+                DEC
+                ASL
+                TAY
+                BRA ++
+             +: TYA
+                ASL
+                TAY
+            ++: STY.B tmp32
                 LDA.W data_Xtimes20,Y
                 CLC
                 ADC.W P1colDmaDest0
@@ -23768,7 +23775,7 @@ UploadTilemapRowP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                STA.W MDMAEN                             
+                ;STA.W MDMAEN                             
                 REP #$30                                 
                 RTL
 
@@ -23782,7 +23789,7 @@ UploadTilemapRowP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                STA.W MDMAEN                             
+                ;STA.W MDMAEN                             
                 REP #$30                                 
 
                 LDA.W P1rowDmaDest1                      
@@ -23793,7 +23800,7 @@ UploadTilemapRowP1:
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$01                               
-                STA.W MDMAEN                             
+                ;STA.W MDMAEN                             
                 REP #$30                                 
                 RTL
 
@@ -23807,7 +23814,7 @@ UploadTilemapRowP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                STA.W MDMAEN                             
+                ;STA.W MDMAEN                             
                 REP #$30                                 
                 RTL
 
@@ -23834,32 +23841,32 @@ UploadTilemapColumnP1:
                 LDA.B #$01                               
                 STA.W MDMAEN                             
                 
-                REP #$30                                 
-                LDA.W colDmaLen1
-                BEQ +
+            ;     REP #$30                                 
+            ;     LDA.W colDmaLen1
+            ;     BEQ +
 
-                LDA.W #$38E2 ;this (probably) is wrong
-                STA.W A1TL0                              
-                LDA.W colDmaLen1                             
-                STA.W DASL0                              
-                SEP #$30                                 
-                LDA.B #$01                               
-                STA.W MDMAEN                             
+            ;     LDA.W #$38E2 ;this (probably) is wrong
+            ;     STA.W A1TL0                              
+            ;     LDA.W colDmaLen1                             
+            ;     STA.W DASL0                              
+            ;     SEP #$30                                 
+            ;     LDA.B #$01                               
+            ;     STA.W MDMAEN                             
             
 
-                REP #$30                                 
-             +: LDA.W colDmaLen0
-                BEQ +
+            ;     REP #$30                                 
+            ;  +: LDA.W colDmaLen0
+            ;     BEQ +
 
-                LDA.W P1colDmaDest1                       
-                STA.W VMADDL                             
-                LDA.W #$38E0                             
-                STA.W A1TL0                              
-                LDA.W colDmaLen0                             
-                STA.W DASL0                              
-                SEP #$30
-                LDA.B #$01                               
-                STA.W MDMAEN                                
+            ;     LDA.W P1colDmaDest1                       
+            ;     STA.W VMADDL                             
+            ;     LDA.W #$38E0                             
+            ;     STA.W A1TL0                              
+            ;     LDA.W colDmaLen0                             
+            ;     STA.W DASL0                              
+            ;     SEP #$30
+            ;     LDA.B #$01                               
+            ;     STA.W MDMAEN                                
 
             ;SECOND COLUMN
                 REP #$30
@@ -23876,34 +23883,34 @@ UploadTilemapColumnP1:
                 LDA.B #$01                               
                 STA.W MDMAEN                             
                 
-                REP #$30                                 
-                LDA.W colDmaLen1
-                BEQ +
+            ;     REP #$30                                 
+            ;     LDA.W colDmaLen1
+            ;     BEQ +
 
 
-                LDA.W #$3906 ;this (probably) is wrong
-                STA.W A1TL0                              
-                LDA.W colDmaLen1                             
-                STA.W DASL0                              
-                SEP #$30                                 
-                LDA.B #$01                               
-                STA.W MDMAEN                             
+            ;     LDA.W #$3906 ;this (probably) is wrong
+            ;     STA.W A1TL0                              
+            ;     LDA.W colDmaLen1                             
+            ;     STA.W DASL0                              
+            ;     SEP #$30                                 
+            ;     LDA.B #$01                               
+            ;     STA.W MDMAEN                             
             
 
-                REP #$30                                 
-             +: LDA.W colDmaLen0
-                BEQ +
+            ;     REP #$30                                 
+            ;  +: LDA.W colDmaLen0
+            ;     BEQ +
              
-                LDA.W P1colDmaDest1                       
-                INC
-                STA.W VMADDL                             
-                LDA.W #$3904                             
-                STA.W A1TL0                              
-                LDA.W colDmaLen0                             
-                STA.W DASL0                              
-                SEP #$30
-                LDA.B #$01                               
-                STA.W MDMAEN                                
+            ;     LDA.W P1colDmaDest1                       
+            ;     INC
+            ;     STA.W VMADDL                             
+            ;     LDA.W #$3904                             
+            ;     STA.W A1TL0                              
+            ;     LDA.W colDmaLen0                             
+            ;     STA.W DASL0                              
+            ;     SEP #$30
+            ;     LDA.B #$01                               
+            ;     STA.W MDMAEN                                
 
              +: SEP #$30
                 LDA.B #$80 
@@ -24631,8 +24638,6 @@ UploadTilemapRowBg2P1:
                 SEP #$30
                 LDA.B #$01
                 STA.W MDMAEN
-                ; LDA.B #$00
-                ; STA.W A1B0                                  ;Reset in case other code doesnt
                 REP #$30
                 RTL
 

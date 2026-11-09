@@ -23426,6 +23426,7 @@ GetRowStageXMod:    ;returns X = tile-x of the row window start
 
 
 BuildTilemapColMod:
+                PHY
                 PHA                                 
                                                     
                 TXA                                 
@@ -23459,25 +23460,22 @@ BuildTilemapColMod:
                 ADC.W tilemapBaseLo
                 STA.W P1colDmaDest0
                 STA.W P1colDmaDest1    ;top of col
-                LDY.W refillSnapRowTileY
-                LDA.B playerCamY                               ;INSERT|
-                AND.W #$0008                                   ;INSERT|
-                BNE +                                          ;INSERT|
-                TYA
-                DEC
-                DEC
-                ASL
+                PLA         
+                AND.W #$000F
+                ASL A       
+                STA.B tmp32 
                 TAY
-                BRA ++
-             +: TYA
-                ASL
-                TAY
-            ++: STY.B tmp32
-                LDA.W data_Xtimes20,Y
+            ++: LDA.W data_Xtimes20,Y
                 CLC
                 ADC.W P1colDmaDest0
                 STA.W P1colDmaDest0
-                LDA.B tmp32
+                
+                ; colDmaLen0 = 0x40 (screen height) - (y + lenth of visible screen)
+                ; colDmaLen0 = 0x40 - y - 24
+                ; colDmaLen0 = 0x1C - y
+                LDA.W #$001C    
+                SEC             
+                SBC.B tmp32
                 STA.W colDmaLen0
                 LDA.W #$001C    
                 SEC             
@@ -23841,32 +23839,32 @@ UploadTilemapColumnP1:
                 LDA.B #$01                               
                 STA.W MDMAEN                             
                 
-            ;     REP #$30                                 
-            ;     LDA.W colDmaLen1
-            ;     BEQ +
+                REP #$30                                 
+                LDA.W colDmaLen0
+                BEQ +
 
-            ;     LDA.W #$38E2 ;this (probably) is wrong
-            ;     STA.W A1TL0                              
-            ;     LDA.W colDmaLen1                             
-            ;     STA.W DASL0                              
-            ;     SEP #$30                                 
-            ;     LDA.B #$01                               
-            ;     STA.W MDMAEN                             
+                LDA.W #$38E2 ;this (probably) is wrong
+                STA.W A1TL0                              
+                LDA.W colDmaLen0                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$01                               
+                STA.W MDMAEN                             
             
 
-            ;     REP #$30                                 
-            ;  +: LDA.W colDmaLen0
-            ;     BEQ +
+                REP #$30                                 
+             +: LDA.W colDmaLen1
+                BEQ +
 
-            ;     LDA.W P1colDmaDest1                       
-            ;     STA.W VMADDL                             
-            ;     LDA.W #$38E0                             
-            ;     STA.W A1TL0                              
-            ;     LDA.W colDmaLen0                             
-            ;     STA.W DASL0                              
-            ;     SEP #$30
-            ;     LDA.B #$01                               
-            ;     STA.W MDMAEN                                
+                LDA.W P1colDmaDest1                       
+                STA.W VMADDL                             
+                LDA.W #$38E0                             
+                STA.W A1TL0                              
+                LDA.W colDmaLen1                             
+                STA.W DASL0                              
+                SEP #$30
+                LDA.B #$01                               
+                STA.W MDMAEN                                
 
             ;SECOND COLUMN
                 REP #$30
@@ -23883,34 +23881,34 @@ UploadTilemapColumnP1:
                 LDA.B #$01                               
                 STA.W MDMAEN                             
                 
-            ;     REP #$30                                 
-            ;     LDA.W colDmaLen1
-            ;     BEQ +
+                REP #$30                                 
+                LDA.W colDmaLen0
+                BEQ +
 
 
-            ;     LDA.W #$3906 ;this (probably) is wrong
-            ;     STA.W A1TL0                              
-            ;     LDA.W colDmaLen1                             
-            ;     STA.W DASL0                              
-            ;     SEP #$30                                 
-            ;     LDA.B #$01                               
-            ;     STA.W MDMAEN                             
+                LDA.W #$3906 ;this (probably) is wrong
+                STA.W A1TL0                              
+                LDA.W colDmaLen0                             
+                STA.W DASL0                              
+                SEP #$30                                 
+                LDA.B #$01                               
+                STA.W MDMAEN                             
             
 
-            ;     REP #$30                                 
-            ;  +: LDA.W colDmaLen0
-            ;     BEQ +
+                REP #$30                                 
+             +: LDA.W colDmaLen1
+                BEQ +
              
-            ;     LDA.W P1colDmaDest1                       
-            ;     INC
-            ;     STA.W VMADDL                             
-            ;     LDA.W #$3904                             
-            ;     STA.W A1TL0                              
-            ;     LDA.W colDmaLen0                             
-            ;     STA.W DASL0                              
-            ;     SEP #$30
-            ;     LDA.B #$01                               
-            ;     STA.W MDMAEN                                
+                LDA.W P1colDmaDest1                       
+                INC
+                STA.W VMADDL                             
+                LDA.W #$3904                             
+                STA.W A1TL0                              
+                LDA.W colDmaLen1                             
+                STA.W DASL0                              
+                SEP #$30
+                LDA.B #$01                               
+                STA.W MDMAEN                                
 
              +: SEP #$30
                 LDA.B #$80 

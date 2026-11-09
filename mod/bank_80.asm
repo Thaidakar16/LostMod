@@ -12324,9 +12324,9 @@ SnapshotCameras:
                 BIT.W #$0001
                 BEQ .original
 
-                ; JSL.L moduloCamY
-                ; LDA.L snapCamY
-                ; BRA +
+                LDA.B playerCamY
+                JSL.L moduloCamY
+                BRA +
 
      .original: LDA.B playerCamY                               ;80BFC0|000046
                 SEC                                            ;80BFC2|
@@ -24810,23 +24810,19 @@ scanBoxPrepVerticalMod:
 
 ; We will need to get a bit creative as SNES does not support a 16 bit divisor
 moduloCamY:
+    PHA
     LSR : LSR : LSR : LSR
-    STA.W WRDIVL
-    
-    SEP #$20
-    LDA #$09
-    STA.B WRDIVB
-
-    NOP : NOP : NOP : NOP
-    NOP : NOP : NOP : NOP
-    
-    REP #$20
-    LDA.W RDMPYL ; remainder
+.loop:
+    CMP.W #$0009
+    BCC .done
+    SBC.W #$0009        ; carry is set here from the CMP
+    BRA .loop
+.done:
     ASL : ASL : ASL : ASL
     STA.W tmp32
-    LDA.W playerCamY
+    PLA
     AND.W #$000F
-    ORA.W tmp32     ;Add the sub-metatile bits back in
+    ORA.W tmp32
     RTL
 
 

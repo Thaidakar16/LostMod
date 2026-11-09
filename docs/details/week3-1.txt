@@ -1,0 +1,1 @@
+It may not seem like a lot, and that is because it is not that much visually. I somewhat fixed the horizontal scrolling for the main screen. It is still missing some things. This has been the hardest part of the mod so far as this requires very complicated logic.

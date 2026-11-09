@@ -63,5 +63,18 @@
         "caption": "Broken Scrolling"
       }
     ]
+  },
+  {
+    "id": "week3-1",
+    "week": "Week 3",
+    "version": 1,
+    "notes": "progress on fixing scrolling",
+    "details": "details/week3-1.txt",
+    "media": [
+      {
+        "mod": "media/week3-1.mp4",
+        "caption": "Less Broken Scrolling"
+      }
+    ]
   }
 ]

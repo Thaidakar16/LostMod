@@ -839,8 +839,11 @@ P1rowDmaDest1 = $16D9
 P1colDmaDest0 = $16CD
 P1colDmaDest1 = $16D1
 
-P1Bg2colDmaDest        = $16E1
-P1Bg2rowDmaDest       = $16E9
+P1Bg2rowDmaDest0       = $16E9
+
+P1Bg2colDmaDest0        = $16E1
+P1Bg2colDmaDest1        = $16E5
+
 
 expandSrcPtr  = $0060   ; 3 bytes: lo, hi, bank of source pointer
 expandDstPtr  = $0063   ; 3 bytes: lo, hi, bank of dest pointer
@@ -853,8 +856,12 @@ rowLenFlags = $7E3810
 snapCamY = $7E3812
 lastSnapCamY = $7E3814
 
-; i have no idea if this a safe value to use
+snapBg2CamYSrc = $7E3816
+lastSnapBg2CamYSrc = $7E3816
+
+; i have no idea if these are safe values to use
 refillSnapRowTileY = $0566
+refillSnapBg2RowTileY = $0568
 
 
 ; Corrected with hex semantics: bare +$NN values are decimal in ASAR, so the true bank-end alignment
@@ -6526,6 +6533,8 @@ ComputeCameras:
                 LDA.W camMaxY                                  ;809EAA|8019A5
 
              +: STA.B playerCamY                               ;809EAD|000046   ; playerCamY = clamp(followObjY-(224-hudYOffset)/2, 0, camMaxY)
+                JSL.L moduloCamY
+                STA.L snapCamY
 
                 LDA.W parallaxScaleX                           ;809EAF|801A06
                 STA.B mulMultiplicand                          ;809EB2|0000AC
@@ -6547,6 +6556,8 @@ ComputeCameras:
                 STA.W bg2CamYFrac                              ;809ED9|8016B3
                 LDA.B zp_B3                                    ;809EDC|0000B3
                 STA.W bg2CamYSrc                               ;809EDE|8016A7
+                JSL.L moduloCamY
+                STA.L snapBg2CamYSrc
                 RTS                                            ;809EE1|
 
 
@@ -13889,6 +13900,10 @@ RefillTilemapOnScrollBg2:
                 LDA.W ram_1A00                                 ;80C7D9|801A00
                 BMI .exit                                      
 
+                LDA.W bg2CamYSrc
+                JSL.L moduloCamY
+                STA.L snapBg2CamYSrc
+
                 ;Vertical refill
                 LDA.W refillLastBg2CamYSrc                                 ;80C7DE|8016AF
                 AND.W #$FFF8                                   ;80C7E1|
@@ -13933,6 +13948,8 @@ RefillTilemapOnScrollBg2:
                 STA.W refillLastBg2CamXSrc                                 ;80C81B|8016AD
                 LDA.W bg2CamYSrc                               ;80C81E|8016A7
                 STA.W refillLastBg2CamYSrc                                 ;80C821|8016AF
+                LDA.L snapBg2CamYSrc
+                STA.L lastSnapBg2CamYSrc
 
          .exit: RTS                                            ;80C824|
 
@@ -22987,6 +23004,7 @@ FillTilemapFullMod:
                 LSR A                                     
                 AND.W #$FFFE                              
                 STA.W refillSnapRowTileY 
+         
                 LDA.W gameModeFlags                       
                 BIT.W #$000A                              
                 BNE .exit                                 
@@ -23025,7 +23043,9 @@ FillTilemapFullMod:
 
 RefillTilemapOnScrollMod:
                 
+                LDA.W playerCamY
                 JSL.L moduloCamY
+                STA.L snapCamY
                 ;Vertical refill
                 LDA.W refillLastCamY 
                 AND.W #$FFF8         
@@ -23215,10 +23235,10 @@ RefillRowDownMod:
                 CMP.L lastSnapCamY                                      ;If the snapCam is smaller than the last one when we are scolling down, the only explanation is a snapback.
                 JMP .jumpUp                                     ;INSERT|
                 
-                BIT.W #$0008                                    ;INSERT|
+                AND.W #$0008                                    ;INSERT|
                 BEQ .secondHalf                                 ;INSERT|
                 
-                LDX.W refillColTileX
+                
                 JSR.W GetRowStageXMod
 
                 LDA.W refillRowTileY                            ;INSERT| 
@@ -23438,7 +23458,7 @@ BuildTilemapColMod:
                 CLC
                 ADC.W tilemapBaseLo
                 STA.W P1colDmaDest0
-                STA.W colDmaVramDest1    ;top of col
+                STA.W P1colDmaDest1    ;top of col
                 LDY.W refillSnapRowTileY
                 LDA.B playerCamY                               ;INSERT|
                 AND.W #$0008                                   ;INSERT|
@@ -23448,12 +23468,9 @@ BuildTilemapColMod:
              +: STY.B tmp32
                 LDA.W data_Xtimes20,Y
                 CLC
-                ADC.W colDmaVramDest0
-                STA.W colDmaVramDest0
-                ; LDA.W #$0040
-                ; SEC             
-                ; SBC.B tmp32
-                LDA.W tmp32
+                ADC.W P1colDmaDest0
+                STA.W P1colDmaDest0
+                LDA.B tmp32
                 STA.W colDmaLen0
                 LDA.W #$001C    
                 SEC             
@@ -23845,8 +23862,8 @@ UploadTilemapColumnP1:
                 STA.W MDMAEN                                
 
             ;SECOND COLUMN
-             +: REP #$30
-                LDA.W P1colDmaDest0
+                REP #$30
+             +: LDA.W P1colDmaDest0
                 INC                       
                 STA.W VMADDL                             
                 LDA.W #$3904                             
@@ -23912,6 +23929,14 @@ FillTilemapFullBg2Mod:
                 AND.W #$FFFE                                   ;80C66E|
                 STA.W refillBg2RowTileY                                 ;80C671|8016CB
                 TAY                                            ;80C674|
+                
+                LDA.L snapBg2CamYSrc
+                LSR A                                         
+                LSR A                                         
+                LSR A                                         
+                AND.W #$FFFE  
+                STA.W refillSnapBg2RowTileY
+
                 LDA.W gameModeFlags                            ;80C675|8019E3
                 BIT.W #$0004                                   ;80C678|
                 BNE .skip                                      ;80C67B|80C6A4
@@ -24017,8 +24042,6 @@ RefillColumnRightBg2Mod:
                 LSR A                                          ;INSERT|
                 LSR A                                          ;INSERT|
                 LSR A                                          ;INSERT|
-
-
                 AND.W #$FFFE                                   ;INSERT|
                 LDX.W bg2CamXSrc                               ;INSERT|
                 BPL +                                          ;INSERT|
@@ -24140,9 +24163,21 @@ RefillRowDownBg2Mod:
                 ORA.W #$E000                                    ;INSERT|
                                                                 ;INSERT|
              +: STA.W refillBg2RowTileY                         ;INSERT|
-                LDA.W bg2CamYSrc                                ;INSERT|
+                
+                
+                LDA.L snapBg2CamYSrc
+                LSR A                                         
+                LSR A                                         
+                LSR A                                         
+                AND.W #$FFFE  
+                STA.W refillSnapBg2RowTileY
+
+                LDA.L snapBg2CamYSrc
+                CMP.L lastSnapBg2CamYSrc
+                ; JMP .jumpUp
+
                 AND.W #$0008                                    ;INSERT|
-                BEQ .firstHalf                                  ;INSERT|
+                BEQ .secondHalf                                  ;INSERT|
                                                                 ;INSERT|
                                                                 ;INSERT|
                 JSR.W GetRowStageXBg2Mod
@@ -24158,7 +24193,7 @@ RefillRowDownBg2Mod:
                 RTS
 
 
-    .firstHalf: LDA.W bg2CamYSrc                                ;INSERT|
+   .secondHalf: LDA.W bg2CamYSrc                                ;INSERT|
                 SEC                                             ;INSERT|
                 SBC.W refillLastBg2CamYSrc                      ;INSERT|
                 CMP.W #$0009                                    ;INSERT|
@@ -24188,6 +24223,14 @@ RefillRowUpBg2Mod:
                 ORA.W #$E000
 
              +: STA.W refillBg2RowTileY
+
+                LDA.L snapBg2CamYSrc
+                LSR A                                         
+                LSR A                                         
+                LSR A                                         
+                AND.W #$FFFE  
+                STA.W refillSnapBg2RowTileY
+
                 LDA.W bg2CamYSrc
                 AND.W #$0008
                 BNE .skip
@@ -24244,7 +24287,6 @@ GetRowStageXBg2Mod:    ;returns X = tile-x of the row window start
 
 
 BuildTilemapColBg2Mod:
-                PHY
                 PHA
 
                 TXA
@@ -24258,12 +24300,8 @@ BuildTilemapColBg2Mod:
                 ROR A
                 TAY
 
-                AND.W #$0007
-
-                ASL A
-                ASL A
-                STA.W refillStageStart
-                STA.B tmp34
+ 
+                STZ.B tmp34
 
          .loop: JSR.W FetchConvertMetatileColBg2Mod
 
@@ -24272,31 +24310,39 @@ BuildTilemapColBg2Mod:
                 CLC
                 ADC.W #$0004
                 STA.B tmp34
-                CMP.W #$0020
+                CMP.W #$0024
                 BCC .loop
 
-                LDA.W refillStageStart
-                BEQ .skip
-                STZ.B tmp34
-
-        .loop2: JSR.W FetchConvertMetatileColBg2Mod
-
-                INY
-                LDA.B tmp34
-                CLC
-                ADC.W #$0004
-                STA.B tmp34
-                CMP.W refillStageStart
-                BCC .loop2
-
-         .skip: PLA
-                PLY
+ 
+                PLA
                 CLC
                 ADC.W refillBgCol2TileX
                 AND.W #$001F
                 CLC
                 ADC.W tilemapBaseBg2Lo
-                STA.W P1Bg2colDmaDest
+                STA.W P1Bg2colDmaDest0
+                STA.W P1Bg2colDmaDest1
+                LDY.W refillSnapBg2RowTileY
+                LDA.W playerCamY
+                LDA.W bg2CamYSrc
+                AND.W #$0008
+                BNE +
+                DEY
+                DEY
+             +: STY.B tmp32
+                LDA.W data_Xtimes20,Y
+                CLC
+                ADC.W P1Bg2colDmaDest0
+                STA.W P1Bg2colDmaDest0
+                LDA.B tmp32
+                STA.W Bg2colDmaLen0
+                LDA.W #$001C
+                SEC
+                SBC.W Bg2colDmaLen0
+                STA.W Bg2colDmaLen1
+                ;TEMP FIX
+                STZ.W Bg2colDmaLen0
+                STZ.W Bg2colDmaLen1
                 RTS
 
 FetchConvertMetatileColBg2Mod:
@@ -24454,7 +24500,7 @@ BuildTilemapRowBg2Mod:
                 LDA.W data_Xtimes20,Y     ; row * $20
                 CLC
                 ADC.W tilemapBaseBg2Lo    ; BG2 P1 subscreen base
-                STA.W P1Bg2rowDmaDest     ; one dest word, no len variables
+                STA.W P1Bg2rowDmaDest0     
                 RTS
 
 
@@ -24560,10 +24606,8 @@ UploadTilemapRowBg2P1:
                 STA.W DMAP0
                 LDA.B #$18
                 STA.W BBAD0
-                ; LDA.B #$01                                  ;Change bank for modded uploads
-                ; STA.W A1B0
                 REP #$30
-                LDA.W P1Bg2rowDmaDest
+                LDA.W P1Bg2rowDmaDest0
                 STA.W VMADDL
                 LDA.W #$3A30
                 STA.W A1TL0
@@ -24575,7 +24619,7 @@ UploadTilemapRowBg2P1:
                 LDA.B #$01
                 STA.W MDMAEN
                 REP #$30
-                LDA.W P1Bg2rowDmaDest
+                LDA.W P1Bg2rowDmaDest0
                 CLC
                 ADC.W #$0200
 
@@ -24600,14 +24644,13 @@ UploadTilemapColumnBg2P1:
                 STA.W DMAP0
                 LDA.B #$18
                 STA.W BBAD0
-                ; LDA.B #$01                                  ;Change bank for modded uploads
-                ; STA.W A1B0
+
                 REP #$30
-                LDA.W P1Bg2colDmaDest
+                LDA.W P1Bg2colDmaDest0
                 STA.W VMADDL
-                LDA.W #$39D8
+                LDA.W #$3AA8
                 STA.W A1TL0
-                LDA.W #$0020
+                LDA.W #$0024
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$7E
@@ -24616,47 +24659,77 @@ UploadTilemapColumnBg2P1:
                 STA.W MDMAEN
 
                 REP #$30
-                LDA.W P1Bg2colDmaDest
-                INC A
-                STA.W VMADDL
-                LDA.W #$39DA
+                LDA.W Bg2colDmaLen1
+                BEQ +
+
+                LDA.W #$3AAA ; this is (probably) wrong
                 STA.W A1TL0
-                LDA.W #$0020
+                LDA.W Bg2colDmaLen1
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
                 STA.W MDMAEN
 
                 REP #$30
-                LDA.W P1Bg2colDmaDest
-                CLC
-                ADC.W #$0200
+             +: LDA.W Bg2colDmaLen0
+                BEQ +
+
+                LDA.W P1Bg2colDmaDest1
                 STA.W VMADDL
-                LDA.W #$39D8
+                LDA.W #$3AA8
                 STA.W A1TL0
-                LDA.W #$0020
+                LDA.W Bg2colDmaLen0
+                STA.W DASL0
+                SEP #$30
+                LDA.B #$01
+                STA.W MDMAEN
+
+
+
+            ;SECOND COLUMN
+                REP #$30
+             +: LDA.W P1Bg2colDmaDest0
+                INC
+                STA.W VMADDL
+                LDA.W #$3ACC
+                STA.W A1TL0
+                LDA.W #$0024
+                STA.W DASL0
+                SEP #$30
+                LDA.B #$7E
+                STA.W A1B0
+                LDA.B #$01
+                STA.W MDMAEN
+
+                REP #$30
+                LDA.W Bg2colDmaLen1
+                BEQ +
+
+                LDA.W #$3ACE ; this is (probably) wrong
+                STA.W A1TL0
+                LDA.W Bg2colDmaLen1
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
                 STA.W MDMAEN
 
                 REP #$30
-                LDA.W P1Bg2colDmaDest
-                CLC
-                ADC.W #$0201
+             +: LDA.W Bg2colDmaLen0
+                BEQ +
+
+                LDA.W P1Bg2colDmaDest1
                 STA.W VMADDL
-                LDA.W #$39D8
+                LDA.W #$3ACC
                 STA.W A1TL0
-                LDA.W #$0020
+                LDA.W Bg2colDmaLen0
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
                 STA.W MDMAEN
-
+                
+             +: SEP #$30
                 LDA.B #$80
                 STA.W VMAIN
-                ; LDA.B #$00
-                ; STA.W A1B0                                  ;Reset in case other code doesnt
                 REP #$30
                 RTL
 
@@ -24737,7 +24810,6 @@ scanBoxPrepVerticalMod:
 
 ; We will need to get a bit creative as SNES does not support a 16 bit divisor
 moduloCamY:
-    LDA.W playerCamY
     LSR : LSR : LSR : LSR
     STA.W WRDIVL
     
@@ -24755,7 +24827,6 @@ moduloCamY:
     LDA.W playerCamY
     AND.W #$000F
     ORA.W tmp32     ;Add the sub-metatile bits back in
-    STA.L snapCamY
     RTL
 
 

@@ -12582,6 +12582,8 @@ ProcessTilemapEdits:
             ;     JSR.W UploadTilemapRowBg2P2
 
              +: STZ.W tilemapUploadMask                        ;80C07B|8003AE
+                LDA.W #$0000
+                STA.L rowLenFlags
                 SEC                                            ;80C07E|
                 RTS                                            ;80C07F|
 
@@ -23264,9 +23266,10 @@ RefillRowDownMod:
                 
                 LDA.L snapCamY                                  ;INSERT|
                 CMP.L lastSnapCamY                                      ;If the snapCam is smaller than the last one when we are scolling down, the only explanation is a snapback.
+                BNE +
                 JMP .jumpUp                                     ;INSERT|
                 
-                AND.W #$0008                                    ;INSERT|
+             +: AND.W #$0008                                    ;INSERT|
                 BEQ .secondHalf                                 ;INSERT|
                 
                 
@@ -23278,7 +23281,7 @@ RefillRowDownMod:
                 TAY                                             ;INSERT|
                 STZ.W tmp34
                 LDA.W #$000E                                   ;INSERT|
-                PHX ; X is the same for the second update. 
+                PHX ; 
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
                 LDA.L snapCamY
@@ -23290,12 +23293,13 @@ RefillRowDownMod:
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
                 ADC.W #$000A                                    ;INSERT|
-                TAY
-                LDA.W #$FFFE
-                JSR.W BuildTilemapRowMod                        ;INSERT|
+                TAY 
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
+                LDA.W #$FFFE
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+               
 
          .skip: LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod                       ;INSERT|
@@ -23319,27 +23323,28 @@ RefillRowDownMod:
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
 
-                ; LDA.L snapCamY
-                ; CMP.W #$0020
-                ; BCC .skip2
+                LDA.L snapCamY
+                CMP.W #$0020
+                BCC .skip2
 
-                ; LDA.W #$0080
-                ; STA.W tmp34
-                ; LDA.W refillRowTileY                            ;INSERT|
-                ; CLC
-                ; ADC.W #$0008                                    ;INSERT|
-                ; TAY
-                ; LDA.W #$FFFC
-                ; JSR.W BuildTilemapRowMod                        ;INSERT|
-                ; LDA.W #$0001
-                ; ORA.L rowLenFlags
-                ; STA.L rowLenFlags
+                LDA.W #$0080
+                STA.W tmp34
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC
+                ADC.W #$0008                                    ;INSERT|
+                TAY
+                LDA.W #$0001
+                ORA.L rowLenFlags
+                STA.L rowLenFlags
+                LDA.W #$FFFC
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+
 
         .skip2: LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod                       ;INSERT|
                 JMP.W scanBoxPrepVerticalMod_down               ;INSERT|
         
-        .exit: RTL
+        .exit: RTS
 
        .jumpUp:     
                 JSR.W GetRowStageXMod
@@ -23353,6 +23358,10 @@ RefillRowDownMod:
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 
                 PLX
+                LDA.W #$0002
+                ORA.L rowLenFlags
+                STA.L rowLenFlags
+
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$000C                                    ;INSERT|
@@ -23368,14 +23377,10 @@ RefillRowDownMod:
                 CLC                                             ;INSERT|
                 ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
-                LDA.W #$0080
+                LDA.W #$0100
                 STA.W tmp34
                 LDA.W #$000E                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
-                
-                LDA.W #$0002
-                ORA.L rowLenFlags
-                STA.L rowLenFlags
 
                 LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod                       ;INSERT|
@@ -23491,7 +23496,7 @@ BuildTilemapColMod:
                 ADC.W tilemapBaseLo
                 STA.W P1colDmaDest0
                 STA.W P1colDmaDest1    ;top of col
-                PLA         
+                PLA
                 AND.W #$000F
                 ASL A       
                 STA.B tmp32 
@@ -23658,7 +23663,6 @@ BuildTilemapRowMod:
                 AND.W #$F800
                 STA.B tmp34
 
-                
         .loop2: JSR.W FetchConvertMetatileRowMod
                 INX
                 LDA.B tmp34
@@ -23669,127 +23673,138 @@ BuildTilemapRowMod:
                 CMP.W refillStageStart
                 BCC .loop2
 
-         .skip: PLA                     ; row offset
+
+                ;we need to know which row we are refilling
+                ;we can reuse rowlenflags 
+                LDA.L rowLenFlags
+                BIT.W #$0002 ;if this flag is set, we are doing a 3 in a row of rows, and the dest has already been set
+                BNE .skipDest
+         .skip: PLA                     ; row offset 
                 CLC
-                ADC.W refillRowTileY
-                AND.W #$000F
-                ASL A
+                ADC.W refillSnapRowTileY ;add camera
+                ;AND.W #$001F             ;the value should already be wrapped...
+                ASL A                     ;convert to 16bit pointer 
                 TAY
                 LDA.W data_Xtimes20,Y     ; row * $20
                 CLC
                 ADC.W tilemapBaseLo     ; P1 subscreen base
+                STA.W P1rowDmaDest1
+                LDA.L rowLenFlags
+                BIT.W $0001
+                BNE +    ;if the first flag is set, this is the second row, so we don't want to overwrite the first scroll dest.
+                LDA.W P1rowDmaDest1 ;else, we want to update dest0
                 STA.W P1rowDmaDest0
-                SEC
-                SBC.W #$0140
-                STA.W P1rowDmaDest1 
-                RTS        
+             +: RTS
+
+     .skipDest: PLA
+                RTS
 
 FetchConvertMetatileRowMod:
-                STX.B refillSaveX                              ;80C469|00003E
-                STY.B refillSaveY                              ;80C46B|000040
-                CPX.W levelWidthMetaTiles                      ;80C46D|8019F0
-                BCS +                                          ;80C470|80C477
-                CPY.W levelHeightMetaTiles                     ;80C472|8019F2
-                BCC .main                                      ;80C475|80C4D2
+                STX.B refillSaveX                
+                STY.B refillSaveY                
+                CPX.W levelWidthMetaTiles        
+                BCS +                            
+                CPY.W levelHeightMetaTiles       
+                BCC .main                        
 
-             +: LDA.W levelWrapFlags                           ;80C477|8019F4
-                BIT.W #$0002                                   ;80C47A|
-                BEQ .skip                                      ;80C47D|80C493
-                STX.B tmp32                              ;80C47F|000032
-                LDA.W levelWidthMetaTiles                      ;80C481|8019F0
-                DEC A                                          ;80C484|
-                AND.B tmp32                              ;80C485|000032
-                TAX                                            ;80C487|
-                STY.B tmp32                              ;80C488|000032
-                LDA.W levelHeightMetaTiles                     ;80C48A|8019F2
-                DEC A                                          ;80C48D|
-                AND.B tmp32                              ;80C48E|000032
-                TAY                                            ;80C490|
-                BRA .main                                      ;80C491|80C4D2
+             +: LDA.W levelWrapFlags             
+                BIT.W #$0002                     
+                BEQ .skip                        
+                STX.B tmp32                      
+                LDA.W levelWidthMetaTiles        
+                DEC A                            
+                AND.B tmp32                      
+                TAX                              
+                STY.B tmp32                      
+                LDA.W levelHeightMetaTiles       
+                DEC A                            
+                AND.B tmp32                      
+                TAY                              
+                BRA .main                        
 
 
-         .skip: BIT.W #$0008                                   ;80C493|
-                BEQ .skip2                                     ;80C496|80C4AC
-                LDX.B tmp34                           ;80C498|000034
-                LDA.W tileAttrOr                               ;80C49A|801997
-                STA.L !P1row0smtLU,X                  ;80C49D|801775
-                STA.L !P1row0smtLD,X                  ;80C4A0|8017C5
-                STA.L !P1row0smtRD,X                  ;80C4A6|8017C7
-                STA.L !P1row0smtRU,X                  ;80C4A3|801777
-                LDX.B refillSaveX                              ;80C4A9|00003E
-                RTS                                            ;80C4AB|
+         .skip: BIT.W #$0008                     
+                BEQ .skip2                       
+                LDX.B tmp34                      
+                LDA.W tileAttrOr                 
+                STA.L !P1row0smtLU,X             
+                STA.L !P1row0smtLD,X             
+                STA.L !P1row0smtRD,X             
+                STA.L !P1row0smtRU,X             
+                LDX.B refillSaveX                
+                RTS                              
                 
-        .skip2: CPX.W levelWidthMetaTiles                      ;80C4AC|8019F0
-                BCC .skip3                                     ;80C4AF|80C4BF
-                CPX.W #$8000                                   ;80C4B1|
-                BCC +                                          ;80C4B4|80C4BB
-                LDX.W #$0000                                   ;80C4B6|
-                BRA .skip3                                     ;80C4B9|80C4BF
+        .skip2: CPX.W levelWidthMetaTiles        
+                BCC .skip3                       
+                CPX.W #$8000                     
+                BCC +                            
+                LDX.W #$0000                     
+                BRA .skip3                       
 
 
-             +: LDX.W levelWidthMetaTiles                      ;80C4BB|8019F0
-                DEX                                            ;80C4BE|
+             +: LDX.W levelWidthMetaTiles        
+                DEX                              
 
-        .skip3: CPY.W levelHeightMetaTiles                     ;80C4BF|8019F2
-                BCC .main                                      ;80C4C2|80C4D2
-                CPY.W #$8000                                   ;80C4C4|
-                BCC +                                          ;80C4C7|80C4CE
-                LDY.W #$0000                                   ;80C4C9|
-                BRA .main                                      ;80C4CC|80C4D2
+        .skip3: CPY.W levelHeightMetaTiles       
+                BCC .main                        
+                CPY.W #$8000                     
+                BCC +                            
+                LDY.W #$0000                     
+                BRA .main                        
 
 
-             +: LDY.W levelHeightMetaTiles                     ;80C4CE|8019F2
-                DEY                                            ;80C4D1|
+             +: LDY.W levelHeightMetaTiles       
+                DEY                              
 
-         .main: STY.B mulMultiplicand                          ;80C4D2|0000AC
-                LDA.W levelRowStride                           ;80C4D4|8019AB
-                STA.B mulMultiplierLo                          ;80C4D7|0000B0
-                JSL.L Far_Mul8x16                                  ;80C4D9|809152
-                TXA                                            ;80C4DC|
-                ASL A                                          ;80C4DD|
-                ADC.B mulResult                                ;80C4DE|0000B2
-                TAY                                            ;80C4E0|          ;Y is now the metatlile index ((Y*X) + X)
-                LDA.B [levelTileMapPtr],Y                      ;80C4E1|000050
-                AND.W #$03FF                                   ;80C4E3|
-                ASL A                                          ;80C4E6|
-                ASL A                                          ;80C4E7|
-                ASL A                                          ;80C4E8|
-                TAY                                            ;80C4E9|
-             +: LDA.B [tileVisualPtr],Y                        ;80C4EA|000054
-                LDX.B tmp34                           ;80C4EC|000034
-                ORA.W tileAttrOr                               ;80C4EE|801997
-                STA.L !P1row0smtLU,X                    ;80C4F1|801775
-                INY                                            ;80C4F4|
-                INY                                            ;80C4F5|
-                LDA.B [tileVisualPtr],Y                        ;80C4F6|000054
-                ORA.W tileAttrOr                               ;80C4F8|801997
-                STA.L !P1row0smtRU,X                    ;80C4FB|801777
-                INY                                            ;80C4FE|
-                INY                                            ;80C4FF|
-                LDA.B [tileVisualPtr],Y                        ;80C500|000054
-                ORA.W tileAttrOr                               ;80C502|801997
-                STA.L !P1row0smtLD,X                    ;80C505|8017C5
-                INY                                            ;80C508|
-                INY                                            ;80C509|8017C5
-                LDA.B [tileVisualPtr],Y                        ;80C50A|000054
-                ORA.W tileAttrOr                               ;80C50C|801997
-                STA.L !P1row0smtRD,X                    ;80C50F|8017C7
-                LDX.B refillSaveX                              ;80C512|00003E
-                LDY.B refillSaveY                              ;80C514|000040
-                RTS                                            ;80C516|
+         .main: STY.B mulMultiplicand            
+                LDA.W levelRowStride             
+                STA.B mulMultiplierLo            
+                JSL.L Far_Mul8x16                
+                TXA                              
+                ASL A                            
+                ADC.B mulResult                  
+                TAY                              
+                LDA.B [levelTileMapPtr],Y        
+                AND.W #$03FF                     
+                ASL A                            
+                ASL A                            
+                ASL A                            
+                TAY                              
+             +: LDA.B [tileVisualPtr],Y          
+                LDX.B tmp34                      
+                ORA.W tileAttrOr                 
+                STA.L !P1row0smtLU,X             
+                INY                              
+                INY                              
+                LDA.B [tileVisualPtr],Y          
+                ORA.W tileAttrOr                 
+                STA.L !P1row0smtRU,X             
+                INY                              
+                INY                              
+                LDA.B [tileVisualPtr],Y          
+                ORA.W tileAttrOr                 
+                STA.L !P1row0smtLD,X             
+                INY                              
+                INY                              
+                LDA.B [tileVisualPtr],Y          
+                ORA.W tileAttrOr                 
+                STA.L !P1row0smtRD,X             
+                LDX.B refillSaveX                
+                LDY.B refillSaveY                
+                RTS                              
 
 
 UploadTilemapRowP1:
                 SEP #$30
                 LDA.B #$01
                 STA.W DMAP0
-                LDA.B #$18                               
-                STA.W BBAD0                              
-                REP #$30                                 
+                LDA.B #$18
+                STA.W BBAD0
+                REP #$30
                 LDA.L rowLenFlags
                 BIT.W #$0001
                 BNE .2row
-                BIT.W #$0002
+                BIT.W #$0002 
                 BNE .3row
 
                 LDA.W P1rowDmaDest0                       
@@ -23802,7 +23817,7 @@ UploadTilemapRowP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                ;STA.W MDMAEN                             
+                STA.W MDMAEN                             
                 REP #$30                                 
                 RTL
 
@@ -23816,7 +23831,7 @@ UploadTilemapRowP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                ;STA.W MDMAEN                             
+                STA.W MDMAEN                             
                 REP #$30                                 
 
                 LDA.W P1rowDmaDest1
@@ -23827,7 +23842,7 @@ UploadTilemapRowP1:
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
-                ;STA.W MDMAEN                             
+                STA.W MDMAEN                             
                 REP #$30                                 
                 RTL
 
@@ -23841,7 +23856,7 @@ UploadTilemapRowP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                ;STA.W MDMAEN                             
+                STA.W MDMAEN                             
                 REP #$30                                 
                 RTL
 
@@ -23865,7 +23880,7 @@ UploadTilemapColumnP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                STA.W MDMAEN                             
+                ;STA.W MDMAEN                             
                 
                 REP #$30                                 
                 LDA.W colDmaLen0
@@ -23877,7 +23892,7 @@ UploadTilemapColumnP1:
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$01                               
-                STA.W MDMAEN                             
+                ;STA.W MDMAEN                             
             
 
                 REP #$30
@@ -23892,7 +23907,7 @@ UploadTilemapColumnP1:
                 STA.W DASL0                              
                 SEP #$30
                 LDA.B #$01                               
-                STA.W MDMAEN                            
+                ;STA.W MDMAEN                            
 
             ;SECOND COLUMN
                 REP #$30
@@ -23907,7 +23922,7 @@ UploadTilemapColumnP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                STA.W MDMAEN                             
+                ;STA.W MDMAEN                             
                 
                 REP #$30                                 
                 LDA.W colDmaLen0
@@ -23920,7 +23935,7 @@ UploadTilemapColumnP1:
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$01                               
-                STA.W MDMAEN                             
+                ;STA.W MDMAEN                             
             
 
                 REP #$30                                 
@@ -23936,7 +23951,7 @@ UploadTilemapColumnP1:
                 STA.W DASL0                              
                 SEP #$30
                 LDA.B #$01                               
-                STA.W MDMAEN                                
+                ;STA.W MDMAEN                                
 
              +: SEP #$30
                 LDA.B #$80 
@@ -24650,7 +24665,7 @@ UploadTilemapRowBg2P1:
                 LDA.B #$7E
                 STA.W A1B0
                 LDA.B #$01
-                STA.W MDMAEN
+                ;STA.W MDMAEN
                 REP #$30
                 LDA.W P1Bg2rowDmaDest0
                 CLC
@@ -24663,7 +24678,7 @@ UploadTilemapRowBg2P1:
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
-                STA.W MDMAEN
+                ;STA.W MDMAEN
                 REP #$30
                 RTL
 
@@ -24687,7 +24702,7 @@ UploadTilemapColumnBg2P1:
                 LDA.B #$7E
                 STA.W A1B0
                 LDA.B #$01
-                STA.W MDMAEN
+                ;STA.W MDMAEN
 
                 REP #$30
                 LDA.W Bg2colDmaLen1
@@ -24699,7 +24714,7 @@ UploadTilemapColumnBg2P1:
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
-                STA.W MDMAEN
+                ;STA.W MDMAEN
 
                 REP #$30
              +: LDA.W Bg2colDmaLen0
@@ -24713,7 +24728,7 @@ UploadTilemapColumnBg2P1:
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
-                STA.W MDMAEN
+                ;STA.W MDMAEN
 
 
 
@@ -24730,7 +24745,7 @@ UploadTilemapColumnBg2P1:
                 LDA.B #$7E
                 STA.W A1B0
                 LDA.B #$01
-                STA.W MDMAEN
+                ;STA.W MDMAEN
 
                 REP #$30
                 LDA.W Bg2colDmaLen1
@@ -24742,7 +24757,7 @@ UploadTilemapColumnBg2P1:
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
-                STA.W MDMAEN
+                ;STA.W MDMAEN
 
                 REP #$30
              +: LDA.W Bg2colDmaLen0
@@ -24756,7 +24771,7 @@ UploadTilemapColumnBg2P1:
                 STA.W DASL0
                 SEP #$30
                 LDA.B #$01
-                STA.W MDMAEN
+                ;STA.W MDMAEN
                 
              +: SEP #$30
                 LDA.B #$80

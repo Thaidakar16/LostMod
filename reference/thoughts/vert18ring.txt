@@ -84,9 +84,9 @@ This is the original logic:
                 LDA.B tmp34                       
                 CLC                               
                 ADC.W #$0004                      
-                STA.B tmp34                       
+                STA.B tmp34                     
                 CMP.W #$0050                      
-                BCC .loop                         
+                BCC .loop                        
 
 Where X is used as a storing index. 
 So, if our rows are stacked right after each other, we can just add 80 if we need the next block.
@@ -96,7 +96,6 @@ We could take this further and stack the p2 ones right after to reuse the functi
 
 I need a new camera Y. I need camera values that are playerCamY modulo 0x12, but because there is no easy way to do that, we will want a variable for it.
 I could use the division stuff, but I think it will be worth the while to make a new playerCamY. 
-
 
 
 

@@ -99,4 +99,15 @@ I could use the division stuff, but I think it will be worth the while to make a
 
 
 
+More thoughts time!
+
+we have to assume that the screen can scroll up to a metatile between updates.
+this means that if 15 is visible, we are cooked. the update cycle that 15 is visible, we need to snap back. 
+the new cameraY can not be just raw modulo either. I has to be controlled by the refill system.
+
+as said, the update cycle that 15 is visible, we have to snap back. this snapback would visibly keep 15 in the same place, but it would be new. we would also need to load 16
+but, something overlooked before, when we snap back, we need to have the padding behind so that we can do the snap back the other way. 
+when 15 is visible, 8 is potentially visible. 7 is reserve. 7 HAS to bee mirrored over. this unfortunately means we need 4 stages. i think we have the room and cycles for it tho
+its just less comfortable than i would like. 
+
 

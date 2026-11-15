@@ -863,40 +863,46 @@ lastSnapBg2CamYSrc = $7E3816
 refillSnapRowTileY = $0566
 refillSnapBg2RowTileY = $0568
 
-;This layout needs to change! this will likely break a whole lot, 
-;so i will wait to do it until the game isn't broken from other things...
+;i could probably use 0x38E0 to 0x39FF for the columns. 
+;but, we could also use the original queuing space! either work and ill make it easy to switch
+;but, using the original opens up 0x38E0 to 0x39FF if needed. 
 
-;proposed layout: 
-; ALL bg1 for both players
-; All bg2 for both players
-;col p1 then col p2
-;row p1 (all of them), then row p2
+;the original queuing space is 0x16F5 to 0x1935 which is 0x240. I only need 0x120
+; If I wanted to, I could potentially load the entire column instead of just 14 metatiles worth of it.
+; that would cost 0x80 per column, or 0x200. I think it is work the extra effort! 
+;It makes the logic on the upload side faster and much easier. We would only need one destword.
 
-;this layout will allow us to use the same functions for p1 and p2 by using the x offset
+;for the sake of legibility, and because I can, i wont start at 16F5. i will use 0x1700 to 0x1900, which is still in the range
+;(again, ill make this easy to change on a dime)
 
+;proposed columns:
+;P1col = 1700, 1702, 1740, 1742
+;P2col = 1780, 1782, 17C0, 17C2
 
-;P1col = 38E0, 38E2, 3904, 3906 (ends before 3928)
-;P2col = 3928, 392A, 394C, 394E (ends before 3970)
-
-;P1row0 = 3970, 3972, 39B0, 39B2 (39F0)
-;P1row1 = 39F0, 39F2, 3A30, 3932 (3A70)
-;P1row2 = 3A70, 3A72, 3AB0, 3AB2 (3AF0)
-
-;P2row0 = 3AF0, 3AF2, 3B30, 3B32 (3B70)
-;P2row1 = 3B70, 3B72, 3BB0, 3BB2 (3BF0)
-;P2row2 = 3BF0, 3BF2, 3C30, 3C32 (3C70)
+;P1Bg2col = 1800, 1802, 1840, 1842
+;P2Bg2col = 1880, 1882, 18C0, 18C2
 
 
-;P1Bg2col = 3C70, 3C72, 3C94, 3C96 (ends before 3CB8)
-;P2Bg2col = 3CB8, 3CBA, 3CDC, 3CDE (ends before 3D00)
+;proposed rows:
+;P1row0 = 3A00, 3A02, 3A40, 3A42
+;P1row1 = 3A80, 3A82, 3AC0, 3AC2
+;P1row2 = 3B00, 3B02, 3B40, 3B42
+;P1row3 = 3B80, 3B82, 3BC0, 3BC2
 
-;P1Bg2row0 = 3D00, 3D02, 3D40, 3D42
-;P1Bg2row1 = 3D80, 3D82, 3DC0, 3DC2
-;P1Bg2row2 = 3E00, 3E02, 3E40, 3E42
+;P2row0 = 3B00, 3B02, 3B40, 3B42
+;P2row1 = 3B80, 3B82, 3BC0, 3BC2
+;P2row2 = 3C00, 3C02, 3C40, 3C42
+;P2row3 = 3C80, 3C82, 3CC0, 3CC2
 
-;P2Bg2row0 = 3E80, 3E82, 3EC0, 3EC2
-;P2Bg2row1 = 3F00, 3F02, 3F40, 3F42
-;P2Bg2row2 = 3F80, 3F82, 3FC0, 3FC2 (ends on 3FFF, right before $4000)
+;P1Bg2row0 = 3C00, 3C02, 3C40, 3C42
+;P1Bg2row1 = 3C80, 3C82, 3CC0, 3CC2
+;P1Bg2row2 = 3D00, 3D02, 3D40, 3D42
+;P1Bg2row3 = 3D80, 3D82, 3DC0, 3DC2
+
+;P2Bg2row0 = 3E00, 3E02, 3E00, 3E02
+;P2Bg2row1 = 3E80, 3E82, 3EC0, 3EC2
+;P2Bg2row2 = 3F00, 3F02, 3F40, 3F42
+;P2Bg2row3 = 3F80, 3F82, 3FC0, 3FC2 (ends on 3FFF, right before $4000)
 
 ;smt=StagedMetaTile
 !P1colSmtLU = $7E38E0           ; actual: $7E38E0
@@ -23266,7 +23272,7 @@ RefillRowDownMod:
                 
                 LDA.L snapCamY                                  ;INSERT|
                 CMP.L lastSnapCamY                                      ;If the snapCam is smaller than the last one when we are scolling down, the only explanation is a snapback.
-                BNE +
+                BCS +
                 JMP .jumpUp                                     ;INSERT|
                 
              +: AND.W #$0008                                    ;INSERT|
@@ -23281,7 +23287,7 @@ RefillRowDownMod:
                 TAY                                             ;INSERT|
                 STZ.W tmp34
                 LDA.W #$000E                                   ;INSERT|
-                PHX ; 
+                PHX 
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
                 LDA.L snapCamY
@@ -23297,7 +23303,7 @@ RefillRowDownMod:
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
-                LDA.W #$FFFE
+                LDA.W #$FFFC
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                
 
@@ -23336,7 +23342,7 @@ RefillRowDownMod:
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
-                LDA.W #$FFFC
+                LDA.W #$FFFA
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
 
@@ -23353,7 +23359,7 @@ RefillRowDownMod:
                 ADC.W #$000A                                    ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$000A                                    ;INSERT|
+                LDA.W #$0010                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 
@@ -23368,7 +23374,7 @@ RefillRowDownMod:
                 TAY                                             ;INSERT|
                 LDA.W #$0080
                 STA.W tmp34
-                LDA.W #$000C                                    ;INSERT|
+                LDA.W #$0012                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23379,7 +23385,7 @@ RefillRowDownMod:
                 TAY                                             ;INSERT|
                 LDA.W #$0100
                 STA.W tmp34
-                LDA.W #$000E                                    ;INSERT|
+                LDA.W #$0014                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|
@@ -23660,7 +23666,7 @@ BuildTilemapRowMod:
                 
             
                 LDA.B tmp34
-                AND.W #$F800
+                AND.W #$FF80
                 STA.B tmp34
 
         .loop2: JSR.W FetchConvertMetatileRowMod
@@ -23690,7 +23696,7 @@ BuildTilemapRowMod:
                 ADC.W tilemapBaseLo     ; P1 subscreen base
                 STA.W P1rowDmaDest1
                 LDA.L rowLenFlags
-                BIT.W $0001
+                BIT.W #$0001
                 BNE +    ;if the first flag is set, this is the second row, so we don't want to overwrite the first scroll dest.
                 LDA.W P1rowDmaDest1 ;else, we want to update dest0
                 STA.W P1rowDmaDest0

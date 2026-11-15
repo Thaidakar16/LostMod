@@ -837,7 +837,7 @@ P1rowDmaDest0 = $16D5
 P1rowDmaDest1 = $16D9
 
 P1colDmaDest0 = $16CD
-P1colDmaDest1 = $16D1
+;P1colDmaDest1 = $16D1
 
 P1Bg2rowDmaDest0       = $16E9
 
@@ -853,8 +853,10 @@ expandNewEnd  = $006A   ; 2 bytes: return value (new data end offset)
 
 
 rowLenFlags = $7E3810
-snapCamY = $7E3812
-lastSnapCamY = $7E3814
+; snapCamY = $7E3812
+; lastSnapCamY = $7E3814
+
+snapCamYOffset = $7E3812
 
 snapBg2CamYSrc = $7E3816
 lastSnapBg2CamYSrc = $7E3816
@@ -905,92 +907,116 @@ refillSnapBg2RowTileY = $0568
 ;P2Bg2row3 = 3F80, 3F82, 3FC0, 3FC2 (ends on 3FFF, right before $4000)
 
 ;smt=StagedMetaTile
-!P1colSmtLU = $7E38E0           ; actual: $7E38E0
-!P1colSmtLD = !P1colSmtLU+$2    ; actual: $7E38E2
-!P1colSmtRU = !P1colSmtLU+$24   ; actual: $7E3904
-!P1colSmtRD = !P1colSmtLU+$26   ; actual: $7E3906
+!P1colSmtLU = $1700
+!P1colSmtLD = !P1colSmtLU+$2
+!P1colSmtRU = !P1colSmtLU+$40
+!P1colSmtRD = !P1colSmtLU+$42
 
-;
-!P1row0smtLU = !P1colSmtLU+$48  ; actual: $7E3928
-!P1row0smtRU = !P1row0smtLU+$2  ; actual: $7E392A
-!P1row0smtLD = !P1row0smtLU+$40 ; actual: $7E3968
-!P1row0smtRD = !P1row0smtLU+$42 ; actual: $7E396A
+!P2colSmtLU  = !P1colSmtLU+$80
+!P2colSmtLD  = !P2colSmtLU+$2
+!P2colSmtRU  = !P2colSmtLU+$40
+!P2colSmtRD  = !P2colSmtLU+$42
 
-;
-!P1row1smtLU = !P1row0smtLU+$80 ; actual: $7E39A8
-!P1row1smtRU = !P1row1smtLU+$2  ; actual: $7E39AA
-!P1row1smtLD = !P1row1smtLU+$40 ; actual: $7E39E8
-!P1row1smtRD = !P1row1smtLU+$42 ; actual: $7E39EA
+!P1Bg2colSmtLU  = !P2colSmtLU+$80
+!P1Bg2colSmtLD  = !P1Bg2colSmtLU+$2
+!P1Bg2colSmtRU  = !P1Bg2colSmtLU+$40
+!P1Bg2colSmtRD  = !P1Bg2colSmtLU+$42
 
-;
-!P1row2smtLU  = !P1row1smtLU+$80 ; actual: $7E3A28
-!P1row2smtRU  = !P1row2smtLU+$2 ; actual: $7E3A2A
-!P1row2smtLD  = !P1row2smtLU+$40 ; actual: $7E3A68
-!P1row2smtRD  = !P1row2smtLU+$42 ; actual: $7E3A6A
+!P2Bg2colSmtLU  = !P1Bg2colSmtLU+$80
+!P2Bg2colSmtLD  = !P2Bg2colSmtLU+$2
+!P2Bg2colSmtRU  = !P2Bg2colSmtLU+$40
+!P2Bg2colSmtRD  = !P2Bg2colSmtLU+$42
 
-;
-!P1Bg2colSmtLU  = !P1row2smtLU+$80 ; actual: $7E3AA8
-!P1Bg2colSmtLD  = !P1Bg2colSmtLU+$2 ; actual: $7E3AAA
-!P1Bg2colSmtRU  = !P1Bg2colSmtLU+$24 ; actual: $7E3ACC
-!P1Bg2colSmtRD  = !P1Bg2colSmtLU+$26 ; actual: $7E3ACE
 
-;
-!P1Bg2row0smtLU  = !P1Bg2colSmtLU+$48 ; actual: $7E3AF0
-!P1Bg2row0smtRU  = !P1Bg2row0smtLU+$2 ; actual: $7E3AF2
-!P1Bg2row0smtLD  = !P1Bg2row0smtLU+$40 ; actual: $7E3B30
-!P1Bg2row0smtRD  = !P1Bg2row0smtLU+$42 ; actual: $7E3B32
+;==============================================================
+;ROWS
+;==============================================================
 
-;
-!P1Bg2row1smtLU  = !P1Bg2row0smtLU+$80 ; actual: $7E3B70
-!P1Bg2row1smtRU  = !P1Bg2row1smtLU+$2 ; actual: $7E3B72
-!P1Bg2row1smtLD  = !P1Bg2row1smtLU+$40 ; actual: $7E3BB0
-!P1Bg2row1smtRD  = !P1Bg2row1smtLU+$42 ; actual: $7E3BB2
+;P1 rows
+!P1row0smtLU = $3A00
+!P1row0smtRU = !P1row0smtLU+$2
+!P1row0smtLD = !P1row0smtLU+$40
+!P1row0smtRD = !P1row0smtLU+$42
 
-; 
-!P1Bg2row2smtLU  = !P1Bg2row1smtLU+$80 ; actual: $7E3BF0
-!P1Bg2row2smtRU  = !P1Bg2row2smtLU+$2 ; actual: $7E3BF2
-!P1Bg2row2smtLD  = !P1Bg2row2smtLU+$40 ; actual: $7E3C30
-!P1Bg2row2smtRD  = !P1Bg2row2smtLU+$42 ; actual: $7E3C32
+!P1row1smtLU = !P1row0smtLU+$80
+!P1row1smtRU = !P1row1smtLU+$2
+!P1row1smtLD = !P1row1smtLU+$40
+!P1row1smtRD = !P1row1smtLU+$42
 
-!P2colSmtLU  = !P1Bg2row2smtLU+$80 ; actual: $7E3C70
-!P2colSmtLD  = !P2colSmtLU+$2 ; actual: $7E3C72
-!P2colSmtRU  = !P2colSmtLU+$24 ; actual: $7E3C94
-!P2colSmtRD  = !P2colSmtLU+$26 ; actual: $7E3C96
+!P1row2smtLU  = !P1row1smtLU+$80
+!P1row2smtRU  = !P1row2smtLU+$2
+!P1row2smtLD  = !P1row2smtLU+$40
+!P1row2smtRD  = !P1row2smtLU+$42
 
-!P2row0smtLU  = !P2colSmtLU+$48 ; actual: $7E3CB8
-!P2row0smtRU  = !P2row0smtLU+$2 ; actual: $7E3CBA
-!P2row0smtLD  = !P2row0smtLU+$40 ; actual: $7E3CF8
-!P2row0smtRD  = !P2row0smtLU+$42 ; actual: $7E3CFA
+!P1row3smtLU  = !P1row2smtLU+$80
+!P1row3smtRU  = !P1row3smtLU+$2
+!P1row3smtLD  = !P1row3smtLU+$40
+!P1row3smtRD  = !P1row3smtLU+$42
 
-!P2row1smtLU  = !P2row0smtLU+$80 ; actual: $7E3D38
-!P2row1smtRU  = !P2row1smtLU+$2 ; actual: $7E3D3A
-!P2row1smtLD  = !P2row1smtLU+$40 ; actual: $7E3D78
-!P2row1smtRD  = !P2row1smtLU+$42 ; actual: $7E3D7A
+;P2 rows
+!P2row0smtLU  = !P1row3smtLU+$80
+!P2row0smtRU  = !P2row0smtLU+$2
+!P2row0smtLD  = !P2row0smtLU+$40
+!P2row0smtRD  = !P2row0smtLU+$42
 
-!P2row2smtLU  = !P2row1smtLU+$80 ; actual: $7E3DB8
-!P2row2smtRU  = !P2row2smtLU+$2 ; actual: $7E3DBA
-!P2row2smtLD  = !P2row2smtLU+$40 ; actual: $7E3DF8
-!P2row2smtRD  = !P2row2smtLU+$42 ; actual: $7E3DFA
+!P2row1smtLU  = !P2row0smtLU+$80
+!P2row1smtRU  = !P2row1smtLU+$2
+!P2row1smtLD  = !P2row1smtLU+$40
+!P2row1smtRD  = !P2row1smtLU+$42
 
-!P2Bg2colSmtLU  = !P2row2smtLU+$80 ; actual: $7E3E38
-!P2Bg2colSmtLD  = !P2Bg2colSmtLU+$2 ; actual: $7E3E3A
-!P2Bg2colSmtRU  = !P2Bg2colSmtLU+$24 ; actual: $7E3E5C
-!P2Bg2colSmtRD  = !P2Bg2colSmtLU+$26 ; actual: $7E3E5E
+!P2row2smtLU  = !P2row1smtLU+$80
+!P2row2smtRU  = !P2row2smtLU+$2
+!P2row2smtLD  = !P2row2smtLU+$40
+!P2row2smtRD  = !P2row2smtLU+$42
 
-!P2Bg2row0smtLU  = !P2Bg2colSmtLU+$48 ; actual: $7E3E80
-!P2Bg2row0smtRU  = !P2Bg2row0smtLU+$2 ; actual: $7E3E82
-!P2Bg2row0smtLD  = !P2Bg2row0smtLU+$40 ; actual: $7E3EC0
-!P2Bg2row0smtRD  = !P2Bg2row0smtLU+$42 ; actual: $7E3EC2
+!P2row3smtLU  = !P2row2smtLU+$80
+!P2row3smtRU  = !P2row3smtLU+$2
+!P2row3smtLD  = !P2row3smtLU+$40
+!P2row3smtRD  = !P2row3smtLU+$42
 
-!P2Bg2row1smtLU  = !P2Bg2row0smtLU+$80 ; actual: $7E3F00
-!P2Bg2row1smtRU  = !P2Bg2row1smtLU+$2 ; actual: $7E3F02
-!P2Bg2row1smtLD  = !P2Bg2row1smtLU+$40 ; actual: $7E3F40
-!P2Bg2row1smtRD  = !P2Bg2row1smtLU+$42 ; actual: $7E3F42
 
-!P2Bg2row2smtLU  = !P2Bg2row1smtLU+$80 ; actual: $7E3F80
-!P2Bg2row2smtRU  = !P2Bg2row2smtLU+$2 ; actual: $7E3F82
-!P2Bg2row2smtLD  = !P2Bg2row2smtLU+$40 ; actual: $7E3FC0
-!P2Bg2row2smtRD  = !P2Bg2row2smtLU+$42 ; actual: $7E3FC2
+
+;P1 BG2 rows
+!P1Bg2row0smtLU  = !P2row3smtLU+$80
+!P1Bg2row0smtRU  = !P1Bg2row0smtLU+$2
+!P1Bg2row0smtLD  = !P1Bg2row0smtLU+$40
+!P1Bg2row0smtRD  = !P1Bg2row0smtLU+$42
+
+!P1Bg2row1smtLU  = !P1Bg2row0smtLU+$80
+!P1Bg2row1smtRU  = !P1Bg2row1smtLU+$2
+!P1Bg2row1smtLD  = !P1Bg2row1smtLU+$40
+!P1Bg2row1smtRD  = !P1Bg2row1smtLU+$42
+
+!P1Bg2row2smtLU  = !P1Bg2row1smtLU+$80
+!P1Bg2row2smtRU  = !P1Bg2row2smtLU+$2
+!P1Bg2row2smtLD  = !P1Bg2row2smtLU+$40
+!P1Bg2row2smtRD  = !P1Bg2row2smtLU+$42
+
+!P1Bg2row3smtLU  = !P1Bg2row2smtLU+$80
+!P1Bg2row3smtRU  = !P1Bg2row3smtLU+$2
+!P1Bg2row3smtLD  = !P1Bg2row3smtLU+$40
+!P1Bg2row3smtRD  = !P1Bg2row3smtLU+$42
+
+;P2 BG2 rows
+!P2Bg2row0smtLU  = !P1Bg2row3smtLU+$80
+!P2Bg2row0smtRU  = !P2Bg2row0smtLU+$2
+!P2Bg2row0smtLD  = !P2Bg2row0smtLU+$40
+!P2Bg2row0smtRD  = !P2Bg2row0smtLU+$42
+
+!P2Bg2row1smtLU  = !P2Bg2row0smtLU+$80
+!P2Bg2row1smtRU  = !P2Bg2row1smtLU+$2
+!P2Bg2row1smtLD  = !P2Bg2row1smtLU+$40
+!P2Bg2row1smtRD  = !P2Bg2row1smtLU+$42
+
+!P2Bg2row2smtLU  = !P2Bg2row1smtLU+$80
+!P2Bg2row2smtRU  = !P2Bg2row2smtLU+$2
+!P2Bg2row2smtLD  = !P2Bg2row2smtLU+$40
+!P2Bg2row2smtRD  = !P2Bg2row2smtLU+$42
+
+!P2Bg2row3smtLU  = !P2Bg2row2smtLU+$80
+!P2Bg2row3smtRU  = !P2Bg2row3smtLU+$2
+!P2Bg2row3smtLD  = !P2Bg2row3smtLU+$40
+!P2Bg2row3smtRD  = !P2Bg2row3smtLU+$42
 
 
                        ORG $808000
@@ -6570,9 +6596,20 @@ ComputeCameras:
                 LDA.W camMaxY                                  ;809EAA|8019A5
 
              +: STA.B playerCamY                               ;809EAD|000046   ; playerCamY = clamp(followObjY-(224-hudYOffset)/2, 0, camMaxY)
-                JSL.L moduloCamY
-                STA.L snapCamY
 
+                LDA.W #$0000                                    ;INSERT
+                STA.L snapCamYOffset
+         .loop: 
+                CMP.W #$0090
+                BCC .done
+                SBC.W #$0090        ; carry is set here from the CMP
+                LDA.L snapCamYOffset
+                CLC
+                ADC.W #$0090
+                STA.L snapCamYOffset
+                BRA .loop
+         
+         .done:
                 LDA.W parallaxScaleX                           ;809EAF|801A06
                 STA.B mulMultiplicand                          ;809EB2|0000AC
                 LDA.B playerCamX                               ;809EB4|000044
@@ -12362,7 +12399,8 @@ SnapshotCameras:
                 BEQ .original
 
                 LDA.B playerCamY
-                JSL.L moduloCamY
+                SEC 
+                SBC.L snapCamYOffset
                 BRA +
 
      .original: LDA.B playerCamY                               ;80BFC0|000046
@@ -23036,8 +23074,9 @@ FillTilemapFullMod:
                 STA.W refillRowTileY                      
                 TAY                                       
                 
-                LDA.B snapCamY                          
-                STA.W lastSnapCamY                      
+                LDA.W playerCamY                                  ;INSERT|
+                SEC
+                SBC.L snapCamYOffset
                 LSR A                                     
                 LSR A                                     
                 LSR A                                     
@@ -23082,9 +23121,7 @@ FillTilemapFullMod:
 
 RefillTilemapOnScrollMod:
                 
-                LDA.W playerCamY
-                JSL.L moduloCamY
-                STA.L snapCamY
+
                 ;Vertical refill
                 LDA.W refillLastCamY 
                 AND.W #$FFF8         
@@ -23126,8 +23163,6 @@ RefillTilemapOnScrollMod:
                 STA.W refillLastCamX                             ; and store it as the last camera X position for the next frame's comparison
                 LDA.B playerCamY                                 ; load the current camera Y position
                 STA.W refillLastCamY                             ; and store it as the last camera Y position for the next frame's comparison
-                LDA.L snapCamY
-                STA.L lastSnapCamY
                 RTL                                            
 
 
@@ -23260,37 +23295,37 @@ RefillRowDownMod:
                 LDX.B playerCamY                                ;INSERT| 
                 BPL +                                           ;INSERT|
                 ORA.W #$E000                                    ;INSERT| ;preserve negative
-                                                                ;INSERT|
              +: STA.W refillRowTileY                            ;INSERT|
-                
-                LDA.L snapCamY                              
-                LSR A                                         
-                LSR A                                         
-                LSR A                                         
-                AND.W #$FFFE                                  
-                STA.W refillSnapRowTileY 
-                
-                LDA.L snapCamY                                  ;INSERT|
-                CMP.L lastSnapCamY                                      ;If the snapCam is smaller than the last one when we are scolling down, the only explanation is a snapback.
-                BCS +
+
+
+                LDA.W playerCamY                                  ;INSERT|
+                SEC
+                SBC.L snapCamYOffset
+                PHA
+                CMP.W #$0080     ;If the current version of the camera is now hovering over 0xF even a little, jump up.
+                BCC +
                 JMP .jumpUp                                     ;INSERT|
                 
-             +: AND.W #$0008                                    ;INSERT|
+             +: LSR A : LSR A : LSR A
+                AND.W #$FFFE                                  
+                STA.W refillSnapRowTileY                          
+                PLA
+                PHA
+                AND.W #$0008                                    ;INSERT|
                 BEQ .secondHalf                                 ;INSERT|
-                
-                
-                JSR.W GetRowStageXMod
 
+                JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT| 
                 CLC                                             ;INSERT|
                 ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
                 LDA.W #$000E                                   ;INSERT|
-                PHX 
+                PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
-                LDA.L snapCamY
+
+                PLA
                 CMP.W #$0020
                 BCC .skip
                 
@@ -23298,14 +23333,16 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$000A                                    ;INSERT|
-                TAY 
+                ADC.W #$0008                                    ;INSERT|
+                TAY
+
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
+
                 LDA.W #$FFFC
                 JSR.W BuildTilemapRowMod                        ;INSERT|
-               
+
 
          .skip: LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod                       ;INSERT|
@@ -23316,7 +23353,6 @@ RefillRowDownMod:
                 SBC.W refillLastCamY                            ;INSERT|
                 CMP.W #$0009                                    ;INSERT|
                 BCC .exit                                       ;INSERT|
-                LDX.W refillColTileX
 
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
@@ -23329,7 +23365,7 @@ RefillRowDownMod:
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
 
-                LDA.L snapCamY
+                PLA
                 CMP.W #$0020
                 BCC .skip2
 
@@ -23337,11 +23373,13 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$0008                                    ;INSERT|
+                ADC.W #$0006                                    ;INSERT|
                 TAY
+
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
+
                 LDA.W #$FFFA
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
@@ -23350,19 +23388,33 @@ RefillRowDownMod:
                 JSR.W SetPpuUpdateBitsMod                       ;INSERT|
                 JMP.W scanBoxPrepVerticalMod_down               ;INSERT|
         
-        .exit: RTS
+        .exit:  PLA
+                RTS
 
-       .jumpUp:     
+       .jumpUp: 
+
+                LDA.L snapCamYOffset
+                CLC
+                ADC.W #$0090
+                STA.L snapCamYOffset
+
+                PLA
+                SEC
+                SBC.W #$0090
+                LSR A : LSR A : LSR A
+                AND.W #$FFFE                                  
+                STA.W refillSnapRowTileY                          
+
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$000A                                    ;INSERT|
+                ADC.W #$000C                                    ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$0010                                    ;INSERT|
+                LDA.W #$000C                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
-                
+
                 PLX
                 LDA.W #$0002
                 ORA.L rowLenFlags
@@ -23370,22 +23422,33 @@ RefillRowDownMod:
 
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$000C                                    ;INSERT|
+                ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0080
                 STA.W tmp34
-                LDA.W #$0012                                    ;INSERT|
+                LDA.W #$000E                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
-                
+
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$000E                                    ;INSERT|
+                ADC.W #$0010                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0100
                 STA.W tmp34
-                LDA.W #$0014                                    ;INSERT|
+                LDA.W #$0010                                    ;INSERT|
+                PHX
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                PLX
+
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC                                             ;INSERT|
+                ADC.W #$0012                                    ;INSERT|
+                TAY                                             ;INSERT|
+                LDA.W #$0180
+                STA.W tmp34
+                LDA.W #$0012                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|
@@ -23401,48 +23464,154 @@ RefillRowUpMod:
                 LDX.B playerCamY                              
                 BPL +                                         
                 ORA.W #$E000                                 
-
              +: STA.W refillRowTileY                          
+
+
+                LDA.W playerCamY                                  ;INSERT|
+                SEC
+                SBC.L snapCamYOffset
+                PHA
+                CMP.W #$0010
+                BCC +
+                JMP .jumpDown                                     ;INSERT|
                 
-                LDA.L snapCamY                              
-                LSR A                                         
-                LSR A                                         
-                LSR A                                         
+             +: LSR A : LSR A : LSR A
                 AND.W #$FFFE                                  
                 STA.W refillSnapRowTileY                          
-
-                LDA.B playerCamY                              
+                PLA
+                PHA
                 AND.W #$0008                                  
-                BNE .skip                                     
-                                                            
-                                                            
-                                                            
+                BNE .secondHalf                                     
+
                 JSR.W GetRowStageXMod
                 LDY.W refillRowTileY                                                                     
-                DEY                                           
+                DEY
+                DEY
+                STZ.W tmp34
                 LDA.W #$FFFE                                  
+                PHX
                 JSR.W BuildTilemapRowMod                         
-                LDA.W #$0040                                  
+                PLX
+
+
+                PLA
+                CMP.W #$0070
+                BCS .skip
+
+                LDA.W #$0080
+                STA.W tmp34
+                LDY.W refillRowTileY 
+                INY : INY : INY : INY
+
+                LDA.W #$0001
+                ORA.L rowLenFlags
+                STA.L rowLenFlags
+
+                LDA.W #$0010
+                JSR.W BuildTilemapRowMod
+
+
+         .skip: LDA.W #$0040                                  
                 JSR.W SetPpuUpdateBitsMod                        
                 JMP.W scanBoxPrepVerticalMod_up
 
 
-         .skip: LDA.W refillLastCamY                          
+   .secondHalf: LDA.W refillLastCamY                          
                 SEC                                           
                 SBC.B playerCamY                              
                 CMP.W #$0009                                  
                 BCC .exit                                     
+
                 JSR.W GetRowStageXMod
                 LDY.W refillRowTileY
-                INY                          
+                STZ.W tmp34
                 LDA.W #$0000                                  
+                PHX
                 JSR.W BuildTilemapRowMod                         
-                LDA.W #$0040                                  
+                PLX
+
+                PLA
+                CMP.W #$0070
+                BCC .skip2
+
+                LDA.W #$0080
+                STA.W tmp34
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC
+                ADC.W #$0006                                    ;INSERT|
+                TAY
+
+                LDA.W #$0001
+                ORA.L rowLenFlags
+                STA.L rowLenFlags
+
+                LDA.W #$0012
+                JSR.W BuildTilemapRowMod
+
+        .skip2: LDA.W #$0040                                  
                 JSR.W SetPpuUpdateBitsMod                        
                 JMP.W scanBoxPrepVerticalMod_up
 
+         .exit: PLA
+                RTS                                           
 
-         .exit: RTS                                           
+     .jumpDown:
+                LDA.L snapCamYOffset
+                SEC
+                SBC.W #$0090
+                STA.L snapCamYOffset
+                
+                PLA
+                SEC
+                SBC.W #$0090
+                LSR A : LSR A : LSR A
+                AND.W #$FFFE                                  
+                STA.W refillSnapRowTileY                          
+
+                JSR.W GetRowStageXMod
+                LDY.W refillRowTileY
+                STZ.W tmp34
+                LDA.W #$0000                                    ;INSERT|
+                PHX
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+
+                PLX
+                LDA.W #$0002
+                ORA.L rowLenFlags
+                STA.L rowLenFlags
+
+                LDY.W refillRowTileY                            ;INSERT|
+                INY : INY
+                LDA.W #$0080
+                STA.W tmp34
+                LDA.W #$0002                                    ;INSERT|
+                PHX
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                PLX
+
+                LDY.W refillRowTileY                                            ;INSERT|
+                INY : INY : INY : INY
+                LDA.W #$0100
+                STA.W tmp34
+                LDA.W #$0004                                    ;INSERT|
+                PHX
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                PLX
+
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC
+                ADC.W #$0006                                    ;INSERT|
+                TAY
+                LDA.W #$0180
+                STA.W tmp34
+                LDA.W #$0006                                    ;INSERT|
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+
+                LDA.W #$0040                                    ;INSERT|
+                JSR.W SetPpuUpdateBitsMod                       ;INSERT|
+                JMP.W scanBoxPrepVerticalMod_down               ;INSERT|
+
+
 
 GetRowStageXMod:    ;returns X = tile-x of the row window start
                 LDA.B playerCamX
@@ -23468,9 +23637,8 @@ GetRowStageXMod:    ;returns X = tile-x of the row window start
 
 
 BuildTilemapColMod:
-                PHY
+;                PHY
                 PHA                                 
-                                                    
                 TXA                                 
                 ASL A                               
                 TXA                                 
@@ -23485,7 +23653,7 @@ BuildTilemapColMod:
                 STZ.B tmp34
 
          .loop: JSR.W FetchConvertMetatileColMod       
-                
+
                 INY                                 
                 LDA.B tmp34                         
                 CLC                                 
@@ -23501,28 +23669,29 @@ BuildTilemapColMod:
                 CLC
                 ADC.W tilemapBaseLo
                 STA.W P1colDmaDest0
-                STA.W P1colDmaDest1    ;top of col
-                PLA
-                AND.W #$000F
-                ASL A       
-                STA.B tmp32 
-                TAY
-            ++: LDA.W data_Xtimes20,Y
-                CLC
-                ADC.W P1colDmaDest0
-                STA.W P1colDmaDest0
+
+            ;     STA.W P1colDmaDest1    ;top of col
+            ;     PLA
+            ;     AND.W #$000F
+            ;     ASL A       
+            ;     STA.B tmp32 
+            ;     TAY
+            ; ++: LDA.W data_Xtimes20,Y
+            ;     CLC
+            ;     ADC.W P1colDmaDest0
+            ;     STA.W P1colDmaDest0
                 
-                ; colDmaLen0 = 0x40 (screen height) - (y + lenth of visible screen)
-                ; colDmaLen0 = 0x40 - y - 24
-                ; colDmaLen0 = 0x1C - y
-                LDA.W #$001C    
-                SEC             
-                SBC.B tmp32
-                STA.W colDmaLen0
-                LDA.W #$001C    
-                SEC             
-                SBC.W colDmaLen0
-                STA.W colDmaLen1
+            ;     ; colDmaLen0 = 0x40 (screen height) - (y + lenth of visible screen)
+            ;     ; colDmaLen0 = 0x40 - y - 24
+            ;     ; colDmaLen0 = 0x1C - y
+            ;     LDA.W #$001C    
+            ;     SEC             
+            ;     SBC.B tmp32
+            ;     STA.W colDmaLen0
+            ;     LDA.W #$001C    
+            ;     SEC             
+            ;     SBC.W colDmaLen0
+            ;     STA.W colDmaLen1
                 RTS
 
 FetchConvertMetatileColMod:
@@ -23811,11 +23980,11 @@ UploadTilemapRowP1:
                 BIT.W #$0001
                 BNE .2row
                 BIT.W #$0002 
-                BNE .3row
+                BNE .4row
 
                 LDA.W P1rowDmaDest0                       
                 STA.W VMADDL                             
-                LDA.W #$3928                          
+                LDA.W #$3A00                          
                 STA.W A1TL0                              
                 LDA.W #$0080                             
                 STA.W DASL0                              
@@ -23829,7 +23998,7 @@ UploadTilemapRowP1:
 
          .2row: LDA.W P1rowDmaDest0                       
                 STA.W VMADDL                             
-                LDA.W #$3928                          
+                LDA.W #$3A00                          
                 STA.W A1TL0                              
                 LDA.W #$0080                             
                 STA.W DASL0                              
@@ -23842,7 +24011,7 @@ UploadTilemapRowP1:
 
                 LDA.W P1rowDmaDest1
                 STA.W VMADDL
-                LDA.W #$39A8
+                LDA.W #$3B00
                 STA.W A1TL0
                 LDA.W #$0080
                 STA.W DASL0
@@ -23852,11 +24021,11 @@ UploadTilemapRowP1:
                 REP #$30                                 
                 RTL
 
-         .3row: LDA.W P1rowDmaDest0                       
+         .4row: LDA.W P1rowDmaDest0                       
                 STA.W VMADDL                             
-                LDA.W #$3928                          
+                LDA.W #$3A00                          
                 STA.W A1TL0                              
-                LDA.W #$0180                             
+                LDA.W #$0200                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$7E                               
@@ -23878,88 +24047,31 @@ UploadTilemapColumnP1:
                 REP #$30                                 
                 LDA.W P1colDmaDest0                      
                 STA.W VMADDL                             
-                LDA.W #$38E0                             
+                LDA.W #$1700                             
                 STA.W A1TL0                              
-                LDA.W #$0024                             
+                LDA.W #$0040                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                ;STA.W MDMAEN                             
-                
-                REP #$30                                 
-                LDA.W colDmaLen0
-                BEQ +
-
-                LDA.W #$38E2 ;this (probably) is wrong
-                STA.W A1TL0                              
-                LDA.W colDmaLen0                             
-                STA.W DASL0                              
-                SEP #$30                                 
-                LDA.B #$01                               
-                ;STA.W MDMAEN                             
-            
-
-                REP #$30
-             +: LDA.W colDmaLen1
-                BEQ +
-
-                LDA.W P1colDmaDest1                       
-                STA.W VMADDL                             
-                LDA.W #$38E0                             
-                STA.W A1TL0                              
-                LDA.W colDmaLen1                         
-                STA.W DASL0                              
-                SEP #$30
-                LDA.B #$01                               
-                ;STA.W MDMAEN                            
+                STA.W MDMAEN                             
 
             ;SECOND COLUMN
                 REP #$30
-             +: LDA.W P1colDmaDest0
+                LDA.W P1colDmaDest0
                 INC                       
                 STA.W VMADDL                             
-                LDA.W #$3904                             
+                LDA.W #$1740                             
                 STA.W A1TL0                              
-                LDA.W #$0024                             
+                LDA.W #$0040                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                ;STA.W MDMAEN                             
-                
-                REP #$30                                 
-                LDA.W colDmaLen0
-                BEQ +
+                STA.W MDMAEN                             
 
-
-                LDA.W #$3906 ;this (probably) is wrong
-                STA.W A1TL0                              
-                LDA.W colDmaLen0                             
-                STA.W DASL0                              
-                SEP #$30                                 
-                LDA.B #$01                               
-                ;STA.W MDMAEN                             
-            
-
-                REP #$30                                 
-             +: LDA.W colDmaLen1
-                BEQ +
-             
-                LDA.W P1colDmaDest1                       
-                INC
-                STA.W VMADDL                             
-                LDA.W #$3904                             
-                STA.W A1TL0                              
-                LDA.W colDmaLen1                             
-                STA.W DASL0                              
-                SEP #$30
-                LDA.B #$01                               
-                ;STA.W MDMAEN                                
-
-             +: SEP #$30
                 LDA.B #$80 
                 STA.W VMAIN
                 REP #$30                                 

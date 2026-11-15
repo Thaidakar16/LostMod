@@ -44,7 +44,7 @@ So: in the case we mirror 7,
     FOUR. 
     FOUR stages. When accounting for P2, This is EIGHT TIMES the amount of staging for rows. (not quite, but pretty much)
 
-In the case we mirror 8,
+In the case we mirror 8, (we cant mirror 8)
     When we load 10, we load 8 into 0
     11, 9 to 1
     12, 10 to 2
@@ -110,4 +110,14 @@ but, something overlooked before, when we snap back, we need to have the padding
 when 15 is visible, 8 is potentially visible. 7 is reserve. 7 HAS to bee mirrored over. this unfortunately means we need 4 stages. i think we have the room and cycles for it tho
 its just less comfortable than i would like. 
 
+
+Im working on the new columns now.
+
+first case: the camera is focused on the middle of the area.
+the top of the column is an offset from last snap
+that applies all the way until camY-1. then it is the normal camera stuff for the next 10 lines.
+then, the bottom is an offset from last snap. 
+
+It seems like it would be better to use a value that is our snap offset.
+We would subtract it from camY for display and for other stuff. any time we snap, we would simply add or subtract from it. 
 

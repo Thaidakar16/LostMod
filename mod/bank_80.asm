@@ -23650,19 +23650,57 @@ BuildTilemapColMod:
                 ROR A                               
                 TAY                                 
 
-                STZ.B tmp34
+                TYA
+                AND.W #$000F
+            
+                ASL A
+                ASL A
+                STA.W refillStageStart
+                STA.B tmp34
+                CLC
+                ADC.W #$0024
+                STA.B tmp36
 
          .loop: JSR.W FetchConvertMetatileColMod       
-
                 INY                                 
                 LDA.B tmp34                         
                 CLC                                 
                 ADC.W #$0004                        
                 STA.B tmp34                         
-                CMP.W #$0024                        
+                CMP.W tmp36                        
                 BCC .loop                           
 
-                PLA                                                                  
+                LDA.W refillStageStart
+                CMP.W #$001C
+                BCS .skip
+
+                ;WIP: add (or subtract) offset for Y
+
+        .loop2: JSR.W FetchConvertMetatileColMod       
+                INY                                 
+                LDA.B tmp34                         
+                CLC                                 
+                ADC.W #$0004                        
+                STA.B tmp34                         
+                CMP.W #$0040                        
+                BCC .loop2                           
+
+         .skip: LDA.W refillStageStart
+                BEQ .skip2
+
+                STZ.B tmp34
+                ;WIP: add (or subtract) offset for Y
+
+        .loop3: JSR.W FetchConvertMetatileColMod       
+                INY                                 
+                LDA.B tmp34                         
+                CLC                                 
+                ADC.W #$0004                        
+                STA.B tmp34                         
+                CMP.W refillStageStart                        
+                BCC .loop3                           
+                
+        .skip2: PLA                                                                  
                 CLC                                 
                 ADC.W refillColTileX                 
                 AND.W #$001F                         

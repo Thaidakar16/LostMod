@@ -20,3 +20,5 @@ First, my snap camera was a simple modulo of the main camera. however, this has 
 So I removed the modulo camera Y. Instead, I now have an offset from the camera. Whenever we need the "modulo-ed camera", we instead just subtract the offset. 
 To fix the first problem, The code only adjusts the offset inside the refill code. when we load the rows for a snap up, we add to the offset, and when we snap down, we subtract from the offset.
 To fix the second problem, Instead of adjusting the offset by a factor of 9 metatiles, I do it by a factor of 7 metatiles. This correctly positions the camera so that we can detect a snap that happens right after an opposite snap.
+
+For the main loading itself, It first calculates the camera - offset. It checks if the value means we should do a snap back. If yes, it loads 4 rows and adjusts the camera offset. If no, then it loads the next row in the ring. It then checks the camera - offset again. This time, it decides whether it should do a row behind. 

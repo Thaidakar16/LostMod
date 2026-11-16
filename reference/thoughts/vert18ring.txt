@@ -28,12 +28,12 @@ when we can no longer see 7, we will see (or soon see) 15.
     We will probably want to do double cues instead of direct mirrors as we would still need additional ram required for double cues even if we did direct mirroring.
 
 So: in the case we mirror 7,
-    When we load 10, we load 7 into 0
-    11, 8 to 1
-    12, 9 to 2
-    13, 10 to 3
-    14, 11 to 4
-    15, 12 to 5
+    cam at 2, When we load 10, we load 7 into 0
+    3,11, 8 to 1 
+    4,12, 9 to 2
+    5,13, 10 to 3
+    6,14, 11 to 4
+    7,15, 12 to 5
     then, we need to perform the next load. this would mean we have to be ready for the snapback already, so, we need to overwrite.
     when we snap, 16 must be loaded.
     13 to 6

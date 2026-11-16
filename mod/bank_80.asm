@@ -23303,7 +23303,7 @@ RefillRowDownMod:
                 SEC
                 SBC.L snapCamYOffset
                 PHA
-                CMP.W #$0090     ;If the current version of the camera is now hovering over 0xF even a little, jump up.
+                CMP.W #$0070     ;If the current version of the camera is now hovering over 0xF even a little, jump up.
                 BCC +
                 JMP .jumpUp                                     ;INSERT|
                 
@@ -23318,10 +23318,10 @@ RefillRowDownMod:
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT| 
                 CLC                                             ;INSERT|
-                ADC.W #$000E                                    ;INSERT|
+                ADC.W #$0012                                    ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$000E                                   ;INSERT|
+                LDA.W #$0012                                   ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23334,7 +23334,7 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$000C                                    ;INSERT|
+                ADC.W #$000A                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
@@ -23358,10 +23358,10 @@ RefillRowDownMod:
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$000C                                    ;INSERT|
+                ADC.W #$0010                                    ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$000C                                    ;INSERT|
+                LDA.W #$0010                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23374,7 +23374,7 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$000A                                    ;INSERT|
+                ADC.W #$000E                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
@@ -23396,7 +23396,7 @@ RefillRowDownMod:
 
                 LDA.L snapCamYOffset
                 CLC
-                ADC.W #$0080
+                ADC.W #$0070
                 STA.L snapCamYOffset
 
                 PLA
@@ -23407,11 +23407,11 @@ RefillRowDownMod:
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$0008                                   ;INSERT|
+                ADC.W #$000A                                   ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
                 ; LDA.W #$000C                                    ;INSERT|
-                LDA.W #$FFF8
+                LDA.W #$FFFC
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
@@ -23422,24 +23422,12 @@ RefillRowDownMod:
 
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$000A                                    ;INSERT|
+                ADC.W #$000C                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0080
                 STA.W tmp34
                 ; LDA.W #$000E                                    ;INSERT|
-                LDA.W #$FFFA
-                PHX
-                JSR.W BuildTilemapRowMod                        ;INSERT|
-                PLX
-
-                LDA.W refillRowTileY                            ;INSERT|
-                CLC                                             ;INSERT|
-                ADC.W #$000C                                    ;INSERT|
-                TAY                                             ;INSERT|
-                LDA.W #$0100
-                STA.W tmp34
-                ; LDA.W #$0010                                    ;INSERT|
-                LDA.W #$FFFC
+                LDA.W #$FFFE
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23448,10 +23436,22 @@ RefillRowDownMod:
                 CLC                                             ;INSERT|
                 ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
+                LDA.W #$0100
+                STA.W tmp34
+                ; LDA.W #$0010                                    ;INSERT|
+                LDA.W #$0000
+                PHX
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                PLX
+
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC                                             ;INSERT|
+                ADC.W #$0010                                    ;INSERT|
+                TAY                                             ;INSERT|
                 LDA.W #$0180
                 STA.W tmp34
                 ; LDA.W #$0012                                    ;INSERT|
-                LDA.W #$FFFE
+                LDA.W #$0002
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|
@@ -24066,12 +24066,10 @@ UploadTilemapRowP1:
                 RTL
 
          .4row: LDA.W P1rowDmaDest0                       
-                CLC
-                ADC.W #$0080
                 STA.W VMADDL                             
-                LDA.W #$3B00                          
+                LDA.W #$3A00                          
                 STA.W A1TL0                              
-                LDA.W #$0100                             
+                LDA.W #$0200                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$7E                               

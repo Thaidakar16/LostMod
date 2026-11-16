@@ -82,6 +82,12 @@
     "week": "Week 4",
     "version": 1,
     "notes": "Fixed Vertical scrolling!",
-    "details": "details/week4-1.txt"
+    "details": "details/week4-1.txt",
+        "media": [
+      {
+        "mod": "media/weekW-1.mp4",
+        "caption": "Fixed Vertical Scrolling"
+      }
+    ]
   }
 ]

@@ -23303,7 +23303,7 @@ RefillRowDownMod:
                 SEC
                 SBC.L snapCamYOffset
                 PHA
-                CMP.W #$0080     ;If the current version of the camera is now hovering over 0xF even a little, jump up.
+                CMP.W #$0090     ;If the current version of the camera is now hovering over 0xF even a little, jump up.
                 BCC +
                 JMP .jumpUp                                     ;INSERT|
                 
@@ -23334,7 +23334,7 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$0008                                    ;INSERT|
+                ADC.W #$000C                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
@@ -23374,7 +23374,7 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$0006                                    ;INSERT|
+                ADC.W #$000A                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
@@ -24055,7 +24055,7 @@ UploadTilemapRowP1:
 
                 LDA.W P1rowDmaDest1
                 STA.W VMADDL
-                LDA.W #$3B00
+                LDA.W #$3A80
                 STA.W A1TL0
                 LDA.W #$0080
                 STA.W DASL0
@@ -24066,10 +24066,12 @@ UploadTilemapRowP1:
                 RTL
 
          .4row: LDA.W P1rowDmaDest0                       
+                CLC
+                ADC.W #$0080
                 STA.W VMADDL                             
-                LDA.W #$3A00                          
+                LDA.W #$3B00                          
                 STA.W A1TL0                              
-                LDA.W #$0200                             
+                LDA.W #$0100                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$7E                               

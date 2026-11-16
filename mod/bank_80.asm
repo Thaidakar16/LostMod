@@ -933,7 +933,7 @@ refillSnapBg2RowTileY = $0568
 ;==============================================================
 
 ;P1 rows
-!P1row0smtLU = $3A00
+!P1row0smtLU = $7E3A00
 !P1row0smtRU = !P1row0smtLU+$2
 !P1row0smtLD = !P1row0smtLU+$40
 !P1row0smtRD = !P1row0smtLU+$42
@@ -6599,6 +6599,7 @@ ComputeCameras:
 
                 LDA.W #$0000                                    ;INSERT
                 STA.L snapCamYOffset
+                LDA.B playerCamY
          .loop: 
                 CMP.W #$0090
                 BCC .done
@@ -23395,23 +23396,22 @@ RefillRowDownMod:
 
                 LDA.L snapCamYOffset
                 CLC
-                ADC.W #$0090
+                ADC.W #$0080
                 STA.L snapCamYOffset
 
                 PLA
-                SEC
-                SBC.W #$0090
                 LSR A : LSR A : LSR A
                 AND.W #$FFFE                                  
-                STA.W refillSnapRowTileY                          
+                STA.W refillSnapRowTileY
 
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
-                CLC                                             ;INSERT|
-                ADC.W #$000C                                    ;INSERT|
+                CLC
+                ADC.W #$0008                                   ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$000C                                    ;INSERT|
+                ; LDA.W #$000C                                    ;INSERT|
+                LDA.W #$FFF8
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
@@ -23422,33 +23422,36 @@ RefillRowDownMod:
 
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$000E                                    ;INSERT|
+                ADC.W #$000A                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0080
                 STA.W tmp34
-                LDA.W #$000E                                    ;INSERT|
+                ; LDA.W #$000E                                    ;INSERT|
+                LDA.W #$FFFA
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
 
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$0010                                    ;INSERT|
+                ADC.W #$000C                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0100
                 STA.W tmp34
-                LDA.W #$0010                                    ;INSERT|
+                ; LDA.W #$0010                                    ;INSERT|
+                LDA.W #$FFFC
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
 
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$0012                                    ;INSERT|
+                ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0180
                 STA.W tmp34
-                LDA.W #$0012                                    ;INSERT|
+                ; LDA.W #$0012                                    ;INSERT|
+                LDA.W #$FFFE
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|
@@ -23558,12 +23561,11 @@ RefillRowUpMod:
      .jumpDown:
                 LDA.L snapCamYOffset
                 SEC
-                SBC.W #$0090
+                SBC.W #$00A0
                 STA.L snapCamYOffset
+
                 
                 PLA
-                SEC
-                SBC.W #$0090
                 LSR A : LSR A : LSR A
                 AND.W #$FFFE                                  
                 STA.W refillSnapRowTileY                          
@@ -23891,14 +23893,14 @@ BuildTilemapRowMod:
                 ;we can reuse rowlenflags 
                 LDA.L rowLenFlags
                 BIT.W #$0002 ;if this flag is set, we are doing a 3 in a row of rows, and the dest has already been set
-                BNE .skipDest
+                BNE .3row
          .skip: PLA                     ; row offset 
                 CLC
                 ADC.W refillSnapRowTileY ;add camera
                 ;AND.W #$001F             ;the value should already be wrapped...
                 ASL A                     ;convert to 16bit pointer 
-                TAY
-                LDA.W data_Xtimes20,Y     ; row * $20
+                TAX
+                LDA.L data_Xtimes20,X     ; row * $20
                 CLC
                 ADC.W tilemapBaseLo     ; P1 subscreen base
                 STA.W P1rowDmaDest1
@@ -23909,7 +23911,11 @@ BuildTilemapRowMod:
                 STA.W P1rowDmaDest0
              +: RTS
 
-     .skipDest: PLA
+          .3row: ;LDA.W P1rowDmaDest0
+        ;         SEC
+        ;         SBC.W #$00
+        ;         STA.W P1rowDmaDest0
+                PLA
                 RTS
 
 FetchConvertMetatileRowMod:

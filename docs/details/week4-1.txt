@@ -1,0 +1,22 @@
+A LOT of progress has been made!
+To start, I changed the layout of the staged rows and columns AGAIN.
+I did this for a few reasons: 
+1. I realized that if I have the player 2 staging right after the player 1 staging, I could use the same functions to build the rows and columns by using an offset for player 2
+2. I checked my thoughts on how the ring of 18 would work and I realized the path I chose (The option that mirrored 7 to 0 instead of 8 to 0), was flawed and wouldn't work. Because of this, I need to use 4 whole metatile rows for the snap-back.
+3. Because of the additional space needed because of the additional row and to reclaim unused space, I decided to use the original staging location for the columns and the new location for the rows.
+4. When I moved the columns to the original staging, I noticed that the available space in that area was 0x240 bytes (576 in decimal). However, my columns only used 0x120 bytes in total. This extra space could be used to increase the queuing for the columns from 9 metatiles to all 16 metatiles. This greatly simplifies the uploading logic.
+5. Finally, I was just sick of the addresses being unintuitive, so now they all have very nice numbers (the rows and columns all start at $XX00 or $XX80).
+
+After making these changes, I moved on to the new column system. I simplified the uploading function and moved on to the loading system.
+The loading system used to run a simple loop that loads cam -1 (one metatile before the camera Y) to cam + 1. It still does that, but now the storing location is offset so that an upload of an entire column correctly places the metatiles.
+Then, I added 2 more loops that load the metatiles before and after the main camera section. (these values have yet to be adjusted correctly)
+That leaves me with the horizontal like 90% done.
+
+Then I moved to the vertical. This was a headache and a half. The logic that I set up last week was mostly wrong.
+First, my snap camera was a simple modulo of the main camera. however, this has 2 problems.
+1. The camera could snap back on a non-upload frame (the game only uploads new columns and rows every 3 frames, but the camera can scroll every frame). This is a problem as some of the lines overlap on usage. i.e. When the new tiles must load at the same time as the camera snaps back, but a simple modulo circumvents that.
+2. Having a static modulo also means that when the camera snaps back, it goes back to the top or bottom. However, this creates a blind spot. For example, I we scrolled down and it snapped back, and then we continued scrolling down, then went back up, It would snap back down because it saw the scroll up. However, If we snapped up, then immediately scrolled up, It could not detect the scroll up soon enough for the snap down.
+
+So I removed the modulo camera Y. Instead, I now have an offset from the camera. Whenever we need the "modulo-ed camera", we instead just subtract the offset. 
+To fix the first problem, The code only adjusts the offset inside the refill code. when we load the rows for a snap up, we add to the offset, and when we snap down, we subtract from the offset.
+To fix the second problem, Instead of adjusting the offset by a factor of 9 metatiles, I do it by a factor of 7 metatiles. This correctly positions the camera so that we can detect a snap that happens right after an opposite snap.

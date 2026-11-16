@@ -76,5 +76,12 @@
         "caption": "Less Broken Scrolling"
       }
     ]
+  },
+  {
+    "id": "week4-1",
+    "week": "Week 4",
+    "version": 1,
+    "notes": "Fixed Vertical scrolling!",
+    "details": "details/week4-1.txt"
   }
 ]

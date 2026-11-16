@@ -870,7 +870,7 @@ refillSnapBg2RowTileY = $0568
 ;but, using the original opens up 0x38E0 to 0x39FF if needed. 
 
 ;the original queuing space is 0x16F5 to 0x1935 which is 0x240. I only need 0x120
-; If I wanted to, I could potentially load the entire column instead of just 14 metatiles worth of it.
+; If I wanted to, I could potentially load the entire column instead of just 9 metatiles of it.
 ; that would cost 0x80 per column, or 0x200. I think it is work the extra effort! 
 ;It makes the logic on the upload side faster and much easier. We would only need one destword.
 
@@ -23374,7 +23374,7 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$000E                                    ;INSERT|
+                ADC.W #$0008                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
@@ -23475,7 +23475,7 @@ RefillRowUpMod:
                 SBC.L snapCamYOffset
                 PHA
                 CMP.W #$0010
-                BCC +
+                BCS +
                 JMP .jumpDown                                     ;INSERT|
                 
              +: LSR A : LSR A : LSR A
@@ -23498,19 +23498,21 @@ RefillRowUpMod:
 
 
                 PLA
-                CMP.W #$0070
+                CMP.W #$0060
                 BCS .skip
 
                 LDA.W #$0080
                 STA.W tmp34
-                LDY.W refillRowTileY 
-                INY : INY : INY : INY
+                LDA.W refillRowTileY 
+                CLC                                             ;INSERT|
+                ADC.W #$0006                                    ;INSERT|
+                TAY
 
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
 
-                LDA.W #$0010
+                LDA.W #$0014
                 JSR.W BuildTilemapRowMod
 
 
@@ -23541,14 +23543,14 @@ RefillRowUpMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$0006                                    ;INSERT|
+                ADC.W #$0008                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
 
-                LDA.W #$0012
+                LDA.W #$0016
                 JSR.W BuildTilemapRowMod
 
         .skip2: LDA.W #$0040                                  
@@ -23561,7 +23563,7 @@ RefillRowUpMod:
      .jumpDown:
                 LDA.L snapCamYOffset
                 SEC
-                SBC.W #$00A0
+                SBC.W #$0070
                 STA.L snapCamYOffset
 
                 
@@ -23573,7 +23575,7 @@ RefillRowUpMod:
                 JSR.W GetRowStageXMod
                 LDY.W refillRowTileY
                 STZ.W tmp34
-                LDA.W #$0000                                    ;INSERT|
+                LDA.W #$000E                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
@@ -23586,7 +23588,7 @@ RefillRowUpMod:
                 INY : INY
                 LDA.W #$0080
                 STA.W tmp34
-                LDA.W #$0002                                    ;INSERT|
+                LDA.W #$0010                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23595,7 +23597,7 @@ RefillRowUpMod:
                 INY : INY : INY : INY
                 LDA.W #$0100
                 STA.W tmp34
-                LDA.W #$0004                                    ;INSERT|
+                LDA.W #$0012                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23606,7 +23608,7 @@ RefillRowUpMod:
                 TAY
                 LDA.W #$0180
                 STA.W tmp34
-                LDA.W #$0006                                    ;INSERT|
+                LDA.W #$0014                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|

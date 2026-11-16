@@ -28,7 +28,7 @@ when we can no longer see 7, we will see (or soon see) 15.
     We will probably want to do double cues instead of direct mirrors as we would still need additional ram required for double cues even if we did direct mirroring.
 
 So: in the case we mirror 7,
-    cam at 2, When we load 10, we load 7 into 0
+    cam at 2, we load 10, we load 7 into 0
     3,11, 8 to 1 
     4,12, 9 to 2
     5,13, 10 to 3

@@ -23318,10 +23318,10 @@ RefillRowDownMod:
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT| 
                 CLC                                             ;INSERT|
-                ADC.W #$0012                                    ;INSERT|
+                ADC.W #$0010                                    ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$0012                                   ;INSERT|
+                LDA.W #$0010                                   ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23334,14 +23334,14 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$000A                                    ;INSERT|
+                ADC.W #$000C                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
 
-                LDA.W #$FFFC
+                LDA.W #$FFFE
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
 
@@ -23358,10 +23358,10 @@ RefillRowDownMod:
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$0010                                    ;INSERT|
+                ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$0010                                    ;INSERT|
+                LDA.W #$000E                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23374,14 +23374,14 @@ RefillRowDownMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$0008                                    ;INSERT|
+                ADC.W #$000A                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
 
-                LDA.W #$FFFA
+                LDA.W #$FFFC
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
 
@@ -23498,21 +23498,21 @@ RefillRowUpMod:
 
 
                 PLA
-                CMP.W #$0060
+                CMP.W #$0070
                 BCS .skip
 
                 LDA.W #$0080
                 STA.W tmp34
                 LDA.W refillRowTileY 
                 CLC                                             ;INSERT|
-                ADC.W #$0006                                    ;INSERT|
+                ADC.W #$0002                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
 
-                LDA.W #$0014
+                LDA.W #$0010
                 JSR.W BuildTilemapRowMod
 
 
@@ -23543,14 +23543,14 @@ RefillRowUpMod:
                 STA.W tmp34
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$0008                                    ;INSERT|
+                ADC.W #$0004                                    ;INSERT|
                 TAY
 
                 LDA.W #$0001
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
 
-                LDA.W #$0016
+                LDA.W #$0012
                 JSR.W BuildTilemapRowMod
 
         .skip2: LDA.W #$0040                                  

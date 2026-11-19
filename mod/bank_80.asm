@@ -23423,7 +23423,7 @@ RefillRowDownMod:
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$00C                                   ;INSERT|
+                ADC.W #$000C                                   ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
                 LDA.W #$FFFC
@@ -23591,7 +23591,7 @@ RefillRowUpMod:
 
                 JSR.W GetRowStageXMod
                 LDY.W refillRowTileY
-                ;DEY : DEY : DEY : DEY
+               ; DEY : DEY : DEY : DEY
                 STZ.W tmp34
                 LDA.W #$000A                                    ;INSERT|
                 PHX
@@ -23696,8 +23696,8 @@ BuildTilemapColMod:
 
                 ;WIP: add (or subtract) offset for Y
                 LDA.W refillRowTileY
-                CLC
-                ADC.W #$0009
+                SEC
+                SBC.W #$0009
                 TAY
 
         .loop2: JSR.W FetchConvertMetatileColMod       
@@ -23899,7 +23899,7 @@ BuildTilemapRowMod:
                 ;we can reuse rowlenflags 
                 LDA.L rowLenFlags
                 BIT.W #$0002 ;if this flag is set, we are doing a 3 in a row of rows, and the dest is a constant.
-                BNE .3row
+                BNE .snapRow
          .skip: PLA                     ; row offset 
                 CLC
                 ADC.W refillSnapRowTileY ;add camera
@@ -23916,7 +23916,7 @@ BuildTilemapRowMod:
                 STA.W P1rowDmaDest0
              +: RTS
 
-         .3row: LDA.W #$01C0
+      .snapRow: LDA.W #$01C0
                 CLC
                 ADC.W tilemapBaseLo
                 STA.W P1rowDmaDest0
@@ -24070,7 +24070,8 @@ UploadTilemapRowP1:
                 REP #$30                                 
                 RTL
 
-         .4row: LDA.W P1rowDmaDest0                       
+         .4row: ;LDA.W P1rowDmaDest0                       
+                LDA.W #$19C0
                 STA.W VMADDL                             
                 LDA.W #$3A00                          
                 STA.W A1TL0                              
@@ -24104,7 +24105,7 @@ UploadTilemapColumnP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                ;STA.W MDMAEN                             
+                STA.W MDMAEN                             
 
             ;SECOND COLUMN
                 REP #$30
@@ -24119,7 +24120,7 @@ UploadTilemapColumnP1:
                 LDA.B #$7E                               
                 STA.W A1B0                               
                 LDA.B #$01                               
-                ;STA.W MDMAEN                             
+                STA.W MDMAEN                             
 
                 LDA.B #$80 
                 STA.W VMAIN

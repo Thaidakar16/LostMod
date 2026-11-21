@@ -23423,7 +23423,7 @@ RefillRowDownMod:
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
-                ADC.W #$000C                                   ;INSERT|
+                ADC.W #$000A                                   ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
                 LDA.W #$FFFC
@@ -23437,7 +23437,7 @@ RefillRowDownMod:
 
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
-                ADC.W #$000E                                    ;INSERT|
+                ADC.W #$000C                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0080
                 STA.W tmp34
@@ -23446,26 +23446,26 @@ RefillRowDownMod:
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
 
-                ; LDA.W refillRowTileY                            ;INSERT|
-                ; CLC                                             ;INSERT|
-                ; ADC.W #$000E                                    ;INSERT|
-                ; TAY                                             ;INSERT|
-                ; LDA.W #$0100
-                ; STA.W tmp34
-                ; LDA.W #$0000
-                ; PHX
-                ; JSR.W BuildTilemapRowMod                        ;INSERT|
-                ; PLX
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC                                             ;INSERT|
+                ADC.W #$000E                                    ;INSERT|
+                TAY                                             ;INSERT|
+                LDA.W #$0100
+                STA.W tmp34
+                LDA.W #$0000
+                PHX
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                PLX
 
-                ; LDA.W refillRowTileY                            ;INSERT|
-                ; CLC                                             ;INSERT|
-                ; ADC.W #$0010                                    ;INSERT|
-                ; TAY                                             ;INSERT|
-                ; LDA.W #$0180
-                ; STA.W tmp34
-                ; ; LDA.W #$0012                                    ;INSERT|
-                ; LDA.W #$0002
-                ; JSR.W BuildTilemapRowMod                        ;INSERT|
+                LDA.W refillRowTileY                            ;INSERT|
+                CLC                                             ;INSERT|
+                ADC.W #$0010                                    ;INSERT|
+                TAY                                             ;INSERT|
+                LDA.W #$0180
+                STA.W tmp34
+                ; LDA.W #$0012                                    ;INSERT|
+                LDA.W #$0002
+                JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod                       ;INSERT|
@@ -23591,7 +23591,7 @@ RefillRowUpMod:
 
                 JSR.W GetRowStageXMod
                 LDY.W refillRowTileY
-               ; DEY : DEY : DEY : DEY
+                DEY : DEY ;: DEY : DEY
                 STZ.W tmp34
                 LDA.W #$000A                                    ;INSERT|
                 PHX
@@ -23603,7 +23603,7 @@ RefillRowUpMod:
                 STA.L rowLenFlags
 
                 LDY.W refillRowTileY                            ;INSERT|
-                INY : INY
+               ; INY : INY
                 LDA.W #$0080
                 STA.W tmp34
                 LDA.W #$000C ; load A doesnt matter anymore
@@ -23611,20 +23611,21 @@ RefillRowUpMod:
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
 
-                ; LDY.W refillRowTileY                                            ;INSERT|
-                ; LDA.W #$0100
-                ; STA.W tmp34
-                ; LDA.W #$000E                                    ;INSERT|
-                ; PHX
-                ; JSR.W BuildTilemapRowMod                        ;INSERT|
-                ; PLX
+                LDY.W refillRowTileY                                            ;INSERT|
+                INY : INY
+                LDA.W #$0100
+                STA.W tmp34
+                LDA.W #$000E                                    ;INSERT|
+                PHX
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                PLX
 
-                ; LDA.W refillRowTileY                            ;INSERT|
-                ; INY : INY
-                ; LDA.W #$0180
-                ; STA.W tmp34
-                ; LDA.W #$0010                                    ;INSERT|
-                ; JSR.W BuildTilemapRowMod                        ;INSERT|
+                LDY.W refillRowTileY                            ;INSERT|
+                INY : INY : INY : INY
+                LDA.W #$0180
+                STA.W tmp34
+                LDA.W #$0010                                    ;INSERT|
+                JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|
                 JSR.W SetPpuUpdateBitsMod                       ;INSERT|
@@ -23697,7 +23698,7 @@ BuildTilemapColMod:
                 ;WIP: add (or subtract) offset for Y
                 LDA.W refillRowTileY
                 SEC
-                SBC.W #$0009
+                SBC.W #$0007
                 TAY
 
         .loop2: JSR.W FetchConvertMetatileColMod       
@@ -24071,11 +24072,11 @@ UploadTilemapRowP1:
                 RTL
 
          .4row: ;LDA.W P1rowDmaDest0                       
-                LDA.W #$19C0
+                LDA.W #$1980
                 STA.W VMADDL                             
                 LDA.W #$3A00                          
                 STA.W A1TL0                              
-                LDA.W #$0100                             
+                LDA.W #$0200                             
                 STA.W DASL0                              
                 SEP #$30                                 
                 LDA.B #$7E                               

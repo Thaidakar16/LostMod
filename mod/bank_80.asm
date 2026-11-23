@@ -23421,28 +23421,27 @@ RefillRowDownMod:
                 AND.W #$FFFE                                  
                 STA.W refillSnapRowTileY
 
+                LDA.W #$0002
+                ORA.L rowLenFlags
+                STA.L rowLenFlags
+
+
                 JSR.W GetRowStageXMod
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC
                 ADC.W #$000A                                   ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$FFFC
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 PLX
-                LDA.W #$0002
-                ORA.L rowLenFlags
-                STA.L rowLenFlags
-
                 LDA.W refillRowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$000C                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0080
                 STA.W tmp34
-                LDA.W #$FFFE
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23453,7 +23452,6 @@ RefillRowDownMod:
                 TAY                                             ;INSERT|
                 LDA.W #$0100
                 STA.W tmp34
-                LDA.W #$0000
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23464,8 +23462,6 @@ RefillRowDownMod:
                 TAY                                             ;INSERT|
                 LDA.W #$0180
                 STA.W tmp34
-                ; LDA.W #$0012                                    ;INSERT|
-                LDA.W #$0002
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|
@@ -23586,24 +23582,20 @@ RefillRowUpMod:
                 AND.W #$FFFE                                  
                 STA.W refillSnapRowTileY                          
 
-                JSR.W GetRowStageXMod
-                LDY.W refillRowTileY
-                DEY : DEY ;: DEY : DEY
-                STZ.W tmp34
-                LDA.W #$000A                                    ;INSERT|
-                PHX
-                JSR.W BuildTilemapRowMod                        ;INSERT|
-
-                PLX
                 LDA.W #$0002
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
 
+                JSR.W GetRowStageXMod
+                LDY.W refillRowTileY
+                DEY : DEY
+                STZ.W tmp34
+                PHX
+                JSR.W BuildTilemapRowMod                        ;INSERT|
+                PLX
                 LDY.W refillRowTileY                            ;INSERT|
-               ; INY : INY
                 LDA.W #$0080
                 STA.W tmp34
-                LDA.W #$000C ; load A doesnt matter anymore
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23612,7 +23604,6 @@ RefillRowUpMod:
                 INY : INY
                 LDA.W #$0100
                 STA.W tmp34
-                LDA.W #$000E                                    ;INSERT|
                 PHX
                 JSR.W BuildTilemapRowMod                        ;INSERT|
                 PLX
@@ -23621,7 +23612,6 @@ RefillRowUpMod:
                 INY : INY : INY : INY
                 LDA.W #$0180
                 STA.W tmp34
-                LDA.W #$0010                                    ;INSERT|
                 JSR.W BuildTilemapRowMod                        ;INSERT|
 
                 LDA.W #$0040                                    ;INSERT|
@@ -23644,8 +23634,7 @@ GetRowStageXMod:    ;returns X = tile-x of the row window start
                 AND.W #$0008
                 LSR A
                 LSR A 
-                CLC
-                ADC.W #$0002
+                INC : INC 
                 CLC
                 ADC.W refillColTileX
                 TAX
@@ -23654,7 +23643,6 @@ GetRowStageXMod:    ;returns X = tile-x of the row window start
 
 
 BuildTilemapColMod:
-;                PHY
                 PHA                                 
                 TXA                                 
                 ASL A                               
@@ -23692,7 +23680,6 @@ BuildTilemapColMod:
                 CMP.W #$0018
                 BCS .skip
 
-                ;WIP: add (or subtract) offset for Y
                 LDA.W refillRowTileY
                 SEC
                 SBC.W #$0007
@@ -23712,7 +23699,6 @@ BuildTilemapColMod:
 
          .skip: STZ.B tmp34
                 
-                ;WIP: add (or subtract) offset for Y
                 LDA.L snapCamYOffset 
                 LSR A : LSR A : LSR A : LSR A 
                 CLC
@@ -23893,11 +23879,6 @@ BuildTilemapRowMod:
                 BCC .loop2
 
 
-                ;we need to know which row we are refilling
-                ;we can reuse rowlenflags 
-                ; LDA.L rowLenFlags
-                ; BIT.W #$0002 ;if this flag is set, we are doing a 3 in a row of rows, and the dest is a constant.
-                ; BNE .snapRow
          .skip: PLA                     ; row offset 
                 CLC
                 ADC.W refillSnapRowTileY ;add camera
@@ -23915,12 +23896,6 @@ BuildTilemapRowMod:
                 STA.W P1rowDmaDest0
              +: RTS
 
-    ;   .snapRow: LDA.W #$01C0
-    ;             CLC
-    ;             ADC.W tilemapBaseLo
-    ;             STA.W P1rowDmaDest0
-    ;             PLA
-    ;             RTS
 
 FetchConvertMetatileRowMod:
                 STX.B refillSaveX                
@@ -24070,8 +24045,7 @@ UploadTilemapRowP1:
                 REP #$30                                 
                 RTL
 
-         .4row: ;LDA.W P1rowDmaDest0                       
-                LDA.W #$1980
+         .4row: LDA.W #$1980
                 STA.W VMADDL                             
                 LDA.W #$3A00                          
                 STA.W A1TL0                              
@@ -24229,7 +24203,6 @@ RefillTilemapOnScrollBg2Mod:
        .goDown: JSR.W RefillRowDownBg2Mod
 
                 ;Horizontal refill
-
       .refillX: LDA.W refillLastBg2CamXSrc                     ;INSERT|         ; last camera X position
                 AND.W #$FFF8                                   ;INSERT|         ; align to half metatile instead of full metatile
                 STA.B tmp32                                    ;INSERT|
@@ -24382,7 +24355,6 @@ RefillRowDownBg2Mod:
                 ORA.W #$E000                                    ;INSERT|
              +: STA.W refillBg2RowTileY                         ;INSERT|
                 
-                
                 LDA.W bg2CamYSrc                                  ;INSERT|
                 SEC
                 SBC.L bg2SnapCamYOffset
@@ -24496,51 +24468,46 @@ RefillRowDownBg2Mod:
                 AND.W #$FFFE                                  
                 STA.L refillSnapBg2RowTileY
 
+                LDA.W #$0200
+                ORA.L rowLenFlags
+                STA.L rowLenFlags
+
                 JSR.W GetRowStageXBg2Mod
                 LDA.W refillBg2RowTileY                            ;INSERT|
                 CLC
                 ADC.W #$000A                                   ;INSERT|
                 TAY                                             ;INSERT|
                 STZ.W tmp34
-                LDA.W #$FFFC
                 PHX
                 JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
 
                 PLX
-                LDA.W #$0200
-                ORA.L rowLenFlags
-                STA.L rowLenFlags
-
                 LDA.W refillBg2RowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$000C                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0080
                 STA.W tmp34
-                LDA.W #$FFFE
                 PHX
                 JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
-                PLX
 
+                PLX
                 LDA.W refillBg2RowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$000E                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0100
                 STA.W tmp34
-                LDA.W #$0000
                 PHX
                 JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
-                PLX
 
+                PLX
                 LDA.W refillBg2RowTileY                            ;INSERT|
                 CLC                                             ;INSERT|
                 ADC.W #$0010                                    ;INSERT|
                 TAY                                             ;INSERT|
                 LDA.W #$0180
                 STA.W tmp34
-                ; LDA.W #$0012                                    ;INSERT|
-                LDA.W #$0002
                 JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
 
                 LDA.W #$0400                                    ;INSERT|
@@ -24660,42 +24627,37 @@ RefillRowUpBg2Mod:
                 AND.W #$FFFE                                  
                 STA.L refillSnapBg2RowTileY
 
-                JSR.W GetRowStageXBg2Mod
-                LDY.W refillBg2RowTileY                            ;INSERT|
-                DEY : DEY                                           ;INSERT|
-                STZ.W tmp34
-                LDA.W #$00A
-                PHX
-                JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
-
-                PLX
                 LDA.W #$0200
                 ORA.L rowLenFlags
                 STA.L rowLenFlags
 
+                JSR.W GetRowStageXBg2Mod
+                LDY.W refillBg2RowTileY                            ;INSERT|
+                DEY : DEY                                           ;INSERT|
+                STZ.W tmp34
+                PHX
+                JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
+
+                PLX
                 LDY.W refillBg2RowTileY                            ;INSERT|                              ;INSERT|
                 LDA.W #$0080
                 STA.W tmp34
-                LDA.W #$000C
                 PHX
                 JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
-                PLX
 
+                PLX
                 LDY.W refillBg2RowTileY                            ;INSERT|
                 INY : INY
                 LDA.W #$0100
                 STA.W tmp34
-                LDA.W #$000E
                 PHX
                 JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
-                PLX
 
+                PLX
                 LDY.W refillBg2RowTileY                            ;INSERT|
                 INY : INY : INY : INY
                 LDA.W #$0180
                 STA.W tmp34
-                ; LDA.W #$0012                                    ;INSERT|
-                LDA.W #$0010
                 JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
 
                 LDA.W #$0400                                    ;INSERT|
@@ -24717,8 +24679,7 @@ GetRowStageXBg2Mod:    ;returns X = tile-x of the row window start
                 AND.W #$0008
                 LSR A
                 LSR A
-                CLC
-                ADC.W #$0002
+                INC : INC 
                 CLC
                 ADC.W refillBg2ColTileX
                 TAX
@@ -25091,7 +25052,6 @@ UploadTilemapRowBg2P1:
                 BNE .2row
                 BIT.W #$0200 
                 BNE .4row
-                
                 
                 LDA.W P1Bg2rowDmaDest0
                 STA.W VMADDL

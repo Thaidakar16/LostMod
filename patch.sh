@@ -147,7 +147,7 @@ if os.path.exists(path):
             sys.exit(f"{path} isn't valid JSON ({e}). Fix it or empty it, then try again.")
 version = 1 + sum(1 for s in ships if s.get("id", "").startswith(key + "-"))
 sid = f"{key}-{version}"
-ships.append({"id": sid, "week": label, "version": version, "notes": notes, "details": f"details/{sid}.txt"})
+ships.append({"id": sid, "week": label, "version": version, "notes": notes, "details": f"details/{sid}.txt", "media": [{"mod": f"media/{sid}.mp4","caption": notes}]})
 with open(path, "w") as f:
     json.dump(ships, f, indent=2)
     f.write("\n")
@@ -161,5 +161,5 @@ touch "$DOCS/details/$id.txt"
 echo
 echo "Published $id ($(week_label "$week"), $notes)"
 echo "Next: write the longer description in $DOCS/details/$id.txt (blank line = new paragraph),"
-echo "      add screenshots to $DOCS/media and a \"media\" list to its entry in ships.json,"
+echo "      add a screenshot or video to $DOCS/media/ named $id.filetype,"
 echo "      then commit and push the docs repo."

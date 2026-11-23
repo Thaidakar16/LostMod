@@ -25093,9 +25093,9 @@ UploadTilemapRowBg2P1:
                 REP #$30   
                 RTL
 
-         .4row: LDA.W #$3C00
+         .4row: LDA.W #$1180
                 STA.W VMADDL                             
-                LDA.W #$3A00                          
+                LDA.W #$3C00                          
                 STA.W A1TL0                              
                 LDA.W #$0200                             
                 STA.W DASL0                              

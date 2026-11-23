@@ -24468,7 +24468,7 @@ RefillRowDownBg2Mod:
                 STA.L rowLenFlags
 
                 LDA.W #$FFFC
-                JSR.W BuildTilemapRowMod                        ;INSERT|
+                JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
 
                 
         .skip2: LDA.W #$0400                                    ;INSERT|
@@ -24633,7 +24633,7 @@ RefillRowUpBg2Mod:
                 STA.L rowLenFlags
 
                 LDA.W #$0012
-                JSR.W BuildTilemapRowMod                        ;INSERT|
+                JSR.W BuildTilemapRowBg2Mod                        ;INSERT|
 
                 
         .skip2: LDA.W #$0400                                    ;INSERT|

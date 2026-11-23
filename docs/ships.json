@@ -83,10 +83,23 @@
     "version": 1,
     "notes": "Fixed Vertical scrolling!",
     "details": "details/week4-1.txt",
-        "media": [
+    "media": [
       {
         "mod": "media/week4-1.mp4",
         "caption": "Fixed Vertical Scrolling"
+      }
+    ]
+  },
+  {
+    "id": "week5-1",
+    "week": "Week 5",
+    "version": 1,
+    "notes": "Finished New Scrolling!",
+    "details": "details/week5-1.txt",
+    "media": [
+      {
+        "mod": "media/week5-1.mp4",
+        "caption": "Finished Scrolling System"
       }
     ]
   }

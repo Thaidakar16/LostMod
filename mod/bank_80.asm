@@ -23544,7 +23544,7 @@ RefillRowUpMod:
                 PLX
 
                 PLA
-                CMP.W #$0070
+                CMP.W #$0080
                 BCC .skip2
 
                 LDA.W #$0080

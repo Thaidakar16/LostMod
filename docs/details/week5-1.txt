@@ -1,0 +1,4 @@
+I have finally finished the scrolling mechanics! (whoops, i just jinxed myself. I will probably have to fix scrolling at least 2 more times now in the future)
+3 weeks ago I had a scrolling system that looked fine. However, if I had kept that system and moved on, the visual glitches would have become apparent when I would have implemented the second viewport. So, I decided to fix it then! Three weeks to fix a small visual glitch is crazy, but it should be worth it. 
+The technical details on how the new scrolling system works are VERY complex, so I will not explain them. (This is DEFINITELY not because I barely know how it works myself)
+I also modded the emulator I am using; that was fun. This section of the mod is literally so hard to understand that it was easier to modify the emulator so i could see what was happening. 

@@ -44,6 +44,10 @@ Main things:
     I need to set up the secondary camera
         I have NO idea how I will do this.
         But, it is probably the next big step.
+            It is time! I finished the scrolling, back to this!
+            We are going to play hot potato with the player 1 and player 2 variables. I will have a backup wram value for each, then we will swap them and rerun the code.
+                The hard part of this will be to find what wram values and what functions need to had this done. 
+                    I will start with the main game loop and determine which functions need it.z
 
     I need to set up the Fblank system
 

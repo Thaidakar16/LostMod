@@ -354,8 +354,8 @@ backdropColorB2        = $034E  ; second blue contribution OR'd into COLDATA
 cgadsubShadow          = $0350  ; shadow of CGADSUB (colour-math add/sub control)
 ram_0352               = $0352  ; refs=3 (r2/w1) [LDX:1,INC:1,STZ:1], 2 site(s)
 ram_0354               = $0354  ; refs=2 (r1/w1) [LDY:1,STZ:1], 2 site(s); member of a 0x28-stride table (likely per-object field)
-ram_0358               = $0358  ; refs=5 (r0/w5) [STX:2,STA:2,STZ:1], 5 site(s)
 ram_0356               = $0356  ; refs=5 (r0/w5) [STX:2,STA:2,STZ:1], 5 site(s)
+ram_0358               = $0358  ; refs=5 (r0/w5) [STX:2,STA:2,STZ:1], 5 site(s)
 ram_035A               = $035A  ; refs=5 (r2/w3) [STA:2,LDA:1,EOR:1,STX:1], 2 site(s)
 vmFarCallSaveY         = $035C  ; refs=2 (r1/w1) [STY:1,LDY:1], 1 site(s)  Saves the VM's Y (script instruction pointer) across an Op_FarCall's PHK/RTL dance so it can be restored once the native routine returns.
 ram_035E               = $035E  ; refs=3 (r2/w1) [LDA:2,STA:1], 2 site(s); member of a 0x28-stride table (likely per-object field)
@@ -21133,7 +21133,7 @@ data_OamSmallSizes:
                 db $08,$08,$08,$10,$10,$20                     ;80EA30|
 
 data_OamLargeSizes:
-                db $10,$20,$20,$40,$40,$40                     ;80EA36|
+                db $10,$20,$40,$20,$40,$40                     ;80EA36|
 ;--------------------------------------------------------------
 ;  Op_FaceRight   (object VM op $08)
 ;    operands: -
@@ -25159,7 +25159,6 @@ scanBoxPrepVerticalMod:
 
                 JSL.L Far_ScanAllPlacementsInBox
                 RTS
-
 
 ; ---- end of bank $81 region A.  Bank-$81 free space is $81ED00-$81FFFF ----
 assert pc() <= $820000

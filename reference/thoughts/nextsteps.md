@@ -1,8 +1,9 @@
-Okay! Messy thoughts time again!
+# Okay! Messy thoughts time again!
 
-Main things:
+## Main things:
 
-    There might be an issue with the vertical scrolling
+
+### There might be an issue with the vertical scrolling: (It should be fixed now!)
         I don't feel like fixing this rn.
         Not might. there IS an issue. and it sucks.
             currently I use a 16 tile ring. This gives us the 14 always visible, and the 15 possible visible. that leaves us with ONE update bar. 
@@ -14,8 +15,7 @@ Main things:
                         I really hate option 1. Im already cutting almost half of the vertical screen space. 
                         Option 2 will SUCK to implement, but I want to do this correctly.
 
-
-    We need a ring of 18. 
+#### We need a ring of 18. 
         before, we were using a ring of 16. this had the advantage of letting us jump directly back when we reach an edge.
             we can't do that anymore. 
                 options: 
@@ -33,24 +33,40 @@ Main things:
                         So, either double the amount of row staging, or one frame that we update only 1 metatile ro and a frame that we update 3 metatile rows. 
                             I did research and math, and there would be plenty of time for the 3 metatile rows!
 
-    I need to adjust the object spawn boxes.
+### I need to adjust the object spawn boxes: (should be done!)
         Done? 
         I think that i also need to adjust the despawn mechanic
             I have no idea how that happens...
                 we will come back here later.
             fixed it!
 
+### I need to set up the secondary camera
+I have NO idea how I will do this.
+But I finished the scrolling and this is the next big step!
 
-    I need to set up the secondary camera
-        I have NO idea how I will do this.
-        But, it is probably the next big step.
-            It is time! I finished the scrolling, back to this!
-            We are going to play hot potato with the player 1 and player 2 variables. I will have a backup wram value for each, then we will swap them and rerun the code.
-                The hard part of this will be to find what wram values and what functions need to had this done. 
-                    I will start with the main game loop and determine which functions need it.z
+#### The idea:
+We are going to play hot potato with the player 1 and player 2 variables. I will have a backup wram value for many of the player cam variables.
+We will occasionally swap them and rerun the code with the different values. Then, we will swap back before the next cycle.
+The hard part of this will be to find what wram values and what functions need to had this done. 
+I will start with the main game loop and determine which functions need it.
 
-    I need to set up the Fblank system
+#### Specific systems: 
+The things that the second camera needs are:
+- the tilemap space (already resolved)
+- the tilemap update system (75% there)
+- removal of player input disabling (resolved)
+- object loading (tilemap update system handles it)
+- object unloading
+- object offset to get them to the bottom
+- camera offset to get it to the bottom
+- Fblank system:
+    - adjust scroll registers
+    - adjust sprite positions that are on the border between top and bottom 
+- nmi additions:
+    - reset scroll registers
+    - adjust sprite positions that are on the border between top and bottom 
 
-    I need to add the hud sidebar
 
-    I need to add conveniences.
+### I need to add the hud sidebar
+
+### I need to add conveniences.

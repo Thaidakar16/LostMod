@@ -339,7 +339,7 @@ inidispShadow          = $0330  ; shadow of INIDISP (brightness/forced-blank); c
 spawnGateFrame         = $0331  ; refs=4 (r3/w1) [LDA:2,INC:1,STZ:1], 4 site(s)  Nonzero for one frame right after a scene reinit; CanSpawnPlacement refuses every spawn while it's set, so the level-load spawn passes (which run their own, separate logic) don't race with anything else.
 vblankCmd              = $0333  ; VBlank task selector; main loop sets it, NMI runs vblankCmdTable[x] then clears
 rasterIrqActive        = $0335  ; nonzero => the scanline IRQ raster effect is armed
-loopRequestFlags         = $0336  ; bitfield of pending PPU updates requested by the main thread
+levelLoadRequestFlags         = $0336  ; bitfield of pending PPU updates requested by the main thread
 frameCounter           = $0338  ; incremented once per NMI (free-running frame timer)
 ram_033C               = $033C  ; refs=2 (r1/w1) [LDA:1,STA:1], 2 site(s)
 objScanStartSlot       = $033E  ; refs=6 (r3/w3) [LDX:3,STA:2,STZ:1], 5 site(s)  First object-table slot that spawn/respawn dedup scans are allowed to match against (lets reserved low slots -- the vikings -- be skipped in some contexts). Set to $0002 or $0006 depending on game mode by the scene-setup code.
@@ -813,7 +813,7 @@ QueueOrRunAudioCommand          = $858002
 ;       0DE1      objPrevX         X at the start of the frame (for movement direction / collision)
 ;       0E09      objPrevY         Y at the start of the frame
 ;       0E31      objTouchMask     bit n = touch/collide query slot n hit this frame (see ram_0390 protocol)
-;       0E59      objParent        slot this object follows this frame ($FFFF none; >=$0100 = one-shot move by objMove). Reset to $FFFF every frame by ApplyAllObjectFollows_One
+;       0E59      objParent        slot this object follows this frame ($FFFF none; >=$0100 = one-shot move by objMove). Reset to $FFFF every frame by ApplyAllObjectFollows
 ;       0E81      objWidth         hitbox width in pixels
 ;       0EA9      objHeight        hitbox height in pixels
 ;       0ED1      objCullHalfH     half-height used by the off-screen test (FlagOffscreenObjects)
@@ -1102,34 +1102,34 @@ Boot_ClearWram:
 ;    calls:     Practically everything
 ; --------------------------------------------------------
 MainLoop:
-                JSL.L ProcessInputRecordReplay                           ;808063|818190
-                JSR.W WaitTilemapStreamDrain                            ;808067|808741
-                JSR.W ComputeButtonEdges                       ;80806A|80925C
-                JSR.W HandleStartDuringRecordReplay                             ;80806D|8082F6
-                JSR.W GiveUpDialog_TriggerGate                 ;808070|8083B6
-                JSR.W ProcessLoopRequests                             ;808073|80814E
-                LDA.W gameModeFlags                            ;808076|8019E3
-                BIT.W #$0008                                   ;808079|
-                BEQ .Gameplay                               ;80807C|808081
-                JMP.W .TimeDoor                      ;80807E|80811B
+                JSL.L ProcessInputRecordReplay                  ;808063|818190      ;Not relevant to this step of the mod
+                JSR.W WaitTilemapStreamDrain                    ;808067|808741      ;Not relevant to this step of the mod
+                JSR.W ComputeButtonEdges                        ;80806A|80925C      ;No changes needed
+                JSR.W HandleStartDuringRecordReplay             ;80806D|8082F6      ;Not relevant to this step of the mod
+                JSR.W GiveUpDialog_TriggerGate                  ;808070|8083B6      ;Not relevant to this step of the mod
+                JSR.W ProcessLevelLoadRequests                  ;808073|80814E      ;Not relevant to this step of the mod
+                LDA.W gameModeFlags                             ;808076|8019E3
+                BIT.W #$0008                                    ;808079|      
+                BEQ .Gameplay                                   ;80807E|80811B
+                JMP.W .TimeDoor                                 ;80807E|80811B
 
 
         .Gameplay:
-                JSR.W checkSelectPause                              ;808081|80B529
-                JSL.L UpdateAllCharacterSwaps                             ;808084|8182B2
-                JSR.W UpdateAllVikingViewports                                ;808088|8086E1
-                JSL.L ComputeInactivity                         ;80808B|818368
-                JSR.W UpdateAllObjects                          ;80808F|80CCB3
-                JSR.W SnapshotAllObjectPositions                ;808092|80ECA9
-                JSR.W ProcessObjectFloorCollision                                ;808095|80B04E
-                JSR.W ClearTouchMasksAndRunScripts                      ;808098|80A45D
-                JSR.W ApplyAllObjectFollows                     ;80809B|80ED80
+                JSR.W checkSelectPause                          ;808081|80B529      ;Not relevant to this step of the mod
+                JSL.L UpdateAllCharacterSwaps                   ;808084|8182B2      ;Changes optional, I think I like how it is now
+                JSR.W UpdateAllVikingViewports                  ;808088|8086E1      ;Changes done!
+                JSL.L ComputeInactivity                         ;80808B|818368      ;Not relevant to this step of the mod
+                JSR.W UpdateAllObjects                          ;80808F|80CCB3      ;Not relevant to this step of the mod
+                JSR.W SnapshotAllObjectPositions                ;808092|80ECA9      ;Not relevant to this step of the mod
+                JSR.W ProcessObjectFloorCollision               ;808095|80B04E      ;Not relevant to this step of the mod
+                JSR.W ClearTouchMasksAndRunScripts              ;808098|80A45D      ;Not relevant to this step of the mod
+                JSR.W ApplyAllObjectFollows                     ;80809B|80ED80      ;Not relevant to this step of the mod
 
-         .loop: LDA.W vblankCmd                                 ;80809E|800333   ; poll vblankCmd (wait for NMI to consume)
-                BNE .loop                                       ;8080A1|80809E
+             -: LDA.W vblankCmd                                 ;80809E|800333
+                BNE -                                           ;8080A1|80809E
 
-                JSR.W CameraFollowActiveViking                              ;8080A3|808515   ; Touches camY
-                JSR.W UpdateObjectMotion_Step1                                ;8080A6|80E02D
+                JSR.W CameraFollowActiveViking                  ;8080A3|808515      ;THE BIG PLAYER!
+                JSR.W UpdateOAMPosition_Step1                   ;8080A6|80E02D      
                 JSR.W BuildSpriteOam                            ;8080A9|80E0B7
                 JSR.W SetupVramGpDmaCh5_GfxSet                  ;8080AC|80E860
                 JSR.W SnapshotCameras                           ;8080AF|80BFBB
@@ -1137,65 +1137,65 @@ MainLoop:
                 LDA.W #$0002                                    ;8080B2|
                 JSR.W WaitVBlankCmd                             ;8080B5|808145
                 
-                JSL.L UpdateAllAutoVikingSwaps                              ;8080B8|81822C
-                JSR.W CollectObjectTouchQueries                                ;8080BC|80A449
-                JSR.W CameraFollowStep2                                ;8080BF|8085C2  ; Touches camY
-                JSR.W UpdateObjectMotion_Step2                                ;8080C2|80E032
+                JSL.L UpdateAllAutoVikingSwaps                  ;8080B8|81822C
+                JSR.W CollectObjectTouchQueries                 ;8080BC|80A449
+                JSR.W CameraFollowStep2                         ;8080BF|8085C2  ; Touches camY
+                JSR.W UpdateOAMPosition_Step2                   ;8080C2|80E032
                 JSR.W BuildSpriteOam                            ;8080C5|80E0B7
                 JSR.W SetupVramGpDmaCh5_Frame                   ;8080C8|80E885
-                JSL.L UpdateScreenShake                             ;8080CB|81815B
+                JSL.L UpdateScreenShake                         ;8080CB|81815B
                 JSR.W SnapshotCameras                           ;8080CF|80BFBB
                 
                 LDA.W #$0004                                    ;8080D2|
                 STA.W vblankCmd                                 ;8080D5|800333   ; issue VBlank command to NMI
                 
-                JSR.W CameraFollowStep3                                ;8080D8|8085FC
+                JSR.W CameraFollowStep3                         ;8080D8|8085FC
                 JSR.W FlagOffscreenObjects                      ;8080DB|80F018
-                JSR.W RefillTilemapsOnScroll                                ;8080DE|80C080
-                JSR.W UpdateObjectMotion_Step3                        ;8080E1|80E037
-                JSR.W UpdateHud                                ;8080E4|80B285
-                JSR.W UpdatePaletteCycling                                ;8080E7|808219
+                JSR.W RefillTilemapsOnScroll                    ;8080DE|80C080
+                JSR.W UpdateOAMPosition_Step3                   ;8080E1|80E037
+                JSR.W UpdateHud                                 ;8080E4|80B285
+                JSR.W UpdatePaletteCycling                      ;8080E7|808219
 
-        .loop2: LDA.W vblankCmd                                 ;8080EA|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd (frame sync)
-                BNE .loop2                                      ;8080ED|8080EA
+             -: LDA.W vblankCmd                                 ;8080EA|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd (frame sync)
+                BNE -                                           ;8080ED|8080EA
                 JSR.W SetupCgramGpDma                           ;8080EF|808667
                 JSR.W BuildSpriteOam                            ;8080F2|80E0B7
                 JSR.W SnapshotCameras                           ;8080F5|80BFBB
                 LDA.W #$0006                                    ;8080F8|
                 STA.W vblankCmd                                 ;8080FB|800333   ; issue VBlank command to NMI
-                JMP.W MainLoop                           ;8080FE|808063
+                JMP.W MainLoop                                  ;8080FE|808063
 
 
     .TimeDoorDispatch:
-                LDA.W #$0010                                   ;808101|
-                STA.W vblankCmd                                ;808104|800333   ; issue VBlank command to NMI
-                JSR.W ComputeButtonEdges                       ;808107|80925C
-                JSR.W HandleStartDuringRecordReplay                             ;80810A|8082F6
-                JSR.W ProcessLoopRequests                             ;80810D|80814E
-                LDA.W gameModeFlags                            ;808110|8019E3
-                BIT.W #$0008                                   ;808113|
-                BNE .TimeDoor                        ;808116|80811B
-                JMP.W .Gameplay                             ;808118|808081
+                LDA.W #$0010                                    ;808101|
+                STA.W vblankCmd                                 ;808104|800333   ; issue VBlank command to NMI
+                JSR.W ComputeButtonEdges                        ;808107|80925C
+                JSR.W HandleStartDuringRecordReplay             ;80810A|8082F6
+                JSR.W ProcessLevelLoadRequests                       ;80810D|80814E
+                LDA.W gameModeFlags                             ;808110|8019E3
+                BIT.W #$0008                                    ;808113|
+                BNE .TimeDoor                                   ;808116|80811B
+                JMP.W .Gameplay                                 ;808118|808081
 
 
     .TimeDoor:
-                JSR.W UpdateAllObjects                         ;80811B|80CCB3
-                JSR.W SetupVramGpDmaCh5_GfxSet                               ;80811E|80E860
+                JSR.W UpdateAllObjects                          ;80811B|80CCB3
+                JSR.W SetupVramGpDmaCh5_GfxSet                  ;80811E|80E860
 
-         .loop: LDA.W vblankCmd                                ;808121|800333   ; poll vblankCmd (wait for NMI to consume)
-                BNE .loop                                      ;808124|808121
-                LDA.W #$0014                                   ;808126|
-                JSR.W WaitVBlankCmd                            ;808129|808145
-                LDA.W #$0010                                   ;80812C|
-                STA.W vblankCmd                                ;80812F|800333   ; issue VBlank command to NMI
-                JSR.W UpdateTimeDoorMode7Scale                               ;808132|8099A1
-                JSR.W SetupVramGpDmaCh5_Frame                  ;808135|80E885
+             -: LDA.W vblankCmd                                 ;808121|800333   ; poll vblankCmd (wait for NMI to consume)
+                BNE -                                           ;808124|808121
+                LDA.W #$0014                                    ;808126|
+                JSR.W WaitVBlankCmd                             ;808129|808145
+                LDA.W #$0010                                    ;80812C|
+                STA.W vblankCmd                                 ;80812F|800333   ; issue VBlank command to NMI
+                JSR.W UpdateTimeDoorMode7Scale                  ;808132|8099A1
+                JSR.W SetupVramGpDmaCh5_Frame                   ;808135|80E885
 
-        .loop2: LDA.W vblankCmd                                ;808138|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd
-                BNE .loop2                                     ;80813B|808138
-                LDA.W #$0016                                   ;80813D|
-                JSR.W WaitVBlankCmd                            ;808140|808145
-                BRA .TimeDoorDispatch                                 ;808143|808101
+             -: LDA.W vblankCmd                                 ;808138|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd
+                BNE -                                           ;80813B|808138
+                LDA.W #$0016                                    ;80813D|
+                JSR.W WaitVBlankCmd                             ;808140|808145
+                BRA .TimeDoorDispatch                           ;808143|808101
 
 
 ; --------------------------------------------------------
@@ -1213,15 +1213,15 @@ WaitVBlankCmd:
 
 
 ; --------------------------------------------------------
-;  ProcessLoopRequests   [52 ins, returns RTS]
+;  ProcessLevelLoadRequests   [52 ins, returns RTS]
 ;    callers: MainLoop, MainLoop_Gameplay, WaitTilemapStreamDrain
-;    writes:    loopRequestFlags, requestedSceneId
-;    reads:     spawnGateFrame, loopRequestFlags, joy1Pressed, joy2Pressed, gameModeFlags
+;    writes:    levelLoadRequestFlags, requestedSceneId
+;    reads:     spawnGateFrame, levelLoadRequestFlags, joy1Pressed, joy2Pressed, gameModeFlags
 ;    calls:     sub_8087B7, hdma_808E7E, irqcfg_809210, irqcfg_808834, UpdateAllObjects, ScreenReinitHdmaOff, +7 more
 ;
 ;    RECON NOTE (trace-assisted, see level_loading_recon.md):
 ;    Polled once per frame; this is the dispatcher that decides whether
-;    a scene (re)load happens this frame. loopRequestFlags bits, low to
+;    a scene (re)load happens this frame. levelLoadRequestFlags bits, low to
 ;    high as checked here:
 ;      bit0 ($0001) -> generic reinit. Falls into the same reinit chain
 ;                      as bit1 but does NOT touch requestedSceneId --
@@ -1237,13 +1237,13 @@ WaitVBlankCmd:
 ;      bit5 ($0020) -> loc_8081BF (controller-1+2 hold-to-skip loop)
 ;      bit2 ($0004) -> loc_80819D (controller-1-only hold-to-skip loop)
 ;    Both bit0 and bit1 land in the shared block that clears
-;    loopRequestFlags, runs sub_8087B7/hdma_808E7E/irqcfg_809210/
+;    levelLoadRequestFlags, runs sub_8087B7/hdma_808E7E/irqcfg_809210/
 ;    irqcfg_808834, bumps spawnGateFrame, calls UpdateAllObjects, then calls
 ;    ScreenReinitHdmaOff (THE scene-load hook -- see its header) and
 ;    finishes with WindowWipeThenHdmaOff (the visual wipe transition).
 ; --------------------------------------------------------
-ProcessLoopRequests:
-                LDA.W loopRequestFlags                           ;80814E|800336
+ProcessLevelLoadRequests:
+                LDA.W levelLoadRequestFlags                    ;80814E|800336
                 BIT.W #$0004                                   ;808151|
                 BNE .skip2                                     ;808154|80819D
                 BIT.W #$0020                                   ;808156|
@@ -1263,7 +1263,7 @@ ProcessLoopRequests:
              +: LDA.W #$0025                                   ;80816E|
                 STA.W targetLevelIndex                         ;808171|8019DD
 
-         .skip: STZ.W loopRequestFlags                           ;808174|800336
+         .skip: STZ.W levelLoadRequestFlags                           ;808174|800336
                 JSR.W sub_8087B7                               ;808177|8087B7
                 JSR.W hdma_808E7E                              ;80817A|808E7E
                 JSR.W irqcfg_809210                            ;80817D|809210
@@ -1281,7 +1281,7 @@ ProcessLoopRequests:
 
 
         .skip2: AND.W #$FFFB                                   ;80819D|
-                STA.W loopRequestFlags                           ;8081A0|800336
+                STA.W levelLoadRequestFlags                           ;8081A0|800336
 
          .loop: JSR.W ComputeButtonEdges                       ;8081A3|80925C
                 LDA.W joy1Pressed                              ;8081A6|8003C8
@@ -1298,7 +1298,7 @@ ProcessLoopRequests:
 
 
         .skip3: AND.W #$FFDF                                   ;8081BF|
-                STA.W loopRequestFlags                           ;8081C2|800336
+                STA.W levelLoadRequestFlags                           ;8081C2|800336
 
         .loop2: JSR.W ComputeButtonEdges                       ;8081C5|80925C
                 LDA.W joy1Pressed                              ;8081C8|8003C8
@@ -1315,14 +1315,14 @@ ProcessLoopRequests:
 
 ; --------------------------------------------------------
 ;  input_8081DE   [11 ins, returns ?]
-;    callers: ProcessLoopRequests
-;    writes:    loopRequestFlags
+;    callers: ProcessLevelLoadRequests
+;    writes:    levelLoadRequestFlags
 ;    reads:     joy2Pressed
 ;    calls:     ComputeButtonEdges, sub_8081FD, sub_8096EB
 ; --------------------------------------------------------
 input_8081DE:
                 AND.W #$FFEF                                   ;8081DE|
-                STA.W loopRequestFlags                           ;8081E1|800336
+                STA.W levelLoadRequestFlags                           ;8081E1|800336
 
          .loop: JSR.W ComputeButtonEdges                       ;8081E4|80925C
                 LDA.W joy2Pressed                              ;8081E7|8003CA
@@ -1339,7 +1339,7 @@ input_8081DE:
 
 ; --------------------------------------------------------
 ;  sub_8081FD   [9 ins, returns ?]
-;    callers: ProcessLoopRequests, input_8081DE
+;    callers: ProcessLevelLoadRequests, input_8081DE
 ;    calls:     ComputeInactivity, WaitVBlankCmd, UpdatePaletteCycling, SetupCgramGpDma
 ; --------------------------------------------------------
 sub_8081FD:
@@ -1513,8 +1513,8 @@ RotatePaletteRangeBackward:
 ; --------------------------------------------------------
 ;  HandleStartDuringRecordReplay   [64 ins, returns RTS]
 ;    callers: MainLoop, MainLoop_Gameplay
-;    writes:    zp_8A, numPlayers, loopRequestFlags, p1vikingIdx, p2vikingIdx, activePlayerSlot ...
-;    reads:     zp_8A, loopRequestFlags, joy1Held, joy1Pressed, savedNumPlayers, inputRecMode ...
+;    writes:    zp_8A, numPlayers, levelLoadRequestFlags, p1vikingIdx, p2vikingIdx, activePlayerSlot ...
+;    reads:     zp_8A, levelLoadRequestFlags, joy1Held, joy1Pressed, savedNumPlayers, inputRecMode ...
 ; --------------------------------------------------------
 HandleStartDuringRecordReplay:
                 LDA.W inputRecMode                                 ;8082F6|8003EA
@@ -1594,9 +1594,9 @@ HandleStartDuringRecordReplay:
         .skip5: LDA.W #$0001                                   ;80838C|
                 STA.W inputRecMode                                 ;80838F|8003EA
 
-        .cont3: LDA.W loopRequestFlags                           ;808392|800336
+        .cont3: LDA.W levelLoadRequestFlags                           ;808392|800336
                 ORA.W #$0001                                   ;808395|
-                STA.W loopRequestFlags                           ;808398|800336
+                STA.W levelLoadRequestFlags                           ;808398|800336
                 RTS                                            ;80839B|
 
 
@@ -1611,7 +1611,7 @@ data_8083AA:
 ; --------------------------------------------------------
 ;  GiveUpDialog_TriggerGate (was input_8083B6)   [28 ins, returns RTS]
 ;    callers: MainLoop
-;    reads:     loopRequestFlags, backdropColorR, backdropColorG, backdropColorB, joy1Pressed, joy2Pressed ...
+;    reads:     levelLoadRequestFlags, backdropColorR, backdropColorG, backdropColorB, joy1Pressed, joy2Pressed ...
 ;    calls:     color_80CF31, GiveUpDialog_Run, Op_ClearBackdrop
 ;
 ;    RECON NOTE (trace-assisted, see level_loading_recon.md): called
@@ -1620,7 +1620,7 @@ data_8083AA:
 ;    nonzero (a per-context "dialog armed" flag -- true during normal
 ;    level play; also seen ticking over on the Try Again screen, so
 ;    this same gate is reused there too, though we couldn't fully trace
-;    what it drives in that context), inputRecMode != $8000, loopRequestFlags
+;    what it drives in that context), inputRecMode != $8000, levelLoadRequestFlags
 ;    bits 0-1 are both clear (no reinit already pending), and Start is
 ;    freshly pressed (joy1Pressed|joy2Pressed BIT $1000). Confirmed via
 ;    trace #1 and #2 (idle-in-level, press Start -> this fires).
@@ -1632,7 +1632,7 @@ GiveUpDialog_TriggerGate:
                 LDA.W inputRecMode                                 ;8083BE|8003EA
                 CMP.W #$8000                                   ;8083C1|
                 BEQ .exit                                      ;8083C4|808401
-                LDA.W loopRequestFlags                           ;8083C6|800336
+                LDA.W levelLoadRequestFlags                           ;8083C6|800336
                 AND.W #$0003                                   ;8083C9|
                 BNE .exit                                      ;8083CC|808401
                 LDA.W joy1Pressed                              ;8083CE|8003C8
@@ -1662,8 +1662,8 @@ GiveUpDialog_TriggerGate:
 ; --------------------------------------------------------
 ;  GiveUpDialog_Run (was vbwait_808402)   [45 ins, returns RTS]
 ;    callers: GiveUpDialog_TriggerGate
-;    writes:    loopRequestFlags, dialogChoiceIdx, ram_0467, dialogueBoxColorLo
-;    reads:     vblankCmd, loopRequestFlags, tilemapStreamRdIdx, tilemapStreamWrIdx
+;    writes:    levelLoadRequestFlags, dialogChoiceIdx, ram_0467, dialogueBoxColorLo
+;    reads:     vblankCmd, levelLoadRequestFlags, tilemapStreamRdIdx, tilemapStreamWrIdx
 ;    calls:     sub_80891D, sub_8088E7, sub_8094A2, sub_80961A, ComputeButtonEdges, sub_80847D, +6 more
 ;
 ;    RECON NOTE (trace-assisted, see level_loading_recon.md): fades in
@@ -1672,8 +1672,8 @@ GiveUpDialog_TriggerGate:
 ;    GiveUpDialog_NavConfirm until confirmed. On decline (choice==1,
 ;    the default) calls DeclineDialog_StopCues and returns -- no scene
 ;    change, play resumes (trace #1). On accept (choice==0, reached by
-;    pressing Left once -- trace #2) sets loopRequestFlags bit1 instead,
-;    which ProcessLoopRequests picks up next frame and routes into
+;    pressing Left once -- trace #2) sets levelLoadRequestFlags bit1 instead,
+;    which ProcessLevelLoadRequests picks up next frame and routes into
 ;    ScreenReinitHdmaOff with requestedSceneId=$0025 (Try Again).
 ;    Note: Op_ClearDialog (loc_808454) runs UNCONDITIONALLY right after
 ;    confirm, before the choice is even checked -- it looks at
@@ -1727,9 +1727,9 @@ GiveUpDialog_Run:
                 JSR.W ComputeButtonEdges                       ;808469|80925C
                 PLA                                            ;80846C|
                 BNE .skip2                                     ;80846D|808479
-                LDA.W loopRequestFlags                           ;80846F|800336
+                LDA.W levelLoadRequestFlags                           ;80846F|800336
                 ORA.W #$0002                                   ;808472|
-                STA.W loopRequestFlags                           ;808475|800336
+                STA.W levelLoadRequestFlags                           ;808475|800336
                 RTS                                            ;808478|
 
 
@@ -2168,7 +2168,12 @@ UpdateAllVikingViewports:
 CheckVikingOnScreen:
                 LDY.W p1vikingIdx,X                            ;8086F6|8003D8
                 CPY.W #$0006                                   ;8086F9|
-                BCS .skip2                                     ;8086FC|80873A
+                BCS .skip2                                     ;8086FC|80873A ;exit if player does not have a valid active viking
+                
+                ; LDA.W modFlags                                 ;INSERT| If mod is active, do not check for if players's vikings are offscreen
+                ; BIT.W #$0001
+                ; BNE .skip
+
                 LDA.W objX,Y                                   ;8086FE|801179
                 SEC                                            ;808701|
                 SBC.B playerCamX                               ;808702|000044
@@ -2211,7 +2216,7 @@ CheckVikingOnScreen:
 ;  WaitTilemapStreamDrain   [18 ins, returns RTS]
 ;    callers: MainLoop
 ;    reads:     vblankCmd, replayActive, tilemapStreamRdIdx, tilemapStreamWrIdx
-;    calls:     ComputeButtonEdges, ProcessLoopRequests, WaitVBlankCmd
+;    calls:     ComputeButtonEdges, ProcessLevelLoadRequests, WaitVBlankCmd
 ; --------------------------------------------------------
 WaitTilemapStreamDrain:
                 LDA.W replayActive                                 ;808741|80039C
@@ -2224,7 +2229,7 @@ WaitTilemapStreamDrain:
         .loop2: LDA.W vblankCmd                                ;80874E|800333   ; poll vblankCmd (wait for NMI to consume)
                 BNE .loop2                                     ;808751|80874E
                 JSR.W ComputeButtonEdges                       ;808753|80925C
-                JSR.W ProcessLoopRequests                             ;808756|80814E
+                JSR.W ProcessLevelLoadRequests                             ;808756|80814E
                 LDA.W #$000E                                   ;808759|
                 JSR.W WaitVBlankCmd                            ;80875C|808145
                 LDA.W #$000E                                   ;80875F|
@@ -2284,7 +2289,7 @@ sub_80879F:
 
 ; --------------------------------------------------------
 ;  sub_8087B7   [5 ins, returns ?]
-;    callers: ProcessLoopRequests
+;    callers: ProcessLevelLoadRequests
 ;    reads:     ram_19CD
 ;    calls:     ptrtbl_8087C2
 ; --------------------------------------------------------
@@ -2366,7 +2371,7 @@ loc_808825:
 
 ; --------------------------------------------------------
 ;  irqcfg_808834   [22 ins, returns RTS]
-;    callers: ProcessLoopRequests
+;    callers: ProcessLevelLoadRequests
 ;    writes HW: NMITIMEN
 ;    reads:     ram_035E, ram_19CD
 ;    calls:     QueueOrRunAudioCommand, WaitForVBlankStart, WaitForVBlankEnd
@@ -2695,8 +2700,8 @@ NopRts:
 ;  StreamTilemap   [120 ins, returns RTS]
 ;    callers: StreamTilemap, VBlank_Flush_DmaA, VBlank_Flush_DmaB, VBlank_Flush_Tilemap, VBlank_Cgram_TilemapStream, VBlank_TilemapStream_Only
 ;    writes HW: VMADDL, VMDATAL
-;    writes:    zp_06, zp_86, zp_88, loopRequestFlags, tilemapStreamRdIdx, dialogueBoxColorLo
-;    reads:     zp_06, zp_86, loopRequestFlags, tilemapStreamRdIdx, tilemapStreamWrIdx, tilemapVramAddr
+;    writes:    zp_06, zp_86, zp_88, levelLoadRequestFlags, tilemapStreamRdIdx, dialogueBoxColorLo
+;    reads:     zp_06, zp_86, levelLoadRequestFlags, tilemapStreamRdIdx, tilemapStreamWrIdx, tilemapVramAddr
 ;    calls:     sub_809420, sub_8096EB, vramwr_808D7C, StreamTilemap
 ; --------------------------------------------------------
 StreamTilemap:
@@ -2807,27 +2812,27 @@ StreamTilemap:
                 RTS                                            ;808AA7|
 
 
-        .skip7: LDA.W loopRequestFlags                           ;808AA8|800336
+        .skip7: LDA.W levelLoadRequestFlags                           ;808AA8|800336
                 ORA.W #$0004                                   ;808AAB|
-                STA.W loopRequestFlags                           ;808AAE|800336
+                STA.W levelLoadRequestFlags                           ;808AAE|800336
                 RTS                                            ;808AB1|
 
 
-        .skip8: LDA.W loopRequestFlags                           ;808AB2|800336
+        .skip8: LDA.W levelLoadRequestFlags                           ;808AB2|800336
                 ORA.W #$0020                                   ;808AB5|
-                STA.W loopRequestFlags                           ;808AB8|800336
+                STA.W levelLoadRequestFlags                           ;808AB8|800336
                 RTS                                            ;808ABB|
 
 
-        .skip9: LDA.W loopRequestFlags                           ;808ABC|800336
+        .skip9: LDA.W levelLoadRequestFlags                           ;808ABC|800336
                 ORA.W #$0010                                   ;808ABF|
-                STA.W loopRequestFlags                           ;808AC2|800336
+                STA.W levelLoadRequestFlags                           ;808AC2|800336
                 RTS                                            ;808AC5|
 
 
-       .skip10: LDA.W loopRequestFlags                           ;808AC6|800336
+       .skip10: LDA.W levelLoadRequestFlags                           ;808AC6|800336
                 ORA.W #$0008                                   ;808AC9|
-                STA.W loopRequestFlags                           ;808ACC|800336
+                STA.W levelLoadRequestFlags                           ;808ACC|800336
                 RTS                                            ;808ACF|
 
 
@@ -3562,7 +3567,7 @@ InitOAM:
 
 ; --------------------------------------------------------
 ;  WindowWipeThenHdmaOff   [29 ins, returns RTS]
-;    callers: Boot_ClearWram, ProcessLoopRequests
+;    callers: Boot_ClearWram, ProcessLevelLoadRequests
 ;    writes HW: HDMAEN
 ;    writes:    tmp3A
 ;    reads:     tmp3A, dialogArmedFlag
@@ -3617,7 +3622,7 @@ WindowWipeThenHdmaOff:
 
 ; --------------------------------------------------------
 ;  hdma_808E7E   [37 ins, returns RTS]
-;    callers: ProcessLoopRequests
+;    callers: ProcessLevelLoadRequests
 ;    writes HW: HDMAEN, INIDISP, W12SEL, W34SEL, WOBJSEL
 ;    writes:    tmp3A, inidispShadow
 ;    reads:     tmp3A, dialogArmedFlag
@@ -4239,7 +4244,7 @@ VM_GetRandom:
 
 ; --------------------------------------------------------
 ;  InitInterruptMode   [7 ins, returns RTS]
-;    callers: Boot_ClearWram, ProcessLoopRequests, RunGameplayFrame_NoBlank
+;    callers: Boot_ClearWram, ProcessLevelLoadRequests, RunGameplayFrame_NoBlank
 ;    writes HW: NMITIMEN
 ;    writes:    rasterIrqActive
 ; --------------------------------------------------------
@@ -4255,7 +4260,7 @@ InitInterruptMode:
 
 ; --------------------------------------------------------
 ;  irqcfg_809210   [6 ins, returns RTS]
-;    callers: ProcessLoopRequests, RunGameplayFrame_NoBlank
+;    callers: ProcessLevelLoadRequests, RunGameplayFrame_NoBlank
 ;    writes HW: NMITIMEN
 ;    writes:    rasterIrqActive
 ; --------------------------------------------------------
@@ -5118,7 +5123,7 @@ Op_ClearDialog:
 ;--------------------------------------------------------------
 ;  Op_WaitKeyPlayer   (object VM op $CB)
 ;    operands: -
-;    Wait for a button press by player vmAcc: token $8008 if vmAcc == p2vikingIdx (loopRequestFlags $10,
+;    Wait for a button press by player vmAcc: token $8008 if vmAcc == p2vikingIdx (levelLoadRequestFlags $10,
 ;    controller 2 only) else $8009 ($20, controller 1).
 ;--------------------------------------------------------------
 Op_WaitKeyPlayer:
@@ -5136,7 +5141,7 @@ Op_WaitKeyPlayer:
 ;--------------------------------------------------------------
 ;  Op_WaitKey   (object VM op $43)
 ;    operands: -
-;    Queue token $8000: StreamTilemap sets loopRequestFlags |= 4 and ProcessLoopRequests loops until either
+;    Queue token $8000: StreamTilemap sets levelLoadRequestFlags |= 4 and ProcessLevelLoadRequests loops until either
 ;    player presses a button ($C0C0).
 ;--------------------------------------------------------------
 Op_WaitKey:
@@ -5158,7 +5163,7 @@ loc_80968B:
 ;--------------------------------------------------------------
 ;  Op_DialogCmd06   (object VM op $47)
 ;    operands: u8 value
-;    Queue token $8006 + value (StreamTilemap: loopRequestFlags |= 8). Consumer not found in bank $80.
+;    Queue token $8006 + value (StreamTilemap: levelLoadRequestFlags |= 8). Consumer not found in bank $80.
 ;    (name/behaviour is a best guess)
 ;--------------------------------------------------------------
 Op_DialogCmd06:
@@ -5208,7 +5213,7 @@ Op_SetDialogColor:
 
 ; --------------------------------------------------------
 ;  sub_8096EB   [40 ins, returns RTS]
-;    callers: ProcessLoopRequests, input_8081DE, StreamTilemap
+;    callers: ProcessLevelLoadRequests, input_8081DE, StreamTilemap
 ;    writes:    zp_2E, zp_30, tmp34, zp_6C, zp_6E, tilemapStreamRdIdx ...
 ;    reads:     tmp34, zp_6C, zp_6E, scriptPC, tilemapStreamRdIdx, tilemapStreamWrIdx
 ;    calls:     VM_GetOperandByType, sub_809404, sub_8093D9, sub_8093E8
@@ -5512,7 +5517,7 @@ ScaleSignedWordByZp9C:
 
 ; --------------------------------------------------------
 ;  SetupMode7MatrixHdma   [66 ins, returns RTS]
-;    callers: ProcessLoopRequests
+;    callers: ProcessLevelLoadRequests
 ;    writes HW: A1B0, A1B3, A1B6, A1B7, A1TL0, A1TL3, A1TL6, A1TL7, BBAD0, BBAD3 ...
 ;    writes:    m7HdmaSrc, dmaSrcBankShadow, m7HdmaCtr, zp_9C, m7HdmaTablePtr, zp_A0 ...
 ;    calls:     BuildMode7MatrixTables
@@ -5625,9 +5630,9 @@ UpdateTimeDoorMode7Scale:
                 LDA.B zp_9C                                    ;8099B3|00009C
                 CMP.W #$000A                                   ;8099B5|
                 BNE .exit                                      ;8099B8|8099C3
-                LDA.W loopRequestFlags                           ;8099BA|800336
+                LDA.W levelLoadRequestFlags                           ;8099BA|800336
                 ORA.W #$0001                                   ;8099BD|
-                STA.W loopRequestFlags                           ;8099C0|800336
+                STA.W levelLoadRequestFlags                           ;8099C0|800336
 
          .exit: RTS                                            ;8099C3|
 
@@ -5734,7 +5739,7 @@ data_809A3B:
 
 ; --------------------------------------------------------
 ;  ScreenReinitHdmaOff   [59 ins, returns ?]
-;    callers: Boot_ClearWram, ProcessLoopRequests
+;    callers: Boot_ClearWram, ProcessLevelLoadRequests
 ;    writes HW: HDMAEN, VTIMEL
 ;    writes:    spawnGateFrame, objTableEnd, inactiveTimer, ram_0398_clearedOnReinit, ram_039A, replayActive ...
 ;    reads:     levelIndex, targetLevelIndex
@@ -6917,7 +6922,7 @@ RunGameplayFrame_NoBlank:
                 JSR.W ClearTouchMasksAndRunScripts                     ;80A0AF|80A45D
                 JSR.W ApplyAllObjectFollows                               ;80A0B2|80ED80
                 JSR.W CameraFollowActiveViking                             ;80A0B5|808515
-                JSR.W UpdateObjectMotion_Step1                               ;80A0B8|80E02D
+                JSR.W UpdateOAMPosition_Step1                               ;80A0B8|80E02D
                 JSR.W BuildSpriteOam                           ;80A0BB|80E0B7
                 JSR.W SetupVramGpDmaCh5_GfxSet                               ;80A0BE|80E860
                 JSR.W SnapshotCameras                          ;80A0C1|80BFBB
@@ -6927,7 +6932,7 @@ RunGameplayFrame_NoBlank:
                 JSR.W irqcfg_809210                            ;80A0CD|809210
                 JSR.W CollectObjectTouchQueries                               ;80A0D0|80A449
                 JSR.W CameraFollowStep2                               ;80A0D3|8085C2
-                JSR.W UpdateObjectMotion_Step2                               ;80A0D6|80E032
+                JSR.W UpdateOAMPosition_Step2                               ;80A0D6|80E032
                 JSR.W BuildSpriteOam                           ;80A0D9|80E0B7
                 JSR.W SetupVramGpDmaCh5_Frame                               ;80A0DC|80E885
                 JSR.W SnapshotCameras                          ;80A0DF|80BFBB
@@ -6938,7 +6943,7 @@ RunGameplayFrame_NoBlank:
                 JSR.W CameraFollowStep3                               ;80A0EE|8085FC
                 JSR.W FlagOffscreenObjects                               ;80A0F1|80F018
                 JSR.W RefillTilemapsOnScroll                               ;80A0F4|80C080
-                JSR.W UpdateObjectMotion_Step3                       ;80A0F7|80E037
+                JSR.W UpdateOAMPosition_Step3                       ;80A0F7|80E037
                 JSR.W UpdateHud                               ;80A0FA|80B285
                 JSR.W UpdatePaletteCycling                               ;80A0FD|808219
                 JSR.W SetupCgramGpDma                          ;80A100|808667
@@ -7569,7 +7574,7 @@ ClearTouchMasksAndRunScripts:
 sub_80A471:
                 STZ.W objTouchMask,X                               ;80A471|800E31
                 LDA.W objParent,X                               ;80A474|800E59
-                BPL loc_80A4A1                                 ;80A477|80A4A1
+                BPL RunOneObjectScript_exit                                 ;80A477|80A4A1
 
 ; --------------------------------------------------------
 ;  RunOneObjectScript   [45 ins, returns RTS]
@@ -7580,7 +7585,7 @@ sub_80A471:
 ; --------------------------------------------------------
 RunOneObjectScript:
                 LDA.W objActive,X                      ;80A479|800D91
-                BEQ loc_80A4A1                                 ;80A47C|80A4A1
+                BEQ .exit                                 ;80A47C|80A4A1
                 STX.B curObjIdx                                ;80A47E|000042
                 STZ.W vmQueryOpIdx2                                 ;80A480|800390
                 STA.B scriptPCBank                                    ;80A483|000072
@@ -7601,7 +7606,7 @@ RunOneObjectScript:
 
          .skip: LDX.B curObjIdx                                ;80A49F|000042
 
-loc_80A4A1:
+            .exit:
                 RTS                                            ;80A4A1|
 
 
@@ -14686,7 +14691,7 @@ UploadTilemapRowBg2:
                 RTS                                            ;80CCB2|
 ; --------------------------------------------------------
 ;  UpdateAllObjects   [25 ins, returns RTS]
-;    callers: MainLoop_Gameplay, MainLoop_TimeDoor, ProcessLoopRequests, RunGameplayFrame_NoBlank
+;    callers: MainLoop_Gameplay, MainLoop_TimeDoor, ProcessLevelLoadRequests, RunGameplayFrame_NoBlank
 ;    writes:    newChildCount, vmQueryPass
 ;    reads:     objTableEnd, newChildCount, newChildList
 ;    calls:     ClearPerFrameMoveDeltas, UpdateOneObject
@@ -14848,7 +14853,7 @@ Op_Call:
 ;  Op_Goto   [228 ins, returns RTS]
 ;    callers: Op_Goto, Op_SubAcc_TFld
 ;    writes:    scriptPC, vmFarCallSaveY, placementConsumedBits, objParent, objMoveX, objMoveY ...
-;    reads:     curObjIdx, scriptPC, loopRequestFlags, vmFarCallSaveY, placementConsumedBits, objReturnPtr ...
+;    reads:     curObjIdx, scriptPC, levelLoadRequestFlags, vmFarCallSaveY, placementConsumedBits, objReturnPtr ...
 ;    calls:     DestroyObject, DamageObject, sub_80A761, sub_80A770, sub_80A752, sub_80A743, +4 more
 ; --------------------------------------------------------
 ;--------------------------------------------------------------
@@ -14936,12 +14941,12 @@ Op_BlockRespawn:
 ;--------------------------------------------------------------
 ;  Op_RequestReinit   (object VM op $0F)
 ;    operands: -
-;    Request a scene reload: loopRequestFlags |= 1 (ProcessLoopRequests then reinitialises using
+;    Request a scene reload: levelLoadRequestFlags |= 1 (ProcessLevelLoadRequests then reinitialises using
 ;    requestedSceneId $19DD) and end the frame. Does NOT save scriptPC.
 ;--------------------------------------------------------------
 Op_RequestReinit:
                 LDA.W #$0001                                   ;80CDC5|
-                TSB.W loopRequestFlags                           ;80CDC8|800336
+                TSB.W levelLoadRequestFlags                           ;80CDC8|800336
                 LDX.B curObjIdx                                ;80CDCB|000042
                 PLA                                            ;80CDCD|
                 RTS                                            ;80CDCE|
@@ -15031,7 +15036,7 @@ Op_CallFar:
 ;  Op_AttachSelfToObj0   (object VM op $17)
 ;    operands: s8 dx, s8 dy
 ;    Make this object follow object 0 (Erik) at offset (dx,dy) for THIS FRAME ONLY: sets
-;    objParent[self]=0 and objMoveX/Y = offset; ApplyAllObjectFollows_One consumes it and resets objParent to $FFFF,
+;    objParent[self]=0 and objMoveX/Y = offset; ApplyAllObjectFollows consumes it and resets objParent to $FFFF,
 ;    so the script must reissue it every frame. dx is mirrored when facing left.
 ;--------------------------------------------------------------
 Op_AttachSelfToObj0:
@@ -17869,7 +17874,7 @@ Op_CallIfPointInClass_Common:
 ;  Op_MoveToXY   (object VM op $48)
 ;    operands: u8 kinds(x|y<<3), x, y
 ;    Slide/teleport to absolute (x,y) this frame: objMoveX/Y = target - current, objParent = $0100
-;    (one-shot move applied by ApplyAllObjectFollows_One).
+;    (one-shot move applied by ApplyAllObjectFollows).
 ;--------------------------------------------------------------
 Op_MoveToXY:
                 LDA.B [scriptPC],Y                             ;80D883|000070
@@ -19451,20 +19456,20 @@ sub_80DFFC:
 
 
 ; --------------------------------------------------------
-;  UpdateObjectMotion   [13 ins, returns RTS]
+;  UpdateOAMPosition   [13 ins, returns RTS]
 ;    callers: MainLoop_Gameplay, RunGameplayFrame_NoBlank
 ;    reads:     objTableEnd
 ;    calls:     UpdateOneObjectMotion
 ; --------------------------------------------------------
-UpdateObjectMotion:
+UpdateOAMPosition:
 
         .Step1:
                 LDX.W #$0000                                   ;80E02D|
-                BRA UpdateObjectMotion_Run                                 ;80E030|80E03A
+                BRA .Run                                 ;80E030|80E03A
 
         .Step2:
                 LDX.W #$0002                                   ;80E032|
-                BRA UpdateObjectMotion_Run                                 ;80E035|80E03A
+                BRA .Run                                 ;80E035|80E03A
 
         .Step3:
                 LDX.W #$0004                           ;80E037|
@@ -19483,7 +19488,7 @@ UpdateObjectMotion:
 
 ; --------------------------------------------------------
 ;  UpdateOneObjectMotion   [51 ins, returns RTS]
-;    callers: UpdateObjectMotion
+;    callers: UpdateOAMPosition
 ;    writes:    tmp32, tmp34, tmp36, oamSrcX, oamSrcY
 ;    reads:     tmp32, tmp34, tmp36, oamSrcX, oamSrcY, objActive ...
 ;    calls:     DivBy3TypeTbl
@@ -21166,7 +21171,7 @@ Op_ToggleFlipH:
 
 ; --------------------------------------------------------
 ;  MirrorObjectX   [66 ins, returns RTS]
-;    callers: ApplyAllObjectFollows_One, UnmirrorNewObject
+;    callers: ApplyAllObjectFollows, UnmirrorNewObject
 ;    writes:    tmp32, tmp36, tmp38, tmp3A, oamSrcPalette, oamSrcX ...
 ;    reads:     tmp32, tmp36, tmp38, tmp3A, oamSmallSizePx, oamLargeSizePx ...
 ;    calls:     GetOamHiBit
@@ -21350,7 +21355,7 @@ Op_ToggleFlipV:
 
 ; --------------------------------------------------------
 ;  MirrorObjectY   [66 ins, returns RTS]
-;    callers: ApplyAllObjectFollows_One, UnmirrorNewObject
+;    callers: ApplyAllObjectFollows, UnmirrorNewObject
 ;    writes:    tmp32, tmp36, tmp38, tmp3A, oamSrcPalette, oamSrcY ...
 ;    reads:     tmp32, tmp36, tmp38, tmp3A, oamSmallSizePx, oamLargeSizePx ...
 ;    calls:     GetOamHiBit
@@ -21569,9 +21574,10 @@ SpawnObject:
 
 
 ; --------------------------------------------------------
-;  SnapshotAllObjectPositions   [3 ins, returns ?]
+;  SnapshotAllObjectPositions   [98 ins, returns ?]
 ;    callers: MainLoop_Gameplay, RunGameplayFrame_NoBlank
-;    reads:     objTableEnd
+;    writes:    objPrevX, objPrevY, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight ...
+;    reads:     objTableEnd, objActive, objParent, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight ...
 ;    Copies every live object's current objX/objY into objPrevX/objPrevY (ram_0DE1/ram_0E09), for use
 ;    by this frame's collision direction tests. Runs once per frame before collision resolution.
 ; --------------------------------------------------------
@@ -21579,23 +21585,10 @@ SnapshotAllObjectPositions:
                 LDY.W objTableEnd                              ;80ECA9|800380
                 DEY                                            ;80ECAC|
                 DEY                                            ;80ECAD|
-
-; --------------------------------------------------------
-;  SnapshotAllObjectPositions_One   [90 ins, returns ?]
-;    callers: ApplyAllObjectFollows_Next
-;    writes:    objPrevX, objPrevY, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight ...
-;    reads:     objActive, objParent, objBoxTop, objBoxBottom, objBoxLeft, objBoxRight ...
-;    calls:     ApplyAllObjectFollows_Next
-;    operands: Y = object slot
-;    Per-object body for SnapshotAllObjectPositions; also integrates objMoveX/objMoveY into position
-;    for any object with a pending Op_DamageTarget-style knockback (objMoveX/Y != 0 at this point
-;    came from damage/collision resolution earlier in the frame, not from script Op_MoveToXY which
-;    uses the separate objParent=$0100 one-shot path).
-; --------------------------------------------------------
-SnapshotAllObjectPositions_One:
+    .objectLoop:
                 LDA.W objActive,Y                              ;80ECAE|800D91
                 BNE +                                          ;80ECB1|80ECB6
-                JMP.W ApplyAllObjectFollows_Next                               ;80ECB3|80ED78
+                JMP.W .nextObject                               ;80ECB3|80ED78
 
 
              +: LDA.W objX,Y                          ;80ECB6|801179
@@ -21604,7 +21597,7 @@ SnapshotAllObjectPositions_One:
                 STA.W objPrevY,Y                               ;80ECBF|800E09
                 LDA.W objParent,Y                               ;80ECC2|800E59
                 BMI +                                          ;80ECC5|80ECCA
-                JMP.W ApplyAllObjectFollows_Next                               ;80ECC7|80ED78
+                JMP.W .nextObject                               ;80ECC7|80ED78
 
 
              +: LDA.W objMoveX,Y                               ;80ECCA|801381
@@ -21698,27 +21691,23 @@ SnapshotAllObjectPositions_One:
                 ADC.W objBoxBottom,Y                          ;80ED72|800F49
                 STA.W objBoxBottom,Y                          ;80ED75|800F49
 
-; --------------------------------------------------------
-;  ApplyAllObjectFollows_Next   [5 ins, returns RTS]
-;    callers: SnapshotAllObjectPositions_One
-;    calls:     SnapshotAllObjectPositions_One
-;    Loop-continuation tail for ApplyAllObjectFollows.
-; --------------------------------------------------------
-ApplyAllObjectFollows_Next:
+    .nextObject:
                 DEY                                            ;80ED78|
                 DEY                                            ;80ED79|
                 BMI .exit                                      ;80ED7A|80ED7F
-                JMP.W SnapshotAllObjectPositions_One                               ;80ED7C|80ECAE
+                JMP.W .objectLoop                               ;80ED7C|80ECAE
 
 
          .exit: RTS                                            ;80ED7F|
 
 
 ; --------------------------------------------------------
-;  ApplyAllObjectFollows   [3 ins, returns ?]
+;  ApplyAllObjectFollows   [113 ins, returns RTS]
 ;    callers: MainLoop_Gameplay, RunGameplayFrame_NoBlank
-;    reads:     objTableEnd
-;    Runs ApplyAllObjectFollows_One for every live object: resolves objParent-based following
+;    writes:    zp_6C, zp_6E, objParent, objBoxTop, objBoxBottom, objBoxLeft ...
+;    reads:     zp_6E, objActive, objParent, objBoxTop, objBoxBottom, objBoxLeft, objBoxTop, objTableEnd ...
+;    calls:     MirrorObjectX, MirrorObjectY,
+;    Runs .objectLoop for every live object: resolves objParent-based following
 ;    (Op_AttachSelfToObj0/Op_AttachSelfToTarget) and the one-shot Op_MoveToXY move, then resets
 ;    objParent to $FFFF so the attachment doesn't persist past this frame.
 ; --------------------------------------------------------
@@ -21727,24 +21716,15 @@ ApplyAllObjectFollows:
                 DEX                                            ;80ED83|
                 DEX                                            ;80ED84|
 
-; --------------------------------------------------------
-;  ApplyAllObjectFollows_One   [105 ins, returns ?]
-;    callers: ApplyAllObjectFollows_One_Next
-;    writes:    zp_6C, zp_6E, objParent, objBoxTop, objBoxBottom, objBoxLeft ...
-;    reads:     zp_6E, objActive, objParent, objBoxTop, objBoxBottom, objBoxLeft ...
-;    calls:     MirrorObjectX, MirrorObjectY, ApplyAllObjectFollows_One_Next
-;    operands: X = object slot
-;    Per-object body for ApplyAllObjectFollows.
-; --------------------------------------------------------
-ApplyAllObjectFollows_One:
+    .objectLoop:
                 LDA.W objActive,X                              ;80ED85|800D91
                 BNE +                                          ;80ED88|80ED8D
-                JMP.W ApplyAllObjectFollows_One_Next                               ;80ED8A|80EE72
+                JMP.W .nextObject                               ;80ED8A|80EE72
 
 
              +: LDA.W objParent,X                               ;80ED8D|800E59
                 BPL +                                          ;80ED90|80ED95
-                JMP.W ApplyAllObjectFollows_One_Next                               ;80ED92|80EE72
+                JMP.W .nextObject                               ;80ED92|80EE72
 
 
              +: CMP.W #$0100                                   ;80ED95|
@@ -21777,7 +21757,7 @@ ApplyAllObjectFollows_One:
                 STA.W objBoxBottom,X                          ;80EDCD|800F49
                 LDA.W #$FFFF                                   ;80EDD0|
                 STA.W objParent,X                               ;80EDD3|800E59
-                JMP.W ApplyAllObjectFollows_One_Next                               ;80EDD6|80EE72
+                JMP.W .nextObject                               ;80EDD6|80EE72
 
 
          .skip: TAY                                            ;80EDD9|
@@ -21857,17 +21837,12 @@ ApplyAllObjectFollows_One:
                 LDA.W #$FFFF                                   ;80EE6C|
                 STA.W objParent,X                               ;80EE6F|800E59
 
-; --------------------------------------------------------
-;  ApplyAllObjectFollows_One_Next   [5 ins, returns RTS]
-;    callers: ApplyAllObjectFollows_One
-;    calls:     ApplyAllObjectFollows_One
-;    Loop-continuation tail for ApplyAllObjectFollows_One.
-; --------------------------------------------------------
-ApplyAllObjectFollows_One_Next:
+
+        .nextObject:
                 DEX                                            ;80EE72|
                 DEX                                            ;80EE73|
                 BMI .exit                                      ;80EE74|80EE79
-                JMP.W ApplyAllObjectFollows_One                               ;80EE76|80ED85
+                JMP.W .objectLoop                               ;80EE76|80ED85
 
 
          .exit: RTS                                            ;80EE79|
@@ -25115,7 +25090,7 @@ UploadTilemapColumnBg2P1:
 
 
 scanBoxPrepHorizontalMod:
- 
+
     .left:
                 LDA.B playerCamX                    
                 SEC                                 
@@ -25148,6 +25123,7 @@ scanBoxPrepHorizontalMod:
                 
                 JSL.L Far_ScanAllPlacementsInBox
                 RTS
+
 
 scanBoxPrepVerticalMod:
 
@@ -25183,28 +25159,6 @@ scanBoxPrepVerticalMod:
 
                 JSL.L Far_ScanAllPlacementsInBox
                 RTS
-
-; A = playerCamY
-; Function to perform modulo operation on playerCamY for the 18 ring
-; Stores snapCamY = playerCamY modulo 0x120 
-
-; We will need to get a bit creative as SNES does not support a 16 bit divisor
-moduloCamY:
-    PHA
-    LSR : LSR : LSR : LSR
-.loop:
-    CMP.W #$0009
-    BCC .done
-    SBC.W #$0009        ; carry is set here from the CMP
-    BRA .loop
-.done:
-    ASL : ASL : ASL : ASL
-    STA.W tmp32
-    PLA
-    AND.W #$000F
-    ORA.W tmp32
-    RTL
-
 
 
 ; ---- end of bank $81 region A.  Bank-$81 free space is $81ED00-$81FFFF ----

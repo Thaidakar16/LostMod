@@ -1,3 +1,5 @@
+//This is partially incorrect, but scrolling is completed! 
+
 Okay! Ring of 18 time!
 
 18 = 9 meta-rows

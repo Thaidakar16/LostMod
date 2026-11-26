@@ -102,5 +102,54 @@
         "caption": "Finished Scrolling System"
       }
     ]
+  },
+  {
+    "id": "week6-1",
+    "week": "Week 6",
+    "version": 1,
+    "notes": "Layout Options",
+    "details": "details/week6-1.txt",
+    "media": [
+      {
+        "mod": "media/layouts/layout4-1.png",
+        "caption": "4px screen divider/1px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout4-2.png",
+        "caption": "4px screen divider/2px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout4-3.png",
+        "caption": "4px screen divider/3px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout4-4.png",
+        "caption": "4px screen divider/4px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout6-1.png",
+        "caption": "6px screen divider/1px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout6-2.png",
+        "caption": "6px screen divider/2px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout6-3.png",
+        "caption": "6px screen divider/3px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout6-4.png",
+        "caption": "6px screen divider/4px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout6-5.png",
+        "caption": "6px screen divider/5px hud divider"
+      },
+      {
+        "mod": "media/layouts/layout6-6.png",
+        "caption": "6px screen divider/6px hud divider"
+      }
+    ]
   }
 ]

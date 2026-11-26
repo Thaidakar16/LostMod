@@ -1099,7 +1099,7 @@ MainLoop:
                 JSR.W ComputeButtonEdges                        ;80806A|80925C      ;No changes needed
                 JSR.W HandleStartDuringRecordReplay             ;80806D|8082F6      ;Not relevant to this step of the mod
                 JSR.W GiveUpDialog_TriggerGate                  ;808070|8083B6      ;Not relevant to this step of the mod
-                JSR.W ProcessPendingRequests                    ;808073|80814E      ;Not relevant to this step of the mod
+                JSR.W ProcessPendingRequests                    ;808073|80814E      ;Will need to initialize P2 here...
                 LDA.W gameModeFlags                             ;808076|8019E3
                 BIT.W #$0008                                    ;808079|      
                 BEQ .Gameplay                                   ;80807E|80811B
@@ -1111,7 +1111,7 @@ MainLoop:
                 JSL.L UpdateAllCharacterSwaps                   ;808084|8182B2      ;Changes optional, I think I like how it is now
                 JSR.W UpdateAllVikingViewports                  ;808088|8086E1      ;Changes done!
                 JSL.L ComputeInactivity                         ;80808B|818368      ;Not relevant to this step of the mod
-                JSR.W UpdateAllObjects                          ;80808F|80CCB3      ;Not relevant to this step of the mod
+                JSR.W UpdateAllObjects                          ;80808F|80CCB3      ;Can reach camera, might be relevant
                 JSR.W SnapshotAllObjectPositions                ;808092|80ECA9      ;Not relevant to this step of the mod
                 JSR.W ProcessObjectFloorCollision               ;808095|80B04E      ;Not relevant to this step of the mod
                 JSR.W ClearTouchMasksAndRunScripts              ;808098|80A45D      ;Not relevant to this step of the mod
@@ -1120,39 +1120,40 @@ MainLoop:
              -: LDA.W vblankCmd                                 ;80809E|800333
                 BNE -                                           ;8080A1|80809E
 
-                JSR.W CameraFollowActiveViking                  ;8080A3|808515      ;THE BIG PLAYER!
-                JSR.W UpdateOAMPosition_Step1                   ;8080A6|80E02D      
-                JSR.W BuildSpriteOam                            ;8080A9|80E0B7
-                JSR.W SetupVramGpDmaCh5_GfxSet                  ;8080AC|80E860
-                JSR.W SnapshotCameras                           ;8080AF|80BFBB
+                JSR.W CameraFollowActiveViking                  ;8080A3|808515      ;THE BIG PLAYER! rerun w/swapped vals
+                JSR.W UpdateOAMPosition_Step1                   ;8080A6|80E02D      ;Might be relevant
+                JSR.W BuildSpriteOam                            ;8080A9|80E0B7      ;Might be relevant
+                JSR.W SetupVramGpDmaCh5_GfxSet                  ;8080AC|80E860      ;Not relevant to this step of the mod
+                JSR.W SnapshotCameras                           ;8080AF|80BFBB      ;Needs different outputs for the NMI/Fblank
                 
                 LDA.W #$0002                                    ;8080B2|
                 JSR.W WaitVBlankCmd                             ;8080B5|808145
                 
-                JSL.L UpdateAllAutoVikingSwaps                  ;8080B8|81822C
-                JSR.W CollectObjectTouchQueries                 ;8080BC|80A449
-                JSR.W CameraFollowStep2                         ;8080BF|8085C2  ; Touches camY
-                JSR.W UpdateOAMPosition_Step2                   ;8080C2|80E032
-                JSR.W BuildSpriteOam                            ;8080C5|80E0B7
-                JSR.W SetupVramGpDmaCh5_Frame                   ;8080C8|80E885
-                JSL.L UpdateScreenShake                         ;8080CB|81815B
-                JSR.W SnapshotCameras                           ;8080CF|80BFBB
+                JSL.L UpdateAllAutoVikingSwaps                  ;8080B8|81822C      ;Not relevant to this step of the mod, but make sure we have reset to normal
+                JSR.W CollectObjectTouchQueries                 ;8080BC|80A449      ;Can reach camera, might be relevant
+                JSR.W CameraFollowStep2                         ;8080BF|8085C2      ;THE BIG PLAYER! rerun w/ swapped vals
+                JSR.W UpdateOAMPosition_Step2                   ;8080C2|80E032      ;Might be relevant
+                JSR.W BuildSpriteOam                            ;8080C5|80E0B7      ;Might be relevant
+                JSR.W SetupVramGpDmaCh5_Frame                   ;8080C8|80E885      ;Not relevant to this step of the mod
+                JSL.L UpdateScreenShake                         ;8080CB|81815B      ;Adjust NMI/Fblank to update this for both players
+                JSR.W SnapshotCameras                           ;8080CF|80BFBB      ;Needs different outputs for the NMI/Fblank
                 
                 LDA.W #$0004                                    ;8080D2|
-                STA.W vblankCmd                                 ;8080D5|800333   ; issue VBlank command to NMI
+                STA.W vblankCmd                                 ;8080D5|800333
                 
-                JSR.W CameraFollowStep3                         ;8080D8|8085FC
-                JSR.W FlagOffscreenObjects                      ;8080DB|80F018
-                JSR.W RefillTilemapsOnScroll                    ;8080DE|80C080
-                JSR.W UpdateOAMPosition_Step3                   ;8080E1|80E037
-                JSR.W UpdateHud                                 ;8080E4|80B285
-                JSR.W UpdatePaletteCycling                      ;8080E7|808219
+                JSR.W CameraFollowStep3                         ;8080D8|8085FC      ;Same as before
+                JSR.W FlagOffscreenObjects                      ;8080DB|80F018      ;Adjust flagging system
+                JSR.W RefillTilemapsOnScroll                    ;8080DE|80C080      ;Rerun
+                JSR.W UpdateOAMPosition_Step3                   ;8080E1|80E037      ;Not relevant to this step of the mod
+                JSR.W UpdateHud                                 ;8080E4|80B285      ;Not relevant to this step of the mod
+                JSR.W UpdatePaletteCycling                      ;8080E7|808219      ;Not relevant to this step of the mod
 
-             -: LDA.W vblankCmd                                 ;8080EA|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd (frame sync)
+             -: LDA.W vblankCmd                                 ;8080EA|800333
                 BNE -                                           ;8080ED|8080EA
-                JSR.W SetupCgramGpDma                           ;8080EF|808667
-                JSR.W BuildSpriteOam                            ;8080F2|80E0B7
-                JSR.W SnapshotCameras                           ;8080F5|80BFBB
+
+                JSR.W SetupCgramGpDma                           ;8080EF|808667      ;Not relevant to this step of the mod
+                JSR.W BuildSpriteOam                            ;8080F2|80E0B7      ;Same as before
+                JSR.W SnapshotCameras                           ;8080F5|80BFBB      ;Same as before
                 LDA.W #$0006                                    ;8080F8|
                 STA.W vblankCmd                                 ;8080FB|800333   ; issue VBlank command to NMI
                 JMP.W MainLoop                                  ;8080FE|808063
@@ -1169,15 +1170,16 @@ MainLoop:
                 BNE .TimeDoor                                   ;808116|80811B
                 JMP.W .Gameplay                                 ;808118|808081
 
-
     .TimeDoor:
                 JSR.W UpdateAllObjects                          ;80811B|80CCB3
                 JSR.W SetupVramGpDmaCh5_GfxSet                  ;80811E|80E860
 
              -: LDA.W vblankCmd                                 ;808121|800333   ; poll vblankCmd (wait for NMI to consume)
                 BNE -                                           ;808124|808121
+
                 LDA.W #$0014                                    ;808126|
                 JSR.W WaitVBlankCmd                             ;808129|808145
+
                 LDA.W #$0010                                    ;80812C|
                 STA.W vblankCmd                                 ;80812F|800333   ; issue VBlank command to NMI
                 JSR.W UpdateTimeDoorMode7Scale                  ;808132|8099A1
@@ -1185,6 +1187,7 @@ MainLoop:
 
              -: LDA.W vblankCmd                                 ;808138|800333   ; poll vblankCmd (wait for NMI to consume)   ; spin: wait until NMI consumes vblankCmd
                 BNE -                                           ;80813B|808138
+
                 LDA.W #$0016                                    ;80813D|
                 JSR.W WaitVBlankCmd                             ;808140|808145
                 BRA .TimeDoorDispatch                           ;808143|808101

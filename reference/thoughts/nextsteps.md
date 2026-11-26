@@ -62,6 +62,7 @@ The things that the second camera needs are:
 - Fblank system:
     - adjust scroll registers
     - adjust sprite positions that are on the border between top and bottom 
+    - the best way do the sprites is a full OAM upload... I dont know if I have space for that rn... 
 - nmi additions:
     - reset scroll registers
     - adjust sprite positions that are on the border between top and bottom 
